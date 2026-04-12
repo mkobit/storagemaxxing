@@ -1,31 +1,39 @@
 import eslint from '@eslint/js'
-import tseslint from '@typescript-eslint/eslint-plugin'
-import tsparser from '@typescript-eslint/parser'
 import functional from 'eslint-plugin-functional'
 import reactPlugin from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import globals from 'globals'
+import tseslint from 'typescript-eslint'
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
-  {
-    ignores: ['dist/**', 'node_modules/**'],
-  },
+export default tseslint.config(
+  { ignores: ['dist/**', 'node_modules/**', '**/*.d.ts'] },
   eslint.configs.recommended,
+  // Node/config files (vite.config.ts etc.)
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['*.ts'],
+    extends: [tseslint.configs.recommendedTypeChecked],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.node.json',
+      },
+      globals: {
+        ...globals.node,
+        ...globals.es2022,
+      },
+    },
+  },
+  // App source files
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    extends: [tseslint.configs.recommendedTypeChecked],
     plugins: {
-      '@typescript-eslint': tseslint,
       functional,
       react: reactPlugin,
       'react-hooks': reactHooks,
     },
     languageOptions: {
-      parser: tsparser,
       parserOptions: {
         project: './tsconfig.app.json',
-        ecmaVersion: 'latest',
-        sourceType: 'module',
         ecmaFeatures: { jsx: true },
       },
       globals: {
@@ -37,9 +45,8 @@ export default [
       react: { version: 'detect' },
     },
     rules: {
-      ...tseslint.configs['recommended'].rules,
       ...reactHooks.configs.recommended.rules,
       'react/react-in-jsx-scope': 'off',
     },
   },
-]
+)
