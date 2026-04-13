@@ -1,0 +1,49 @@
+name: PR Checks
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+
+jobs:
+  enforce-agents:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check for AGENTS.md in modified subdirectories
+        run: |
+          MODIFIED_FILES=$(git diff --name-only origin/${{ github.base_ref }} HEAD | grep '^src/')
+          DIRS=$(echo "$MODIFIED_FILES" | xargs -I {} dirname {} | sort -u)
+          FAILED=0
+          for dir in $DIRS; do
+            if [ "$dir" != "src" ]; then
+              if [ ! -f "$dir/AGENTS.md" ]; then
+                echo "::error::Directory $dir is missing an AGENTS.md file."
+                FAILED=1
+              fi
+            fi
+          done
+          if [ $FAILED -ne 0 ]; then
+            bash -c "exit 1"
+          fi
+
+  file-size:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check file sizes (max 150 lines)
+        run: |
+          FAILED=0
+          FILES=$(find src -type f -name "*.ts" -o -name "*.tsx")
+          for file in $FILES; do
+            LINES=$(wc -l < "$file")
+            if [ "$LINES" -gt 150 ]; then
+              echo "::error file=$file::File exceeds 150 lines ($LINES lines)."
+              FAILED=1
+            fi
+          done
+          if [ $FAILED -ne 0 ]; then
+            bash -c "exit 1"
+          fi

@@ -41,3 +41,9 @@ src/
   App.tsx    — top-level component with Three.js canvas
   db.ts      — all IndexedDB access via idb
 ```
+
+## Strict Architecture Mandate
+
+- **Dependency Direction:** The core architectural rule is a strict one-way dependency graph: `ui → store → engine → model`.
+- **NEVER Backwards:** Packages lower in the hierarchy (`model`, `engine`) must never import from packages higher up (`ui`, `store`).
+- Subdirectories in `src/` contain their own `AGENTS.md` files enforcing specific mandates for that package.
