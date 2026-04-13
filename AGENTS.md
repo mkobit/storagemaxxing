@@ -1,43 +1,23 @@
-# storagemaxxing — agent context
+# StorageMaxxing
 
-## Project overview
+This is the central repository for StorageMaxxing. This application is a strictly client-side constraint solver and placement engine for organizational storage systems (like Gridfinity, OpenGrid, etc.). It runs entirely in the browser using Bun, React 18, Zustand, and a GLPK.js Web Worker. State is persisted solely to localStorage.
 
-A client-side web application built with React + Vite + Three.js, using IndexedDB (via `idb`) for local browser storage.
-The goal is interactive WebGL-driven UX with persistent local state.
+## Architecture & Code Philosophy
+- **Functional and immutable**: No `let`, no mutation, no side effects outside designated boundaries. Use `const` and `readonly` types everywhere.
+- **Small files**: Strict 150 lines per source file limit. Split by responsibility.
+- **Single responsibility**: One primary concept per file. Name files after the export.
+- **Types live with their domain**: No centralized types folder.
+- **Strict types**: No `any`. Strict TS config. Unknown + narrowing preferred.
+- **Exports**: Named exports only. No default exports. No index.ts barrel files.
+- **No circular dependencies**: Strictly enforced via `import/no-cycle`.
+- **Pure logic cores**: `geometry/`, `engine/`, and `catalog/` must be 100% pure functions (no expression statements, throws, or try/catch blocks).
 
-## Stack
+## Package Dependency Tree
+Dependencies must strictly flow downwards:
+`ui` -> `store` -> (`assembly`, `engine`, `solver`)
+`assembly` -> `catalog` -> `geometry`
+`engine` -> `catalog`, `geometry`
+`solver` -> `assembly`, `catalog`, `geometry`
+`workers` -> `solver`
 
-- **Runtime:** Bun 1.3.11
-- **Build:** Vite 6 + `@vitejs/plugin-react`
-- **UI:** React 19 (strict mode)
-- **3D/WebGL:** Three.js
-- **Storage:** IndexedDB via `idb`
-- **Types:** TypeScript 5 (strict)
-- **Lint:** ESLint 9 with `@typescript-eslint`
-- **Format:** Prettier
-
-## Key constraints
-
-- All TypeScript must pass `tsc --noEmit` with the settings in `tsconfig.app.json` (strict, noUncheckedIndexedAccess, exactOptionalPropertyTypes).
-- DB access goes through `src/db.ts` only — no direct `indexedDB` calls elsewhere.
-- Three.js resources (geometries, materials, renderers) must be disposed in `useEffect` cleanup.
-- No SSR — this is a pure client-side SPA.
-
-## Scripts
-
-```
-bun run dev        # local dev server
-bun run build      # type-check + vite build
-bun run typecheck  # tsc --noEmit only
-bun run lint       # eslint
-bun run format     # prettier --write
-```
-
-## File structure
-
-```
-src/
-  main.tsx   — React root mount
-  App.tsx    — top-level component with Three.js canvas
-  db.ts      — all IndexedDB access via idb
-```
+Before editing any package, read the corresponding `AGENTS.md` in its directory.

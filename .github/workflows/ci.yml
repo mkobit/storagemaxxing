@@ -2,28 +2,37 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main, dev ]
   pull_request:
-    branches: [main]
+    branches: [ main, dev ]
 
 jobs:
-  ci:
-    name: Typecheck, lint, build
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
 
-      - name: Install mise
-        uses: jdx/mise-action@v2
-
-      - name: Install dependencies
+      - name: Install Dependencies
         run: bun install --frozen-lockfile
 
       - name: Typecheck
-        run: bun run typecheck
+        run: tsc --noEmit
 
       - name: Lint
-        run: bun run lint
+        run: eslint src --max-warnings 0
+
+      - name: Test
+        run: bun test
 
       - name: Build
         run: bun run build
+
+      - name: Bundle Size Check
+        run: |
+          size=$(du -sk dist/ | cut -f1)
+          if [ $size -gt 1024 ]; then
+            echo "::warning::Bundle size exceeds 1MB ($size KB)"
+          fi

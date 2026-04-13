@@ -1,0 +1,33 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Verify AGENTS.md in all src subdirectories
+        run: |
+          MISSING=0
+          for dir in src/*/; do
+            if [ -d "$dir" ] && [ ! -f "${dir}AGENTS.md" ]; then
+              echo "::error::Missing AGENTS.md in $dir"
+              MISSING=1
+            fi
+          done
+          if [ $MISSING -eq 1 ]; then
+            exit 1
+          fi
+
+      - name: Check File Length (150 lines max)
+        run: |
+          VIOLATING_FILES=$(find src -name "*.ts" -o -name "*.tsx" | xargs -r wc -l | awk '$1 > 150 && $2 != "total" {print $2}')
+          if [ ! -z "$VIOLATING_FILES" ]; then
+            echo "::error::The following files exceed the 150 line limit:"
+            echo "$VIOLATING_FILES"
+            exit 1
+          fi

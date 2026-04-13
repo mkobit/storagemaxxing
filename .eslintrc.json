@@ -1,0 +1,59 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "ecmaFeatures": { "jsx": true }
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "functional",
+    "import"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript"
+  ],
+  "rules": {
+    "functional/no-let": "error",
+    "functional/immutable-data": ["error", { "ignoreImmediateMutation": true }],
+    "functional/no-loop-statements": "error",
+    "functional/prefer-readonly-type": "error",
+    "max-lines": ["error", { "max": 150, "skipBlankLines": true, "skipComments": true }],
+    "max-lines-per-function": ["error", { "max": 40, "skipBlankLines": true, "skipComments": true }],
+    "complexity": ["error", 8],
+    "max-depth": ["error", 3],
+    "max-params": ["error", 4],
+    "import/no-cycle": "error",
+    "import/no-default-export": "error",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/prefer-readonly": "error",
+    "@typescript-eslint/switch-exhaustiveness-check": "error"
+  },
+  "overrides": [
+    {
+      "files": ["src/geometry/**/*.ts", "src/engine/**/*.ts", "src/catalog/**/*.ts"],
+      "rules": {
+        "functional/no-expression-statements": "error",
+        "functional/no-throw-statements": "error",
+        "functional/no-try-statements": "error"
+      }
+    },
+    {
+      "files": ["src/store/**/*.ts", "src/workers/**/*.ts", "src/ui/**/*.tsx", "src/ui/**/*.ts"],
+      "rules": {
+        "functional/no-expression-statements": "off",
+        "functional/no-return-void": "off"
+      }
+    }
+  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": true,
+      "node": true
+    }
+  }
+}
