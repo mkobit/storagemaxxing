@@ -1,4 +1,4 @@
-import { BinSpec, StorageSystem, BinId } from "./index";
+import { BinSpec, BinId } from "./index";
 import { Inches } from "../geometry/imperial";
 import { SCHALLER_CATALOG } from "./schaller";
 import { GRIDFINITY_CATALOG } from "./gridfinity";
@@ -22,11 +22,4 @@ export const binsForDepth = (
   maxDepth: Inches
 ): ReadonlyArray<BinSpec> => {
   return catalog.filter((bin) => bin.nominal.h <= maxDepth);
-};
-
-export const binsForSystem = (
-  catalog: ReadonlyArray<BinSpec>,
-  system: StorageSystem
-): ReadonlyArray<BinSpec> => {
-  return catalog.filter((bin) => bin.system === system);
 };
