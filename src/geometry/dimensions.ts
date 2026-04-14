@@ -41,7 +41,7 @@ export const parseDim = (input: string): Inches | null => {
   }
 
   // Handle mixed format: "15 3/4" or "15-3/4"
-  const match = trimmed.match(/^(\d+)[ \-]+(\d\/\d)$/);
+  const match = trimmed.match(/^(\d+)[ -]+(\d\/\d)$/);
   if (match) {
     const wholePart = parseInt(match[1], 10);
     const fractionPart = match[2];
