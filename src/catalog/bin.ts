@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Inches } from "../geometry/imperial";
-import { Dimensions3D } from "../geometry/types";
+import { Dimensions3D } from "../geometry/index";
 import { CatalogSource } from "./catalogSource";
 
 export const BinIdSchema = z.string().brand("BinId");
