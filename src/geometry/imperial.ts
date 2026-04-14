@@ -1,6 +1,7 @@
 // Core value types — branded to prevent unit confusion
 export type Inches = number & { readonly _brand: "inches" };
 
+/* eslint-disable-next-line @typescript-eslint/consistent-type-assertions */
 export const inches = (value: number): Inches => value as Inches;
 
 // parseDim("15 3/4") → 15.75 as Inches

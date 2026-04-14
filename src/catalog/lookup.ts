@@ -1,4 +1,4 @@
-import { BinSpec, StorageSystem } from "./types";
+import { BinSpec, StorageSystem, BinId } from "./types";
 import { Inches } from "../geometry/imperial";
 import { SCHALLER_CATALOG } from "./schaller";
 import { GRIDFINITY_CATALOG } from "./gridfinity";
@@ -10,24 +10,20 @@ export const ALL_BINS: ReadonlyArray<BinSpec> = [
   ...AKROMILS_CATALOG,
 ];
 
-// Find a single bin by ID — returns undefined if not found, never throws
 export const findBinById = (
   catalog: ReadonlyArray<BinSpec>,
-  id: string
+  id: BinId
 ): BinSpec | undefined => {
   return catalog.find((bin) => bin.id === id);
 };
 
-// All bins compatible with a given drawer depth
-// A bin is compatible if bin.nominalH <= maxDepth
 export const binsForDepth = (
   catalog: ReadonlyArray<BinSpec>,
   maxDepth: Inches
 ): ReadonlyArray<BinSpec> => {
-  return catalog.filter((bin) => bin.nominalH <= maxDepth);
+  return catalog.filter((bin) => bin.nominal.h <= maxDepth);
 };
 
-// All bins for a given system
 export const binsForSystem = (
   catalog: ReadonlyArray<BinSpec>,
   system: StorageSystem

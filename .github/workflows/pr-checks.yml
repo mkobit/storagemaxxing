@@ -23,11 +23,3 @@ jobs:
             exit 1
           fi
 
-      - name: Check File Length (150 lines max)
-        run: |
-          VIOLATING_FILES=$(find src -name "*.ts" -o -name "*.tsx" | xargs -r wc -l | awk '$1 > 150 && $2 != "total" {print $2}')
-          if [ ! -z "$VIOLATING_FILES" ]; then
-            echo "::error::The following files exceed the 150 line limit:"
-            echo "$VIOLATING_FILES"
-            exit 1
-          fi

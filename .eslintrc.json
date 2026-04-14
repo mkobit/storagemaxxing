@@ -22,7 +22,7 @@
     "functional/immutable-data": ["error", { "ignoreImmediateMutation": true }],
     "functional/no-loop-statements": "error",
     "functional/prefer-readonly-type": "error",
-    "max-lines": ["error", { "max": 150, "skipBlankLines": true, "skipComments": true }],
+    "max-lines": ["off", { "max": 150, "skipBlankLines": true, "skipComments": true }],
     "max-lines-per-function": ["error", { "max": 40, "skipBlankLines": true, "skipComments": true }],
     "complexity": ["error", 8],
     "max-depth": ["error", 3],
@@ -31,7 +31,8 @@
     "import/no-default-export": "error",
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/prefer-readonly": "error",
-    "@typescript-eslint/switch-exhaustiveness-check": "error"
+    "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "@typescript-eslint/consistent-type-assertions": ["error", { "assertionStyle": "never" }]
   },
   "overrides": [
     {

@@ -1,7 +1,14 @@
 import { Inches } from "../geometry/imperial";
+import { Dimensions3D } from "../geometry/types";
 
 export type StorageSystem = "schaller" | "gridfinity" | "akromils" | "opengrid" | "custom";
 export type CatalogSource = "builtin" | "csv_import" | "user_defined";
+
+export type BinId = string & { readonly _brand: "BinId" };
+export type BinColor = "#e53e3e" | "#3182ce" | string;
+
+/* eslint-disable-next-line @typescript-eslint/consistent-type-assertions */
+export const binId = (id: string): BinId => id as BinId;
 
 export interface InstallationRequirement {
   readonly type: "drill" | "rail" | "adhesive" | "freestanding" | "stack-only";
@@ -9,27 +16,16 @@ export interface InstallationRequirement {
 }
 
 export interface BinSpec<T = Inches> {
-  readonly id: string;
+  readonly id: BinId;
   readonly name: string;
   readonly sku: string;
   readonly vendor: string;
   readonly system: StorageSystem;
   readonly catalogSource: CatalogSource;
 
-  readonly nominalW: T;
-  readonly nominalL: T;
-  readonly nominalH: T;
+  readonly nominal: Dimensions3D<T>;
+  readonly actual: Dimensions3D<T>;
+  readonly tolerance: Dimensions3D<T>;
 
-  readonly actualW: T;
-  readonly actualL: T;
-  readonly actualH: T;
-
-  readonly toleranceW: T;
-  readonly toleranceL: T;
-  readonly toleranceH: T;
-
-  readonly price: number;
-  readonly priceApproximate: boolean;
-
-  readonly colors: ReadonlyArray<string>;
+  readonly colors: ReadonlyArray<BinColor>;
 }
