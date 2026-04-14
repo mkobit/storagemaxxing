@@ -1,7 +1,8 @@
+/* eslint-disable functional/no-expression-statements */
 import { expect, test, describe } from "bun:test";
 import { ALL_BINS, findBinById, binsForDepth, binsForSystem } from "./lookup";
 import { SCHALLER_CATALOG } from "./schaller";
-import { Inches } from "../geometry/types";
+import { inches } from "../geometry/imperial";
 
 describe("Catalog Lookup", () => {
   test("Schaller catalog has exactly 40 entries", () => {
@@ -23,7 +24,7 @@ describe("Catalog Lookup", () => {
   });
 
   test("binsForDepth", () => {
-    const depth2Bins = binsForDepth(SCHALLER_CATALOG, 2 as Inches);
+    const depth2Bins = binsForDepth(SCHALLER_CATALOG, inches(2));
     expect(depth2Bins.length).toBeGreaterThan(0);
     // Ensure all returned bins have nominalH <= 2
     depth2Bins.forEach((bin) => {

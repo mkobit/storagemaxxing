@@ -1,5 +1,5 @@
 import { BinSpec, StorageSystem } from "./types";
-import { Inches } from "../geometry/types";
+import { Inches } from "../geometry/imperial";
 import { SCHALLER_CATALOG } from "./schaller";
 import { GRIDFINITY_CATALOG } from "./gridfinity";
 import { AKROMILS_CATALOG } from "./akromils";

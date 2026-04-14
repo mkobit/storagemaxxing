@@ -35,14 +35,7 @@
   },
   "overrides": [
     {
-      "files": ["**/*.test.ts", "**/*.test.tsx"],
-      "rules": {
-        "functional/no-expression-statements": "off"
-      }
-    },
-    {
       "files": ["src/geometry/**/*.ts", "src/engine/**/*.ts", "src/catalog/**/*.ts"],
-      "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
         "functional/no-expression-statements": "error",
         "functional/no-throw-statements": "error",

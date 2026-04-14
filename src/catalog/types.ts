@@ -1,4 +1,4 @@
-import { Inches } from "../geometry/types";
+import { Inches } from "../geometry/imperial";
 
 export type StorageSystem = "schaller" | "gridfinity" | "akromils" | "opengrid" | "custom";
 export type CatalogSource = "builtin" | "csv_import" | "user_defined";
@@ -8,7 +8,7 @@ export interface InstallationRequirement {
   readonly description: string;
 }
 
-export interface BinSpec {
+export interface BinSpec<T = Inches> {
   readonly id: string;
   readonly name: string;
   readonly sku: string;
@@ -16,20 +16,20 @@ export interface BinSpec {
   readonly system: StorageSystem;
   readonly catalogSource: CatalogSource;
 
-  readonly nominalW: Inches;
-  readonly nominalL: Inches;
-  readonly nominalH: Inches; // this is the BIN HEIGHT — i.e. drawer depth required
+  readonly nominalW: T;
+  readonly nominalL: T;
+  readonly nominalH: T;
 
-  readonly actualW: Inches;
-  readonly actualL: Inches;
-  readonly actualH: Inches;
+  readonly actualW: T;
+  readonly actualL: T;
+  readonly actualH: T;
 
-  readonly toleranceW: Inches;
-  readonly toleranceL: Inches;
-  readonly toleranceH: Inches;
+  readonly toleranceW: T;
+  readonly toleranceL: T;
+  readonly toleranceH: T;
 
   readonly price: number;
   readonly priceApproximate: boolean;
 
-  readonly colors: ReadonlyArray<string>; // standard css colors e.g. '#e53e3e'
+  readonly colors: ReadonlyArray<string>;
 }
