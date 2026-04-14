@@ -1,4 +1,3 @@
-/* eslint-disable functional/no-expression-statements */
 import { expect, test, describe } from "bun:test";
 import { ALL_BINS, findBinById, binsForDepth, binsForSystem } from "./lookup";
 import { SCHALLER_CATALOG } from "./schaller";
