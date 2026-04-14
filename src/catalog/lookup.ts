@@ -1,4 +1,4 @@
-import { BinSpec, StorageSystem, BinId } from "./types";
+import { BinSpec, StorageSystem, BinId } from "./index";
 import { Inches } from "../geometry/imperial";
 import { SCHALLER_CATALOG } from "./schaller";
 import { GRIDFINITY_CATALOG } from "./gridfinity";

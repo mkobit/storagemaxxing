@@ -2,7 +2,7 @@ import { expect, test, describe } from "bun:test";
 import { ALL_BINS, findBinById, binsForDepth, binsForSystem } from "./lookup";
 import { SCHALLER_CATALOG } from "./schaller";
 import { inches } from "../geometry/imperial";
-import { binId } from "./types";
+import { binId } from "./index";
 
 describe("Catalog Lookup", () => {
   test("Schaller catalog has exactly 40 entries", () => {
