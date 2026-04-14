@@ -1,9 +1,10 @@
+import { z } from "zod";
 import { Inches, inches } from "./imperial";
 
-export type Millimeters = number & { readonly _brand: "mm" };
+export const MillimetersSchema = z.number().nonnegative().brand("mm");
+export type Millimeters = z.infer<typeof MillimetersSchema>;
 
-/* eslint-disable-next-line @typescript-eslint/consistent-type-assertions */
-export const mm = (value: number): Millimeters => value as Millimeters;
+export const mm = (value: number): Millimeters => MillimetersSchema.parse(value);
 
-export const mmToIn = (m: Millimeters): Inches => inches(m / 25.4);
-export const inToMm = (inch: Inches): Millimeters => mm(inch * 25.4);
+export const mmToIn = (value: Millimeters): Inches => inches(value / 25.4);
+export const inToMm = (value: Inches): Millimeters => mm(value * 25.4);

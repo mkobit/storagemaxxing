@@ -1,24 +1,19 @@
-// Core value types — branded to prevent unit confusion
-export type Inches = number & { readonly _brand: "inches" };
+import { z } from "zod";
 
-/* eslint-disable-next-line @typescript-eslint/consistent-type-assertions */
-export const inches = (value: number): Inches => value as Inches;
+export const InchesSchema = z.number().nonnegative().brand("inches");
+export type Inches = z.infer<typeof InchesSchema>;
 
-// parseDim("15 3/4") → 15.75 as Inches
-// parseDim("16-1/8") → 16.125 as Inches
-// parseDim("24") → 24 as Inches
-// parseDim("3/4") → 0.75 as Inches
-// parseDim("15.75") -> 15.75 as Inches
+export const inches = (value: number): Inches => InchesSchema.parse(value);
+
 export const parseDim = (input: string): Inches | null => {
   const trimmed = input.trim();
   if (trimmed === "") return null;
 
   const asNumber = Number(trimmed);
-  if (!isNaN(asNumber)) {
+  if (!isNaN(asNumber) && asNumber >= 0) {
     return inches(asNumber);
   }
 
-  // Handle purely fractions "3/4", "7/16", "1/32"
   const fractionMatch = trimmed.match(/^(\d+)\/(\d+)$/);
   if (fractionMatch) {
     const num = parseInt(fractionMatch[1], 10);
@@ -26,7 +21,6 @@ export const parseDim = (input: string): Inches | null => {
     if (den !== 0) return inches(num / den);
   }
 
-  // Handle mixed format: "15 3/4" or "15-3/4"
   const mixedMatch = trimmed.match(/^(\d+)[ -]+(\d+)\/(\d+)$/);
   if (mixedMatch) {
     const wholePart = parseInt(mixedMatch[1], 10);
@@ -38,7 +32,6 @@ export const parseDim = (input: string): Inches | null => {
   return null;
 };
 
-// Fractions mapping for formatting up to 32nds
 export const formatDim = (value: Inches): string => {
   const wholePart = Math.floor(value);
   const fractionPart = value - wholePart;
