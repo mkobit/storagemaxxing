@@ -1,6 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: npm
+  - package-ecosystem: bun
     directory: /
     schedule:
       interval: weekly
@@ -32,6 +32,11 @@ updates:
           - "@eslint/*"
           - "globals"
           - "@stylistic/*"
+      bun:
+        patterns:
+          - "*"
+    cooldown:
+      default-days: 14
 
   - package-ecosystem: github-actions
     directory: /
@@ -39,3 +44,9 @@ updates:
       interval: weekly
       day: monday
     open-pull-requests-limit: 5
+    groups:
+      actions:
+        patterns:
+          - "*"
+    cooldown:
+      default-days: 14
