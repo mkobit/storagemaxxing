@@ -1,10 +1,20 @@
 import { BinSpec } from "./types";
-import { SCHALLER_1IN } from "./schaller_data/schaller_1in";
-import { SCHALLER_2IN } from "./schaller_data/schaller_2in";
-import { SCHALLER_3IN } from "./schaller_data/schaller_3in";
+import { SCHALLER_PART_0 } from "./schaller_data/part_0";
+import { SCHALLER_PART_1 } from "./schaller_data/part_1";
+import { SCHALLER_PART_2 } from "./schaller_data/part_2";
+import { SCHALLER_PART_3 } from "./schaller_data/part_3";
+import { SCHALLER_PART_4 } from "./schaller_data/part_4";
+import { SCHALLER_PART_5 } from "./schaller_data/part_5";
+import { SCHALLER_PART_6 } from "./schaller_data/part_6";
+import { SCHALLER_PART_7 } from "./schaller_data/part_7";
 
 export const SCHALLER_CATALOG: ReadonlyArray<BinSpec> = [
-  ...SCHALLER_1IN,
-  ...SCHALLER_2IN,
-  ...SCHALLER_3IN,
+  ...SCHALLER_PART_0,
+  ...SCHALLER_PART_1,
+  ...SCHALLER_PART_2,
+  ...SCHALLER_PART_3,
+  ...SCHALLER_PART_4,
+  ...SCHALLER_PART_5,
+  ...SCHALLER_PART_6,
+  ...SCHALLER_PART_7,
 ];
