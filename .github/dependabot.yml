@@ -7,31 +7,11 @@ updates:
       day: monday
     open-pull-requests-limit: 10
     groups:
-      react:
+      bun:
         patterns:
-          - "react"
-          - "react-dom"
-          - "@types/react"
-          - "@types/react-dom"
-      three:
-        patterns:
-          - "three"
-          - "@types/three"
-      vite:
-        patterns:
-          - "vite"
-          - "@vitejs/*"
-      typescript-eslint:
-        patterns:
-          - "@typescript-eslint/*"
-          - "typescript"
-      eslint:
-        patterns:
-          - "eslint"
-          - "eslint-*"
-          - "@eslint/*"
-          - "globals"
-          - "@stylistic/*"
+          - "*"
+    cooldown:
+      default-days: 14
 
   - package-ecosystem: github-actions
     directory: /
@@ -39,3 +19,9 @@ updates:
       interval: weekly
       day: monday
     open-pull-requests-limit: 5
+    groups:
+      actions:
+        patterns:
+          - "*"
+    cooldown:
+      default-days: 14
