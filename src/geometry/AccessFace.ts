@@ -1,1 +1,2 @@
-export type AccessFace = 'top' | 'front' | 'top+front' | 'all-sides';
+export type AccessFace = 'top' | 'bottom' | 'left' | 'right' | 'front' | 'back';
+export type AccessFaces = ReadonlyArray<AccessFace>;
