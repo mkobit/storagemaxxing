@@ -1,14 +1,14 @@
 import { z } from 'zod';
-import { BasePartSchema } from './BasePart.js';
+import { createBasePartSchema } from './BasePart.js';
+import { MillimetersSchema } from './Units.js';
 
-export const FreeSpaceBinSchema = BasePartSchema.extend({});
+export const FreeSpaceBinSchema = createBasePartSchema(MillimetersSchema).extend({});
 
 export type FreeSpaceBin = z.infer<typeof FreeSpaceBinSchema>;
 
 export const SchallerBinSchema = FreeSpaceBinSchema.extend({
   system: z.literal('Schaller'),
   color: z.enum(['red', 'yellow', 'blue', 'grey', 'green', 'black']),
-  drawerFraction: z.string().optional(), // e.g. "1/2", "1/4" for reference
   labelHolder: z.boolean(),
 });
 

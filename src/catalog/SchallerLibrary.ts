@@ -14,7 +14,6 @@ const rawSchallerLibrary = [
       height: createMillimeters(45), // standard height for low drawers
     },
     color: 'red',
-    drawerFraction: '1/8',
     labelHolder: false,
   },
   {
@@ -27,7 +26,6 @@ const rawSchallerLibrary = [
       height: createMillimeters(45),
     },
     color: 'yellow',
-    drawerFraction: '1/4',
     labelHolder: true,
   },
   {
@@ -40,7 +38,6 @@ const rawSchallerLibrary = [
       height: createMillimeters(45),
     },
     color: 'blue',
-    drawerFraction: '1/2',
     labelHolder: true,
   },
   {
@@ -53,7 +50,6 @@ const rawSchallerLibrary = [
       height: createMillimeters(45),
     },
     color: 'grey',
-    drawerFraction: '1/1',
     labelHolder: true,
   },
 ] as const;

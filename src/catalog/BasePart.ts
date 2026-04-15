@@ -1,12 +1,14 @@
 import { z } from 'zod';
 import { StorageSystemSchema } from './StorageSystem.js';
-import { PartDimensionsSchema } from './PartDimensions.js';
+import { createPartDimensionsSchema } from './PartDimensions.js';
 
-export const BasePartSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  system: StorageSystemSchema,
-  boundingBox: PartDimensionsSchema,
-});
+export const PartIdSchema = z.string().brand<'PartId'>();
+export type PartId = z.infer<typeof PartIdSchema>;
 
-export type BasePart = z.infer<typeof BasePartSchema>;
+export const createBasePartSchema = <T extends z.ZodTypeAny>(unitSchema: T) =>
+  z.object({
+    id: PartIdSchema,
+    name: z.string(),
+    system: StorageSystemSchema,
+    boundingBox: createPartDimensionsSchema(unitSchema),
+  });

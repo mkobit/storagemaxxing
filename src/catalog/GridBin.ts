@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { BasePartSchema } from './BasePart.js';
+import { createBasePartSchema } from './BasePart.js';
+import { MillimetersSchema } from './Units.js';
 
 export const GridFootprintSchema = z.object({
   gridWidth: z.number().int().positive(),
@@ -9,7 +10,7 @@ export const GridFootprintSchema = z.object({
 
 export type GridFootprint = z.infer<typeof GridFootprintSchema>;
 
-export const GridConstrainedBinSchema = BasePartSchema.extend({
+export const GridConstrainedBinSchema = createBasePartSchema(MillimetersSchema).extend({
   gridFootprint: GridFootprintSchema,
 });
 
