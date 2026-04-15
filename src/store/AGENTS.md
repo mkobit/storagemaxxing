@@ -1,10 +1,10 @@
 # store/
 
 ## Responsibility
-This package manages the immutable Zustand application state, selectors, and localStorage persistence. It centralizes state mutations via typed actions.
+This package manages the immutable Zustand application state, selectors, and localStorage/IndexedDB persistence. It centralizes state mutations via typed actions.
 
 ## Type Ownership
-Owns: `AppState`, `ActiveIds`, `UIMode`, `SolverCache`.
+Owns: `AppState`, `ActiveIds`, `UIMode`, `SolverCache`, `ToolMode`, `AppActions`, `StoreState`.
 
 ## Import Rules
 - **May import from**: `geometry/`, `catalog/`, `assembly/`, `engine/`, `solver/`.
