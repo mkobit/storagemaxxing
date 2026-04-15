@@ -4,6 +4,7 @@ import { SketchCanvas } from './SketchCanvas';
 import { SketchList } from './SketchList';
 import { useStore } from '../store/useStore';
 import { createSketch2D } from '../assembly/Sketch2D';
+import { createSketchId } from '../assembly/SketchId';
 
 export const App: React.FC = () => {
   const hasHydrated = useStore((state) => state._hasHydrated);
@@ -12,7 +13,7 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     if (hasHydrated && sketches.length === 0) {
-      addSketch(createSketch2D(crypto.randomUUID(), 'Sketch 1', []));
+      addSketch(createSketch2D(createSketchId(), 'Sketch 1', []));
     }
   }, [hasHydrated, sketches.length, addSketch]);
 

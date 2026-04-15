@@ -1,6 +1,7 @@
 import React from 'react';
 import { useStore } from '../store/useStore';
 import { createSketch2D } from '../assembly/Sketch2D';
+import { createSketchId } from '../assembly/SketchId';
 
 export const SketchList: React.FC = () => {
   const sketches = useStore((state) => state.sketches);
@@ -9,7 +10,7 @@ export const SketchList: React.FC = () => {
   const addSketch = useStore((state) => state.addSketch);
 
   const handleAddSketch = () => {
-    const id = crypto.randomUUID();
+    const id = createSketchId();
     const name = `Sketch ${sketches.length + 1}`;
     addSketch(createSketch2D(id, name, []));
     setActiveSketchId(id);

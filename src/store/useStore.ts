@@ -4,6 +4,7 @@ import { get, set, del } from 'idb-keyval';
 import { ToolMode } from './ToolMode';
 import { Sketch2D } from '../assembly/Sketch2D';
 import { SketchElement } from '../assembly/SketchElement';
+import { SketchId } from '../assembly/SketchId';
 
 const idbStorage: StateStorage = {
   getItem: async (name: string): Promise<string | null> => {
@@ -21,13 +22,13 @@ export type AppState = {
   readonly _hasHydrated: boolean;
   readonly mode: ToolMode;
   readonly sketches: readonly Sketch2D[];
-  readonly activeSketchId: string | null;
+  readonly activeSketchId: SketchId | null;
 };
 
 export type AppActions = {
   readonly setHasHydrated: (state: boolean) => void;
   readonly setMode: (mode: ToolMode) => void;
-  readonly setActiveSketchId: (id: string | null) => void;
+  readonly setActiveSketchId: (id: SketchId | null) => void;
   readonly addSketch: (sketch: Sketch2D) => void;
   readonly addElementToActiveSketch: (element: SketchElement) => void;
 };

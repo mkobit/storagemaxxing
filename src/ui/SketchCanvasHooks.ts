@@ -4,6 +4,7 @@ import { createPoint2D } from '../geometry/Point2D';
 import { createRect2D } from '../geometry/Rect2D';
 import { createSketchRectangle, SketchElement } from '../assembly/SketchElement';
 import { createDimensions2D } from '../geometry/Dimensions2D';
+import { createSketchElementId } from '../assembly/SketchElementId';
 
 export type Point = { readonly x: number; readonly y: number };
 
@@ -16,7 +17,7 @@ const handleTwoPointRect = (start: Point, current: Point, addElement: (el: Sketc
   const origin = createPoint2D(x, y);
   const dims = createDimensions2D(w, h);
   const geometry = createRect2D(origin, dims);
-  addElement(createSketchRectangle(crypto.randomUUID(), geometry));
+  addElement(createSketchRectangle(createSketchElementId(), geometry));
 };
 
 const handleCenterRect = (start: Point, current: Point, addElement: (el: SketchElement) => void) => {
@@ -26,7 +27,7 @@ const handleCenterRect = (start: Point, current: Point, addElement: (el: SketchE
   const origin = createPoint2D(start.x - dx, start.y - dy);
   const dims = createDimensions2D(dx * 2, dy * 2);
   const geometry = createRect2D(origin, dims);
-  addElement(createSketchRectangle(crypto.randomUUID(), geometry));
+  addElement(createSketchRectangle(createSketchElementId(), geometry));
 };
 
 export const useSketchEvents = (canvasRef: MutableRefObject<HTMLCanvasElement | null>) => {
