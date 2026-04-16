@@ -9,32 +9,32 @@ updates:
     groups:
       react:
         patterns:
-          - 'react'
-          - 'react-dom'
-          - '@types/react'
-          - '@types/react-dom'
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
       three:
         patterns:
-          - 'three'
-          - '@types/three'
+          - "three"
+          - "@types/three"
       vite:
         patterns:
-          - 'vite'
-          - '@vitejs/*'
+          - "vite"
+          - "@vitejs/*"
       typescript-eslint:
         patterns:
-          - '@typescript-eslint/*'
-          - 'typescript'
+          - "@typescript-eslint/*"
+          - "typescript"
       eslint:
         patterns:
-          - 'eslint'
-          - 'eslint-*'
-          - '@eslint/*'
-          - 'globals'
-          - '@stylistic/*'
+          - "eslint"
+          - "eslint-*"
+          - "@eslint/*"
+          - "globals"
+          - "@stylistic/*"
       bun:
         patterns:
-          - '*'
+          - "*"
     cooldown:
       default-days: 14
 
@@ -47,6 +47,6 @@ updates:
     groups:
       actions:
         patterns:
-          - '*'
+          - "*"
     cooldown:
       default-days: 14

@@ -1,24 +1,24 @@
-import React, { useEffect } from 'react'
-import { Toolbar } from './Toolbar'
-import { SketchCanvas } from './SketchCanvas'
-import { SketchList } from './SketchList'
-import { useStore } from '../store/useStore'
-import { createSketch2D } from '../assembly/Sketch2D'
-import { createSketchId } from '../assembly/SketchId'
+import React, { useEffect } from 'react';
+import { Toolbar } from './Toolbar';
+import { SketchCanvas } from './SketchCanvas';
+import { SketchList } from './SketchList';
+import { useStore } from '../store/useStore';
+import { createSketch2D } from '../assembly/Sketch2D';
+import { createSketchId } from '../assembly/SketchId';
 
 export const App: React.FC = () => {
-  const hasHydrated = useStore((state) => state._hasHydrated)
-  const sketches = useStore((state) => state.sketches)
-  const addSketch = useStore((state) => state.addSketch)
+  const hasHydrated = useStore((state) => state._hasHydrated);
+  const sketches = useStore((state) => state.sketches);
+  const addSketch = useStore((state) => state.addSketch);
 
   useEffect(() => {
     if (hasHydrated && sketches.length === 0) {
-      addSketch(createSketch2D(createSketchId(), 'Sketch 1', []))
+      addSketch(createSketch2D(createSketchId(), 'Sketch 1', []));
     }
-  }, [hasHydrated, sketches.length, addSketch])
+  }, [hasHydrated, sketches.length, addSketch]);
 
   if (!hasHydrated) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   return (
@@ -31,5 +31,5 @@ export const App: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
