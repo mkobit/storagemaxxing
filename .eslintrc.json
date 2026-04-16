@@ -43,7 +43,7 @@
       }
     },
     {
-      "files": ["src/store/**/*.ts", "src/workers/**/*.ts", "src/ui/**/*.tsx", "src/ui/**/*.ts"],
+      "files": ["src/store/**/*.ts", "src/workers/**/*.ts", "src/ui/**/*.tsx", "src/ui/**/*.ts", "**/*.test.ts"],
       "rules": {
         "functional/no-expression-statements": "off",
         "functional/no-return-void": "off"
