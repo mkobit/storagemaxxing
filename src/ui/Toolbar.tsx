@@ -1,9 +1,9 @@
-import React from 'react';
-import { useStore } from '../store/useStore';
+import React from 'react'
+import { useStore } from '../store/useStore'
 
 export const Toolbar: React.FC = () => {
-  const mode = useStore((state) => state.mode);
-  const setMode = useStore((state) => state.setMode);
+  const mode = useStore((state) => state.mode)
+  const setMode = useStore((state) => state.setMode)
 
   return (
     <div style={{ padding: '1rem', display: 'flex', gap: '1rem', background: '#eee' }}>
@@ -26,5 +26,5 @@ export const Toolbar: React.FC = () => {
         Center Rectangle
       </button>
     </div>
-  );
-};
+  )
+}

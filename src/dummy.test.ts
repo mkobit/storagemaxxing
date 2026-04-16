@@ -1,5 +1,5 @@
-import { expect, test } from "bun:test";
+import { expect, test } from 'bun:test'
 
-test("dummy test", () => {
-  expect(true).toBe(true);
-});
+test('dummy test', () => {
+  expect(true).toBe(true)
+})

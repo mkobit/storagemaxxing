@@ -1,15 +1,15 @@
-import React, { useRef, useEffect } from 'react';
-import { useStore } from '../store/useStore';
-import { useSketchEvents } from './SketchCanvasHooks';
-import { drawCanvas } from './SketchCanvasDrawing';
+import React, { useRef, useEffect } from 'react'
+import { useStore } from '../store/useStore'
+import { useSketchEvents } from './SketchCanvasHooks'
+import { drawCanvas } from './SketchCanvasDrawing'
 
 export const SketchCanvas: React.FC = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mode = useStore((state) => state.mode);
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const mode = useStore((state) => state.mode)
 
-  const activeSketchId = useStore((state) => state.activeSketchId);
-  const sketches = useStore((state) => state.sketches);
-  const activeSketch = sketches.find(s => s.id === activeSketchId) || null;
+  const activeSketchId = useStore((state) => state.activeSketchId)
+  const sketches = useStore((state) => state.sketches)
+  const activeSketch = sketches.find((s) => s.id === activeSketchId) || null
 
   const {
     isDrawing,
@@ -18,19 +18,23 @@ export const SketchCanvas: React.FC = () => {
     handlePointerDown,
     handlePointerMove,
     handlePointerUp,
-  } = useSketchEvents(canvasRef);
+  } = useSketchEvents(canvasRef)
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
 
-    drawCanvas({ canvas, ctx, activeSketch, mode, isDrawing, startPoint, currentPoint });
-  }, [activeSketch, isDrawing, startPoint, currentPoint, mode]);
+    drawCanvas({ canvas, ctx, activeSketch, mode, isDrawing, startPoint, currentPoint })
+  }, [activeSketch, isDrawing, startPoint, currentPoint, mode])
 
   if (!activeSketch) {
-    return <div style={{ padding: '2rem', color: '#666' }}>Select or create a sketch to start drawing.</div>;
+    return (
+      <div style={{ padding: '2rem', color: '#666' }}>
+        Select or create a sketch to start drawing.
+      </div>
+    )
   }
 
   return (
@@ -44,5 +48,5 @@ export const SketchCanvas: React.FC = () => {
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp}
     />
-  );
-};
+  )
+}
