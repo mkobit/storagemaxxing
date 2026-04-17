@@ -4,45 +4,21 @@ updates:
     directory: /
     schedule:
       interval: weekly
-      day: monday
     open-pull-requests-limit: 10
     groups:
-      react:
-        patterns:
-          - "react"
-          - "react-dom"
-          - "@types/react"
-          - "@types/react-dom"
-      three:
-        patterns:
-          - "three"
-          - "@types/three"
-      vite:
-        patterns:
-          - "vite"
-          - "@vitejs/*"
-      typescript-eslint:
-        patterns:
-          - "@typescript-eslint/*"
-          - "typescript"
-      eslint:
-        patterns:
-          - "eslint"
-          - "eslint-*"
-          - "@eslint/*"
-          - "globals"
-          - "@stylistic/*"
-      bun:
+      all-dependencies:
         patterns:
           - "*"
     cooldown:
       default-days: 14
+      semver-major-days: 14
+      semver-minor-days: 14
+      semver-patch-days: 14
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
-      day: monday
     open-pull-requests-limit: 5
     groups:
       actions:
@@ -50,3 +26,6 @@ updates:
           - "*"
     cooldown:
       default-days: 14
+      semver-major-days: 14
+      semver-minor-days: 14
+      semver-patch-days: 14
