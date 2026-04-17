@@ -32,7 +32,7 @@ updates:
           - "@eslint/*"
           - "globals"
           - "@stylistic/*"
-      bun:
+      other:
         patterns:
           - "*"
     cooldown:
