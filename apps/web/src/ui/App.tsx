@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { Toolbar } from './Toolbar';
 import { SketchCanvas } from './SketchCanvas';
 import { SketchList } from './SketchList';
-import { useStore } from '../store/useStore';
-import { createSketch2D } from '../assembly/Sketch2D';
-import { createSketchId } from '../assembly/SketchId';
+import { useStore } from '@storagemaxxing/engine/store/useStore';
+import { createSketch2D } from '@storagemaxxing/engine/assembly/Sketch2D';
+import { createSketchId } from '@storagemaxxing/engine/assembly/SketchId';
 
 export const App: React.FC = () => {
   const hasHydrated = useStore((state) => state._hasHydrated);
