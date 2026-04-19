@@ -1,8 +1,12 @@
-import { MaxRectsPacker } from 'maxrects-packer';
-import { BinSpec } from '../assembly/BinSpec.js';
-import { SpaceConstraint } from '../assembly/SpaceConstraint.js';
-import { ConstraintFailure, createConstraintFailure, ValidityState } from './types.js';
-import { getEffectiveFootprint } from './geometryUtils.js';
+import { MaxRectsPacker } from "maxrects-packer";
+import { BinSpec } from "../assembly/BinSpec.js";
+import { SpaceConstraint } from "../assembly/SpaceConstraint.js";
+import {
+  ConstraintFailure,
+  createConstraintFailure,
+  ValidityState,
+} from "./types.js";
+import { getEffectiveFootprint } from "./geometryUtils.js";
 
 export type PackRect = {
   readonly width: number;
@@ -11,7 +15,10 @@ export type PackRect = {
 };
 export type RectsAccumulator = readonly PackRect[];
 
-export const generateRects = (bin: BinSpec, count: number): RectsAccumulator => {
+export const generateRects = (
+  bin: BinSpec,
+  count: number,
+): RectsAccumulator => {
   if (count <= 0) return [];
   const footprint = getEffectiveFootprint(bin);
   return Array.from({ length: count }, () => ({
@@ -41,7 +48,7 @@ export const checkPhaseFailures = (
   constraints: readonly SpaceConstraint[],
   packer: MaxRectsPacker,
   getRequired: (c: SpaceConstraint) => number,
-  reason: 'hardMin' | 'softMin',
+  reason: "hardMin" | "softMin",
 ): readonly ConstraintFailure[] =>
   constraints
     .map((c) => ({
@@ -50,26 +57,37 @@ export const checkPhaseFailures = (
       placed: getPlacedCount(packer, c.binId),
     }))
     .filter(({ req, placed }) => placed < req)
-    .map(({ c, req, placed }) => createConstraintFailure(c.binId, reason, req, placed));
+    .map(({ c, req, placed }) =>
+      createConstraintFailure(c.binId, reason, req, placed),
+    );
 
 export const getHardMin = (c: SpaceConstraint): number => {
-  if (c.mode === 'hard') return c.lo;
-  if (c.mode === 'soft') return c.hardLo ?? 0;
+  if (c.mode === "hard") return c.lo;
+  if (c.mode === "soft") return c.hardLo ?? 0;
   return 0;
 };
 
 export const getSoftMin = (c: SpaceConstraint): number => {
-  if (c.mode === 'soft') return c.lo;
-  if (c.mode === 'hard') return c.softLo ?? c.lo;
+  if (c.mode === "soft") return c.lo;
+  if (c.mode === "hard") return c.softLo ?? c.lo;
   return 0;
 };
 
-export const getMax = (c: SpaceConstraint): number | undefined => c.hi ?? undefined;
+export const getMax = (c: SpaceConstraint): number | undefined =>
+  c.hi ?? undefined;
 
-export const checkHardMinPhase = (constraints: readonly SpaceConstraint[], packer: MaxRectsPacker) => {
-  const failures = checkPhaseFailures(constraints, packer, getHardMin, 'hardMin');
+export const checkHardMinPhase = (
+  constraints: readonly SpaceConstraint[],
+  packer: MaxRectsPacker,
+) => {
+  const failures = checkPhaseFailures(
+    constraints,
+    packer,
+    getHardMin,
+    "hardMin",
+  );
   return {
-    validity: failures.length > 0 ? ('invalid' as const) : ('valid' as const),
+    validity: failures.length > 0 ? ("invalid" as const) : ("valid" as const),
     failures,
   };
 };
@@ -79,10 +97,15 @@ export const checkSoftMinPhase = (
   packer: MaxRectsPacker,
   validity: ValidityState,
 ) => {
-  if (validity !== 'valid') return { validity, failures: [] };
-  const failures = checkPhaseFailures(constraints, packer, getSoftMin, 'softMin');
+  if (validity !== "valid") return { validity, failures: [] };
+  const failures = checkPhaseFailures(
+    constraints,
+    packer,
+    getSoftMin,
+    "softMin",
+  );
   return {
-    validity: failures.length > 0 ? ('partial' as const) : ('valid' as const),
+    validity: failures.length > 0 ? ("partial" as const) : ("valid" as const),
     failures,
   };
 };
@@ -103,6 +126,8 @@ export const generateAutoFillRects = (
   );
   return sorted.reduce((acc: RectsAccumulator, bin) => {
     const area = getEffectiveFootprint(bin).w * getEffectiveFootprint(bin).l;
-    return area > 0 ? [...acc, ...generateRects(bin, Math.floor(spaceArea / area))] : acc;
+    return area > 0
+      ? [...acc, ...generateRects(bin, Math.floor(spaceArea / area))]
+      : acc;
   }, []);
 };

@@ -9,3 +9,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+
+      - name: Verify AGENTS.md in all src subdirectories
+        run: |
+          MISSING=0
+          for dir in src/*/; do
+            if [ -d "$dir" ] && [ ! -f "${dir}AGENTS.md" ]; then
+              echo "::error::Missing AGENTS.md in $dir"
+              MISSING=1
+            fi
+          done
+          if [ $MISSING -eq 1 ]; then
+            exit 1
+          fi

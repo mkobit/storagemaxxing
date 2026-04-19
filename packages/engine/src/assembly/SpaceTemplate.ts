@@ -1,21 +1,17 @@
-import { z } from "zod";
-import { Point2D } from "../geometry/Point2D.js";
+import { z } from 'zod';
+import { Point2D } from '../geometry/Point2D.js';
+import { Dimensions3D } from '../geometry/Dimensions3D.js';
 import {
   SpaceTypeIdSchema,
   InstallationConstraintSchema,
   DividerSchema,
   ObstacleSchema,
-} from "./BaseTypes.js";
+} from './BaseTypes.js';
 
-export const SpaceTemplateIdSchema = z.string().brand<"SpaceTemplateId">();
+export const SpaceTemplateIdSchema = z.string().brand<'SpaceTemplateId'>();
 export type SpaceTemplateId = z.infer<typeof SpaceTemplateIdSchema>;
 
-export const AccessFaceSchema = z.enum([
-  "top",
-  "front",
-  "top+front",
-  "all-sides",
-]);
+export const AccessFaceSchema = z.enum(['top', 'front', 'top+front', 'all-sides']);
 export type AccessFace = z.infer<typeof AccessFaceSchema>;
 
 export const Point2DSchema = z.custom<Point2D>((val) => {
@@ -36,7 +32,7 @@ export const SpaceTemplateSchema = z
     footprint: z.array(Point2DSchema).readonly().optional(),
 
     gridResolution: z.number().default(0.5),
-    packingModel: z.enum(["2d", "2.5d", "3d"]),
+    packingModel: z.enum(['2d', '2.5d', '3d']),
 
     installationConstraints: z.array(InstallationConstraintSchema).readonly(),
 
@@ -49,7 +45,7 @@ export const SpaceTemplateSchema = z
       (data.w !== undefined && data.l !== undefined && data.h !== undefined) ||
       data.footprint !== undefined,
     {
-      message: "Either w/l/h or footprint must be defined",
+      message: 'Either w/l/h or footprint must be defined',
     },
   );
 
@@ -57,21 +53,17 @@ export type SpaceTemplate = z.infer<typeof SpaceTemplateSchema>;
 
 export const createSpaceTemplate = (
   id: string,
-  dimensions: {
-    readonly width: number;
-    readonly height: number;
-    readonly depth: number;
-  },
+  dimensions: Dimensions3D,
   accessFace: AccessFace,
 ): SpaceTemplate => ({
   id: id as SpaceTemplateId,
   name: id,
-  type: "drawer",
+  type: 'drawer',
   accessFace,
-  w: dimensions.width,
-  h: dimensions.height,
-  l: dimensions.depth,
-  packingModel: "2d",
+  w: dimensions.w,
+  h: dimensions.h,
+  l: dimensions.l,
+  packingModel: '2d',
   installationConstraints: [],
   gridResolution: 0.5,
 });

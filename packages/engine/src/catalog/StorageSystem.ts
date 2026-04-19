@@ -1,9 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const StorageSystemSchema = z.enum([
-  "Schaller",
-  "Gridfinity",
-  "OpenGrid",
+  'schaller',
+  'gridfinity',
+  'akromils',
+  'opengrid',
+  'custom',
 ]);
 
 export type StorageSystem = z.infer<typeof StorageSystemSchema>;

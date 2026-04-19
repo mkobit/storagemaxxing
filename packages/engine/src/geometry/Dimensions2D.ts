@@ -1,12 +1,9 @@
 export type Dimensions2D<T extends number = number> = {
-  readonly width: T;
-  readonly height: T;
+  readonly w: T;
+  readonly l: T;
 };
 
-export const createDimensions2D = <T extends number>(
-  width: T,
-  height: T,
-): Dimensions2D<T> => ({
-  width,
-  height,
+export const createDimensions2D = <T extends number>(w: T, l: T): Dimensions2D<T> => ({
+  w,
+  l,
 });

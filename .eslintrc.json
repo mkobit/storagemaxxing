@@ -25,15 +25,23 @@
     "import/no-default-export": "error",
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/prefer-readonly": "error",
-    "@typescript-eslint/switch-exhaustiveness-check": "error"
+    "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "@typescript-eslint/consistent-type-assertions": [
+      "error",
+      { "assertionStyle": "never" }
+    ]
   },
   "overrides": [
     {
       "files": [
         "src/geometry/**/*.ts",
         "src/engine/**/*.ts",
-        "src/catalog/**/*.ts"
+        "src/catalog/**/*.ts",
+        "packages/engine/src/geometry/**/*.ts",
+        "packages/engine/src/engine/**/*.ts",
+        "packages/engine/src/catalog/**/*.ts"
       ],
+      "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
         "functional/no-expression-statements": "error",
         "functional/no-throw-statements": "error",
@@ -46,8 +54,19 @@
         "src/workers/**/*.ts",
         "src/ui/**/*.tsx",
         "src/ui/**/*.ts",
-        "**/*.test.ts"
+        "packages/engine/src/store/**/*.ts",
+        "packages/engine/src/workers/**/*.ts",
+        "apps/web/src/ui/**/*.tsx",
+        "apps/web/src/ui/**/*.ts"
       ],
+      "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "functional/no-expression-statements": "off",
+        "functional/no-return-void": "off"
+      }
+    },
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
         "functional/no-expression-statements": "off",
         "functional/no-return-void": "off"

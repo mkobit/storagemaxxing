@@ -1,17 +1,20 @@
-import { GridUnit } from "./GridUnit";
-
 export type GridDimensions = {
-  readonly width: GridUnit;
-  readonly height: GridUnit;
-  readonly depth?: GridUnit; // Depth is optional as a grid might just be 2D
+  readonly cols: number;
+  readonly rows: number;
+  readonly depth?: number;
 };
 
+export interface GridCoord {
+  readonly col: number;
+  readonly row: number;
+}
+
 export const createGridDimensions = (
-  width: GridUnit,
-  height: GridUnit,
-  depth?: GridUnit,
+  cols: number,
+  rows: number,
+  depth?: number,
 ): GridDimensions => ({
-  width,
-  height,
+  cols,
+  rows,
   ...(depth !== undefined ? { depth } : {}),
 });

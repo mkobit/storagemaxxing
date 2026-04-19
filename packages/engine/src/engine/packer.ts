@@ -71,10 +71,10 @@ export const packSpace = (
   constraints: readonly SpaceConstraint[],
 ): PackingResult => {
   const dims = getEffectiveSpaceDimensions(space, getMaxBinDepth(availableBins));
-  const spaceArea = dims.width * dims.depth;
+  const spaceArea = dims.w * dims.l;
   const binMap = new Map(availableBins.map((b) => [b.id, b]));
 
-  const packer = new MaxRectsPacker(dims.width, dims.depth, 0, {
+  const packer = new MaxRectsPacker(dims.w, dims.l, 0, {
     smart: true,
     pot: false,
     square: false,

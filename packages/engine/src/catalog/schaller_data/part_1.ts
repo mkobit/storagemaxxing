@@ -1,0 +1,55 @@
+import { BinSpec, binId } from "../index";
+import { inches } from "../../geometry/Inches.js";
+
+export const SCHALLER_PART_1: ReadonlyArray<BinSpec> = [
+  {
+    id: binId("schaller-1x2x3"),
+    name: "Schaller 2x3 - 1 inch depth",
+    sku: "SCH-123",
+    vendor: "Schaller",
+    catalogSource: "builtin",
+    nominal: { w: inches(2), l: inches(3), h: inches(1) },
+    actual: { w: inches(1.9), l: inches(2.9), h: inches(1) },
+    tolerance: { w: inches(0.02), l: inches(0.02), h: inches(0.02) },
+  },
+  {
+    id: binId("schaller-1x2x4"),
+    name: "Schaller 2x4 - 1 inch depth",
+    sku: "SCH-124",
+    vendor: "Schaller",
+    catalogSource: "builtin",
+    nominal: { w: inches(2), l: inches(4), h: inches(1) },
+    actual: { w: inches(1.9), l: inches(3.9), h: inches(1) },
+    tolerance: { w: inches(0.02), l: inches(0.02), h: inches(0.02) },
+  },
+  {
+    id: binId("schaller-1x2x6"),
+    name: "Schaller 2x6 - 1 inch depth",
+    sku: "SCH-126",
+    vendor: "Schaller",
+    catalogSource: "builtin",
+    nominal: { w: inches(2), l: inches(6), h: inches(1) },
+    actual: { w: inches(1.9), l: inches(5.9), h: inches(1) },
+    tolerance: { w: inches(0.02), l: inches(0.02), h: inches(0.02) },
+  },
+  {
+    id: binId("schaller-1x3x3"),
+    name: "Schaller 3x3 - 1 inch depth",
+    sku: "SCH-133",
+    vendor: "Schaller",
+    catalogSource: "builtin",
+    nominal: { w: inches(3), l: inches(3), h: inches(1) },
+    actual: { w: inches(2.9), l: inches(2.9), h: inches(1) },
+    tolerance: { w: inches(0.02), l: inches(0.02), h: inches(0.02) },
+  },
+  {
+    id: binId("schaller-1x3x6"),
+    name: "Schaller 3x6 - 1 inch depth",
+    sku: "SCH-136",
+    vendor: "Schaller",
+    catalogSource: "builtin",
+    nominal: { w: inches(3), l: inches(6), h: inches(1) },
+    actual: { w: inches(2.9), l: inches(5.9), h: inches(1) },
+    tolerance: { w: inches(0.02), l: inches(0.02), h: inches(0.02) },
+  },
+];

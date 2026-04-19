@@ -2,6 +2,8 @@
 
 ## Responsibility
 
+<<<<<<< HEAD:packages/engine/src/catalog/AGENTS.md
+
 This package contains static vendor product data and lookup functions.
 It houses all pre-defined dimensions and specs for supported systems.
 
@@ -16,3 +18,16 @@ Owns: `BinSpec`, `GridBinSpec`, `GridAccessory`, `StorageSystem` (enum), `Vendor
 - **Other rules**: All exports must be frozen `as const` or `ReadonlyArray`.
   No runtime mutation.
   Pure functions for lookups only.
+  =======
+  This package contains static vendor product data and lookup functions. It houses all pre-defined dimensions and specs for supported systems.
+
+## Type Ownership
+
+Owns: `BinSpec`, `GridBinSpec`, `GridAccessory`, `StorageSystem` (enum), `VendorPack`, `InstallationRequirement`.
+
+## Import Rules
+
+- **May import from**: `geometry/` ONLY.
+- **Must not import from**: `engine/`, `solver/`, `assembly/`, `store/`, `workers/`, `ui/`.
+- **Other rules**: All exports must be frozen `as const` or `ReadonlyArray`. No runtime mutation. Pure functions for lookups only.
+  > > > > > > > origin/main:src/catalog/AGENTS.md

@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
@@ -22,7 +22,7 @@ jobs:
         run: bun run typecheck
 
       - name: Lint
-        run: bun run lint
+        run: bun x eslint src --max-warnings 0
 
       - name: Test
         run: bun test
@@ -32,7 +32,7 @@ jobs:
 
       - name: Bundle Size Check
         run: |
-          size=$(du -sk apps/web/dist/ | cut -f1)
+          size=$(du -sk dist/ | cut -f1)
           if [ $size -gt 1024 ]; then
             echo "::warning::Bundle size exceeds 1MB ($size KB)"
           fi
