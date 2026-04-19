@@ -1,4 +1,4 @@
-import { BinSpec } from "./index";
+import { BinSpec } from "./bin.js";
 import { SCHALLER_PART_0 } from "./schaller_data/part_0";
 import { SCHALLER_PART_1 } from "./schaller_data/part_1";
 import { SCHALLER_PART_2 } from "./schaller_data/part_2";

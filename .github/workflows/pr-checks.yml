@@ -8,14 +8,22 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
-      - name: Verify AGENTS.md in all src subdirectories
+      - name: Verify AGENTS.md in package subdirectories
         run: |
           MISSING=0
-          for dir in src/*/; do
-            if [ -d "$dir" ] && [ ! -f "${dir}AGENTS.md" ]; then
-              echo "::error::Missing AGENTS.md in $dir"
+          # Check root packages/ directories
+          for pkg in packages/*/src/*/; do
+            if [ -d "$pkg" ] && [[ "$pkg" != *"__tests__"* ]] && [ ! -f "${pkg}AGENTS.md" ]; then
+              echo "::error::Missing AGENTS.md in $pkg"
+              MISSING=1
+            fi
+          done
+          # Check apps/ directories
+          for app in apps/*/src/*/; do
+            if [ -d "$app" ] && [ ! -f "${app}AGENTS.md" ]; then
+              echo "::error::Missing AGENTS.md in $app"
               MISSING=1
             fi
           done

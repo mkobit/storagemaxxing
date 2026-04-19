@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { Inches } from "../geometry/Inches.js";
 import { Dimensions3D } from "../geometry/index";
 import { CatalogSource } from "./catalogSource";
+
 
 export const BinIdSchema = z.string().brand("BinId");
 export type BinId = z.infer<typeof BinIdSchema>;

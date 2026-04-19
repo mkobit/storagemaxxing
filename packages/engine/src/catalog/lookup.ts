@@ -1,4 +1,4 @@
-import { BinSpec, BinId } from "./index";
+import { BinSpec, BinId } from "./bin.js";
 import { Inches } from "../geometry/Inches.js";
 import { SCHALLER_CATALOG } from "./schaller";
 import { GRIDFINITY_CATALOG } from "./gridfinity";

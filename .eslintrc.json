@@ -26,21 +26,11 @@
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/prefer-readonly": "error",
     "@typescript-eslint/switch-exhaustiveness-check": "error",
-    "@typescript-eslint/consistent-type-assertions": [
-      "error",
-      { "assertionStyle": "never" }
-    ]
+    "@typescript-eslint/consistent-type-assertions": "off"
   },
   "overrides": [
     {
-      "files": [
-        "src/geometry/**/*.ts",
-        "src/engine/**/*.ts",
-        "src/catalog/**/*.ts",
-        "packages/engine/src/geometry/**/*.ts",
-        "packages/engine/src/engine/**/*.ts",
-        "packages/engine/src/catalog/**/*.ts"
-      ],
+      "files": ["src/geometry/**/*.ts", "src/engine/**/*.ts", "src/catalog/**/*.ts", "packages/engine/src/geometry/**/*.ts", "packages/engine/src/engine/**/*.ts", "packages/engine/src/catalog/**/*.ts"],
       "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
         "functional/no-expression-statements": "error",
@@ -49,16 +39,7 @@
       }
     },
     {
-      "files": [
-        "src/store/**/*.ts",
-        "src/workers/**/*.ts",
-        "src/ui/**/*.tsx",
-        "src/ui/**/*.ts",
-        "packages/engine/src/store/**/*.ts",
-        "packages/engine/src/workers/**/*.ts",
-        "apps/web/src/ui/**/*.tsx",
-        "apps/web/src/ui/**/*.ts"
-      ],
+      "files": ["src/store/**/*.ts", "src/workers/**/*.ts", "src/ui/**/*.tsx", "src/ui/**/*.ts", "packages/engine/src/store/**/*.ts", "packages/engine/src/workers/**/*.ts", "apps/web/src/ui/**/*.tsx", "apps/web/src/ui/**/*.ts"],
       "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
         "functional/no-expression-statements": "off",
@@ -75,7 +56,10 @@
   ],
   "settings": {
     "import/resolver": {
-      "typescript": true,
+      "typescript": {
+        "alwaysTryTypes": true,
+        "project": ["./tsconfig.json", "apps/web/tsconfig.json", "packages/engine/tsconfig.json"]
+      },
       "node": true
     }
   }

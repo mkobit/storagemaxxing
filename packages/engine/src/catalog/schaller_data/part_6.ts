@@ -1,4 +1,4 @@
-import { BinSpec, binId } from "../index";
+import { BinSpec, binId } from "../bin.js";
 import { inches } from "../../geometry/Inches.js";
 
 export const SCHALLER_PART_6: ReadonlyArray<BinSpec> = [
