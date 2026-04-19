@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { BinSpecIdSchema } from './BaseTypes.js';
+import { BinSpecIdSchema, BinSpecId } from './BaseTypes.js';
 
 export const SpaceConstraintOffSchema = z.object({
   mode: z.literal('off'),
@@ -70,7 +70,7 @@ export const createSpaceConstraint = (
   if (hardMin > 0) {
     return {
       mode: 'hard',
-      binId: binId as any,
+      binId: binId as BinSpecId,
       lo: hardMin,
       softLo: softMin > hardMin ? softMin : undefined,
       hi: max ?? null,
@@ -81,7 +81,7 @@ export const createSpaceConstraint = (
   if (softMin > 0) {
     return {
       mode: 'soft',
-      binId: binId as any,
+      binId: binId as BinSpecId,
       lo: softMin,
       hi: max ?? null,
       hard: false,
@@ -90,7 +90,7 @@ export const createSpaceConstraint = (
   }
   return {
     mode: 'auto',
-    binId: binId as any,
+    binId: binId as BinSpecId,
     lo: 0,
     hi: null,
     hard: false,

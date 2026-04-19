@@ -88,17 +88,6 @@ export const AggregateConstraintSchema = z.object({
 }).readonly();
 export type AggregateConstraint = z.infer<typeof AggregateConstraintSchema>;
 
-export const PlacedBinSchema = z.object({
-  binId: BinSpecIdSchema,
-  x: InchesZodSchema,
-  y: InchesZodSchema,
-  z: InchesZodSchema,
-  w: InchesZodSchema,
-  l: InchesZodSchema,
-  h: InchesZodSchema
-}).readonly();
-export type PlacedBin = z.infer<typeof PlacedBinSchema>;
-
 export const PackingStrategyIdSchema = z.string().brand<'PackingStrategyId'>();
 export type PackingStrategyId = z.infer<typeof PackingStrategyIdSchema>;
 

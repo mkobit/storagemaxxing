@@ -39,10 +39,10 @@ export type SpaceTemplate = z.infer<typeof SpaceTemplateSchema>;
 
 export const createSpaceTemplate = (
   id: string,
-  dimensions: { width: number; height: number; depth: number },
+  dimensions: { readonly width: number; readonly height: number; readonly depth: number },
   accessFace: AccessFace,
 ): SpaceTemplate => ({
-  id: id as any,
+  id: id as SpaceTemplateId,
   name: id,
   type: 'drawer',
   accessFace,
