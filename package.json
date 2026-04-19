@@ -15,13 +15,17 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "glpk.js": "^4.0.2",
+    "gl-matrix": "^3.4.4",
+    "glpk.js": "^5.0.0",
+    "idb-keyval": "^6.2.2",
+    "maxrects-packer": "^2.7.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "zod": "^4.3.6",
-    "zustand": "^4.5.2"
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@types/gl-matrix": "^3.2.0",
     "@types/node": "^22.15.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
