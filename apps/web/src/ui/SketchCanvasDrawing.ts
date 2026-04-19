@@ -1,5 +1,5 @@
-import { ToolMode } from '../store/ToolMode';
-import { Sketch2D } from '../assembly/Sketch2D';
+import { ToolMode } from '@storagemaxxing/engine/store/ToolMode';
+import { Sketch2D } from '@storagemaxxing/engine/assembly/Sketch2D';
 import { Point } from './SketchCanvasHooks';
 
 export type DrawContext = {

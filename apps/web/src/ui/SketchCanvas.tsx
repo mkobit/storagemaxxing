@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { useStore } from '../store/useStore';
+import { useStore } from '@storagemaxxing/engine/store/useStore';
 import { useSketchEvents } from './SketchCanvasHooks';
 import { drawCanvas } from './SketchCanvasDrawing';
 
