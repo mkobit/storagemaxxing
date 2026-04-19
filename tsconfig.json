@@ -15,11 +15,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["bun-types"],
-    "paths": {
-      "@storagemaxxing/engine/*": ["./packages/engine/src/*"],
-      "@storagemaxxing/engine": ["./packages/engine/src"]
-    }
+    "types": ["bun-types"]
   },
-  "include": ["apps/*/src", "packages/*/src", "apps/*/serve.ts"]
+  "include": ["src"]
 }
