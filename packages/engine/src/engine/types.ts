@@ -1,31 +1,31 @@
-import { PlacedBin } from '../assembly/PlacedBin.js'
+import { PlacedBin } from "../assembly/PlacedBin.js";
 
-export type PackingPhase = 'hardMin' | 'softMin' | 'cappedFill' | 'autoFill'
+export type PackingPhase = "hardMin" | "softMin" | "cappedFill" | "autoFill";
 
-export type ValidityState = 'valid' | 'partial' | 'invalid'
+export type ValidityState = "valid" | "partial" | "invalid";
 
 export type ConstraintFailure = {
-  readonly binId: string
-  readonly reason: 'hardMin' | 'softMin'
-  readonly required: number
-  readonly placed: number
-}
+  readonly binId: string;
+  readonly reason: "hardMin" | "softMin";
+  readonly required: number;
+  readonly placed: number;
+};
 
 export type PackingMetrics = {
-  readonly placedCounts: Readonly<Record<string, number>>
-  readonly areaUtilization: number
-  readonly failures: readonly ConstraintFailure[]
-}
+  readonly placedCounts: Readonly<Record<string, number>>;
+  readonly areaUtilization: number;
+  readonly failures: readonly ConstraintFailure[];
+};
 
 export type PackingResult = {
-  readonly placedBins: readonly PlacedBin[]
-  readonly metrics: PackingMetrics
-  readonly validity: ValidityState
-}
+  readonly placedBins: readonly PlacedBin[];
+  readonly metrics: PackingMetrics;
+  readonly validity: ValidityState;
+};
 
 export const createConstraintFailure = (
   binId: string,
-  reason: 'hardMin' | 'softMin',
+  reason: "hardMin" | "softMin",
   required: number,
   placed: number,
 ): ConstraintFailure => ({
@@ -33,7 +33,7 @@ export const createConstraintFailure = (
   reason,
   required,
   placed,
-})
+});
 
 export const createPackingMetrics = (
   placedCounts: Readonly<Record<string, number>>,
@@ -43,7 +43,7 @@ export const createPackingMetrics = (
   placedCounts,
   areaUtilization,
   failures,
-})
+});
 
 export const createPackingResult = (
   placedBins: readonly PlacedBin[],
@@ -53,4 +53,4 @@ export const createPackingResult = (
   placedBins,
   metrics,
   validity,
-})
+});

@@ -57,17 +57,21 @@ export type SpaceTemplate = z.infer<typeof SpaceTemplateSchema>;
 
 export const createSpaceTemplate = (
   id: string,
-  dimensions: { readonly width: number; readonly height: number; readonly depth: number },
+  dimensions: {
+    readonly width: number;
+    readonly height: number;
+    readonly depth: number;
+  },
   accessFace: AccessFace,
 ): SpaceTemplate => ({
   id: id as SpaceTemplateId,
   name: id,
-  type: 'drawer',
+  type: "drawer",
   accessFace,
   w: dimensions.width,
   h: dimensions.height,
   l: dimensions.depth,
-  packingModel: '2d',
+  packingModel: "2d",
   installationConstraints: [],
   gridResolution: 0.5,
 });
