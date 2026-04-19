@@ -15,8 +15,8 @@
     "dev": "bun run --filter @storagemaxxing/web dev",
     "build": "bun run --filter @storagemaxxing/web build",
     "typecheck": "bun run --filter '*' typecheck",
-    "lint": "eslint .",
-    "format": "prettier --write ."
+    "lint": "bun x eslint .",
+    "format": "bun x prettier --write ."
   },
   "devDependencies": {
     "@types/node": "^25.5.0",

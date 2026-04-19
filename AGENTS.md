@@ -9,8 +9,7 @@ State is persisted solely to localStorage.
 
 - **Functional and immutable**: No `let`, no mutation, no side effects outside designated boundaries.
   Use `const` and `readonly` types everywhere.
-- **Small files**: Strict 150 lines per source file limit.
-  Split by responsibility.
+- **Small files**: Split by responsibility.
 - **Single responsibility**: One primary concept per file.
   Name files after the export.
 - **Types live with their domain**: No centralized types folder.
