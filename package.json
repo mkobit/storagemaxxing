@@ -1,5 +1,5 @@
 {
-  "name": "storagemaxxing-root",
+  "name": "storagemaxxing",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -7,29 +7,34 @@
   "engines": {
     "bun": "1.3.11"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
-    "dev": "bun run --filter @storagemaxxing/web dev",
-    "build": "bun run --filter @storagemaxxing/web build",
-    "typecheck": "bun run --filter '*' typecheck",
-    "lint": "eslint .",
+    "dev": "bun run build && bun run serve.ts",
+    "build": "bun build ./src/index.tsx --outdir ./dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
     "format": "prettier --write ."
   },
+  "dependencies": {
+    "glpk.js": "^4.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zod": "^4.3.6",
+    "zustand": "^4.5.2"
+  },
   "devDependencies": {
-    "@types/node": "^25.5.0",
-    "@typescript-eslint/eslint-plugin": "^8.58.0",
-    "@typescript-eslint/parser": "^8.58.0",
+    "@types/node": "^22.15.0",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
     "bun-types": "^1.3.11",
     "eslint": "^8.57.0",
-    "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-functional": "^6.0.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-import-resolver-typescript": "^3.6.1",
     "prettier": "^3.5.3",
-    "typescript": "^6.0.2"
+    "typescript": "^5.8.3"
   }
 }

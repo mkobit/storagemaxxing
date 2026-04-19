@@ -1,0 +1,55 @@
+import { BinSpec, binId } from "../index";
+import { inches } from "../../geometry/imperial";
+
+export const SCHALLER_PART_6: ReadonlyArray<BinSpec> = [
+  {
+    id: binId("schaller-3x2x3"),
+    name: "Schaller 2x3 - 3 inch depth",
+    sku: "SCH-323",
+    vendor: "Schaller",
+    catalogSource: "builtin",
+    nominal: { w: inches(2), l: inches(3), h: inches(3) },
+    actual: { w: inches(1.9), l: inches(2.9), h: inches(2.75) },
+    tolerance: { w: inches(0.02), l: inches(0.02), h: inches(0.02) },
+  },
+  {
+    id: binId("schaller-3x2x4"),
+    name: "Schaller 2x4 - 3 inch depth",
+    sku: "SCH-324",
+    vendor: "Schaller",
+    catalogSource: "builtin",
+    nominal: { w: inches(2), l: inches(4), h: inches(3) },
+    actual: { w: inches(1.9), l: inches(3.9), h: inches(2.75) },
+    tolerance: { w: inches(0.02), l: inches(0.02), h: inches(0.02) },
+  },
+  {
+    id: binId("schaller-3x2x6"),
+    name: "Schaller 2x6 - 3 inch depth",
+    sku: "SCH-326",
+    vendor: "Schaller",
+    catalogSource: "builtin",
+    nominal: { w: inches(2), l: inches(6), h: inches(3) },
+    actual: { w: inches(1.9), l: inches(5.9), h: inches(2.75) },
+    tolerance: { w: inches(0.02), l: inches(0.02), h: inches(0.02) },
+  },
+  {
+    id: binId("schaller-3x3x3"),
+    name: "Schaller 3x3 - 3 inch depth",
+    sku: "SCH-333",
+    vendor: "Schaller",
+    catalogSource: "builtin",
+    nominal: { w: inches(3), l: inches(3), h: inches(3) },
+    actual: { w: inches(2.9), l: inches(2.9), h: inches(2.75) },
+    tolerance: { w: inches(0.02), l: inches(0.02), h: inches(0.02) },
+  },
+  {
+    id: binId("schaller-3x3x4"),
+    name: "Schaller 3x4 - 3 inch depth",
+    sku: "SCH-334",
+    vendor: "Schaller",
+    catalogSource: "builtin",
+    nominal: { w: inches(3), l: inches(4), h: inches(3) },
+    actual: { w: inches(2.9), l: inches(3.9), h: inches(2.75) },
+    tolerance: { w: inches(0.02), l: inches(0.02), h: inches(0.02) },
+  },
+];
