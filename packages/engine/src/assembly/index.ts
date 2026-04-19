@@ -1,4 +1,6 @@
 export * from './BaseTypes.js';
+export * from './BinSpec.js';
+export * from './PlacedBin.js';
 export * from './SpaceConstraint.js';
 export * from './SpaceTemplate.js';
 export * from './SpaceInstance.js';

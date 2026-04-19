@@ -36,3 +36,20 @@ export const SpaceTemplateSchema = z.object({
 });
 
 export type SpaceTemplate = z.infer<typeof SpaceTemplateSchema>;
+
+export const createSpaceTemplate = (
+  id: string,
+  dimensions: { width: number; height: number; depth: number },
+  accessFace: AccessFace,
+): SpaceTemplate => ({
+  id: id as any,
+  name: id,
+  type: 'drawer',
+  accessFace,
+  w: dimensions.width,
+  h: dimensions.height,
+  l: dimensions.depth,
+  packingModel: '2d',
+  installationConstraints: [],
+  gridResolution: 0.5,
+});

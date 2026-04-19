@@ -1,4 +1,4 @@
-import { PlacedBin } from '../assembly/PlacedBin'
+import { PlacedBin } from '../assembly/PlacedBin.js'
 
 export type PackingPhase = 'hardMin' | 'softMin' | 'cappedFill' | 'autoFill'
 

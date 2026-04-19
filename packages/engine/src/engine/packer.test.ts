@@ -1,11 +1,11 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable max-lines-per-function */
 import { describe, it, expect } from 'bun:test'
-import { packSpace } from './packer'
-import { createBinSpec, createBinSpecBasic } from '../assembly/BinSpec'
-import { createSpaceTemplate } from '../assembly/SpaceTemplate'
-import { createSpaceConstraint } from '../assembly/SpaceConstraint'
-import { createDimensions3D } from '../geometry/Dimensions3D'
+import { packSpace } from './packer.js'
+import { createBinSpec, createBinSpecBasic } from '../assembly/BinSpec.js'
+import { createSpaceTemplate } from '../assembly/SpaceTemplate.js'
+import { createSpaceConstraint } from '../assembly/SpaceConstraint.js'
+import { createDimensions3D } from '../geometry/Dimensions3D.js'
 
 describe('Packer Engine', () => {
   it('basic fill of a 24x24 drawer', () => {

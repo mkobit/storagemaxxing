@@ -22,7 +22,8 @@ export const SpaceConstraintAutoSchema = z.object({
 export const SpaceConstraintSoftSchema = z.object({
   mode: z.literal('soft'),
   binId: BinSpecIdSchema,
-  lo: z.number().int().nonnegative(),
+  lo: z.number().int().nonnegative(), // soft minimum
+  hardLo: z.number().int().nonnegative().optional(), // optional hard minimum
   hi: z.number().int().nonnegative().nullable(),
   hard: z.literal(false),
   color: z.string()
@@ -31,7 +32,8 @@ export const SpaceConstraintSoftSchema = z.object({
 export const SpaceConstraintHardSchema = z.object({
   mode: z.literal('hard'),
   binId: BinSpecIdSchema,
-  lo: z.number().int().positive(), // hard constraints without a minimum make no sense per requirements
+  lo: z.number().int().positive(), // hard minimum
+  softLo: z.number().int().nonnegative().optional(), // optional soft minimum
   hi: z.number().int().positive().nullable(),
   hard: z.literal(true),
   color: z.string()
@@ -58,3 +60,40 @@ export type SpaceConstraintSoft = z.infer<typeof SpaceConstraintSoftSchema>;
 export type SpaceConstraintHard = z.infer<typeof SpaceConstraintHardSchema>;
 
 export type SpaceConstraint = z.infer<typeof SpaceConstraintSchema>;
+
+export const createSpaceConstraint = (
+  binId: string,
+  hardMin: number,
+  softMin: number,
+  max?: number,
+): SpaceConstraint => {
+  if (hardMin > 0) {
+    return {
+      mode: 'hard',
+      binId: binId as any,
+      lo: hardMin,
+      softLo: softMin > hardMin ? softMin : undefined,
+      hi: max ?? null,
+      hard: true,
+      color: '#000000',
+    };
+  }
+  if (softMin > 0) {
+    return {
+      mode: 'soft',
+      binId: binId as any,
+      lo: softMin,
+      hi: max ?? null,
+      hard: false,
+      color: '#000000',
+    };
+  }
+  return {
+    mode: 'auto',
+    binId: binId as any,
+    lo: 0,
+    hi: null,
+    hard: false,
+    color: '#000000',
+  };
+};

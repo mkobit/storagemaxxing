@@ -1,6 +1,6 @@
-import { BinSpec } from '../assembly/BinSpec'
-import { SpaceTemplate } from '../assembly/SpaceTemplate'
-import { Dimensions3D } from '../geometry/Dimensions3D'
+import { BinSpec } from '../assembly/BinSpec.js'
+import { SpaceTemplate } from '../assembly/SpaceTemplate.js'
+import { Dimensions3D } from '../geometry/Dimensions3D.js'
 
 export const getEffectiveFootprint = (
   bin: BinSpec,
@@ -14,13 +14,20 @@ export const getEffectiveSpaceDimensions = (
   space: SpaceTemplate,
   defaultBinDepth: number,
 ): Dimensions3D => {
+  const w = space.w ?? 0;
+  const h = space.h ?? 0;
+  const l = space.l ?? 0;
   return space.accessFace === 'front'
     ? {
-        width: space.dimensions.width,
-        height: space.dimensions.height,
-        depth: Math.min(space.dimensions.depth, defaultBinDepth),
+        width: w,
+        height: h,
+        depth: Math.min(l, defaultBinDepth),
       }
-    : space.dimensions
+    : {
+        width: w,
+        height: h,
+        depth: l,
+      }
 }
 
 export const getMaxBinDepth = (bins: readonly BinSpec[]): number =>
