@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "gl-matrix": "^3.4.4",
     "glpk.js": "^5.0.0",
