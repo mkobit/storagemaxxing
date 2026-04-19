@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [main, dev]
   pull_request:
-    branches: [ main, dev ]
+    branches: [main, dev]
 
 jobs:
   build:
@@ -22,7 +22,7 @@ jobs:
         run: bun run typecheck
 
       - name: Lint
-        run: bun x eslint src --max-warnings 0
+        run: bun run lint
 
       - name: Test
         run: bun test
