@@ -1,10 +1,10 @@
-import { create } from 'zustand';
-import { persist, StateStorage, createJSONStorage } from 'zustand/middleware';
-import { get, set, del } from 'idb-keyval';
-import { ToolMode } from './ToolMode';
-import { Sketch2D } from '../assembly/Sketch2D';
-import { SketchElement } from '../assembly/SketchElement';
-import { SketchId } from '../assembly/SketchId';
+import { create } from "zustand";
+import { persist, StateStorage, createJSONStorage } from "zustand/middleware";
+import { get, set, del } from "idb-keyval";
+import { ToolMode } from "./ToolMode";
+import { Sketch2D } from "../assembly/Sketch2D";
+import { SketchElement } from "../assembly/SketchElement";
+import { SketchId } from "../assembly/SketchId";
 
 const idbStorage: StateStorage = {
   getItem: async (name: string): Promise<string | null> => {
@@ -37,7 +37,7 @@ export type StoreState = AppState & AppActions;
 
 const initialState: AppState = {
   _hasHydrated: false,
-  mode: 'select',
+  mode: "select",
   sketches: [],
   activeSketchId: null,
 };
@@ -69,11 +69,11 @@ export const useStore = create<StoreState>()(
         }),
     }),
     {
-      name: 'storagemaxxing-db',
+      name: "storagemaxxing-db",
       storage: createJSONStorage(() => idbStorage),
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);
       },
-    }
-  )
+    },
+  ),
 );

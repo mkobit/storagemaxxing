@@ -7,7 +7,7 @@ export type Dimensions3D<T extends number = number> = {
 export const createDimensions3D = <T extends number>(
   width: T,
   height: T,
-  depth: T
+  depth: T,
 ): Dimensions3D<T> => ({
   width,
   height,

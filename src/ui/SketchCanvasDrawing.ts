@@ -1,6 +1,6 @@
-import { ToolMode } from '../store/ToolMode';
-import { Sketch2D } from '../assembly/Sketch2D';
-import { Point } from './SketchCanvasHooks';
+import { ToolMode } from "../store/ToolMode";
+import { Sketch2D } from "../assembly/Sketch2D";
+import { Point } from "./SketchCanvasHooks";
 
 export type DrawContext = {
   readonly canvas: HTMLCanvasElement;
@@ -13,30 +13,38 @@ export type DrawContext = {
 };
 
 export const drawCanvas = (context: DrawContext) => {
-  const { canvas, ctx, activeSketch, mode, isDrawing, startPoint, currentPoint } = context;
+  const {
+    canvas,
+    ctx,
+    activeSketch,
+    mode,
+    isDrawing,
+    startPoint,
+    currentPoint,
+  } = context;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (activeSketch) {
     activeSketch.elements.forEach((el) => {
-      if (el.type === 'rectangle') {
+      if (el.type === "rectangle") {
         ctx.strokeRect(
           el.geometry.origin[0],
           el.geometry.origin[1],
           el.geometry.dimensions.width,
-          el.geometry.dimensions.height
+          el.geometry.dimensions.height,
         );
       }
     });
   }
 
   if (isDrawing && startPoint && currentPoint) {
-    if (mode === 'two_point_rect') {
+    if (mode === "two_point_rect") {
       const x = Math.min(startPoint.x, currentPoint.x);
       const y = Math.min(startPoint.y, currentPoint.y);
       const w = Math.abs(currentPoint.x - startPoint.x);
       const h = Math.abs(currentPoint.y - startPoint.y);
       ctx.strokeRect(x, y, w, h);
-    } else if (mode === 'center_rect') {
+    } else if (mode === "center_rect") {
       const dx = Math.abs(currentPoint.x - startPoint.x);
       const dy = Math.abs(currentPoint.y - startPoint.y);
       ctx.strokeRect(startPoint.x - dx, startPoint.y - dy, dx * 2, dy * 2);

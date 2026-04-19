@@ -1,7 +1,7 @@
-import React from 'react';
-import { useStore } from '../store/useStore';
-import { createSketch2D } from '../assembly/Sketch2D';
-import { createSketchId } from '../assembly/SketchId';
+import React from "react";
+import { useStore } from "../store/useStore";
+import { createSketch2D } from "../assembly/Sketch2D";
+import { createSketchId } from "../assembly/SketchId";
 
 export const SketchList: React.FC = () => {
   const sketches = useStore((state) => state.sketches);
@@ -17,24 +17,33 @@ export const SketchList: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '200px', borderRight: '1px solid #ccc', padding: '1rem' }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        width: "200px",
+        borderRight: "1px solid #ccc",
+        padding: "1rem",
+      }}
+    >
       <h3>Sketches</h3>
-      <button onClick={handleAddSketch} style={{ marginBottom: '1rem' }}>
+      <button onClick={handleAddSketch} style={{ marginBottom: "1rem" }}>
         + New Sketch
       </button>
-      <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
+      <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
         {sketches.map((sketch) => (
-          <li key={sketch.id} style={{ marginBottom: '0.5rem' }}>
+          <li key={sketch.id} style={{ marginBottom: "0.5rem" }}>
             <button
               onClick={() => setActiveSketchId(sketch.id)}
               style={{
-                width: '100%',
-                textAlign: 'left',
-                fontWeight: sketch.id === activeSketchId ? 'bold' : 'normal',
-                background: sketch.id === activeSketchId ? '#eee' : 'transparent',
-                border: 'none',
-                padding: '0.5rem',
-                cursor: 'pointer'
+                width: "100%",
+                textAlign: "left",
+                fontWeight: sketch.id === activeSketchId ? "bold" : "normal",
+                background:
+                  sketch.id === activeSketchId ? "#eee" : "transparent",
+                border: "none",
+                padding: "0.5rem",
+                cursor: "pointer",
               }}
             >
               {sketch.name}

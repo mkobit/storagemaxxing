@@ -1,4 +1,4 @@
-import { GridUnit } from './GridUnit';
+import { GridUnit } from "./GridUnit";
 
 export type GridDimensions = {
   readonly width: GridUnit;
@@ -9,7 +9,7 @@ export type GridDimensions = {
 export const createGridDimensions = (
   width: GridUnit,
   height: GridUnit,
-  depth?: GridUnit
+  depth?: GridUnit,
 ): GridDimensions => ({
   width,
   height,
