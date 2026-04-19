@@ -22,7 +22,7 @@ jobs:
         run: bun run typecheck
 
       - name: Lint
-        run: bun x eslint src --max-warnings 0
+        run: bun run lint
 
       - name: Test
         run: bun test
@@ -32,7 +32,7 @@ jobs:
 
       - name: Bundle Size Check
         run: |
-          size=$(du -sk dist/ | cut -f1)
+          size=$(du -sk apps/web/dist/ | cut -f1)
           if [ $size -gt 1024 ]; then
             echo "::warning::Bundle size exceeds 1MB ($size KB)"
           fi
