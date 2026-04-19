@@ -47,19 +47,20 @@ export const formatDim = (value: Inches): string => {
 
   const denominators = [2, 4, 8, 16, 32];
 
-  const foundFraction = denominators.map(den => {
-    const num = Math.round(fractionPart * den);
-    if (Math.abs(num / den - fractionPart) < 0.001) {
-      if (num === 0) return `${wholePart}″`;
-      if (num === den) return `${wholePart + 1}″`;
+  const matchingDenom = denominators.find(
+    (den) => Math.abs(Math.round(fractionPart * den) / den - fractionPart) < 0.001
+  );
 
-      const fractionStr = `${num}/${den}`;
-      const displayFrac = fractionMap[fractionStr] || fractionStr;
+  if (matchingDenom !== undefined) {
+    const num = Math.round(fractionPart * matchingDenom);
+    if (num === 0) return `${wholePart}″`;
+    if (num === matchingDenom) return `${wholePart + 1}″`;
 
-      return wholePart === 0 ? `${displayFrac}″` : `${wholePart} ${displayFrac}″`;
-    }
-    return null;
-  }).find(res => res !== null);
+    const fractionStr = `${num}/${matchingDenom}`;
+    const displayFrac = fractionMap[fractionStr] || fractionStr;
 
-  return foundFraction ?? `${value}″`;
+    return wholePart === 0 ? `${displayFrac}″` : `${wholePart} ${displayFrac}″`;
+  }
+
+  return `${value}″`;
 };
