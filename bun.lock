@@ -1,6 +1,5 @@
 {
   "lockfileVersion": 1,
-  "configVersion": 1,
   "workspaces": {
     "": {
       "name": "storagemaxxing-root",
@@ -36,7 +35,12 @@
       "name": "@storagemaxxing/web",
       "version": "0.0.0",
       "dependencies": {
-        "@storagemaxxing/engine": "workspace:*",
+        "@storagemaxxing/assembly": "workspace:*",
+        "@storagemaxxing/catalog": "workspace:*",
+        "@storagemaxxing/geometry": "workspace:*",
+        "@storagemaxxing/packer": "workspace:*",
+        "@storagemaxxing/solver": "workspace:*",
+        "@storagemaxxing/store": "workspace:*",
         "react": "^19.2.4",
         "react-dom": "^19.2.4",
       },
@@ -45,19 +49,67 @@
         "@types/react-dom": "^19.2.3",
       },
     },
-    "packages/engine": {
-      "name": "@storagemaxxing/engine",
+    "packages/assembly": {
+      "name": "@storagemaxxing/assembly",
+      "version": "0.0.0",
+      "dependencies": {
+        "@storagemaxxing/catalog": "workspace:*",
+        "@storagemaxxing/geometry": "workspace:*",
+        "@storagemaxxing/packer": "workspace:*",
+        "zod": "^4.3.6",
+      },
+    },
+    "packages/catalog": {
+      "name": "@storagemaxxing/catalog",
+      "version": "0.0.0",
+      "dependencies": {
+        "@storagemaxxing/geometry": "workspace:*",
+        "zod": "^4.3.6",
+      },
+    },
+    "packages/geometry": {
+      "name": "@storagemaxxing/geometry",
       "version": "0.0.0",
       "dependencies": {
         "gl-matrix": "^3.4.4",
-        "glpk.js": "^5.0.0",
-        "idb-keyval": "^6.2.2",
-        "maxrects-packer": "^2.7.3",
         "zod": "^4.3.6",
-        "zustand": "^5.0.12",
       },
       "devDependencies": {
         "@types/gl-matrix": "^3.2.0",
+      },
+    },
+    "packages/packer": {
+      "name": "@storagemaxxing/packer",
+      "version": "0.0.0",
+      "dependencies": {
+        "@storagemaxxing/assembly": "workspace:*",
+        "@storagemaxxing/catalog": "workspace:*",
+        "@storagemaxxing/geometry": "workspace:*",
+        "maxrects-packer": "^2.7.3",
+        "zod": "^4.3.6",
+      },
+    },
+    "packages/solver": {
+      "name": "@storagemaxxing/solver",
+      "version": "0.0.0",
+      "dependencies": {
+        "@storagemaxxing/geometry": "workspace:*",
+        "@storagemaxxing/packer": "workspace:*",
+        "glpk.js": "^5.0.0",
+        "zod": "^4.3.6",
+      },
+    },
+    "packages/store": {
+      "name": "@storagemaxxing/store",
+      "version": "0.0.0",
+      "dependencies": {
+        "@storagemaxxing/assembly": "workspace:*",
+        "@storagemaxxing/catalog": "workspace:*",
+        "@storagemaxxing/geometry": "workspace:*",
+        "@storagemaxxing/packer": "workspace:*",
+        "idb-keyval": "^6.2.2",
+        "zod": "^4.3.6",
+        "zustand": "^5.0.12",
       },
     },
   },
@@ -94,7 +146,17 @@
 
     "@rtsao/scc": ["@rtsao/scc@1.1.0", "", {}, "sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g=="],
 
-    "@storagemaxxing/engine": ["@storagemaxxing/engine@workspace:packages/engine"],
+    "@storagemaxxing/assembly": ["@storagemaxxing/assembly@workspace:packages/assembly"],
+
+    "@storagemaxxing/catalog": ["@storagemaxxing/catalog@workspace:packages/catalog"],
+
+    "@storagemaxxing/geometry": ["@storagemaxxing/geometry@workspace:packages/geometry"],
+
+    "@storagemaxxing/packer": ["@storagemaxxing/packer@workspace:packages/packer"],
+
+    "@storagemaxxing/solver": ["@storagemaxxing/solver@workspace:packages/solver"],
+
+    "@storagemaxxing/store": ["@storagemaxxing/store@workspace:packages/store"],
 
     "@storagemaxxing/web": ["@storagemaxxing/web@workspace:apps/web"],
 

@@ -30,7 +30,14 @@
   },
   "overrides": [
     {
-      "files": ["src/geometry/**/*.ts", "src/engine/**/*.ts", "src/catalog/**/*.ts", "packages/engine/src/geometry/**/*.ts", "packages/engine/src/engine/**/*.ts", "packages/engine/src/catalog/**/*.ts"],
+      "files": [
+        "src/geometry/**/*.ts",
+        "src/engine/**/*.ts",
+        "src/catalog/**/*.ts",
+        "packages/geometry/src/**/*.ts",
+        "packages/packer/src/**/*.ts",
+        "packages/catalog/src/**/*.ts"
+      ],
       "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
         "functional/no-expression-statements": "error",
@@ -39,7 +46,16 @@
       }
     },
     {
-      "files": ["src/store/**/*.ts", "src/workers/**/*.ts", "src/ui/**/*.tsx", "src/ui/**/*.ts", "packages/engine/src/store/**/*.ts", "packages/engine/src/workers/**/*.ts", "apps/web/src/ui/**/*.tsx", "apps/web/src/ui/**/*.ts"],
+      "files": [
+        "src/store/**/*.ts",
+        "src/workers/**/*.ts",
+        "src/ui/**/*.tsx",
+        "src/ui/**/*.ts",
+        "packages/store/src/**/*.ts",
+        "packages/solver/src/workers/**/*.ts",
+        "apps/web/src/ui/**/*.tsx",
+        "apps/web/src/ui/**/*.ts"
+      ],
       "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
         "functional/no-expression-statements": "off",
@@ -58,7 +74,16 @@
     "import/resolver": {
       "typescript": {
         "alwaysTryTypes": true,
-        "project": ["./tsconfig.json", "apps/web/tsconfig.json", "packages/engine/tsconfig.json"]
+        "project": [
+          "./tsconfig.json",
+          "apps/web/tsconfig.json",
+          "packages/geometry/tsconfig.json",
+          "packages/catalog/tsconfig.json",
+          "packages/packer/tsconfig.json",
+          "packages/solver/tsconfig.json",
+          "packages/assembly/tsconfig.json",
+          "packages/store/tsconfig.json"
+        ]
       },
       "node": true
     }

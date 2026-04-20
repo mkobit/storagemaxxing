@@ -1,0 +1,15 @@
+{
+  "name": "@storagemaxxing/solver",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@storagemaxxing/geometry": "workspace:*",
+    "@storagemaxxing/packer": "workspace:*",
+    "glpk.js": "^5.0.0",
+    "zod": "^4.3.6"
+  }
+}

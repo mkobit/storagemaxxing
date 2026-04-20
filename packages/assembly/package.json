@@ -1,0 +1,15 @@
+{
+  "name": "@storagemaxxing/assembly",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@storagemaxxing/geometry": "workspace:*",
+    "@storagemaxxing/catalog": "workspace:*",
+    "@storagemaxxing/packer": "workspace:*",
+    "zod": "^4.3.6"
+  }
+}
