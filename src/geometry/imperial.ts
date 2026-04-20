@@ -32,6 +32,18 @@ export const parseDim = (input: string): Inches | null => {
   return null;
 };
 
+const FRACTION_MAP: Readonly<Record<string, string>> = {
+  "1/2": "½",
+  "1/4": "¼",
+  "3/4": "¾",
+  "1/8": "⅛",
+  "3/8": "⅜",
+  "5/8": "⅝",
+  "7/8": "⅞",
+};
+
+const DENOMINATORS: readonly number[] = [2, 4, 8, 16, 32];
+
 export const formatDim = (value: Inches): string => {
   const wholePart = Math.floor(value);
   const fractionPart = value - wholePart;
@@ -40,26 +52,20 @@ export const formatDim = (value: Inches): string => {
     return `${wholePart}″`;
   }
 
-  const fractionMap: Record<string, string> = {
-    "1/2": "½", "1/4": "¼", "3/4": "¾",
-    "1/8": "⅛", "3/8": "⅜", "5/8": "⅝", "7/8": "⅞"
-  };
+  const den = DENOMINATORS.find(
+    (d) => Math.abs(Math.round(fractionPart * d) / d - fractionPart) < 0.001,
+  );
 
-  const denominators = [2, 4, 8, 16, 32];
+  if (den === undefined) {
+    return `${value}″`;
+  }
 
-  const foundFraction = denominators.map(den => {
-    const num = Math.round(fractionPart * den);
-    if (Math.abs(num / den - fractionPart) < 0.001) {
-      if (num === 0) return `${wholePart}″`;
-      if (num === den) return `${wholePart + 1}″`;
+  const num = Math.round(fractionPart * den);
+  if (num === 0) return `${wholePart}″`;
+  if (num === den) return `${wholePart + 1}″`;
 
-      const fractionStr = `${num}/${den}`;
-      const displayFrac = fractionMap[fractionStr] || fractionStr;
+  const fractionStr = `${num}/${den}`;
+  const displayFrac = FRACTION_MAP[fractionStr] || fractionStr;
 
-      return wholePart === 0 ? `${displayFrac}″` : `${wholePart} ${displayFrac}″`;
-    }
-    return null;
-  }).find(res => res !== null);
-
-  return foundFraction ?? `${value}″`;
+  return wholePart === 0 ? `${displayFrac}″` : `${wholePart} ${displayFrac}″`;
 };
