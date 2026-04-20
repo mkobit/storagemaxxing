@@ -6,7 +6,9 @@ const server = serve({
   async fetch(req) {
     const url = new URL(req.url);
     if (url.pathname === "/") {
-      return new Response(Bun.file(path.join(import.meta.dir, "public/index.html")));
+      return new Response(
+        Bun.file(path.join(import.meta.dir, "public/index.html")),
+      );
     }
 
     // Check if the file exists relative to the web package root

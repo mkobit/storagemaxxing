@@ -1,4 +1,4 @@
-import { Point2D } from './Point2D';
+import { Point2D } from "./Point2D";
 
 export type Line2D = {
   readonly start: Point2D;

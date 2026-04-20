@@ -1,4 +1,4 @@
-import { vec3, ReadonlyVec3 } from 'gl-matrix';
+import { vec3, ReadonlyVec3 } from "gl-matrix";
 
 export type Point3D = ReadonlyVec3;
 

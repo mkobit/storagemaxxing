@@ -22,8 +22,8 @@ export const drawCanvas = (context: DrawContext) => {
         ctx.strokeRect(
           el.geometry.origin[0],
           el.geometry.origin[1],
-          el.geometry.dimensions.width,
-          el.geometry.dimensions.height
+          el.geometry.dimensions.w,
+          el.geometry.dimensions.l,
         );
       }
     });

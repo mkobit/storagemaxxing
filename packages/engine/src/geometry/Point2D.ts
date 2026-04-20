@@ -1,4 +1,4 @@
-import { vec2, ReadonlyVec2 } from 'gl-matrix';
+import { vec2, ReadonlyVec2 } from "gl-matrix";
 
 export type Point2D = ReadonlyVec2;
 

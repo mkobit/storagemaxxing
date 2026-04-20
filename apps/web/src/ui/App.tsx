@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { Toolbar } from './Toolbar';
-import { SketchCanvas } from './SketchCanvas';
-import { SketchList } from './SketchList';
-import { useStore } from '@storagemaxxing/engine/store/useStore';
-import { createSketch2D } from '@storagemaxxing/engine/assembly/Sketch2D';
-import { createSketchId } from '@storagemaxxing/engine/assembly/SketchId';
+import React, { useEffect } from "react";
+import { Toolbar } from "./Toolbar";
+import { SketchCanvas } from "./SketchCanvas";
+import { SketchList } from "./SketchList";
+import { useStore } from "@storagemaxxing/engine/store/useStore";
+import { createSketch2D } from "@storagemaxxing/engine/assembly/Sketch2D";
+import { createSketchId } from "@storagemaxxing/engine/assembly/SketchId";
 
 export const App: React.FC = () => {
   const hasHydrated = useStore((state) => state._hasHydrated);
@@ -13,7 +13,7 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     if (hasHydrated && sketches.length === 0) {
-      addSketch(createSketch2D(createSketchId(), 'Sketch 1', []));
+      addSketch(createSketch2D(createSketchId(), "Sketch 1", []));
     }
   }, [hasHydrated, sketches.length, addSketch]);
 
@@ -22,11 +22,11 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <Toolbar />
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         <SketchList />
-        <div style={{ padding: '1rem', flex: 1, overflow: 'auto' }}>
+        <div style={{ padding: "1rem", flex: 1, overflow: "auto" }}>
           <SketchCanvas />
         </div>
       </div>
