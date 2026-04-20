@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const InchesSchema = z.number().nonnegative().brand("inches");
+export const InchesSchema = z.number().brand("inches");
 export type Inches = z.infer<typeof InchesSchema>;
 
 export const inches = (value: number): Inches => InchesSchema.parse(value);
@@ -10,23 +10,32 @@ export const parseDim = (input: string): Inches | null => {
   if (trimmed === "") return null;
 
   const asNumber = Number(trimmed);
-  if (!isNaN(asNumber) && asNumber >= 0) {
+  if (!isNaN(asNumber)) {
     return inches(asNumber);
   }
 
-  const fractionMatch = trimmed.match(/^(\d+)\/(\d+)$/);
+  const isNegative = trimmed.startsWith("-");
+  const absoluteInput = isNegative ? trimmed.substring(1).trim() : trimmed;
+
+  const fractionMatch = absoluteInput.match(/^(\d+)\/(\d+)$/);
   if (fractionMatch) {
     const num = parseInt(fractionMatch[1], 10);
     const den = parseInt(fractionMatch[2], 10);
-    if (den !== 0) return inches(num / den);
+    if (den !== 0) {
+      const val = num / den;
+      return inches(isNegative ? -val : val);
+    }
   }
 
-  const mixedMatch = trimmed.match(/^(\d+)[ -]+(\d+)\/(\d+)$/);
+  const mixedMatch = absoluteInput.match(/^(\d+)[ -]+(\d+)\/(\d+)$/);
   if (mixedMatch) {
     const wholePart = parseInt(mixedMatch[1], 10);
     const num = parseInt(mixedMatch[2], 10);
     const den = parseInt(mixedMatch[3], 10);
-    if (den !== 0) return inches(wholePart + num / den);
+    if (den !== 0) {
+      const val = wholePart + num / den;
+      return inches(isNegative ? -val : val);
+    }
   }
 
   return null;
