@@ -1,1 +1,1 @@
-export type GridUnit = number & { readonly __brand: 'GridUnit' };
+export type GridUnit = number & { readonly __brand: 'GridUnit' }
