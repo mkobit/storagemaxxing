@@ -1,6 +1,6 @@
 import { expect, test, describe } from "bun:test";
-import { mm, mmToIn, inToMm } from "./metric";
-import { inches } from "./imperial";
+import { mm, mmToIn, inToMm } from "./Millimeters.js";
+import { inches } from "./Inches.js";
 
 describe("metric conversion", () => {
   describe("mm()", () => {

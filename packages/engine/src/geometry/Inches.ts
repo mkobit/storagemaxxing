@@ -6,6 +6,23 @@ export type Inches = z.infer<typeof InchesSchema>;
 export const inches = (value: number): Inches => InchesSchema.parse(value);
 export const createInches = inches;
 
+const parseFraction = (input: string): number | null => {
+  const match = input.match(/^(\d+)\/(\d+)$/);
+  if (!match) return null;
+  const num = parseInt(match[1], 10);
+  const den = parseInt(match[2], 10);
+  return den !== 0 ? num / den : null;
+};
+
+const parseMixedNumber = (input: string): number | null => {
+  const match = input.match(/^(\d+)[ -]+(\d+)\/(\d+)$/);
+  if (!match) return null;
+  const whole = parseInt(match[1], 10);
+  const num = parseInt(match[2], 10);
+  const den = parseInt(match[3], 10);
+  return den !== 0 ? whole + num / den : null;
+};
+
 export const parseDim = (input: string): Inches | null => {
   const trimmed = input.trim();
   if (trimmed === '') return null;
@@ -15,28 +32,17 @@ export const parseDim = (input: string): Inches | null => {
     return inches(asNumber);
   }
 
-  const isNegative = trimmed.startsWith("-");
+  const isNegative = trimmed.startsWith('-');
   const absoluteInput = isNegative ? trimmed.substring(1).trim() : trimmed;
 
-  const fractionMatch = absoluteInput.match(/^(\d+)\/(\d+)$/);
-  if (fractionMatch) {
-    const num = parseInt(fractionMatch[1], 10);
-    const den = parseInt(fractionMatch[2], 10);
-    if (den !== 0) {
-      const val = num / den;
-      return inches(isNegative ? -val : val);
-    }
+  const fractionValue = parseFraction(absoluteInput);
+  if (fractionValue !== null) {
+    return inches(isNegative ? -fractionValue : fractionValue);
   }
 
-  const mixedMatch = absoluteInput.match(/^(\d+)[ -]+(\d+)\/(\d+)$/);
-  if (mixedMatch) {
-    const wholePart = parseInt(mixedMatch[1], 10);
-    const num = parseInt(mixedMatch[2], 10);
-    const den = parseInt(mixedMatch[3], 10);
-    if (den !== 0) {
-      const val = wholePart + num / den;
-      return inches(isNegative ? -val : val);
-    }
+  const mixedValue = parseMixedNumber(absoluteInput);
+  if (mixedValue !== null) {
+    return inches(isNegative ? -mixedValue : mixedValue);
   }
 
   return null;
