@@ -1,7 +1,11 @@
 {
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./tsconfig.json",
+    "project": [
+      "./tsconfig.json",
+      "apps/*/tsconfig.json",
+      "packages/*/tsconfig.json"
+    ],
     "ecmaVersion": 2022,
     "sourceType": "module",
     "ecmaFeatures": { "jsx": true }
@@ -31,12 +35,10 @@
   "overrides": [
     {
       "files": [
-        "src/geometry/**/*.ts",
-        "src/engine/**/*.ts",
-        "src/catalog/**/*.ts",
         "packages/geometry/src/**/*.ts",
         "packages/packer/src/**/*.ts",
-        "packages/catalog/src/**/*.ts"
+        "packages/catalog/src/**/*.ts",
+        "packages/solver/src/**/*.ts"
       ],
       "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
@@ -47,14 +49,9 @@
     },
     {
       "files": [
-        "src/store/**/*.ts",
-        "src/workers/**/*.ts",
-        "src/ui/**/*.tsx",
-        "src/ui/**/*.ts",
         "packages/store/src/**/*.ts",
-        "packages/solver/src/workers/**/*.ts",
-        "apps/web/src/ui/**/*.tsx",
-        "apps/web/src/ui/**/*.ts"
+        "apps/web/src/**/*.tsx",
+        "apps/web/src/**/*.ts"
       ],
       "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
@@ -76,13 +73,8 @@
         "alwaysTryTypes": true,
         "project": [
           "./tsconfig.json",
-          "apps/web/tsconfig.json",
-          "packages/geometry/tsconfig.json",
-          "packages/catalog/tsconfig.json",
-          "packages/packer/tsconfig.json",
-          "packages/solver/tsconfig.json",
-          "packages/assembly/tsconfig.json",
-          "packages/store/tsconfig.json"
+          "apps/*/tsconfig.json",
+          "packages/*/tsconfig.json"
         ]
       },
       "node": true
