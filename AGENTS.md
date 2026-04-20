@@ -4,6 +4,7 @@ This is the central repository for StorageMaxxing.
 This application is a strictly client-side constraint solver and placement engine for organizational storage systems (like Gridfinity, OpenGrid, etc.).
 It runs entirely in the browser using Bun, React 18, Zustand, and a GLPK.js Web Worker.
 State is persisted solely to localStorage.
+Bun is used as the runtime, test runner, and package manager for this project.
 
 ## Architecture & code philosophy
 
