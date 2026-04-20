@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { Inches, inches } from './Inches.js';
 
-export const MillimetersSchema = z.number().nonnegative().brand('mm');
+export const MillimetersSchema = z.number().brand('mm');
 export type Millimeters = z.infer<typeof MillimetersSchema>;
 
 export const mm = (value: number): Millimeters => MillimetersSchema.parse(value);

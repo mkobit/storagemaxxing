@@ -10,6 +10,7 @@ describe('parseDim', () => {
   test('decimals', () => {
     expect(parseDim('15.75')).toBe(inches(15.75));
     expect(parseDim('0.5')).toBe(inches(0.5));
+    expect(parseDim('-1.5')).toBe(inches(-1.5));
   });
 
   test('pure fractions', () => {
@@ -26,6 +27,7 @@ describe('parseDim', () => {
   test('mixed numbers with space', () => {
     expect(parseDim('15 3/4')).toBe(inches(15.75));
     expect(parseDim('16 1/8')).toBe(inches(16.125));
+    expect(parseDim('-1 1/2')).toBe(inches(-1.5));
   });
 
   test('mixed numbers with hyphen', () => {
