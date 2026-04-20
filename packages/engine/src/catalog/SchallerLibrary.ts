@@ -1,5 +1,5 @@
-import { SchallerBinSchema, type SchallerBin } from './SchallerBin.js'
-import { createMillimeters } from '../geometry/Millimeters.js'
+import { SchallerBinSchema, type SchallerBin } from './SchallerBin.js';
+import { createMillimeters } from '../geometry/Millimeters.js';
 
 // Using actual standard Schaller bin dimensions (Width x Depth x Height in mm)
 // Reference approximations for standard drawer bins
@@ -52,11 +52,11 @@ const rawSchallerLibrary = [
     color: 'grey',
     labelHolder: true,
   },
-] as const
+] as const;
 
 export const SCHALLER_BINS: ReadonlyArray<SchallerBin> = Object.freeze(
-  rawSchallerLibrary.map((bin) => Object.freeze(SchallerBinSchema.parse(bin))),
-)
+  rawSchallerLibrary.map((bin) => Object.freeze(SchallerBinSchema.parse(bin)))
+);
 
 export const getSchallerBinById = (id: string): SchallerBin | undefined =>
-  SCHALLER_BINS.find((bin) => bin.id === id)
+  SCHALLER_BINS.find((bin) => bin.id === id);

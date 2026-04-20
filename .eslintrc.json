@@ -6,7 +6,11 @@
     "sourceType": "module",
     "ecmaFeatures": { "jsx": true }
   },
-  "plugins": ["@typescript-eslint", "functional", "import"],
+  "plugins": [
+    "@typescript-eslint",
+    "functional",
+    "import"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -19,10 +23,7 @@
     "functional/no-loop-statements": "error",
     "functional/prefer-readonly-type": "error",
     "max-lines": ["error", { "max": 150, "skipBlankLines": true, "skipComments": true }],
-    "max-lines-per-function": [
-      "error",
-      { "max": 40, "skipBlankLines": true, "skipComments": true }
-    ],
+    "max-lines-per-function": ["error", { "max": 40, "skipBlankLines": true, "skipComments": true }],
     "complexity": ["error", 8],
     "max-depth": ["error", 3],
     "max-params": ["error", 4],
@@ -42,13 +43,7 @@
       }
     },
     {
-      "files": [
-        "src/store/**/*.ts",
-        "src/workers/**/*.ts",
-        "src/ui/**/*.tsx",
-        "src/ui/**/*.ts",
-        "**/*.test.ts"
-      ],
+      "files": ["src/store/**/*.ts", "src/workers/**/*.ts", "src/ui/**/*.tsx", "src/ui/**/*.ts", "**/*.test.ts"],
       "rules": {
         "functional/no-expression-statements": "off",
         "functional/no-return-void": "off"

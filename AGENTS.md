@@ -6,25 +6,23 @@ It runs entirely in the browser using Bun, React 18, Zustand, and a GLPK.js Web 
 State is persisted solely to localStorage.
 
 ## Architecture & code philosophy
-
 - **Functional and immutable**: No `let`, no mutation, no side effects outside designated boundaries.
-  Use `const` and `readonly` types everywhere.
+Use `const` and `readonly` types everywhere.
 - **Small files**: Strict 150 lines per source file limit.
-  Split by responsibility.
+Split by responsibility.
 - **Single responsibility**: One primary concept per file.
-  Name files after the export.
+Name files after the export.
 - **Types live with their domain**: No centralized types folder.
 - **Strict types**: No `any`.
-  Strict TS config.
-  Unknown + narrowing preferred.
+Strict TS config.
+Unknown + narrowing preferred.
 - **Exports**: Named exports only.
-  No default exports.
-  No index.ts barrel files.
+No default exports.
+No index.ts barrel files.
 - **No circular dependencies**: Strictly enforced via `import/no-cycle`.
 - **Pure logic cores**: `geometry/`, `engine/`, and `catalog/` must be 100% pure functions (no expression statements, throws, or try/catch blocks).
 
 ## Package dependency tree
-
 Dependencies must strictly flow downwards:
 `ui` -> `store` -> (`assembly`, `engine`, `solver`)
 `assembly` -> `catalog` -> `geometry`
