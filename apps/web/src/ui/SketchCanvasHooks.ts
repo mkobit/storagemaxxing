@@ -1,13 +1,13 @@
 import { useState, MouseEvent, useCallback, MutableRefObject } from "react";
-import { useStore } from "@storagemaxxing/engine/store/useStore";
-import { createPoint2D } from "@storagemaxxing/engine/geometry/Point2D";
-import { createRect2D } from "@storagemaxxing/engine/geometry/Rect2D";
+import { useStore } from "@storagemaxxing/store/useStore";
+import { createPoint2D } from "@storagemaxxing/geometry/Point2D";
+import { createRect2D } from "@storagemaxxing/geometry/Rect2D";
 import {
   createSketchRectangle,
   SketchElement,
-} from "@storagemaxxing/engine/assembly/SketchElement";
-import { createDimensions2D } from "@storagemaxxing/engine/geometry/Dimensions2D";
-import { createSketchElementId } from "@storagemaxxing/engine/assembly/SketchElementId";
+} from "@storagemaxxing/assembly/SketchElement";
+import { createDimensions2D } from "@storagemaxxing/geometry/Dimensions2D";
+import { createSketchElementId } from "@storagemaxxing/assembly/SketchElementId";
 
 export type Point = { readonly x: number; readonly y: number };
 

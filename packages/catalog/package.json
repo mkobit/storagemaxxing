@@ -1,0 +1,13 @@
+{
+  "name": "@storagemaxxing/catalog",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@storagemaxxing/geometry": "workspace:*",
+    "zod": "^4.3.6"
+  }
+}

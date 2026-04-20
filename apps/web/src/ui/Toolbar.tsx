@@ -1,5 +1,5 @@
 import React from "react";
-import { useStore } from "@storagemaxxing/engine/store/useStore";
+import { useStore } from "@storagemaxxing/store/useStore";
 
 export const Toolbar: React.FC = () => {
   const mode = useStore((state) => state.mode);

@@ -1,7 +1,7 @@
 import React from "react";
-import { useStore } from "@storagemaxxing/engine/store/useStore";
-import { createSketch2D } from "@storagemaxxing/engine/assembly/Sketch2D";
-import { createSketchId } from "@storagemaxxing/engine/assembly/SketchId";
+import { useStore } from "@storagemaxxing/store/useStore";
+import { createSketch2D } from "@storagemaxxing/assembly/Sketch2D";
+import { createSketchId } from "@storagemaxxing/assembly/SketchId";
 
 export const SketchList: React.FC = () => {
   const sketches = useStore((state) => state.sketches);

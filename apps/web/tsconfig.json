@@ -3,7 +3,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@storagemaxxing/engine/*": ["../../packages/engine/src/*"]
+      "@storagemaxxing/geometry/*": ["../../packages/geometry/src/*"],
+      "@storagemaxxing/catalog/*": ["../../packages/catalog/src/*"],
+      "@storagemaxxing/packer/*": ["../../packages/packer/src/*"],
+      "@storagemaxxing/solver/*": ["../../packages/solver/src/*"],
+      "@storagemaxxing/assembly/*": ["../../packages/assembly/src/*"],
+      "@storagemaxxing/store/*": ["../../packages/store/src/*"]
     },
     "jsx": "react-jsx",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],

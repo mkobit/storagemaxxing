@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@storagemaxxing/geometry/*": ["../../packages/geometry/src/*"]
+    }
+  },
+  "include": ["src"]
+}
