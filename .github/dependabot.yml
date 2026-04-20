@@ -12,38 +12,18 @@ updates:
           - "react-dom"
           - "@types/react"
           - "@types/react-dom"
-        cooldown:
-          default-days: 14
-          semver-major-days: 14
-          semver-minor-days: 14
-          semver-patch-days: 14
       three:
         patterns:
           - "three"
           - "@types/three"
-        cooldown:
-          default-days: 14
-          semver-major-days: 14
-          semver-minor-days: 14
-          semver-patch-days: 14
       vite:
         patterns:
           - "vite"
           - "@vitejs/*"
-        cooldown:
-          default-days: 14
-          semver-major-days: 14
-          semver-minor-days: 14
-          semver-patch-days: 14
       typescript-eslint:
         patterns:
           - "@typescript-eslint/*"
           - "typescript"
-        cooldown:
-          default-days: 14
-          semver-major-days: 14
-          semver-minor-days: 14
-          semver-patch-days: 14
       eslint:
         patterns:
           - "eslint"
@@ -51,11 +31,6 @@ updates:
           - "@eslint/*"
           - "globals"
           - "@stylistic/*"
-        cooldown:
-          default-days: 14
-          semver-major-days: 14
-          semver-minor-days: 14
-          semver-patch-days: 14
 
   - package-ecosystem: github-actions
     directory: /
@@ -66,8 +41,3 @@ updates:
       actions:
         patterns:
           - "*"
-        cooldown:
-          default-days: 14
-          semver-major-days: 14
-          semver-minor-days: 14
-          semver-patch-days: 14
