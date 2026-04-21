@@ -17,12 +17,6 @@
     "jsx": "react-jsx",
     "types": ["bun-types"]
   },
-  "include": [
-    "src",
-    "apps/*/src",
-    "packages/*/src",
-    "serve.ts",
-    "apps/*/serve.ts"
-  ],
+  "include": ["apps/*/src", "packages/*/src", "apps/*/serve.ts"],
   "exclude": ["node_modules", "**/dist"]
 }
