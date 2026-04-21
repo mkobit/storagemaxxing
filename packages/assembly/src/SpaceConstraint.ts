@@ -106,7 +106,7 @@ export const createSpaceConstraint = (
   return {
     mode: "auto",
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      binId: binId as BinSpecId,
+    binId: binId as BinSpecId,
     lo: 0,
     hi: null,
     hard: false,

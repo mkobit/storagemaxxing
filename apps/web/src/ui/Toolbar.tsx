@@ -12,6 +12,7 @@ export const Toolbar: React.FC = () => {
         display: "flex",
         gap: "1rem",
         background: "#eee",
+        borderBottom: "1px solid #ccc",
       }}
     >
       <button
@@ -20,6 +21,13 @@ export const Toolbar: React.FC = () => {
       >
         Select
       </button>
+      <button
+        style={{ fontWeight: mode === "pan" ? "bold" : "normal" }}
+        onClick={() => setMode("pan")}
+      >
+        Pan
+      </button>
+      <div style={{ width: "1px", background: "#ccc", margin: "0 0.5rem" }} />
       <button
         style={{ fontWeight: mode === "two_point_rect" ? "bold" : "normal" }}
         onClick={() => setMode("two_point_rect")}
