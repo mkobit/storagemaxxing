@@ -83,6 +83,7 @@ export const createSpaceConstraint = (
   if (hardMin > 0) {
     return {
       mode: "hard",
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       binId: binId as BinSpecId,
       lo: hardMin,
       softLo: softMin > hardMin ? softMin : undefined,
@@ -94,6 +95,7 @@ export const createSpaceConstraint = (
   if (softMin > 0) {
     return {
       mode: "soft",
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       binId: binId as BinSpecId,
       lo: softMin,
       hi: max ?? null,
@@ -103,7 +105,8 @@ export const createSpaceConstraint = (
   }
   return {
     mode: "auto",
-    binId: binId as BinSpecId,
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      binId: binId as BinSpecId,
     lo: 0,
     hi: null,
     hard: false,

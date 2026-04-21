@@ -61,6 +61,7 @@ export const createSpaceTemplate = (
   dimensions: Dimensions3D,
   accessFace: AccessFace,
 ): SpaceTemplate => ({
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   id: id as SpaceTemplateId,
   name: id,
   type: "drawer",
