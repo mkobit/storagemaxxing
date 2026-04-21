@@ -105,6 +105,7 @@ export const packSpace = (
   );
   const placedCounts = placedBins.reduce(
     (acc, bin) => ({ ...acc, [bin.binId]: (acc[bin.binId] || 0) + 1 }),
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     {} as Record<string, number>,
   );
   const areaUtil = placedBins.reduce(

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { PartIdSchema } from "@storagemaxxing/catalog/BasePart.js";
-import { Inches } from "@storagemaxxing/geometry/Inches.js";
+import { inches } from "@storagemaxxing/geometry/Inches.js";
 
 export const SpaceTypeIdSchema = z.enum([
   "drawer",
@@ -62,7 +62,7 @@ export type InstallationConstraint = z.infer<
 
 // Since Inches is a branded number type without a custom Zod schema in geometry,
 // we create a local Zod schema that produces an Inches type
-export const InchesZodSchema = z.number().transform((n) => n as Inches);
+export const InchesZodSchema = z.number().transform((n) => inches(n));
 
 export const DividerSchema = z
   .object({
