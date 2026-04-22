@@ -1,13 +1,24 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
-      "@storagemaxxing/assembly/*": ["./src/*"],
-      "@storagemaxxing/catalog/*": ["../../packages/catalog/src/*"],
-      "@storagemaxxing/geometry/*": ["../../packages/geometry/src/*"],
-      "@storagemaxxing/packer/*": ["../../packages/packer/src/*"]
+      "@storagemaxxing/assembly/*": [
+        "./src/*"
+      ],
+      "@storagemaxxing/catalog/*": [
+        "../../packages/catalog/src/*"
+      ],
+      "@storagemaxxing/geometry/*": [
+        "../../packages/geometry/src/*"
+      ],
+      "@storagemaxxing/packer/*": [
+        "../../packages/packer/src/*"
+      ]
     }
   },
   "extends": "../../tsconfig.json",
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

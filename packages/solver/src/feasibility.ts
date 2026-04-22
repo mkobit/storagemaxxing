@@ -19,7 +19,7 @@ const getGlpk = async () => {
       const nodeGLPK = await import("glpk.js/node");
       const factory = (nodeGLPK as any).default || nodeGLPK;
       glpkInstance = await factory();
-    } catch (e) {
+    } catch {
       const factory = (GLPK as any).default || GLPK;
       glpkInstance = await factory();
     }
