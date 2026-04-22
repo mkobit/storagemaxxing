@@ -2,7 +2,13 @@ import React from "react";
 import { useStore } from "@storagemaxxing/store/useStore";
 import { createSketch2D } from "@storagemaxxing/assembly/Sketch2D";
 import { createSketchId, SketchId } from "@storagemaxxing/assembly/SketchId";
-import { createFeatureId, createSketchFeature, createFillSpaceFeature, SketchFeature, FeatureId } from "@storagemaxxing/assembly/Feature";
+import {
+  createFeatureId,
+  createSketchFeature,
+  createFillSpaceFeature,
+  SketchFeature,
+  FeatureId,
+} from "@storagemaxxing/assembly/Feature";
 
 export const FeatureTree: React.FC = () => {
   const timeline = useStore((state) => state.timeline);
@@ -19,34 +25,55 @@ export const FeatureTree: React.FC = () => {
     addSketch(createSketch2D(sketchId, name, []));
 
     const featureId = createFeatureId();
-    const sketchCount = timeline.filter(f => f.type === 'sketch').length;
-    addFeature(createSketchFeature(featureId, `Sketch Feature ${sketchCount + 1}`, sketchId));
+    const sketchCount = timeline.filter((f) => f.type === "sketch").length;
+    addFeature(
+      createSketchFeature(
+        featureId,
+        `Sketch Feature ${sketchCount + 1}`,
+        sketchId,
+      ),
+    );
     setActiveFeatureId(featureId);
     setActiveSketchId(sketchId);
   };
 
   const handleAddFillSpaceFeature = () => {
     // Basic implementation to create a fill space feature referencing the currently active sketch
-    const activeSketchFeature = timeline.find((f): f is SketchFeature => f.id === activeFeatureId && f.type === 'sketch');
+    const activeSketchFeature = timeline.find(
+      (f): f is SketchFeature =>
+        f.id === activeFeatureId && f.type === "sketch",
+    );
     if (!activeSketchFeature) {
-        alert("Please select a Sketch Feature first to create a Fill Space from it.");
-        return;
+      alert(
+        "Please select a Sketch Feature first to create a Fill Space from it.",
+      );
+      return;
     }
 
     const featureId = createFeatureId();
-    const fillCount = timeline.filter(f => f.type === 'fill_space').length;
-    addFeature(createFillSpaceFeature(featureId, `Fill Space ${fillCount + 1}`, activeSketchFeature.sketchId));
+    const fillCount = timeline.filter((f) => f.type === "fill_space").length;
+    addFeature(
+      createFillSpaceFeature(
+        featureId,
+        `Fill Space ${fillCount + 1}`,
+        activeSketchFeature.sketchId,
+      ),
+    );
     setActiveFeatureId(featureId);
-  }
+  };
 
-  const handleSelectFeature = (featureId: FeatureId, type: string, sketchId?: SketchId) => {
-      setActiveFeatureId(featureId);
-      if (type === 'sketch' && sketchId) {
-          setActiveSketchId(sketchId);
-      } else {
-          setActiveSketchId(null);
-      }
-  }
+  const handleSelectFeature = (
+    featureId: FeatureId,
+    type: string,
+    sketchId?: SketchId,
+  ) => {
+    setActiveFeatureId(featureId);
+    if (type === "sketch" && sketchId) {
+      setActiveSketchId(sketchId);
+    } else {
+      setActiveSketchId(null);
+    }
+  };
 
   return (
     <div
@@ -56,23 +83,29 @@ export const FeatureTree: React.FC = () => {
         width: "250px",
         borderRight: "1px solid #ccc",
         padding: "1rem",
-        background: "#fafafa"
+        background: "#fafafa",
       }}
     >
       <h3>Timeline / Features</h3>
       <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
         <button onClick={handleAddSketchFeature} style={{ flex: 1 }}>
-            + Sketch
+          + Sketch
         </button>
         <button onClick={handleAddFillSpaceFeature} style={{ flex: 1 }}>
-            + Fill Space
+          + Fill Space
         </button>
       </div>
       <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
         {timeline.map((feature) => (
           <li key={feature.id} style={{ marginBottom: "0.5rem" }}>
             <button
-              onClick={() => handleSelectFeature(feature.id, feature.type, 'sketchId' in feature ? feature.sketchId : undefined)}
+              onClick={() =>
+                handleSelectFeature(
+                  feature.id,
+                  feature.type,
+                  "sketchId" in feature ? feature.sketchId : undefined,
+                )
+              }
               style={{
                 width: "100%",
                 textAlign: "left",
@@ -80,21 +113,30 @@ export const FeatureTree: React.FC = () => {
                 background:
                   feature.id === activeFeatureId ? "#e0e0ff" : "transparent",
                 border: "1px solid",
-                borderColor: feature.id === activeFeatureId ? "#8888ff" : "transparent",
+                borderColor:
+                  feature.id === activeFeatureId ? "#8888ff" : "transparent",
                 borderRadius: "4px",
                 padding: "0.5rem",
                 cursor: "pointer",
               }}
             >
-              {feature.name} <small style={{color: "#888"}}>({feature.type})</small>
+              {feature.name}{" "}
+              <small style={{ color: "#888" }}>({feature.type})</small>
             </button>
           </li>
         ))}
       </ul>
       {timeline.length === 0 && (
-          <div style={{ color: "#888", fontSize: "0.9rem", textAlign: "center", marginTop: "2rem" }}>
-              Timeline is empty. Start by creating a sketch.
-          </div>
+        <div
+          style={{
+            color: "#888",
+            fontSize: "0.9rem",
+            textAlign: "center",
+            marginTop: "2rem",
+          }}
+        >
+          Timeline is empty. Start by creating a sketch.
+        </div>
       )}
     </div>
   );
