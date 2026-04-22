@@ -12,7 +12,9 @@ export interface BinSpec<T extends number = number> {
   readonly name: string;
   readonly sku: string;
   readonly vendor: string;
+  readonly system?: string;
   readonly catalogSource: CatalogSource;
+  readonly price?: number;
 
   readonly nominal: Dimensions3D<T>;
   readonly actual: Dimensions3D<T>;
