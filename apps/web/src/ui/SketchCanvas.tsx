@@ -6,6 +6,7 @@ import { drawCanvas } from "./SketchCanvasDrawing";
 export const SketchCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mode = useStore((state) => state.mode);
+  const pan = useStore((state) => state.pan);
 
   const activeSketchId = useStore((state) => state.activeSketchId);
   const sketches = useStore((state) => state.sketches);
@@ -34,8 +35,9 @@ export const SketchCanvas: React.FC = () => {
       isDrawing,
       startPoint,
       currentPoint,
+      pan,
     });
-  }, [activeSketch, isDrawing, startPoint, currentPoint, mode]);
+  }, [activeSketch, isDrawing, startPoint, currentPoint, mode, pan]);
 
   if (!activeSketch) {
     return (
@@ -45,6 +47,12 @@ export const SketchCanvas: React.FC = () => {
     );
   }
 
+  const getCursor = () => {
+    if (mode === "pan") return "grab";
+    if (mode === "select") return "default";
+    return "crosshair";
+  };
+
   return (
     <canvas
       ref={canvasRef}
@@ -52,12 +60,14 @@ export const SketchCanvas: React.FC = () => {
       height={600}
       style={{
         border: "1px solid black",
-        cursor: mode === "select" ? "default" : "crosshair",
+        cursor: getCursor(),
+        backgroundColor: "#f5f5f5",
       }}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp}
+      onContextMenu={(e) => e.preventDefault()} // Prevent context menu on right click if we use it later
     />
   );
 };

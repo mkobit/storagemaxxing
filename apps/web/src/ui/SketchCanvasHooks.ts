@@ -45,39 +45,75 @@ export const useSketchEvents = (
   canvasRef: MutableRefObject<HTMLCanvasElement | null>,
 ) => {
   const mode = useStore((state) => state.mode);
+  const pan = useStore((state) => state.pan);
+  const setPan = useStore((state) => state.setPan);
   const addElement = useStore((state) => state.addElementToActiveSketch);
 
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPoint, setStartPoint] = useState<Point | null>(null);
   const [currentPoint, setCurrentPoint] = useState<Point | null>(null);
 
+  // Pan state for middle mouse button
+  const [isPanning, setIsPanning] = useState(false);
+  const [lastPanPoint, setLastPanPoint] = useState<Point | null>(null);
+
+  const getCanvasPoint = useCallback(
+    (e: MouseEvent<HTMLCanvasElement>): Point | null => {
+      const rect = canvasRef.current?.getBoundingClientRect();
+      if (!rect) return null;
+      return {
+        x: e.clientX - rect.left - pan.x,
+        y: e.clientY - rect.top - pan.y,
+      };
+    },
+    [canvasRef, pan],
+  );
+
   const handlePointerDown = useCallback(
     (e: MouseEvent<HTMLCanvasElement>) => {
+      // Middle mouse button or Spacebar (handled separately) for panning
+      if (e.button === 1 || mode === "pan") {
+        setIsPanning(true);
+        setLastPanPoint({ x: e.clientX, y: e.clientY });
+        return;
+      }
+
       if (mode === "select") return;
-      const rect = canvasRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      setStartPoint({ x, y });
-      setCurrentPoint({ x, y });
+
+      const point = getCanvasPoint(e);
+      if (!point) return;
+      setStartPoint(point);
+      setCurrentPoint(point);
       setIsDrawing(true);
     },
-    [mode, canvasRef],
+    [mode, getCanvasPoint],
   );
 
   const handlePointerMove = useCallback(
     (e: MouseEvent<HTMLCanvasElement>) => {
+      if (isPanning && lastPanPoint) {
+        const dx = e.clientX - lastPanPoint.x;
+        const dy = e.clientY - lastPanPoint.y;
+        setPan({ x: pan.x + dx, y: pan.y + dy });
+        setLastPanPoint({ x: e.clientX, y: e.clientY });
+        return;
+      }
+
       if (!isDrawing) return;
-      const rect = canvasRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      setCurrentPoint({ x, y });
+      const point = getCanvasPoint(e);
+      if (!point) return;
+      setCurrentPoint(point);
     },
-    [isDrawing, canvasRef],
+    [isDrawing, isPanning, lastPanPoint, pan, setPan, getCanvasPoint],
   );
 
   const handlePointerUp = useCallback(() => {
+    if (isPanning) {
+      setIsPanning(false);
+      setLastPanPoint(null);
+      return;
+    }
+
     if (!isDrawing || !startPoint || !currentPoint) {
       setIsDrawing(false);
       return;
@@ -91,7 +127,7 @@ export const useSketchEvents = (
     setIsDrawing(false);
     setStartPoint(null);
     setCurrentPoint(null);
-  }, [isDrawing, startPoint, currentPoint, mode, addElement]);
+  }, [isDrawing, isPanning, startPoint, currentPoint, mode, addElement]);
 
   return {
     isDrawing,

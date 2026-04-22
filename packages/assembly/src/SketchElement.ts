@@ -1,22 +1,40 @@
-import { Rect2D } from "@storagemaxxing/geometry/Rect2D";
-import { Line2D } from "@storagemaxxing/geometry/Line2D";
-import { SketchElementId } from "./SketchElementId";
+import { z } from "zod";
+import { Rect2D } from "@storagemaxxing/geometry/Rect2D.js";
+import { Line2D } from "@storagemaxxing/geometry/Line2D.js";
+import { SketchElementId, SketchElementIdSchema } from "./SketchElementId.js";
 
-export type SketchElementType = "rectangle" | "line";
+// Note: Assuming geometry Zod schemas exist or we do custom validation.
+// For now, we will use z.any() for geometry to avoid overcomplicating unless needed,
+// but ideally we'd define Zod schemas for Rect2D and Line2D.
+export const Rect2DSchema = z.any(); // Replace with actual schema later if needed
+export const Line2DSchema = z.any(); // Replace with actual schema later if needed
 
-export type SketchRectangle = {
-  readonly id: SketchElementId;
-  readonly type: "rectangle";
-  readonly geometry: Rect2D;
-};
+export const SketchRectangleSchema = z
+  .object({
+    id: SketchElementIdSchema,
+    type: z.literal("rectangle"),
+    geometry: z.custom<Rect2D>(),
+  })
+  .readonly();
 
-export type SketchLine = {
-  readonly id: SketchElementId;
-  readonly type: "line";
-  readonly geometry: Line2D;
-};
+export type SketchRectangle = z.infer<typeof SketchRectangleSchema>;
 
-export type SketchElement = SketchRectangle | SketchLine;
+export const SketchLineSchema = z
+  .object({
+    id: SketchElementIdSchema,
+    type: z.literal("line"),
+    geometry: z.custom<Line2D>(),
+  })
+  .readonly();
+
+export type SketchLine = z.infer<typeof SketchLineSchema>;
+
+export const SketchElementSchema = z.discriminatedUnion("type", [
+  SketchRectangleSchema,
+  SketchLineSchema,
+]);
+
+export type SketchElement = z.infer<typeof SketchElementSchema>;
 
 export const createSketchRectangle = (
   id: SketchElementId,

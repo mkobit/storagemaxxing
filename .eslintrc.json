@@ -37,18 +37,9 @@
     ],
     "functional/no-loop-statements": "error",
     "functional/prefer-readonly-type": "error",
-    "complexity": [
-      "error",
-      8
-    ],
-    "max-depth": [
-      "error",
-      3
-    ],
-    "max-params": [
-      "error",
-      4
-    ],
+    "complexity": ["error", 8],
+    "max-depth": ["error", 3],
+    "max-params": ["error", 4],
     "import/no-cycle": "error",
     "import/no-default-export": "error",
     "@typescript-eslint/no-explicit-any": "error",
@@ -60,10 +51,7 @@
         "assertionStyle": "never"
       }
     ],
-    "max-lines-per-function": [
-      "error",
-      150
-    ],
+    "max-lines-per-function": ["error", 150],
     "react/react-in-jsx-scope": "off"
   },
   "overrides": [
@@ -75,10 +63,7 @@
         "packages/solver/src/**/*.ts",
         "packages/assembly/src/**/*.ts"
       ],
-      "excludedFiles": [
-        "**/*.test.ts",
-        "**/*.test.tsx"
-      ],
+      "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
         "functional/no-expression-statements": "error",
         "functional/no-throw-statements": "error",
@@ -91,20 +76,14 @@
         "apps/web/src/**/*.tsx",
         "apps/web/src/**/*.ts"
       ],
-      "excludedFiles": [
-        "**/*.test.ts",
-        "**/*.test.tsx"
-      ],
+      "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
         "functional/no-expression-statements": "off",
         "functional/no-return-void": "off"
       }
     },
     {
-      "files": [
-        "**/*.test.ts",
-        "**/*.test.tsx"
-      ],
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
       "rules": {
         "functional/no-expression-statements": "off",
         "functional/no-return-void": "off",
