@@ -7,8 +7,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@storagemaxxing/geometry": "workspace:*",
     "@storagemaxxing/catalog": "workspace:*",
+    "@storagemaxxing/geometry": "workspace:*",
     "@storagemaxxing/packer": "workspace:*",
     "zod": "^4.3.6"
   }

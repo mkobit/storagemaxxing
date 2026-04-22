@@ -4,19 +4,19 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun run build && bun run serve.ts",
     "build": "bun build ./src/index.tsx --outdir ./dist",
+    "dev": "bun run build && bun run serve.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "@storagemaxxing/geometry": "workspace:*",
+    "@storagemaxxing/assembly": "workspace:*",
     "@storagemaxxing/catalog": "workspace:*",
+    "@storagemaxxing/geometry": "workspace:*",
     "@storagemaxxing/packer": "workspace:*",
     "@storagemaxxing/solver": "workspace:*",
-    "@storagemaxxing/assembly": "workspace:*",
-    "@storagemaxxing/store": "workspace:*"
+    "@storagemaxxing/store": "workspace:*",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",

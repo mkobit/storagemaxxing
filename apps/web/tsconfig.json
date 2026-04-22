@@ -1,28 +1,28 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
     "baseUrl": ".",
-    "paths": {
-      "@storagemaxxing/geometry/*": ["../../packages/geometry/src/*"],
-      "@storagemaxxing/catalog/*": ["../../packages/catalog/src/*"],
-      "@storagemaxxing/packer/*": ["../../packages/packer/src/*"],
-      "@storagemaxxing/solver/*": ["../../packages/solver/src/*"],
-      "@storagemaxxing/assembly/*": ["../../packages/assembly/src/*"],
-      "@storagemaxxing/store/*": ["../../packages/store/src/*"]
-    },
+    "checkJs": true,
+    "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "ESNext",
-    "target": "ESNext",
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
     "noEmit": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "isolatedModules": true,
+    "paths": {
+      "@storagemaxxing/assembly/*": ["../../packages/assembly/src/*"],
+      "@storagemaxxing/catalog/*": ["../../packages/catalog/src/*"],
+      "@storagemaxxing/geometry/*": ["../../packages/geometry/src/*"],
+      "@storagemaxxing/packer/*": ["../../packages/packer/src/*"],
+      "@storagemaxxing/solver/*": ["../../packages/solver/src/*"],
+      "@storagemaxxing/store/*": ["../../packages/store/src/*"]
+    },
     "resolveJsonModule": true,
-    "allowJs": true,
-    "checkJs": true
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext"
   },
+  "extends": "../../tsconfig.json",
   "include": ["src", "serve.ts"]
 }

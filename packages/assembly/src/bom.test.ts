@@ -11,7 +11,14 @@ const parseId = (id: string) => BinSpecIdSchema.parse(id);
 
 const mockDimensions = { w: 1, l: 1, h: 1 } as unknown as Dimensions3D<number>;
 
-const mockCatalog: Readonly<Record<string, Readonly<BinSpec & { readonly price?: number; readonly priceApproximate?: boolean }>>> = {
+const mockCatalog: Readonly<
+  Record<
+    string,
+    Readonly<
+      BinSpec & { readonly price?: number; readonly priceApproximate?: boolean }
+    >
+  >
+> = {
   "bin-1": {
     id: binId("bin-1"),
     name: "Bin 1",
@@ -60,8 +67,12 @@ describe("computeBom", () => {
     const bom = computeBom(counts, lookupBin);
 
     expect(bom.items).toHaveLength(2);
-    expect(bom.items.find((i) => i.binId === parseId("bin-1"))?.quantity).toBe(2);
-    expect(bom.items.find((i) => i.binId === parseId("bin-2"))?.quantity).toBe(1);
+    expect(bom.items.find((i) => i.binId === parseId("bin-1"))?.quantity).toBe(
+      2,
+    );
+    expect(bom.items.find((i) => i.binId === parseId("bin-2"))?.quantity).toBe(
+      1,
+    );
 
     expect(bom.totalPrice).toBe(2 * 10 + 1 * 15);
     expect(bom.isApproximatePrice).toBe(true); // bin-2 has priceApproximate

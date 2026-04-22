@@ -1,25 +1,4 @@
 {
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": [
-      "./tsconfig.json",
-      "apps/*/tsconfig.json",
-      "packages/*/tsconfig.json"
-    ],
-    "ecmaVersion": 2022,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
-  },
-  "plugins": [
-    "@typescript-eslint",
-    "functional",
-    "import",
-    "react",
-    "react-hooks",
-    "jsx-a11y"
-  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -29,57 +8,15 @@
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended"
   ],
-  "rules": {
-    "functional/no-let": "error",
-    "functional/immutable-data": [
-      "error",
-      {
-        "ignoreImmediateMutation": true
-      }
-    ],
-    "functional/no-loop-statements": "error",
-    "functional/prefer-readonly-type": "error",
-    "complexity": [
-      "error",
-      8
-    ],
-    "max-depth": [
-      "error",
-      3
-    ],
-    "max-params": [
-      "error",
-      4
-    ],
-    "import/no-cycle": "error",
-    "import/no-default-export": "error",
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/prefer-readonly": "error",
-    "@typescript-eslint/switch-exhaustiveness-check": "error",
-    "@typescript-eslint/consistent-type-assertions": [
-      "error",
-      {
-        "assertionStyle": "never"
-      }
-    ],
-    "max-lines-per-function": [
-      "error",
-      150
-    ],
-    "react/react-in-jsx-scope": "off"
-  },
   "overrides": [
     {
+      "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
       "files": [
         "packages/geometry/src/**/*.ts",
         "packages/packer/src/**/*.ts",
         "packages/catalog/src/**/*.ts",
         "packages/solver/src/**/*.ts",
         "packages/assembly/src/**/*.ts"
-      ],
-      "excludedFiles": [
-        "**/*.test.ts",
-        "**/*.test.tsx"
       ],
       "rules": {
         "functional/no-expression-statements": "error",
@@ -88,14 +25,11 @@
       }
     },
     {
+      "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
       "files": [
         "packages/store/src/**/*.ts",
         "apps/web/src/**/*.tsx",
         "apps/web/src/**/*.ts"
-      ],
-      "excludedFiles": [
-        "**/*.test.ts",
-        "**/*.test.tsx"
       ],
       "rules": {
         "functional/no-expression-statements": "off",
@@ -103,19 +37,98 @@
       }
     },
     {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "@typescript-eslint/consistent-type-assertions": "off",
+        "functional/no-expression-statements": "off",
+        "functional/no-return-void": "off"
+      }
+    },
+    {
+      "files": ["*.json", "*.json5", "*.jsonc"],
+      "parser": "jsonc-eslint-parser",
+      "plugins": ["jsonc"],
+      "rules": {
+        "@typescript-eslint/consistent-type-assertions": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/prefer-readonly": "off",
+        "@typescript-eslint/switch-exhaustiveness-check": "off",
+        "complexity": "off",
+        "functional/immutable-data": "off",
+        "functional/no-let": "off",
+        "functional/no-loop-statements": "off",
+        "functional/prefer-readonly-type": "off",
+        "import/no-cycle": "off",
+        "import/no-default-export": "off",
+        "jsonc/no-comments": "error",
+        "jsonc/sort-keys": ["error", "asc"],
+        "max-depth": "off",
+        "max-lines-per-function": "off",
+        "max-params": "off"
+      }
+    },
+    {
       "files": [
-        "**/*.test.ts",
-        "**/*.test.tsx"
+        "package.json",
+        "packages/*/package.json",
+        "apps/*/package.json"
       ],
       "rules": {
-        "functional/no-expression-statements": "off",
-        "functional/no-return-void": "off",
-        "@typescript-eslint/consistent-type-assertions": "off"
+        "jsonc/sort-keys": "off"
       }
     }
   ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2022,
+    "project": [
+      "./tsconfig.json",
+      "apps/*/tsconfig.json",
+      "packages/*/tsconfig.json"
+    ],
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "functional",
+    "import",
+    "react",
+    "react-hooks",
+    "jsx-a11y"
+  ],
+  "rules": {
+    "@typescript-eslint/consistent-type-assertions": [
+      "error",
+      {
+        "assertionStyle": "never"
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/prefer-readonly": "error",
+    "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "complexity": ["error", 8],
+    "functional/immutable-data": [
+      "error",
+      {
+        "ignoreImmediateMutation": true
+      }
+    ],
+    "functional/no-let": "error",
+    "functional/no-loop-statements": "error",
+    "functional/prefer-readonly-type": "error",
+    "import/no-cycle": "error",
+    "import/no-default-export": "error",
+    "max-depth": ["error", 3],
+    "max-lines-per-function": "off",
+    "max-params": ["error", 4],
+    "react/react-in-jsx-scope": "off"
+  },
   "settings": {
     "import/resolver": {
+      "node": true,
       "typescript": {
         "alwaysTryTypes": true,
         "project": [
@@ -123,8 +136,7 @@
           "apps/*/tsconfig.json",
           "packages/*/tsconfig.json"
         ]
-      },
-      "node": true
+      }
     },
     "react": {
       "version": "detect"
