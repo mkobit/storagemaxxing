@@ -13,3 +13,4 @@ export * from "./SpaceInstance.js";
 export * from "./SpaceTemplate.js";
 export * from "./Unit.js";
 export * from "./Feature.js";
+export * from "./bom.js";

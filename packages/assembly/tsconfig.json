@@ -5,7 +5,8 @@
     "paths": {
       "@storagemaxxing/geometry/*": ["../../packages/geometry/src/*"],
       "@storagemaxxing/catalog/*": ["../../packages/catalog/src/*"],
-      "@storagemaxxing/packer/*": ["../../packages/packer/src/*"]
+      "@storagemaxxing/packer/*": ["../../packages/packer/src/*"],
+      "@storagemaxxing/assembly/*": ["./src/*"]
     }
   },
   "include": ["src"]
