@@ -8,7 +8,7 @@ updates:
     cooldown:
       default-days: 14
     groups:
-      react-and-ui:
+      ui:
         patterns:
           - "react"
           - "react-dom"
@@ -21,7 +21,7 @@ updates:
           - "typescript"
           - "bun-types"
           - "@types/node"
-      eslint-and-build:
+      build:
         patterns:
           - "eslint"
           - "eslint-*"
