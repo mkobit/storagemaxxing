@@ -10,7 +10,10 @@
   ],
   "overrides": [
     {
-      "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
+      "excludedFiles": [
+        "**/*.test.ts",
+        "**/*.test.tsx"
+      ],
       "files": [
         "packages/geometry/src/**/*.ts",
         "packages/packer/src/**/*.ts",
@@ -25,7 +28,10 @@
       }
     },
     {
-      "excludedFiles": ["**/*.test.ts", "**/*.test.tsx"],
+      "excludedFiles": [
+        "**/*.test.ts",
+        "**/*.test.tsx"
+      ],
       "files": [
         "packages/store/src/**/*.ts",
         "apps/web/src/**/*.tsx",
@@ -37,7 +43,10 @@
       }
     },
     {
-      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "files": [
+        "**/*.test.ts",
+        "**/*.test.tsx"
+      ],
       "rules": {
         "@typescript-eslint/consistent-type-assertions": "off",
         "functional/no-expression-statements": "off",
@@ -45,9 +54,15 @@
       }
     },
     {
-      "files": ["*.json", "*.json5", "*.jsonc"],
+      "files": [
+        "*.json",
+        "*.json5",
+        "*.jsonc"
+      ],
       "parser": "jsonc-eslint-parser",
-      "plugins": ["jsonc"],
+      "plugins": [
+        "jsonc"
+      ],
       "rules": {
         "@typescript-eslint/consistent-type-assertions": "off",
         "@typescript-eslint/no-explicit-any": "off",
@@ -61,7 +76,10 @@
         "import/no-cycle": "off",
         "import/no-default-export": "off",
         "jsonc/no-comments": "error",
-        "jsonc/sort-keys": ["error", "asc"],
+        "jsonc/sort-keys": [
+          "error",
+          "asc"
+        ],
         "max-depth": "off",
         "max-lines-per-function": "off",
         "max-params": "off"
@@ -109,7 +127,10 @@
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/prefer-readonly": "error",
     "@typescript-eslint/switch-exhaustiveness-check": "error",
-    "complexity": ["error", 8],
+    "complexity": [
+      "error",
+      8
+    ],
     "functional/immutable-data": [
       "error",
       {
@@ -121,9 +142,24 @@
     "functional/prefer-readonly-type": "error",
     "import/no-cycle": "error",
     "import/no-default-export": "error",
-    "max-depth": ["error", 3],
+    "import/no-unresolved": [
+      "error",
+      {
+        "ignore": [
+          "^bun:",
+          "^bun$"
+        ]
+      }
+    ],
+    "max-depth": [
+      "error",
+      3
+    ],
     "max-lines-per-function": "off",
-    "max-params": ["error", 4],
+    "max-params": [
+      "error",
+      4
+    ],
     "react/react-in-jsx-scope": "off"
   },
   "settings": {

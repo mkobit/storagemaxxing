@@ -4,9 +4,14 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "ignoreDeprecations": "6.0",
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "noEmit": true,
@@ -14,9 +19,18 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ESNext",
-    "types": ["bun-types"],
+    "types": [
+      "bun-types"
+    ],
     "useDefineForClassFields": true
   },
-  "exclude": ["node_modules", "**/dist"],
-  "include": ["apps/*/src", "packages/*/src", "apps/*/serve.ts"]
+  "exclude": [
+    "node_modules",
+    "**/dist"
+  ],
+  "include": [
+    "apps/*/src",
+    "packages/*/src",
+    "apps/*/serve.ts"
+  ]
 }
