@@ -1,4 +1,4 @@
-/* eslint-disable functional/no-expression-statements, @typescript-eslint/consistent-type-assertions */
+/* eslint-disable functional/no-expression-statements */
 import { describe, expect, test } from "bun:test";
 import { computeBom } from "./bom.js";
 import type { BinSpec } from "@storagemaxxing/catalog/bin.js";
@@ -9,7 +9,7 @@ import type { Dimensions3D } from "@storagemaxxing/geometry/index.js";
 
 const parseId = (id: string) => BinSpecIdSchema.parse(id);
 
-const mockDimensions: Dimensions3D<number> = { w: 1, l: 1, h: 1 } as Dimensions3D<number>;
+const mockDimensions = { w: 1, l: 1, h: 1 } as unknown as Dimensions3D<number>;
 
 const mockCatalog: Readonly<Record<string, Readonly<BinSpec & { readonly price?: number; readonly priceApproximate?: boolean }>>> = {
   "bin-1": {

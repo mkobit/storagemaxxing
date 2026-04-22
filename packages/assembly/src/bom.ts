@@ -56,7 +56,7 @@ export const computeBom = (
 
   const totalPrice = entries.reduce((acc, [binId, quantity]) => {
     const spec = lookupBin(binId);
-    const price = getPrice(spec);
+    const price = spec !== undefined ? getPrice(spec) : 0;
     return acc + price * quantity;
   }, 0);
 
