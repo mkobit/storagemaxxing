@@ -1,4 +1,9 @@
-import type { SpaceInstance, SpaceTemplate, AggregateConstraint, BinSpec } from "@storagemaxxing/assembly/index.js";
+import type {
+  SpaceInstance,
+  SpaceTemplate,
+  AggregateConstraint,
+  BinSpec,
+} from "@storagemaxxing/assembly/index.js";
 
 export type SolverRequest = {
   readonly spaces: readonly SpaceInstance[];
@@ -10,7 +15,10 @@ export type SolverRequest = {
 export type SolverResult = {
   readonly feasible: boolean;
   readonly conflicts: readonly string[];
-  readonly suggestedCounts: ReadonlyRecord<string, ReadonlyRecord<string, number>>;
+  readonly suggestedCounts: ReadonlyRecord<
+    string,
+    ReadonlyRecord<string, number>
+  >;
 };
 
 export type LinearModel = {
@@ -23,7 +31,11 @@ export type LinearModel = {
   readonly subjectTo: readonly {
     readonly name: string;
     readonly vars: readonly { readonly name: string; readonly coef: number }[];
-    readonly bnds: { readonly type: number; readonly ub: number; readonly lb: number };
+    readonly bnds: {
+      readonly type: number;
+      readonly ub: number;
+      readonly lb: number;
+    };
   }[];
   readonly bounds?: readonly {
     readonly name: string;
@@ -49,5 +61,5 @@ export type WorkerResponse = {
 export * from "./feasibility.js";
 
 type ReadonlyRecord<K extends string | number | symbol, T> = {
-    readonly [P in K]: T;
+  readonly [P in K]: T;
 };

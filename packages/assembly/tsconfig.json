@@ -1,13 +1,13 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@storagemaxxing/geometry/*": ["../../packages/geometry/src/*"],
+      "@storagemaxxing/assembly/*": ["./src/*"],
       "@storagemaxxing/catalog/*": ["../../packages/catalog/src/*"],
-      "@storagemaxxing/packer/*": ["../../packages/packer/src/*"],
-      "@storagemaxxing/assembly/*": ["./src/*"]
+      "@storagemaxxing/geometry/*": ["../../packages/geometry/src/*"],
+      "@storagemaxxing/packer/*": ["../../packages/packer/src/*"]
     }
   },
+  "extends": "../../tsconfig.json",
   "include": ["src"]
 }

@@ -54,5 +54,5 @@ export const GRIDFINITY_CATALOG: ReadonlyArray<BinSpec> = FOOTPRINTS.flatMap(
           h: inches(toleranceH / 25.4),
         },
       };
-    })
+    }),
 );

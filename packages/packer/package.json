@@ -7,9 +7,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@storagemaxxing/geometry": "workspace:*",
     "@storagemaxxing/assembly": "workspace:*",
     "@storagemaxxing/catalog": "workspace:*",
+    "@storagemaxxing/geometry": "workspace:*",
     "maxrects-packer": "^2.7.3",
     "zod": "^4.3.6"
   }

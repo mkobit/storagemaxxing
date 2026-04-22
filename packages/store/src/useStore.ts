@@ -6,7 +6,10 @@ import { Sketch2D } from "@storagemaxxing/assembly/Sketch2D.js";
 import { SketchElement } from "@storagemaxxing/assembly/SketchElement.js";
 import { SketchId } from "@storagemaxxing/assembly/SketchId.js";
 import { Feature, FeatureId } from "@storagemaxxing/assembly/Feature.js";
-import { SpaceInstance, SpaceInstanceId } from "@storagemaxxing/assembly/SpaceInstance.js";
+import {
+  SpaceInstance,
+  SpaceInstanceId,
+} from "@storagemaxxing/assembly/SpaceInstance.js";
 import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate.js";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint.js";
 import { PackingResult } from "@storagemaxxing/packer/types.js";
@@ -34,8 +37,12 @@ export type AppState = {
 
   readonly spaces: readonly SpaceInstance[];
   readonly activeSpaceId: SpaceInstanceId | null;
-  readonly constraintsBySpace: Readonly<Record<SpaceTemplateId, readonly SpaceConstraint[]>>;
-  readonly packingResultsBySpace: Readonly<Record<SpaceInstanceId, PackingResult>>;
+  readonly constraintsBySpace: Readonly<
+    Record<SpaceTemplateId, readonly SpaceConstraint[]>
+  >;
+  readonly packingResultsBySpace: Readonly<
+    Record<SpaceInstanceId, PackingResult>
+  >;
 };
 
 export type AppActions = {
@@ -51,10 +58,19 @@ export type AppActions = {
   readonly addSpace: (space: SpaceInstance) => void;
   readonly removeSpace: (id: SpaceInstanceId) => void;
   readonly setActiveSpace: (id: SpaceInstanceId | null) => void;
-  readonly setConstraintForSpace: (templateId: SpaceTemplateId, constraint: SpaceConstraint) => void;
-  readonly updateConstraintForSpace: (templateId: SpaceTemplateId, constraint: SpaceConstraint) => void;
+  readonly setConstraintForSpace: (
+    templateId: SpaceTemplateId,
+    constraint: SpaceConstraint,
+  ) => void;
+  readonly updateConstraintForSpace: (
+    templateId: SpaceTemplateId,
+    constraint: SpaceConstraint,
+  ) => void;
   readonly clearConstraintsForSpace: (templateId: SpaceTemplateId) => void;
-  readonly setPackingResultsForSpace: (spaceId: SpaceInstanceId, result: PackingResult) => void;
+  readonly setPackingResultsForSpace: (
+    spaceId: SpaceInstanceId,
+    result: PackingResult,
+  ) => void;
 };
 
 export type StoreState = AppState & AppActions;
@@ -105,8 +121,10 @@ export const useStore = create<StoreState>()(
         }),
       setPan: (pan) => set({ pan }),
 
-      addSpace: (space) => set((state) => ({ spaces: [...state.spaces, space] })),
-      removeSpace: (id) => set((state) => ({ spaces: state.spaces.filter((s) => s.id !== id) })),
+      addSpace: (space) =>
+        set((state) => ({ spaces: [...state.spaces, space] })),
+      removeSpace: (id) =>
+        set((state) => ({ spaces: state.spaces.filter((s) => s.id !== id) })),
       setActiveSpace: (activeSpaceId) => set({ activeSpaceId }),
       setConstraintForSpace: (templateId, constraint) =>
         set((state) => {
