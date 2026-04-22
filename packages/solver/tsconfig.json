@@ -3,9 +3,21 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@storagemaxxing/geometry/*": ["../../packages/geometry/src/*"],
-      "@storagemaxxing/packer/*": ["../../packages/packer/src/*"]
+      "@storagemaxxing/geometry/*": [
+        "../../packages/geometry/src/*"
+      ],
+      "@storagemaxxing/packer/*": [
+        "../../packages/packer/src/*"
+      ],
+      "@storagemaxxing/assembly/*": [
+        "../../packages/assembly/src/*"
+      ],
+      "@storagemaxxing/catalog/*": [
+        "../../packages/catalog/src/*"
+      ]
     }
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

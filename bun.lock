@@ -80,6 +80,8 @@
       "name": "@storagemaxxing/solver",
       "version": "0.0.0",
       "dependencies": {
+        "@storagemaxxing/assembly": "workspace:*",
+        "@storagemaxxing/catalog": "workspace:*",
         "@storagemaxxing/geometry": "workspace:*",
         "@storagemaxxing/packer": "workspace:*",
         "glpk.js": "^5.0.0",
