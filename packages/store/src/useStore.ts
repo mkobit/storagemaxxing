@@ -1,11 +1,15 @@
 import { create } from "zustand";
 import { persist, StateStorage, createJSONStorage } from "zustand/middleware";
 import { get, set, del } from "idb-keyval";
-import { ToolMode } from "./ToolMode";
-import { Sketch2D } from "@storagemaxxing/assembly/Sketch2D";
-import { SketchElement } from "@storagemaxxing/assembly/SketchElement";
-import { SketchId } from "@storagemaxxing/assembly/SketchId";
-import { Feature, FeatureId } from "@storagemaxxing/assembly/Feature";
+import { ToolMode } from "./ToolMode.js";
+import { Sketch2D } from "@storagemaxxing/assembly/Sketch2D.js";
+import { SketchElement } from "@storagemaxxing/assembly/SketchElement.js";
+import { SketchId } from "@storagemaxxing/assembly/SketchId.js";
+import { Feature, FeatureId } from "@storagemaxxing/assembly/Feature.js";
+import { SpaceInstance, SpaceInstanceId } from "@storagemaxxing/assembly/SpaceInstance.js";
+import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate.js";
+import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint.js";
+import { PackingResult } from "@storagemaxxing/packer/types.js";
 
 const idbStorage: StateStorage = {
   getItem: async (name: string): Promise<string | null> => {
@@ -27,6 +31,11 @@ export type AppState = {
   readonly activeSketchId: SketchId | null;
   readonly activeFeatureId: FeatureId | null;
   readonly pan: { readonly x: number; readonly y: number };
+
+  readonly spaces: readonly SpaceInstance[];
+  readonly activeSpaceId: SpaceInstanceId | null;
+  readonly constraintsBySpace: Readonly<Record<SpaceTemplateId, readonly SpaceConstraint[]>>;
+  readonly packingResultsBySpace: Readonly<Record<SpaceInstanceId, PackingResult>>;
 };
 
 export type AppActions = {
@@ -38,6 +47,14 @@ export type AppActions = {
   readonly addFeature: (feature: Feature) => void;
   readonly addElementToActiveSketch: (element: SketchElement) => void;
   readonly setPan: (pan: { readonly x: number; readonly y: number }) => void;
+
+  readonly addSpace: (space: SpaceInstance) => void;
+  readonly removeSpace: (id: SpaceInstanceId) => void;
+  readonly setActiveSpace: (id: SpaceInstanceId | null) => void;
+  readonly setConstraintForSpace: (templateId: SpaceTemplateId, constraint: SpaceConstraint) => void;
+  readonly updateConstraintForSpace: (templateId: SpaceTemplateId, constraint: SpaceConstraint) => void;
+  readonly clearConstraintsForSpace: (templateId: SpaceTemplateId) => void;
+  readonly setPackingResultsForSpace: (spaceId: SpaceInstanceId, result: PackingResult) => void;
 };
 
 export type StoreState = AppState & AppActions;
@@ -50,6 +67,10 @@ const initialState: AppState = {
   activeSketchId: null,
   activeFeatureId: null,
   pan: { x: 0, y: 0 },
+  spaces: [],
+  activeSpaceId: null,
+  constraintsBySpace: {},
+  packingResultsBySpace: {},
 };
 
 export const useStore = create<StoreState>()(
@@ -83,10 +104,65 @@ export const useStore = create<StoreState>()(
           };
         }),
       setPan: (pan) => set({ pan }),
+
+      addSpace: (space) => set((state) => ({ spaces: [...state.spaces, space] })),
+      removeSpace: (id) => set((state) => ({ spaces: state.spaces.filter((s) => s.id !== id) })),
+      setActiveSpace: (activeSpaceId) => set({ activeSpaceId }),
+      setConstraintForSpace: (templateId, constraint) =>
+        set((state) => {
+          const existing = state.constraintsBySpace[templateId] || [];
+          const filtered = existing.filter((c) => c.binId !== constraint.binId);
+          return {
+            constraintsBySpace: {
+              ...state.constraintsBySpace,
+              [templateId]: [...filtered, constraint],
+            },
+          };
+        }),
+      updateConstraintForSpace: (templateId, constraint) =>
+        set((state) => {
+          const existing = state.constraintsBySpace[templateId] || [];
+          const filtered = existing.filter((c) => c.binId !== constraint.binId);
+          return {
+            constraintsBySpace: {
+              ...state.constraintsBySpace,
+              [templateId]: [...filtered, constraint],
+            },
+          };
+        }),
+      clearConstraintsForSpace: (templateId) =>
+        set((state) => {
+          const newConstraints = { ...state.constraintsBySpace };
+          // eslint-disable-next-line functional/immutable-data
+          delete newConstraints[templateId];
+          return { constraintsBySpace: newConstraints };
+        }),
+      setPackingResultsForSpace: (spaceId, result) =>
+        set((state) => ({
+          packingResultsBySpace: {
+            ...state.packingResultsBySpace,
+            [spaceId]: result,
+          },
+        })),
     }),
     {
       name: "storagemaxxing-db",
       storage: createJSONStorage(() => idbStorage),
+      partialize: (state) => {
+        // Exclude ephemeral data (packingResultsBySpace) from persistence.
+        return {
+          _hasHydrated: state._hasHydrated,
+          mode: state.mode,
+          sketches: state.sketches,
+          timeline: state.timeline,
+          activeSketchId: state.activeSketchId,
+          activeFeatureId: state.activeFeatureId,
+          pan: state.pan,
+          spaces: state.spaces,
+          activeSpaceId: state.activeSpaceId,
+          constraintsBySpace: state.constraintsBySpace,
+        };
+      },
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);
       },
