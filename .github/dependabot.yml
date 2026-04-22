@@ -8,31 +8,42 @@ updates:
     cooldown:
       default-days: 14
     groups:
-      react:
+      ui:
         patterns:
           - "react"
           - "react-dom"
           - "@types/react"
           - "@types/react-dom"
-      three:
-        patterns:
           - "three"
           - "@types/three"
-      vite:
+      typescript:
         patterns:
-          - "vite"
-          - "@vitejs/*"
-      typescript-eslint:
-        patterns:
-          - "@typescript-eslint/*"
           - "typescript"
-      eslint:
+          - "bun-types"
+          - "@types/node"
+      build:
         patterns:
           - "eslint"
           - "eslint-*"
           - "@eslint/*"
+          - "@typescript-eslint/*"
           - "globals"
           - "@stylistic/*"
+          - "prettier"
+          - "vite"
+          - "@vitejs/*"
+      functional-libs:
+        patterns:
+          - "zod"
+          - "idb-keyval"
+          - "zustand"
+          - "glpk.js"
+          - "maxrects-packer"
+          - "gl-matrix"
+          - "@types/gl-matrix"
+      other:
+        patterns:
+          - "*"
 
   - package-ecosystem: github-actions
     directory: /
