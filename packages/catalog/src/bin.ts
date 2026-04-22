@@ -15,6 +15,7 @@ export interface BinSpec<T extends number = number> {
   readonly vendor: string;
   readonly system?: StorageSystem;
   readonly catalogSource: CatalogSource;
+  readonly price?: number;
 
   readonly nominal: Dimensions3D<T>;
   readonly actual: Dimensions3D<T>;
