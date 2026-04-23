@@ -1,4 +1,4 @@
-/* eslint-disable functional/no-expression-statements, functional/immutable-data, functional/no-try-statements */
+/* eslint-disable functional/no-expression-statements, functional/immutable-data */
 import { checkFeasibility } from "../feasibility.js";
 import type { WorkerRequest, WorkerResponse } from "../index.js";
 

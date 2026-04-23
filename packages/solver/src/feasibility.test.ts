@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, functional/no-expression-statements, functional/immutable-data, @typescript-eslint/consistent-type-assertions */
+/* eslint-disable @typescript-eslint/no-explicit-any, functional/immutable-data */
 // polyfill self for glpk.js tests in bun
 import { describe, it, expect, beforeAll } from "bun:test";
 
