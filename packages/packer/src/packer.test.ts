@@ -1,5 +1,5 @@
-/* eslint-disable functional/no-expression-statements */
-/* eslint-disable max-lines-per-function */
+ 
+ 
 import { describe, it, expect } from "bun:test";
 import { packSpace } from "./packer.js";
 import {

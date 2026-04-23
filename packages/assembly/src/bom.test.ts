@@ -1,4 +1,4 @@
-/* eslint-disable functional/no-expression-statements */
+ 
 import { describe, expect, test } from "bun:test";
 import { computeBom } from "./bom.js";
 import type { BinSpec } from "@storagemaxxing/catalog/bin.js";
