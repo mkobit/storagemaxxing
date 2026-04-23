@@ -4,7 +4,7 @@
     "ignoreDeprecations": "6.0",
     "paths": {
       "@storagemaxxing/assembly/*": [
-        "./src/*"
+        "../../packages/assembly/src/*"
       ],
       "@storagemaxxing/catalog/*": [
         "../../packages/catalog/src/*"
@@ -14,6 +14,12 @@
       ],
       "@storagemaxxing/packer/*": [
         "../../packages/packer/src/*"
+      ],
+      "@storagemaxxing/solver/*": [
+        "../../packages/solver/src/*"
+      ],
+      "@storagemaxxing/store/*": [
+        "../../packages/store/src/*"
       ]
     }
   },

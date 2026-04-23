@@ -14,6 +14,12 @@
       ],
       "@storagemaxxing/packer/*": [
         "../../packages/packer/src/*"
+      ],
+      "@storagemaxxing/solver/*": [
+        "../../packages/solver/src/*"
+      ],
+      "@storagemaxxing/store/*": [
+        "../../packages/store/src/*"
       ]
     }
   },

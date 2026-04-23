@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/consistent-type-assertions, @typescript-eslint/ban-ts-comment, functional/no-let, functional/no-expression-statements, import/no-named-as-default, functional/no-try-statements */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/consistent-type-assertions, @typescript-eslint/ban-ts-comment, functional/no-let, functional/no-expression-statements, functional/no-try-statements */
 import GLPK from "glpk.js";
 import type { SolverRequest, SolverResult, LinearModel } from "./index.js";
 
