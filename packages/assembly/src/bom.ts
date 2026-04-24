@@ -1,6 +1,7 @@
 import { BOM, BOMItem, BinSpecIdSchema } from "./BaseTypes.js";
 import type { PackingResult } from "@storagemaxxing/packer/types.js";
 import type { BinSpec } from "@storagemaxxing/catalog/bin.js";
+import type { SpaceInstance } from "./SpaceInstance.js";
 
 export type LookupBinFunction = (id: string) => BinSpec | undefined;
 
@@ -111,18 +112,31 @@ export const computeBom = (
 };
 
 export const computeAggregateBom = (
-  results: ReadonlyArray<PackingResult | Readonly<Record<string, number>>>,
+  spaces: readonly SpaceInstance[],
+  packingResultsBySpace: Readonly<
+    Record<string, PackingResult | Readonly<Record<string, number>>>
+  >,
   lookupBin: LookupBinFunction,
 ): BOM => {
-  const aggregatedCounts = results.reduce<Readonly<Record<string, number>>>(
-    (acc, result) => {
-      const counts = getCounts(result);
-      return Object.entries(counts).reduce<Readonly<Record<string, number>>>(
+  const aggregatedCounts = spaces.reduce<Readonly<Record<string, number>>>(
+    (acc, space) => {
+      const result = packingResultsBySpace[space.id];
+      const spaceCounts = result
+        ? getCounts(result)
+        : space.placedBins?.reduce<Readonly<Record<string, number>>>(
+            (counts, bin) => {
+              const existing = counts[bin.binId] || 0;
+              return { ...counts, [bin.binId]: existing + 1 };
+            },
+            {},
+          ) || {};
+
+      return Object.entries(spaceCounts).reduce<Readonly<Record<string, number>>>(
         (innerAcc, [binId, quantity]) => {
           const existing = innerAcc[binId] || 0;
           return {
             ...innerAcc,
-            [binId]: existing + quantity,
+            [binId]: existing + quantity * space.count,
           };
         },
         acc,

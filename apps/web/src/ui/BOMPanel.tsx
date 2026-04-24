@@ -6,14 +6,17 @@ import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup.js";
 import { binId } from "@storagemaxxing/catalog/bin.js";
 
 export const BOMPanel: React.FC = () => {
+  const spaces = useStore((state) => state.spaces);
   const packingResultsBySpace = useStore(
     (state) => state.packingResultsBySpace,
   );
 
-  const resultsArray = Object.values(packingResultsBySpace);
-
   const lookupBin = (id: string) => findBinById(ALL_BINS, binId(id));
-  const aggregateBom = computeAggregateBom(resultsArray, lookupBin);
+  const aggregateBom = computeAggregateBom(
+    spaces,
+    packingResultsBySpace,
+    lookupBin,
+  );
 
   return (
     <div
