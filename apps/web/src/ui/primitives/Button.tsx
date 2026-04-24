@@ -12,11 +12,7 @@ export const Button = ({
   variant = "primary",
 }: ButtonProps) => {
   return (
-    <button
-      onClick={onClick}
-      className={`button ${variant}`}
-      type="button"
-    >
+    <button onClick={onClick} className={`button ${variant}`} type="button">
       {children}
     </button>
   );
