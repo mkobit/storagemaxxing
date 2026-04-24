@@ -61,6 +61,7 @@ export default tseslint.config(
       "import/no-unresolved": "off",
       "max-depth": ["error", 3],
       "max-params": ["error", 4],
+      "no-restricted-imports": ["error", { "patterns": ["**/index", "**/index.ts", "**/index.tsx"] }],
       "react/react-in-jsx-scope": "off",
     },
   },

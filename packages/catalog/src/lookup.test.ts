@@ -3,7 +3,7 @@ import { ALL_BINS, findBinById, binsForDepth } from "./lookup";
 import { SCHALLER_CATALOG } from "./schaller";
 import { AKROMILS_CATALOG } from "./akromils";
 import { inches } from "@storagemaxxing/geometry/Inches.js";
-import { binId } from "./index";
+import { binId } from "./bin";
 
 describe("Catalog Lookup", () => {
   test("AKROMILS_CATALOG has exactly 13 bins", () => {
