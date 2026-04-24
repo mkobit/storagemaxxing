@@ -44,7 +44,10 @@ export default tseslint.config(
       ...(react.configs.recommended.rules as any),
       ...(reactHooks.configs.recommended.rules as any),
       ...(jsxA11y.configs.recommended.rules as any),
-      "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
+      "@typescript-eslint/consistent-type-assertions": [
+        "error",
+        { assertionStyle: "never" },
+      ],
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/prefer-readonly": "error",
       "@typescript-eslint/switch-exhaustiveness-check": "error",
@@ -110,6 +113,6 @@ export default tseslint.config(
       "import/no-default-export": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/consistent-type-assertions": "off",
-    }
-  }
+    },
+  },
 );

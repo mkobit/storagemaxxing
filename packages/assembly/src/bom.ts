@@ -109,3 +109,27 @@ export const computeBom = (
     isApproximatePrice,
   };
 };
+
+export const computeAggregateBom = (
+  results: ReadonlyArray<PackingResult | Readonly<Record<string, number>>>,
+  lookupBin: LookupBinFunction,
+): BOM => {
+  const aggregatedCounts = results.reduce<Readonly<Record<string, number>>>(
+    (acc, result) => {
+      const counts = getCounts(result);
+      return Object.entries(counts).reduce<Readonly<Record<string, number>>>(
+        (innerAcc, [binId, quantity]) => {
+          const existing = innerAcc[binId] || 0;
+          return {
+            ...innerAcc,
+            [binId]: existing + quantity,
+          };
+        },
+        acc,
+      );
+    },
+    {},
+  );
+
+  return computeBom(aggregatedCounts, lookupBin);
+};
