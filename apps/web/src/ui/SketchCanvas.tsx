@@ -17,7 +17,6 @@ export const SketchCanvas: React.FC = () => {
 
   const activeSpaceId = useStore((state) => state.activeSpaceId);
   const spaces = useStore((state) => state.spaces);
-  const constraintsBySpace = useStore((state) => state.constraintsBySpace);
   const packingResultsBySpace = useStore((state) => state.packingResultsBySpace);
 
   const activeSpace = activeSpaceId ? spaces.find((s) => s.id === activeSpaceId) || null : null;
