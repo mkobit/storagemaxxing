@@ -25,5 +25,5 @@
     "target": "ESNext"
   },
   "extends": "../../tsconfig.json",
-  "include": ["src", "serve.ts"]
+  "include": ["src", "serve.ts", ".storybook/**/*", "vitest.config.ts", "vitest.shims.d.ts"]
 }
