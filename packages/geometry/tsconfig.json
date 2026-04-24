@@ -3,7 +3,5 @@
     "ignoreDeprecations": "6.0"
   },
   "extends": "../../tsconfig.json",
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
