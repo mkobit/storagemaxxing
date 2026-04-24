@@ -122,7 +122,18 @@ export const useStore = create<StoreState>()(
       setPan: (pan) => set({ pan }),
 
       addSpace: (space) =>
-        set((state) => ({ spaces: [...state.spaces, space] })),
+        set((state) => {
+          const globalConstraints = state.constraintsBySpace[space.templateId] || [];
+          const constraintsRecord = Object.fromEntries(
+            globalConstraints.map((c) => [c.binId, c])
+          );
+          return {
+            spaces: [
+              ...state.spaces,
+              { ...space, constraints: { ...space.constraints, ...constraintsRecord } },
+            ],
+          };
+        }),
       removeSpace: (id) =>
         set((state) => ({ spaces: state.spaces.filter((s) => s.id !== id) })),
       setActiveSpace: (activeSpaceId) => set({ activeSpaceId }),
@@ -135,6 +146,16 @@ export const useStore = create<StoreState>()(
               ...state.constraintsBySpace,
               [templateId]: [...filtered, constraint],
             },
+            spaces: state.spaces.map((s) => {
+              if (s.templateId !== templateId) return s;
+              return {
+                ...s,
+                constraints: {
+                  ...s.constraints,
+                  [constraint.binId]: constraint,
+                },
+              };
+            }),
           };
         }),
       updateConstraintForSpace: (templateId, constraint) =>
@@ -146,6 +167,16 @@ export const useStore = create<StoreState>()(
               ...state.constraintsBySpace,
               [templateId]: [...filtered, constraint],
             },
+            spaces: state.spaces.map((s) => {
+              if (s.templateId !== templateId) return s;
+              return {
+                ...s,
+                constraints: {
+                  ...s.constraints,
+                  [constraint.binId]: constraint,
+                },
+              };
+            }),
           };
         }),
       clearConstraintsForSpace: (templateId) =>
@@ -153,7 +184,16 @@ export const useStore = create<StoreState>()(
           const newConstraints = { ...state.constraintsBySpace };
           // eslint-disable-next-line functional/immutable-data
           delete newConstraints[templateId];
-          return { constraintsBySpace: newConstraints };
+          return {
+            constraintsBySpace: newConstraints,
+            spaces: state.spaces.map((s) => {
+              if (s.templateId !== templateId) return s;
+              return {
+                ...s,
+                constraints: {},
+              };
+            }),
+          };
         }),
       setPackingResultsForSpace: (spaceId, result) =>
         set((state) => ({
