@@ -9,6 +9,7 @@ import {
   SketchFeature,
   FeatureId,
 } from "@storagemaxxing/assembly/Feature";
+import { ConstraintEditor } from "./constraints/ConstraintEditor.js";
 
 export const FeatureTree: React.FC = () => {
   const timeline = useStore((state) => state.timeline);
@@ -123,6 +124,9 @@ export const FeatureTree: React.FC = () => {
               {feature.name}{" "}
               <small style={{ color: "#888" }}>({feature.type})</small>
             </button>
+            {feature.id === activeFeatureId && feature.type === "fill_space" && (
+              <ConstraintEditor featureId={feature.id} />
+            )}
           </li>
         ))}
       </ul>
