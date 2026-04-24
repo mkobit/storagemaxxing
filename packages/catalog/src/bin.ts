@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Dimensions3D } from "@storagemaxxing/geometry/index";
+import { Dimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
 import { CatalogSource } from "./catalogSource";
 import { StorageSystem } from "./StorageSystem";
 
