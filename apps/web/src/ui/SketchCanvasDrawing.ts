@@ -3,12 +3,20 @@
 /* eslint-disable functional/no-let */
 import { ToolMode } from "@storagemaxxing/store/ToolMode";
 import { Sketch2D } from "@storagemaxxing/assembly/Sketch2D";
+import { SpaceInstance } from "@storagemaxxing/assembly/SpaceInstance";
+import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
+import { PackingResult } from "@storagemaxxing/packer/types";
+import { BinSpec } from "@storagemaxxing/catalog/bin";
 import { Point } from "./SketchCanvasHooks";
 
 export type DrawContext = {
   readonly canvas: HTMLCanvasElement;
   readonly ctx: CanvasRenderingContext2D;
   readonly activeSketch: Sketch2D | null;
+  readonly activeSpace: SpaceInstance | null;
+  readonly constraints: readonly SpaceConstraint[];
+  readonly packingResult: PackingResult | null;
+  readonly lookupBin: (id: string) => BinSpec | undefined;
   readonly mode: ToolMode;
   readonly isDrawing: boolean;
   readonly startPoint: Point | null;
@@ -65,11 +73,78 @@ const drawGrid = (
   ctx.restore();
 };
 
+const drawActiveSketch = (ctx: CanvasRenderingContext2D, activeSketch: Sketch2D) => {
+  ctx.strokeStyle = "#000000";
+  ctx.lineWidth = 2;
+  activeSketch.elements.forEach((el) => {
+    if (el.type === "rectangle") {
+      ctx.strokeRect(
+        el.geometry.origin[0],
+        el.geometry.origin[1],
+        el.geometry.dimensions.w,
+        el.geometry.dimensions.l,
+      );
+    }
+  });
+};
+
+const drawActiveSpace = (
+  ctx: CanvasRenderingContext2D,
+  packingResult: PackingResult,
+  constraints: readonly SpaceConstraint[],
+  lookupBin: (id: string) => BinSpec | undefined
+) => {
+  packingResult.placedBins.forEach((placed) => {
+    const spec = lookupBin(placed.binId);
+    if (spec) {
+      const constraint = constraints.find((c) => c.binId === placed.binId);
+      ctx.fillStyle = constraint?.color || "#cccccc";
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 1;
+
+      const x = placed.origin[0];
+      const y = placed.origin[2];
+      const w = spec.nominal.w;
+      const l = spec.nominal.l;
+
+      ctx.fillRect(x, y, w, l);
+      ctx.strokeRect(x, y, w, l);
+    }
+  });
+};
+
+const drawCurrentAction = (
+  ctx: CanvasRenderingContext2D,
+  mode: ToolMode,
+  startPoint: Point,
+  currentPoint: Point
+) => {
+  ctx.strokeStyle = "#0066cc";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([5, 5]);
+
+  if (mode === "two_point_rect") {
+    const x = Math.min(startPoint.x, currentPoint.x);
+    const y = Math.min(startPoint.y, currentPoint.y);
+    const w = Math.abs(currentPoint.x - startPoint.x);
+    const h = Math.abs(currentPoint.y - startPoint.y);
+    ctx.strokeRect(x, y, w, h);
+  } else if (mode === "center_rect") {
+    const dx = Math.abs(currentPoint.x - startPoint.x);
+    const dy = Math.abs(currentPoint.y - startPoint.y);
+    ctx.strokeRect(startPoint.x - dx, startPoint.y - dy, dx * 2, dy * 2);
+  }
+};
+
 export const drawCanvas = (context: DrawContext) => {
   const {
     canvas,
     ctx,
     activeSketch,
+    activeSpace,
+    constraints,
+    packingResult,
+    lookupBin,
     mode,
     isDrawing,
     startPoint,
@@ -85,36 +160,14 @@ export const drawCanvas = (context: DrawContext) => {
   ctx.translate(pan.x, pan.y);
 
   if (activeSketch) {
-    ctx.strokeStyle = "#000000";
-    ctx.lineWidth = 2;
-    activeSketch.elements.forEach((el) => {
-      if (el.type === "rectangle") {
-        ctx.strokeRect(
-          el.geometry.origin[0],
-          el.geometry.origin[1],
-          el.geometry.dimensions.w,
-          el.geometry.dimensions.l,
-        );
-      }
-    });
+    drawActiveSketch(ctx, activeSketch);
+  }
+  if (activeSpace && packingResult) {
+    drawActiveSpace(ctx, packingResult, constraints, lookupBin);
   }
 
   if (isDrawing && startPoint && currentPoint) {
-    ctx.strokeStyle = "#0066cc";
-    ctx.lineWidth = 2;
-    ctx.setLineDash([5, 5]);
-
-    if (mode === "two_point_rect") {
-      const x = Math.min(startPoint.x, currentPoint.x);
-      const y = Math.min(startPoint.y, currentPoint.y);
-      const w = Math.abs(currentPoint.x - startPoint.x);
-      const h = Math.abs(currentPoint.y - startPoint.y);
-      ctx.strokeRect(x, y, w, h);
-    } else if (mode === "center_rect") {
-      const dx = Math.abs(currentPoint.x - startPoint.x);
-      const dy = Math.abs(currentPoint.y - startPoint.y);
-      ctx.strokeRect(startPoint.x - dx, startPoint.y - dy, dx * 2, dy * 2);
-    }
+    drawCurrentAction(ctx, mode, startPoint, currentPoint);
   }
 
   ctx.restore();

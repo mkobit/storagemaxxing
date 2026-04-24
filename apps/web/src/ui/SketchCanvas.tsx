@@ -1,8 +1,11 @@
 import React, { useRef, useEffect } from "react";
 import { useStore } from "@storagemaxxing/store/useStore";
+import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
+import { binId } from "@storagemaxxing/catalog/bin";
 import { useSketchEvents } from "./SketchCanvasHooks";
 import { drawCanvas } from "./SketchCanvasDrawing";
 
+// eslint-disable-next-line complexity
 export const SketchCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mode = useStore((state) => state.mode);
@@ -11,6 +14,18 @@ export const SketchCanvas: React.FC = () => {
   const activeSketchId = useStore((state) => state.activeSketchId);
   const sketches = useStore((state) => state.sketches);
   const activeSketch = sketches.find((s) => s.id === activeSketchId) || null;
+
+  const activeSpaceId = useStore((state) => state.activeSpaceId);
+  const spaces = useStore((state) => state.spaces);
+  const constraintsBySpace = useStore((state) => state.constraintsBySpace);
+  const packingResultsBySpace = useStore((state) => state.packingResultsBySpace);
+
+  const activeSpace = activeSpaceId ? spaces.find((s) => s.id === activeSpaceId) || null : null;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const constraints = activeSpace ? Object.values(activeSpace.constraints) : [];
+  const packingResult = activeSpaceId ? packingResultsBySpace[activeSpaceId] || null : null;
+
+  const lookupBin = (id: string) => findBinById(ALL_BINS, binId(id));
 
   const {
     isDrawing,
@@ -31,18 +46,32 @@ export const SketchCanvas: React.FC = () => {
       canvas,
       ctx,
       activeSketch,
+      activeSpace,
+      constraints,
+      packingResult,
+      lookupBin,
       mode,
       isDrawing,
       startPoint,
       currentPoint,
       pan,
     });
-  }, [activeSketch, isDrawing, startPoint, currentPoint, mode, pan]);
+  }, [
+    activeSketch,
+    activeSpace,
+    constraints,
+    packingResult,
+    isDrawing,
+    startPoint,
+    currentPoint,
+    mode,
+    pan,
+  ]);
 
-  if (!activeSketch) {
+  if (!activeSketch && !activeSpace) {
     return (
       <div style={{ padding: "2rem", color: "#666" }}>
-        Select or create a sketch to start drawing.
+        Select or create a sketch, or select a space to view.
       </div>
     );
   }
