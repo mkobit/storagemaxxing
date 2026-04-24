@@ -59,6 +59,7 @@ export type WorkerResponse = {
 
 // Re-export feasibility function once created
 export * from "./feasibility.js";
+export * from "./useSolverWorker.js";
 
 type ReadonlyRecord<K extends string | number | symbol, T> = {
   readonly [P in K]: T;
