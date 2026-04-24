@@ -120,12 +120,12 @@ export default tseslint.config(
       "apps/web/.storybook/**/*.ts",
       "**/*.stories.tsx",
       "**/*.stories.ts",
-      "apps/web/vitest.config.ts"
+      "apps/web/vitest.config.ts",
     ],
     rules: {
       "import/no-default-export": "off",
       "functional/prefer-readonly-type": "off",
       "functional/immutable-data": "off",
     },
-  }
+  },
 );
