@@ -45,18 +45,22 @@ describe("formatDim", () => {
   test("integers", () => {
     expect(formatDim(inches(16.0))).toBe("16″");
     expect(formatDim(inches(0))).toBe("0″");
+    expect(formatDim(inches(-5))).toBe("-5″");
   });
 
   test("pure fractions", () => {
     expect(formatDim(inches(0.125))).toBe("⅛″");
     expect(formatDim(inches(0.75))).toBe("¾″");
     expect(formatDim(inches(0.4375))).toBe("7/16″");
+    expect(formatDim(inches(-0.5))).toBe("-½″");
   });
 
   test("mixed fractions", () => {
     expect(formatDim(inches(15.75))).toBe("15 ¾″");
     expect(formatDim(inches(16.125))).toBe("16 ⅛″");
     expect(formatDim(inches(24.5))).toBe("24 ½″");
+    expect(formatDim(inches(-1.5))).toBe("-1 ½″");
+    expect(formatDim(inches(-15.75))).toBe("-15 ¾″");
   });
 
   test("non-standard decimals fallback", () => {

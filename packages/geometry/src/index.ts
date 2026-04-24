@@ -2,6 +2,7 @@ export * from "./AccessFace.js";
 export * from "./Box3D.js";
 export * from "./Dimensions2D.js";
 export * from "./Dimensions3D.js";
+export * from "./Fraction.js";
 export * from "./GridDimensions.js";
 export * from "./GridUnit.js";
 export * from "./Inches.js";
