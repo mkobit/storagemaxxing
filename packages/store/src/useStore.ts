@@ -43,6 +43,10 @@ export type AppState = {
   readonly packingResultsBySpace: Readonly<
     Record<SpaceInstanceId, PackingResult>
   >;
+
+  readonly solverFeasibility: boolean;
+  readonly solverConflicts: readonly string[];
+  readonly solverSuggestedCounts: Readonly<Record<string, number>>;
 };
 
 export type AppActions = {
@@ -71,6 +75,12 @@ export type AppActions = {
     spaceId: SpaceInstanceId,
     result: PackingResult,
   ) => void;
+
+  readonly setSolverFeasibility: (feasibility: boolean) => void;
+  readonly setSolverConflicts: (conflicts: readonly string[]) => void;
+  readonly setSolverSuggestedCounts: (
+    counts: Readonly<Record<string, number>>,
+  ) => void;
 };
 
 export type StoreState = AppState & AppActions;
@@ -87,6 +97,9 @@ const initialState: AppState = {
   activeSpaceId: null,
   constraintsBySpace: {},
   packingResultsBySpace: {},
+  solverFeasibility: true,
+  solverConflicts: [],
+  solverSuggestedCounts: {},
 };
 
 export const useStore = create<StoreState>()(
@@ -162,6 +175,11 @@ export const useStore = create<StoreState>()(
             [spaceId]: result,
           },
         })),
+
+      setSolverFeasibility: (solverFeasibility) => set({ solverFeasibility }),
+      setSolverConflicts: (solverConflicts) => set({ solverConflicts }),
+      setSolverSuggestedCounts: (solverSuggestedCounts) =>
+        set({ solverSuggestedCounts }),
     }),
     {
       name: "storagemaxxing-db",
