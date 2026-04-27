@@ -12,14 +12,14 @@ describe("packerUtils", () => {
     });
 
     it("should count rects by binId", () => {
-      const packer = new MaxRectsPacker(100, 100, 0);
       const rects = [
         { x: 0, y: 0, width: 10, height: 10, data: { binId: "bin1" } },
         { x: 10, y: 0, width: 10, height: 10, data: { binId: "bin1" } },
         { x: 0, y: 10, width: 10, height: 10, data: { binId: "bin2" } },
       ];
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      (packer as any).bins = [{ rects }];
+      const packer = {
+        bins: [{ rects }],
+      } as unknown as MaxRectsPacker;
 
       const counts = getPlacedCounts(packer);
       expect(counts.get("bin1")).toBe(2);
@@ -31,8 +31,7 @@ describe("packerUtils", () => {
   describe("checkPhaseFailures", () => {
     it("should return failures when placed < req", () => {
       const constraints: readonly SpaceConstraint[] = [
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        { binId: "bin1", mode: "hard", lo: 5 } as SpaceConstraint,
+        { binId: "bin1", mode: "hard", lo: 5 } as unknown as SpaceConstraint,
       ];
       const placedCounts = new Map([["bin1", 3]]);
 
@@ -45,8 +44,7 @@ describe("packerUtils", () => {
 
     it("should return no failures when placed >= req", () => {
       const constraints: readonly SpaceConstraint[] = [
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        { binId: "bin1", mode: "hard", lo: 5 } as SpaceConstraint,
+        { binId: "bin1", mode: "hard", lo: 5 } as unknown as SpaceConstraint,
       ];
       const placedCounts = new Map([["bin1", 5]]);
 
