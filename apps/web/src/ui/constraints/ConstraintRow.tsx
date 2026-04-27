@@ -46,48 +46,47 @@ const handleHardMode = (constraint: SpaceConstraint): SpaceConstraint => ({
   color: constraint.color,
 });
 
+const modeHandlers: Readonly<
+  Record<string, (constraint: SpaceConstraint) => SpaceConstraint>
+> = {
+  off: handleOffMode,
+  auto: handleAutoMode,
+  soft: handleSoftMode,
+  hard: handleHardMode,
+};
+
+const updateBound = (
+  constraint: SpaceConstraint,
+  updates: { readonly lo?: number; readonly hi?: number | null },
+): SpaceConstraint | undefined => {
+  if (constraint.mode === "soft" || constraint.mode === "hard") {
+    return { ...constraint, ...updates };
+  }
+  return undefined;
+};
+
 export const ConstraintRow: React.FC<ConstraintRowProps> = ({
   constraint,
   binName,
   onChange,
 }) => {
   const handleModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newMode = e.target.value;
-    if (newMode === "off") {
-      onChange(handleOffMode(constraint));
-    } else if (newMode === "auto") {
-      onChange(handleAutoMode(constraint));
-    } else if (newMode === "soft") {
-      onChange(handleSoftMode(constraint));
-    } else if (newMode === "hard") {
-      onChange(handleHardMode(constraint));
+    const handler = modeHandlers[e.target.value];
+    if (handler !== undefined) {
+      onChange(handler(constraint));
     }
   };
 
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value, 10);
-    if (isNaN(val)) return;
+    if (isNaN(val)) {
+      return;
+    }
 
-    if (constraint.mode === "soft") {
-      onChange({
-        mode: "soft",
-        binId: constraint.binId,
-        lo: Math.max(0, val),
-        hardLo: constraint.hardLo,
-        hi: constraint.hi,
-        hard: false,
-        color: constraint.color,
-      });
-    } else if (constraint.mode === "hard") {
-      onChange({
-        mode: "hard",
-        binId: constraint.binId,
-        lo: Math.max(1, val),
-        softLo: constraint.softLo,
-        hi: constraint.hi,
-        hard: true,
-        color: constraint.color,
-      });
+    const minLo = constraint.mode === "hard" ? 1 : 0;
+    const updated = updateBound(constraint, { lo: Math.max(minLo, val) });
+    if (updated !== undefined) {
+      onChange(updated);
     }
   };
 
@@ -96,26 +95,9 @@ export const ConstraintRow: React.FC<ConstraintRowProps> = ({
     const parsed = parseInt(val, 10);
     const newHi = isNaN(parsed) ? null : parsed;
 
-    if (constraint.mode === "soft") {
-      onChange({
-        mode: "soft",
-        binId: constraint.binId,
-        lo: constraint.lo,
-        hardLo: constraint.hardLo,
-        hi: newHi,
-        hard: false,
-        color: constraint.color,
-      });
-    } else if (constraint.mode === "hard") {
-      onChange({
-        mode: "hard",
-        binId: constraint.binId,
-        lo: constraint.lo,
-        softLo: constraint.softLo,
-        hi: newHi,
-        hard: true,
-        color: constraint.color,
-      });
+    const updated = updateBound(constraint, { hi: newHi });
+    if (updated !== undefined) {
+      onChange(updated);
     }
   };
 
