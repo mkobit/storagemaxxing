@@ -41,12 +41,19 @@ export const generatePhaseRects = (
 export const sortRects = (rects: RectsAccumulator): RectsAccumulator =>
   [...rects].sort((a, b) => b.width * b.height - a.width * a.height);
 
-export const getPlacedCount = (packer: MaxRectsPacker, binId: string): number =>
-  packer.bins[0]?.rects.filter((r) => r.data.binId === binId).length || 0;
+export const getPlacedCounts = (
+  packer: MaxRectsPacker,
+): ReadonlyMap<string, number> =>
+  new Map(
+    Array.from(
+      Map.groupBy(packer.bins[0]?.rects || [], (r) => r.data.binId),
+      ([binId, rects]) => [binId, rects.length],
+    ),
+  );
 
 export const checkPhaseFailures = (
   constraints: readonly SpaceConstraint[],
-  packer: MaxRectsPacker,
+  placedCounts: ReadonlyMap<string, number>,
   getRequired: (c: SpaceConstraint) => number,
   reason: "hardMin" | "softMin",
 ): readonly ConstraintFailure[] =>
@@ -54,7 +61,7 @@ export const checkPhaseFailures = (
     .map((c) => ({
       c,
       req: getRequired(c),
-      placed: getPlacedCount(packer, c.binId),
+      placed: placedCounts.get(c.binId) || 0,
     }))
     .filter(({ req, placed }) => placed < req)
     .map(({ c, req, placed }) =>
@@ -82,7 +89,7 @@ export const checkHardMinPhase = (
 ) => {
   const failures = checkPhaseFailures(
     constraints,
-    packer,
+    getPlacedCounts(packer),
     getHardMin,
     "hardMin",
   );
@@ -100,7 +107,7 @@ export const checkSoftMinPhase = (
   if (validity !== "valid") return { validity, failures: [] };
   const failures = checkPhaseFailures(
     constraints,
-    packer,
+    getPlacedCounts(packer),
     getSoftMin,
     "softMin",
   );
