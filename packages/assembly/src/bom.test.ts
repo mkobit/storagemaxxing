@@ -191,11 +191,19 @@ describe("computeAggregateBom", () => {
       "space-2": result2,
     };
 
-    const bom = computeAggregateBom([space1, space2], packingResults, lookupBin);
+    const bom = computeAggregateBom(
+      [space1, space2],
+      packingResults,
+      lookupBin,
+    );
 
     expect(bom.items).toHaveLength(2);
-    expect(bom.items.find((i) => i.binId === parseId("bin-1"))?.quantity).toBe(5);
-    expect(bom.items.find((i) => i.binId === parseId("bin-2"))?.quantity).toBe(1);
+    expect(bom.items.find((i) => i.binId === parseId("bin-1"))?.quantity).toBe(
+      5,
+    );
+    expect(bom.items.find((i) => i.binId === parseId("bin-2"))?.quantity).toBe(
+      1,
+    );
 
     expect(bom.totalPrice).toBe(5 * 10 + 1 * 15);
     expect(bom.isApproximatePrice).toBe(true);
@@ -212,8 +220,12 @@ describe("computeAggregateBom", () => {
     const bom = computeAggregateBom([space1], {}, lookupBin);
 
     expect(bom.items).toHaveLength(2);
-    expect(bom.items.find((i) => i.binId === parseId("bin-1"))?.quantity).toBe(2);
-    expect(bom.items.find((i) => i.binId === parseId("bin-2"))?.quantity).toBe(1);
+    expect(bom.items.find((i) => i.binId === parseId("bin-1"))?.quantity).toBe(
+      2,
+    );
+    expect(bom.items.find((i) => i.binId === parseId("bin-2"))?.quantity).toBe(
+      1,
+    );
 
     expect(bom.totalPrice).toBe(2 * 10 + 1 * 15);
   });
@@ -238,9 +250,13 @@ describe("computeAggregateBom", () => {
 
     expect(bom.items).toHaveLength(2);
     // (2 bin-1 * 3 spaces) = 6
-    expect(bom.items.find((i) => i.binId === parseId("bin-1"))?.quantity).toBe(6);
+    expect(bom.items.find((i) => i.binId === parseId("bin-1"))?.quantity).toBe(
+      6,
+    );
     // (1 bin-2 * 3 spaces) = 3
-    expect(bom.items.find((i) => i.binId === parseId("bin-2"))?.quantity).toBe(3);
+    expect(bom.items.find((i) => i.binId === parseId("bin-2"))?.quantity).toBe(
+      3,
+    );
 
     expect(bom.totalPrice).toBe(6 * 10 + 3 * 15);
   });
@@ -254,7 +270,9 @@ describe("computeAggregateBom", () => {
     const bom = computeAggregateBom([space1], {}, lookupBin);
 
     expect(bom.items).toHaveLength(1);
-    expect(bom.items.find((i) => i.binId === parseId("bin-1"))?.quantity).toBe(4);
+    expect(bom.items.find((i) => i.binId === parseId("bin-1"))?.quantity).toBe(
+      4,
+    );
     expect(bom.totalPrice).toBe(4 * 10);
   });
 });

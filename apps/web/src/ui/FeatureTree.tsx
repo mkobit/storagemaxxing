@@ -124,9 +124,10 @@ export const FeatureTree: React.FC = () => {
               {feature.name}{" "}
               <small style={{ color: "#888" }}>({feature.type})</small>
             </button>
-            {feature.id === activeFeatureId && feature.type === "fill_space" && (
-              <ConstraintEditor featureId={feature.id} />
-            )}
+            {feature.id === activeFeatureId &&
+              feature.type === "fill_space" && (
+                <ConstraintEditor featureId={feature.id} />
+              )}
           </li>
         ))}
       </ul>

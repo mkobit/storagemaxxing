@@ -9,15 +9,25 @@ const getSpecField = <K extends keyof BinSpec>(
   return spec?.[field] ? String(spec[field]) : fallback;
 };
 
+const sanitizeCSVField = (value: string): string => {
+  const formulaChars = ["=", "+", "-", "@"];
+  if (formulaChars.some((char) => value.startsWith(char))) {
+    return `'${value}`;
+  }
+  return value;
+};
+
 const formatRow = (item: BOMItem, spec: BinSpec | undefined): string => {
-  const sku = getSpecField(spec, "sku", item.binId);
-  const rawName = getSpecField(spec, "name", "Unknown");
+  const sku = sanitizeCSVField(getSpecField(spec, "sku", item.binId));
+  const rawName = sanitizeCSVField(getSpecField(spec, "name", "Unknown"));
   const name = `"${rawName.replace(/"/g, '""')}"`;
   const quantity = item.quantity;
   const price = spec?.price || 0;
   const total = price * quantity;
-  const system = getSpecField(spec, "system", "unknown");
-  const source = getSpecField(spec, "catalogSource", "unknown");
+  const system = sanitizeCSVField(getSpecField(spec, "system", "unknown"));
+  const source = sanitizeCSVField(
+    getSpecField(spec, "catalogSource", "unknown"),
+  );
 
   return [
     sku,

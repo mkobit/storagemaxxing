@@ -136,14 +136,18 @@ export const useStore = create<StoreState>()(
 
       addSpace: (space) =>
         set((state) => {
-          const globalConstraints = state.constraintsBySpace[space.templateId] || [];
+          const globalConstraints =
+            state.constraintsBySpace[space.templateId] || [];
           const constraintsRecord = Object.fromEntries(
-            globalConstraints.map((c) => [c.binId, c])
+            globalConstraints.map((c) => [c.binId, c]),
           );
           return {
             spaces: [
               ...state.spaces,
-              { ...space, constraints: { ...space.constraints, ...constraintsRecord } },
+              {
+                ...space,
+                constraints: { ...space.constraints, ...constraintsRecord },
+              },
             ],
           };
         }),

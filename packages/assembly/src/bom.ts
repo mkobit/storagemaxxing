@@ -131,16 +131,15 @@ export const computeAggregateBom = (
             {},
           ) || {};
 
-      return Object.entries(spaceCounts).reduce<Readonly<Record<string, number>>>(
-        (innerAcc, [binId, quantity]) => {
-          const existing = innerAcc[binId] || 0;
-          return {
-            ...innerAcc,
-            [binId]: existing + quantity * space.count,
-          };
-        },
-        acc,
-      );
+      return Object.entries(spaceCounts).reduce<
+        Readonly<Record<string, number>>
+      >((innerAcc, [binId, quantity]) => {
+        const existing = innerAcc[binId] || 0;
+        return {
+          ...innerAcc,
+          [binId]: existing + quantity * space.count,
+        };
+      }, acc);
     },
     {},
   );
