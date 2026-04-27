@@ -43,16 +43,13 @@ export const sortRects = (rects: RectsAccumulator): RectsAccumulator =>
 
 export const getPlacedCounts = (
   packer: MaxRectsPacker,
-): ReadonlyMap<string, number> => {
-  const rects = packer.bins[0]?.rects || [];
-  const map = new Map<string, number>();
-  // eslint-disable-next-line functional/no-loop-statements
-  for (const r of rects) {
-    // eslint-disable-next-line functional/no-expression-statements, functional/immutable-data
-    map.set(r.data.binId, (map.get(r.data.binId) || 0) + 1);
-  }
-  return map;
-};
+): ReadonlyMap<string, number> =>
+  new Map(
+    Array.from(
+      Map.groupBy(packer.bins[0]?.rects || [], (r) => r.data.binId),
+      ([binId, rects]) => [binId, rects.length],
+    ),
+  );
 
 export const checkPhaseFailures = (
   constraints: readonly SpaceConstraint[],
