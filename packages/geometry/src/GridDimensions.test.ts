@@ -8,7 +8,7 @@ describe("createGridDimensions", () => {
       cols: 2,
       rows: 3,
     });
-    expect(Object.prototype.hasOwnProperty.call(result, "depth")).toBe(false);
+    expect(result).not.toHaveProperty("depth");
   });
 
   test("creates dimensions with cols, rows, and depth", () => {
