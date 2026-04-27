@@ -1,4 +1,9 @@
-import type { SolverRequest, SolverResult, WorkerRequest, WorkerResponse } from "./index.js";
+import type {
+  SolverRequest,
+  SolverResult,
+  WorkerRequest,
+  WorkerResponse,
+} from "./index.js";
 
 export type SolverWorkerStatus = "idle" | "running" | "success" | "error";
 
@@ -22,7 +27,7 @@ export type SolverWorkerAction =
 
 export const solverWorkerReducer = (
   state: SolverWorkerState,
-  action: SolverWorkerAction
+  action: SolverWorkerAction,
 ): SolverWorkerState => {
   if (action.type === "START") {
     return {
@@ -61,7 +66,7 @@ export const createWorkerRequest = (data: SolverRequest): WorkerRequest => ({
 });
 
 export const handleWorkerResponse = (
-  response: WorkerResponse
+  response: WorkerResponse,
 ): SolverWorkerAction => {
   if (response.type === "feasibility_result") {
     return {

@@ -73,7 +73,10 @@ const drawGrid = (
   ctx.restore();
 };
 
-const drawActiveSketch = (ctx: CanvasRenderingContext2D, activeSketch: Sketch2D) => {
+const drawActiveSketch = (
+  ctx: CanvasRenderingContext2D,
+  activeSketch: Sketch2D,
+) => {
   ctx.strokeStyle = "#000000";
   ctx.lineWidth = 2;
   activeSketch.elements.forEach((el) => {
@@ -92,7 +95,7 @@ const drawActiveSpace = (
   ctx: CanvasRenderingContext2D,
   packingResult: PackingResult,
   constraints: readonly SpaceConstraint[],
-  lookupBin: (id: string) => BinSpec | undefined
+  lookupBin: (id: string) => BinSpec | undefined,
 ) => {
   packingResult.placedBins.forEach((placed) => {
     const spec = lookupBin(placed.binId);
@@ -117,7 +120,7 @@ const drawCurrentAction = (
   ctx: CanvasRenderingContext2D,
   mode: ToolMode,
   startPoint: Point,
-  currentPoint: Point
+  currentPoint: Point,
 ) => {
   ctx.strokeStyle = "#0066cc";
   ctx.lineWidth = 2;
