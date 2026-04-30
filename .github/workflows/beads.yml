@@ -4,6 +4,8 @@ on: [push, pull_request]
 jobs:
   validate:
     runs-on: ubuntu-latest
+    env:
+      BD_NO_DB: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
@@ -11,14 +13,9 @@ jobs:
       - name: Setup mise
         uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac
 
-      - name: Bootstrap beads database
-        run: |
-          # Recreate the local database from the tracked JSONL file
-          bd bootstrap
-
       - name: Verify beads database
         run: |
-          # Validate basic connectivity and state
+          # Validate basic connectivity and state using no-db mode
           bd list --json
           
       - name: Lint issues
