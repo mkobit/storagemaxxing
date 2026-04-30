@@ -37,6 +37,13 @@ else
     exit 1
 fi
 
+if command -v bd &> /dev/null; then
+    echo "Beads version: $(bd version)"
+else
+    echo "Error: Beads (bd) not found after mise install"
+    exit 1
+fi
+
 echo "Installing dependencies..."
 bun install --frozen-lockfile
 

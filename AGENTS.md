@@ -2,9 +2,7 @@
 
 This is the central repository for StorageMaxxing.
 This application is a strictly client-side constraint solver and placement engine for organizational storage systems (like Gridfinity, OpenGrid, etc.).
-It runs entirely in the browser using Bun, React 18, Zustand, and a GLPK.js Web Worker.
-State is persisted solely to localStorage.
-Bun is used as the runtime, test runner, and package manager for this project.
+It runs entirely in the browser using Bun, React 19, Zustand, and a GLPK.js Web Worker.
 
 ## Architecture & code philosophy
 
@@ -19,17 +17,22 @@ Bun is used as the runtime, test runner, and package manager for this project.
   Unknown + narrowing preferred.
 - **Exports**: Named exports only.
   No default exports.
-  No index.ts barrel files.
+- **Barrel files**: Prohibited in `src/` subdirectories to prevent circular dependencies. 
+  **Exception**: Each package (e.g., `packages/packer/`) must have a root `index.ts` barrel file to export its public API.
 - **No circular dependencies**: Strictly enforced via `import/no-cycle`.
-- **Pure logic cores**: `geometry/`, `engine/`, and `catalog/` must be 100% pure functions (no expression statements, throws, or try/catch blocks).
+- **Pure logic cores**: `geometry/`, `packer/`, and `catalog/` must be 100% pure functions.
 
 ## Package dependency tree
 
 Dependencies must strictly flow downwards:
-`ui` -> `store` -> (`assembly`, `engine`, `solver`)
+`ui` -> `store` -> (`assembly`, `packer`, `solver`)
 `assembly` -> `catalog` -> `geometry`
-`engine` -> `catalog`, `geometry`
+`packer` -> `catalog`, `geometry`
 `solver` -> `assembly`, `catalog`, `geometry`
 `workers` -> `solver`
 
-Before editing any package, read the corresponding `AGENTS.md` in its directory.
+## Issue Tracking
+
+This project uses **[Beads (bd)](https://github.com/gastownhall/beads)** for all task and issue tracking.
+Operational context is auto-loaded via `bd prime`. 
+Refer to [docs/jules/workflows.md](docs/jules/workflows.md) for supplemental conventions and session-close protocols.
