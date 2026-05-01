@@ -1,5 +1,6 @@
 import React from "react";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint.js";
+import { ConstraintInputs } from "./ConstraintInputs";
 
 export type ConstraintRowProps = {
   readonly constraint: SpaceConstraint;
@@ -28,14 +29,8 @@ const handleAutoMode = (constraint: SpaceConstraint): SpaceConstraint => ({
 const handleSoftMode = (constraint: SpaceConstraint): SpaceConstraint => ({
   mode: "soft",
   binId: constraint.binId,
-  lo:
-    constraint.mode === "hard" || constraint.mode === "soft"
-      ? constraint.lo
-      : 1,
-  hi:
-    constraint.mode === "hard" || constraint.mode === "soft"
-      ? constraint.hi
-      : null,
+  lo: constraint.mode === "hard" || constraint.mode === "soft" ? constraint.lo : 1,
+  hi: constraint.mode === "hard" || constraint.mode === "soft" ? constraint.hi : null,
   hard: false,
   color: constraint.color,
 });
@@ -47,32 +42,10 @@ const handleHardMode = (constraint: SpaceConstraint): SpaceConstraint => ({
     constraint.mode === "hard" || constraint.mode === "soft"
       ? Math.max(1, constraint.lo)
       : 1,
-  hi:
-    constraint.mode === "hard" || constraint.mode === "soft"
-      ? constraint.hi
-      : null,
+  hi: constraint.mode === "hard" || constraint.mode === "soft" ? constraint.hi : null,
   hard: true,
   color: constraint.color,
 });
-
-const modeHandlers: Readonly<
-  Record<string, (constraint: SpaceConstraint) => SpaceConstraint>
-> = {
-  off: handleOffMode,
-  auto: handleAutoMode,
-  soft: handleSoftMode,
-  hard: handleHardMode,
-};
-
-const updateBound = (
-  constraint: SpaceConstraint,
-  updates: { readonly lo?: number; readonly hi?: number | null },
-): SpaceConstraint | undefined => {
-  if (constraint.mode === "soft" || constraint.mode === "hard") {
-    return { ...constraint, ...updates };
-  }
-  return undefined;
-};
 
 export const ConstraintRow: React.FC<ConstraintRowProps> = ({
   constraint,
@@ -80,33 +53,44 @@ export const ConstraintRow: React.FC<ConstraintRowProps> = ({
   onChange,
 }) => {
   const handleModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const handler = modeHandlers[e.target.value];
-    if (handler !== undefined) {
-      onChange(handler(constraint));
-    }
+    const newMode = e.target.value;
+    if (newMode === "off") onChange(handleOffMode(constraint));
+    else if (newMode === "auto") onChange(handleAutoMode(constraint));
+    else if (newMode === "soft") onChange(handleSoftMode(constraint));
+    else if (newMode === "hard") onChange(handleHardMode(constraint));
   };
 
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseInt(e.target.value, 10);
-    if (isNaN(val)) {
-      return;
-    }
+    if (isNaN(val)) return;
 
-    const minLo = constraint.mode === "hard" ? 1 : 0;
-    const updated = updateBound(constraint, { lo: Math.max(minLo, val) });
-    if (updated !== undefined) {
-      onChange(updated);
+    if (constraint.mode === "soft") {
+      onChange({
+        ...constraint,
+        lo: Math.max(0, val),
+      });
+    } else if (constraint.mode === "hard") {
+      onChange({
+        ...constraint,
+        lo: Math.max(1, val),
+      });
     }
   };
 
   const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    const parsed = parseInt(val, 10);
-    const newHi = isNaN(parsed) ? null : parsed;
+    const parsed = parseInt(e.target.value, 10);
+    const hi = isNaN(parsed) ? null : parsed;
 
-    const updated = updateBound(constraint, { hi: newHi });
-    if (updated !== undefined) {
-      onChange(updated);
+    if (constraint.mode === "soft") {
+      onChange({
+        ...constraint,
+        hi,
+      });
+    } else if (constraint.mode === "hard") {
+      onChange({
+        ...constraint,
+        hi: hi !== null ? Math.max(1, hi) : null,
+      });
     }
   };
 
@@ -136,35 +120,11 @@ export const ConstraintRow: React.FC<ConstraintRowProps> = ({
         <option value="hard">Hard</option>
       </select>
 
-      {(constraint.mode === "soft" || constraint.mode === "hard") && (
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          <label
-            style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}
-          >
-            Min:
-            <input
-              type="number"
-              min={constraint.mode === "hard" ? 1 : 0}
-              value={constraint.lo}
-              onChange={handleMinChange}
-              style={{ width: "60px" }}
-            />
-          </label>
-          <label
-            style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}
-          >
-            Max:
-            <input
-              type="number"
-              min={constraint.lo}
-              value={constraint.hi ?? ""}
-              onChange={handleMaxChange}
-              placeholder="none"
-              style={{ width: "60px" }}
-            />
-          </label>
-        </div>
-      )}
+      <ConstraintInputs
+        constraint={constraint}
+        onMinChange={handleMinChange}
+        onMaxChange={handleMaxChange}
+      />
     </div>
   );
 };

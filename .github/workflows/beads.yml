@@ -14,11 +14,7 @@ jobs:
         uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac
 
       - name: Verify beads database
-        run: |
-          # Validate basic connectivity and state using no-db mode
-          bd list --json
+        run: bd list --json
           
       - name: Lint issues
-        run: |
-          # Ensure all open issues have required sections
-          bd lint
+        run: bd lint

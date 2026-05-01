@@ -62,7 +62,7 @@ export type InstallationConstraint = z.infer<
 
 // Since Inches is a branded number type without a custom Zod schema in geometry,
 // we create a local Zod schema that produces an Inches type
-export const InchesZodSchema = z.number().transform((n) => inches(n));
+export const InchesZodSchema = z.number().transform(inches);
 
 export const DividerSchema = z
   .object({

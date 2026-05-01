@@ -1,6 +1,6 @@
 import React from "react";
 import { useStore } from "@storagemaxxing/store/useStore.js";
-import { BOMTable } from "./bom/BOMTable.js";
+import { BOMTable } from "./bom/BOMTable";
 import { computeAggregateBom } from "@storagemaxxing/assembly/bom.js";
 import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup.js";
 import { binId } from "@storagemaxxing/catalog/bin.js";

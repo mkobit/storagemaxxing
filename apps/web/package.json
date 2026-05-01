@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "bun build ./src/index.tsx --outdir ./dist",
-    "dev": "bun run build && bun run serve.ts",
+    "build": "bun build ./index.html --outdir ./dist --minify",
+    "dev": "bun run serve.ts",
+    "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "react-dom": "^19.0.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3"
   }

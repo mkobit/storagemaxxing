@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Toolbar } from "./Toolbar.js";
-import { SketchCanvas } from "./SketchCanvas.js";
-import { FeatureTree } from "./FeatureTree.js";
+import { Toolbar } from "./Toolbar";
+import { SketchCanvas } from "./SketchCanvas";
+import { FeatureTree } from "./FeatureTree";
 import { useStore } from "@storagemaxxing/store/useStore.js";
-import { BOMPanel } from "./BOMPanel.js";
+import { BOMPanel } from "./BOMPanel";
 
 export const App: React.FC = () => {
   const hasHydrated = useStore((state) => state._hasHydrated);

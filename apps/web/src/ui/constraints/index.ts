@@ -1,1 +1,1 @@
-export * from "./ConstraintRow.js";
+export * from "./ConstraintRow";

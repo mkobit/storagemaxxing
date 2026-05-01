@@ -4,11 +4,14 @@ import { describe, it, expect, beforeAll } from "bun:test";
 
 beforeAll(() => {
   if (typeof globalThis !== "undefined" && !(globalThis as any).Worker) {
-    (globalThis as any).Worker = class {
-      constructor() {}
-      postMessage() {}
-      terminate() {}
-    };
+    (globalThis as any).Worker = function () {
+      return {
+        postMessage: () => {},
+        terminate: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      };
+    } as any;
   }
   if (typeof globalThis !== "undefined" && !(globalThis as any).self) {
     (globalThis as any).self = { location: { href: "http://localhost" } };

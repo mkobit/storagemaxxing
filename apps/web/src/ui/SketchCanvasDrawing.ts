@@ -1,12 +1,12 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-let */
-import { ToolMode } from "@storagemaxxing/store/ToolMode";
-import { Sketch2D } from "@storagemaxxing/assembly/Sketch2D";
-import { SpaceInstance } from "@storagemaxxing/assembly/SpaceInstance";
-import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
-import { PackingResult } from "@storagemaxxing/packer/types";
-import { BinSpec } from "@storagemaxxing/catalog/bin";
+import { ToolMode } from "@storagemaxxing/store/ToolMode.js";
+import { Sketch2D } from "@storagemaxxing/assembly/Sketch2D.js";
+import { SpaceInstance } from "@storagemaxxing/assembly/SpaceInstance.js";
+import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint.js";
+import { PackingResult } from "@storagemaxxing/packer/types.js";
+import { BinSpec } from "@storagemaxxing/catalog/bin.js";
 import { Point } from "./SketchCanvasHooks";
 
 export type DrawContext = {
@@ -24,20 +24,18 @@ export type DrawContext = {
   readonly pan: { readonly x: number; readonly y: number };
 };
 
-const drawGrid = (
+const drawGridLines = (
   ctx: CanvasRenderingContext2D,
-  width: number,
-  height: number,
-  pan: { readonly x: number; readonly y: number },
+  gridSize: number,
+  view: {
+    readonly width: number;
+    readonly height: number;
+    readonly pan: { readonly x: number; readonly y: number };
+  }
 ) => {
-  const gridSize = 50;
-  ctx.save();
-  ctx.strokeStyle = "#e0e0e0";
-  ctx.lineWidth = 1;
-
+  const { width, height, pan } = view;
   const startX = (pan.x % gridSize) - gridSize;
   const startY = (pan.y % gridSize) - gridSize;
-
   ctx.beginPath();
   for (let x = startX; x < width; x += gridSize) {
     ctx.moveTo(x, 0);
@@ -48,28 +46,36 @@ const drawGrid = (
     ctx.lineTo(width, y);
   }
   ctx.stroke();
+};
 
-  // Draw axes
+const drawAxes = (
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  pan: { readonly x: number; readonly y: number }
+) => {
   ctx.lineWidth = 2;
-
-  // X Axis (Red)
   if (pan.y >= 0 && pan.y <= height) {
     ctx.strokeStyle = "rgba(255, 0, 0, 0.5)";
-    ctx.beginPath();
-    ctx.moveTo(0, pan.y);
-    ctx.lineTo(width, pan.y);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, pan.y); ctx.lineTo(width, pan.y); ctx.stroke();
   }
-
-  // Y Axis (Green)
   if (pan.x >= 0 && pan.x <= width) {
     ctx.strokeStyle = "rgba(0, 255, 0, 0.5)";
-    ctx.beginPath();
-    ctx.moveTo(pan.x, 0);
-    ctx.lineTo(pan.x, height);
-    ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pan.x, 0); ctx.lineTo(pan.x, height); ctx.stroke();
   }
+};
 
+const drawGrid = (
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  pan: { readonly x: number; readonly y: number },
+) => {
+  ctx.save();
+  ctx.strokeStyle = "#e0e0e0";
+  ctx.lineWidth = 1;
+  drawGridLines(ctx, 50, { width, height, pan });
+  drawAxes(ctx, width, height, pan);
   ctx.restore();
 };
 
@@ -81,12 +87,7 @@ const drawActiveSketch = (
   ctx.lineWidth = 2;
   activeSketch.elements.forEach((el) => {
     if (el.type === "rectangle") {
-      ctx.strokeRect(
-        el.geometry.origin[0],
-        el.geometry.origin[1],
-        el.geometry.dimensions.w,
-        el.geometry.dimensions.l,
-      );
+      ctx.strokeRect(el.geometry.origin[0], el.geometry.origin[1], el.geometry.dimensions.w, el.geometry.dimensions.l);
     }
   });
 };
@@ -99,20 +100,13 @@ const drawActiveSpace = (
 ) => {
   packingResult.placedBins.forEach((placed) => {
     const spec = lookupBin(placed.binId);
-    if (spec) {
-      const constraint = constraints.find((c) => c.binId === placed.binId);
-      ctx.fillStyle = constraint?.color || "#cccccc";
-      ctx.strokeStyle = "#000000";
-      ctx.lineWidth = 1;
-
-      const x = placed.origin[0];
-      const y = placed.origin[2];
-      const w = spec.nominal.w;
-      const l = spec.nominal.l;
-
-      ctx.fillRect(x, y, w, l);
-      ctx.strokeRect(x, y, w, l);
-    }
+    if (!spec) return;
+    const constraint = constraints.find((c) => c.binId === placed.binId);
+    ctx.fillStyle = constraint?.color || "#cccccc";
+    ctx.strokeStyle = "#000000";
+    ctx.lineWidth = 1;
+    ctx.fillRect(placed.origin[0], placed.origin[2], spec.nominal.w, spec.nominal.l);
+    ctx.strokeRect(placed.origin[0], placed.origin[2], spec.nominal.w, spec.nominal.l);
   });
 };
 
@@ -125,7 +119,6 @@ const drawCurrentAction = (
   ctx.strokeStyle = "#0066cc";
   ctx.lineWidth = 2;
   ctx.setLineDash([5, 5]);
-
   if (mode === "two_point_rect") {
     const x = Math.min(startPoint.x, currentPoint.x);
     const y = Math.min(startPoint.y, currentPoint.y);
@@ -140,38 +133,13 @@ const drawCurrentAction = (
 };
 
 export const drawCanvas = (context: DrawContext) => {
-  const {
-    canvas,
-    ctx,
-    activeSketch,
-    activeSpace,
-    constraints,
-    packingResult,
-    lookupBin,
-    mode,
-    isDrawing,
-    startPoint,
-    currentPoint,
-    pan,
-  } = context;
-
+  const { canvas, ctx, activeSketch, activeSpace, constraints, packingResult, lookupBin, mode, isDrawing, startPoint, currentPoint, pan } = context;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   drawGrid(ctx, canvas.width, canvas.height, pan);
-
   ctx.save();
   ctx.translate(pan.x, pan.y);
-
-  if (activeSketch) {
-    drawActiveSketch(ctx, activeSketch);
-  }
-  if (activeSpace && packingResult) {
-    drawActiveSpace(ctx, packingResult, constraints, lookupBin);
-  }
-
-  if (isDrawing && startPoint && currentPoint) {
-    drawCurrentAction(ctx, mode, startPoint, currentPoint);
-  }
-
+  if (activeSketch) drawActiveSketch(ctx, activeSketch);
+  if (activeSpace && packingResult) drawActiveSpace(ctx, packingResult, constraints, lookupBin);
+  if (isDrawing && startPoint && currentPoint) drawCurrentAction(ctx, mode, startPoint, currentPoint);
   ctx.restore();
 };
