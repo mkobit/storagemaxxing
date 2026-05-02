@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "storagemaxxing",
+  "project_id": "99d54be8-5590-467d-b940-898f5d40fb39"
+}

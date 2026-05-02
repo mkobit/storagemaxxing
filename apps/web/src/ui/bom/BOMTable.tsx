@@ -1,50 +1,17 @@
 import React from "react";
 import { BOM } from "@storagemaxxing/assembly/BaseTypes.js";
-import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup.js";
-import { binId } from "@storagemaxxing/catalog/bin.js";
-import { exportBOMToCSV } from "./exportCSV.js";
+import { BOMHeader } from "./BOMHeader";
+import { BOMRow } from "./BOMRow";
+import { BOMSummary } from "./BOMSummary";
 
 export interface BOMTableProps {
   readonly bom: BOM;
 }
 
 export const BOMTable: React.FC<BOMTableProps> = ({ bom }) => {
-  const handleDownload = () => {
-    const csvContent = exportBOMToCSV(bom, ALL_BINS);
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    // eslint-disable-next-line functional/immutable-data
-    link.href = url;
-    link.setAttribute("download", "storagemaxxing_bom.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "1rem",
-        }}
-      >
-        <h3>Bill of Materials</h3>
-        <button
-          onClick={handleDownload}
-          disabled={bom.items.length === 0}
-          style={{
-            padding: "0.5rem 1rem",
-            cursor: bom.items.length === 0 ? "not-allowed" : "pointer",
-          }}
-        >
-          Download CSV
-        </button>
-      </div>
+      <BOMHeader bom={bom} />
 
       <div style={{ overflowY: "auto", flex: 1 }}>
         <table
@@ -92,28 +59,9 @@ export const BOMTable: React.FC<BOMTableProps> = ({ bom }) => {
             </tr>
           </thead>
           <tbody>
-            {bom.items.map((item) => {
-              const spec = findBinById(ALL_BINS, binId(item.binId));
-              const sku = spec?.sku || item.binId;
-              const name = spec?.name || "Unknown Item";
-              const price = spec?.price || 0;
-              const total = price * item.quantity;
-              return (
-                <tr key={item.binId} style={{ borderBottom: "1px solid #eee" }}>
-                  <td style={{ padding: "0.5rem" }}>{sku}</td>
-                  <td style={{ padding: "0.5rem" }}>{name}</td>
-                  <td style={{ padding: "0.5rem", textAlign: "right" }}>
-                    {item.quantity}
-                  </td>
-                  <td style={{ padding: "0.5rem", textAlign: "right" }}>
-                    ${price.toFixed(2)}
-                  </td>
-                  <td style={{ padding: "0.5rem", textAlign: "right" }}>
-                    ${total.toFixed(2)}
-                  </td>
-                </tr>
-              );
-            })}
+            {bom.items.map((item) => (
+              <BOMRow key={item.binId} item={item} />
+            ))}
             {bom.items.length === 0 && (
               <tr>
                 <td
@@ -132,39 +80,11 @@ export const BOMTable: React.FC<BOMTableProps> = ({ bom }) => {
         </table>
       </div>
 
-      {bom.items.length > 0 && (
-        <div
-          style={{
-            marginTop: "1rem",
-            padding: "1rem",
-            background: "#f9f9f9",
-            borderTop: "1px solid #ccc",
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
-          }}
-        >
-          <span style={{ fontWeight: "bold", marginRight: "1rem" }}>
-            Total Estimated Cost:
-          </span>
-          <span style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
-            ${bom.totalPrice.toFixed(2)} {bom.isApproximatePrice ? "*" : ""}
-          </span>
-        </div>
-      )}
-      {bom.isApproximatePrice && (
-        <div
-          style={{
-            fontSize: "0.8rem",
-            color: "#666",
-            textAlign: "right",
-            marginTop: "0.5rem",
-          }}
-        >
-          * Contains items with approximate or missing prices (e.g., 3D
-          printed).
-        </div>
-      )}
+      <BOMSummary
+        totalPrice={bom.totalPrice}
+        isApproximatePrice={bom.isApproximatePrice}
+        itemCount={bom.items.length}
+      />
     </div>
   );
 };

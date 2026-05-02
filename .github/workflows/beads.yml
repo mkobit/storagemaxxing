@@ -1,0 +1,21 @@
+name: Beads validation
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac
+
+      - name: Bootstrap beads
+        run: |
+          rm -f .beads/config.yaml
+          bd bootstrap --yes
+
+      - name: Verify beads database
+        run: bd list --json
+          
+      - name: Lint issues
+        run: bd lint

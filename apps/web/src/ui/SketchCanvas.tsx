@@ -1,45 +1,29 @@
 import React, { useRef, useEffect } from "react";
-import { useStore } from "@storagemaxxing/store/useStore";
-import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
-import { binId } from "@storagemaxxing/catalog/bin";
+import { useStore } from "@storagemaxxing/store/useStore.js";
 import { useSketchEvents } from "./SketchCanvasHooks";
 import { drawCanvas } from "./SketchCanvasDrawing";
+import { useSketchCanvasData } from "./useSketchCanvasData";
 
-// eslint-disable-next-line complexity
+const getCursor = (mode: string) => {
+  if (mode === "pan") return "grab";
+  if (mode === "select") return "default";
+  return "crosshair";
+};
+
 export const SketchCanvas: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mode = useStore((state) => state.mode);
   const pan = useStore((state) => state.pan);
 
-  const activeSketchId = useStore((state) => state.activeSketchId);
-  const sketches = useStore((state) => state.sketches);
-  const activeSketch = sketches.find((s) => s.id === activeSketchId) || null;
-
-  const activeSpaceId = useStore((state) => state.activeSpaceId);
-  const spaces = useStore((state) => state.spaces);
-  const packingResultsBySpace = useStore(
-    (state) => state.packingResultsBySpace,
-  );
-
-  const activeSpace = activeSpaceId
-    ? spaces.find((s) => s.id === activeSpaceId) || null
-    : null;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const constraints = activeSpace ? Object.values(activeSpace.constraints) : [];
-  const packingResult = activeSpaceId
-    ? packingResultsBySpace[activeSpaceId] || null
-    : null;
-
-  const lookupBin = (id: string) => findBinById(ALL_BINS, binId(id));
-
   const {
-    isDrawing,
-    startPoint,
-    currentPoint,
-    handlePointerDown,
-    handlePointerMove,
-    handlePointerUp,
-  } = useSketchEvents(canvasRef);
+    activeSketch,
+    activeSpace,
+    constraints,
+    packingResult,
+    lookupBin,
+  } = useSketchCanvasData();
+
+  const sketchEvents = useSketchEvents(canvasRef);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -56,22 +40,12 @@ export const SketchCanvas: React.FC = () => {
       packingResult,
       lookupBin,
       mode,
-      isDrawing,
-      startPoint,
-      currentPoint,
+      isDrawing: sketchEvents.isDrawing,
+      startPoint: sketchEvents.startPoint,
+      currentPoint: sketchEvents.currentPoint,
       pan,
     });
-  }, [
-    activeSketch,
-    activeSpace,
-    constraints,
-    packingResult,
-    isDrawing,
-    startPoint,
-    currentPoint,
-    mode,
-    pan,
-  ]);
+  }, [activeSketch, activeSpace, constraints, packingResult, sketchEvents, mode, pan, lookupBin]);
 
   if (!activeSketch && !activeSpace) {
     return (
@@ -81,12 +55,6 @@ export const SketchCanvas: React.FC = () => {
     );
   }
 
-  const getCursor = () => {
-    if (mode === "pan") return "grab";
-    if (mode === "select") return "default";
-    return "crosshair";
-  };
-
   return (
     <canvas
       ref={canvasRef}
@@ -94,14 +62,14 @@ export const SketchCanvas: React.FC = () => {
       height={600}
       style={{
         border: "1px solid black",
-        cursor: getCursor(),
+        cursor: getCursor(mode),
         backgroundColor: "#f5f5f5",
       }}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerLeave={handlePointerUp}
-      onContextMenu={(e) => e.preventDefault()} // Prevent context menu on right click if we use it later
+      onPointerDown={sketchEvents.handlePointerDown}
+      onPointerMove={sketchEvents.handlePointerMove}
+      onPointerUp={sketchEvents.handlePointerUp}
+      onPointerLeave={sketchEvents.handlePointerUp}
+      onContextMenu={(e) => e.preventDefault()}
     />
   );
 };

@@ -10,10 +10,9 @@ import * as jsoncParser from "jsonc-eslint-parser";
 import globals from "globals";
 import { fixupPluginRules } from "@eslint/compat";
 
-export default tseslint.config(
-  {
-    ignores: ["**/dist/**", "node_modules/**", ".claude/**"],
-  },
+export default tseslint.config({
+  ignores: ["**/dist/**", "node_modules/**", ".claude/**", ".beads/**", "apps/web/test-results/**", "apps/web/e2e/**", "apps/web/playwright.config.ts", "apps/web/vitest.shims.d.ts"],
+},
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
