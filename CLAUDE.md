@@ -1,11 +1,18 @@
-# Project Instructions for AI Agents
+# Storagemaxxing | Claude Instructions
 
-This project uses **[Beads (bd)](https://github.com/gastownhall/beads)** for all task and issue tracking.
+Spatial planning and packing optimization for modular storage systems.
 
-## Operational Workflow
-The `bd prime` command is **auto-run via hooks** at session start to load the core workflow context.
-Refer to [Project Workflows & Rails](docs/jules/workflows.md) for supplemental conventions and session-close protocols.
+## 🛠 Operations
+- **Build/Run:** `bun run dev` (apps/web)
+- **Test:** `bun test` (all packages)
+- **Typecheck:** `bun run typecheck`
+- **Lint:** `bun run lint`
 
-## Project Rails
-- [Architecture & Standards](AGENTS.md)
-- [Canonical Documentation](docs/jules/)
+## 📖 Docs & Rails
+- **Workflows:** [docs/jules/workflows.md](docs/jules/workflows.md) (Triage, Tagging, Session Protocol)
+- **Architecture:** [AGENTS.md](AGENTS.md) (Standards, Types, Patterns)
+- **Tech:** [docs/jules/tech.md](docs/jules/tech.md) (Architecture, Two-layer engine)
+
+## 📌 Issue Tracking
+Managed via **Beads (bd)**. Run `bd prime` to load active context.
+Refer to [.beads/PRIME.md](.beads/PRIME.md) for triage, tagging, and session protocols.
