@@ -1,0 +1,29 @@
+{
+  "formula": "backlog-hygiene",
+  "description": "Periodic backlog grooming and triage session",
+  "version": 1,
+  "type": "workflow",
+  "steps": [
+    {
+      "id": "scan-stale",
+      "title": "Hygiene: Scan Stale Issues",
+      "type": "task",
+      "priority": 3,
+      "labels": ["scope:infra", "type:refactor", "meta:hygiene"]
+    },
+    {
+      "id": "label-untriaged",
+      "title": "Hygiene: Label Untriaged Beads",
+      "type": "task",
+      "priority": 3,
+      "labels": ["scope:infra", "meta:hygiene"]
+    },
+    {
+      "id": "refine-acceptance",
+      "title": "Hygiene: Refine Acceptance Criteria",
+      "type": "task",
+      "priority": 4,
+      "labels": ["scope:infra", "meta:hygiene"]
+    }
+  ]
+}
