@@ -9,10 +9,10 @@ jobs:
 
       - uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac
 
-      - name: Initialize local database
+      - name: Bootstrap beads
         run: |
-          bd init --non-interactive --prefix sm
-          bd import --body-file .beads/issues.jsonl
+          rm -f .beads/config.yaml
+          bd bootstrap --yes
 
       - name: Verify beads database
         run: bd list --json
