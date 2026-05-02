@@ -1,20 +1,17 @@
 # Project Workflows & Rails
 
-This document supplements the core [Beads workflow](https://github.com/gastownhall/beads) with project-specific conventions.
+This document serves as the high-level map for project operations.
+Detailed Beads conventions and automated agent loops are located in the task database configuration.
 
-## Project Rails
-- [Architecture & Standards](../../AGENTS.md)
-- [Canonical Documentation](../jules/) (Constraints, Tech, Product, Catalog)
+## 📌 Beads & Triage
+All issue management, tagging taxonomy, and triage protocols are defined in:
+- [.beads/PRIME.md](../../.beads/PRIME.md) (Operational Loop)
+- [.beads/TAGS.md](../../.beads/TAGS.md) (Label Taxonomy)
 
-## Issue Tagging & Categorization
-Use labels to categorize work beyond the base types:
-- `ui`: Changes affecting the frontend or user interface.
-- `engine`: Changes to packing logic or solver integration.
-- `testing`: New tests or testing infrastructure.
-- `docs`: Documentation-only updates.
+## 🔴 Session Protocol
+The mandatory pre-close checklist is defined in [.beads/PRIME.md](../../.beads/PRIME.md).
 
-## Supplemental Session Close Protocol
-In addition to the standard beads protocol, ensure the following for this project:
-1. **Linter Check:** Run `bun run lint` before committing.
-2. **Type Safety:** Ensure `bun run typecheck` passes across all packages.
-3. **Beads Sync:** Always run `bd dolt push` to ensure the task database is synchronized with the remote hidden refs.
+## 📖 Canonical Docs
+- [Product Philosophy](product.md)
+- [Technical Stack](tech.md)
+- [Geometric Constraints](constraints.md)
