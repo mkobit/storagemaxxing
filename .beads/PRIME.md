@@ -21,6 +21,12 @@ Automated agents should autonomously:
 - **Architecture:** [AGENTS.md](AGENTS.md)
 - **Product Specs:** [docs/jules/](docs/jules/)
 
+## 🧪 WORK FORMULAS (`bd mol`)
+Use these templates to spawn structured epics for common loops:
+- `bd mol pour catalog-expansion --var system_name=<name>` - New storage system.
+- `bd mol pour engine-feature-loop --var feature_name=<name>` - New packer/solver logic.
+- `bd mol pour backlog-hygiene` - Periodic maintenance.
+
 ## 🛠 ESSENTIAL COMMANDS
 - `bd ready` - Show unblocked work.
 - `bd create -t <type> -p <0-4> -l <labels>` - New issue.

@@ -1,0 +1,41 @@
+{
+  "formula": "engine-feature-loop",
+  "description": "Lifecycle for a new packing or solver feature: {{feature_name}}",
+  "version": 1,
+  "type": "workflow",
+  "vars": {
+    "feature_name": {
+      "description": "Name of the engine feature",
+      "required": true
+    },
+    "package": {
+      "description": "Affected package (packer or solver)",
+      "default": "engine"
+    }
+  },
+  "steps": [
+    {
+      "id": "research-math",
+      "title": "Research: {{feature_name}} Math & Heuristics",
+      "type": "spike",
+      "priority": 1,
+      "labels": ["scope:engine", "type:research"]
+    },
+    {
+      "id": "impl-logic",
+      "title": "Implement: {{feature_name}} Core Logic",
+      "type": "task",
+      "priority": 1,
+      "labels": ["scope:engine", "type:feature", "meta:worker"],
+      "depends_on": ["research-math"]
+    },
+    {
+      "id": "add-tests",
+      "title": "Tests: {{feature_name}} Benchmarks & Validation",
+      "type": "task",
+      "priority": 2,
+      "labels": ["scope:engine", "type:feature"],
+      "depends_on": ["impl-logic"]
+    }
+  ]
+}

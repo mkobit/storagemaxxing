@@ -1,0 +1,45 @@
+{
+  "formula": "catalog-expansion",
+  "description": "Implementation loop for {{system_name}}",
+  "version": 1,
+  "type": "workflow",
+  "vars": {
+    "system_name": {
+      "description": "Value for system_name",
+      "required": true
+    }
+  },
+  "steps": [
+    {
+      "id": "research-system-name-specs",
+      "title": "Research {{system_name}} Specs",
+      "type": "task",
+      "priority": 2,
+      "labels": [
+        "scope:catalog",
+        "type:feature",
+        "type:research"
+      ]
+    },
+    {
+      "id": "implement-system-name-binspecs",
+      "title": "Implement {{system_name}} BinSpecs",
+      "type": "task",
+      "priority": 2,
+      "labels": [
+        "scope:catalog",
+        "type:feature"
+      ]
+    },
+    {
+      "id": "verify-system-name-layouts",
+      "title": "Verify {{system_name}} Layouts",
+      "type": "task",
+      "priority": 2,
+      "labels": [
+        "scope:catalog",
+        "type:feature"
+      ]
+    }
+  ]
+}
