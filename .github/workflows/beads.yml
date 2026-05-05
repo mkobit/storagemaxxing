@@ -15,10 +15,10 @@ jobs:
       - name: Bootstrap beads
         run: |
           rm -f .beads/config.yaml
-          bunx bd bootstrap --yes
+          bd bootstrap --yes
 
       - name: Verify beads database
-        run: bunx bd list --json
+        run: bd list --json
           
       - name: Lint issues
-        run: bunx bd lint
+        run: bd lint
