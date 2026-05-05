@@ -9,6 +9,9 @@ jobs:
 
       - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151
 
+      - name: Install dependencies
+        run: bun install
+
       - name: Bootstrap beads
         run: |
           rm -f .beads/config.yaml
