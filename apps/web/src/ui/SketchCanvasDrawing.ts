@@ -31,7 +31,7 @@ const drawGridLines = (
     readonly width: number;
     readonly height: number;
     readonly pan: { readonly x: number; readonly y: number };
-  }
+  },
 ) => {
   const { width, height, pan } = view;
   const startX = (pan.x % gridSize) - gridSize;
@@ -52,16 +52,22 @@ const drawAxes = (
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
-  pan: { readonly x: number; readonly y: number }
+  pan: { readonly x: number; readonly y: number },
 ) => {
   ctx.lineWidth = 2;
   if (pan.y >= 0 && pan.y <= height) {
     ctx.strokeStyle = "rgba(255, 0, 0, 0.5)";
-    ctx.beginPath(); ctx.moveTo(0, pan.y); ctx.lineTo(width, pan.y); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(0, pan.y);
+    ctx.lineTo(width, pan.y);
+    ctx.stroke();
   }
   if (pan.x >= 0 && pan.x <= width) {
     ctx.strokeStyle = "rgba(0, 255, 0, 0.5)";
-    ctx.beginPath(); ctx.moveTo(pan.x, 0); ctx.lineTo(pan.x, height); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(pan.x, 0);
+    ctx.lineTo(pan.x, height);
+    ctx.stroke();
   }
 };
 
@@ -87,7 +93,12 @@ const drawActiveSketch = (
   ctx.lineWidth = 2;
   activeSketch.elements.forEach((el) => {
     if (el.type === "rectangle") {
-      ctx.strokeRect(el.geometry.origin[0], el.geometry.origin[1], el.geometry.dimensions.w, el.geometry.dimensions.l);
+      ctx.strokeRect(
+        el.geometry.origin[0],
+        el.geometry.origin[1],
+        el.geometry.dimensions.w,
+        el.geometry.dimensions.l,
+      );
     }
   });
 };
@@ -105,8 +116,18 @@ const drawActiveSpace = (
     ctx.fillStyle = constraint?.color || "#cccccc";
     ctx.strokeStyle = "#000000";
     ctx.lineWidth = 1;
-    ctx.fillRect(placed.origin[0], placed.origin[2], spec.nominal.w, spec.nominal.l);
-    ctx.strokeRect(placed.origin[0], placed.origin[2], spec.nominal.w, spec.nominal.l);
+    ctx.fillRect(
+      placed.origin[0],
+      placed.origin[2],
+      spec.nominal.w,
+      spec.nominal.l,
+    );
+    ctx.strokeRect(
+      placed.origin[0],
+      placed.origin[2],
+      spec.nominal.w,
+      spec.nominal.l,
+    );
   });
 };
 
@@ -133,13 +154,28 @@ const drawCurrentAction = (
 };
 
 export const drawCanvas = (context: DrawContext) => {
-  const { canvas, ctx, activeSketch, activeSpace, constraints, packingResult, lookupBin, mode, isDrawing, startPoint, currentPoint, pan } = context;
+  const {
+    canvas,
+    ctx,
+    activeSketch,
+    activeSpace,
+    constraints,
+    packingResult,
+    lookupBin,
+    mode,
+    isDrawing,
+    startPoint,
+    currentPoint,
+    pan,
+  } = context;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawGrid(ctx, canvas.width, canvas.height, pan);
   ctx.save();
   ctx.translate(pan.x, pan.y);
   if (activeSketch) drawActiveSketch(ctx, activeSketch);
-  if (activeSpace && packingResult) drawActiveSpace(ctx, packingResult, constraints, lookupBin);
-  if (isDrawing && startPoint && currentPoint) drawCurrentAction(ctx, mode, startPoint, currentPoint);
+  if (activeSpace && packingResult)
+    drawActiveSpace(ctx, packingResult, constraints, lookupBin);
+  if (isDrawing && startPoint && currentPoint)
+    drawCurrentAction(ctx, mode, startPoint, currentPoint);
   ctx.restore();
 };

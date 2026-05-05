@@ -5,7 +5,7 @@ import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate.js";
 export const updateConstraintInState = (
   state: AppState,
   templateId: SpaceTemplateId,
-  constraint: SpaceConstraint
+  constraint: SpaceConstraint,
 ) => {
   const existing = state.constraintsBySpace[templateId] || [];
   const filtered = existing.filter((c) => c.binId !== constraint.binId);

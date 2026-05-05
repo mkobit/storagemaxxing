@@ -29,8 +29,14 @@ const handleAutoMode = (constraint: SpaceConstraint): SpaceConstraint => ({
 const handleSoftMode = (constraint: SpaceConstraint): SpaceConstraint => ({
   mode: "soft",
   binId: constraint.binId,
-  lo: constraint.mode === "hard" || constraint.mode === "soft" ? constraint.lo : 1,
-  hi: constraint.mode === "hard" || constraint.mode === "soft" ? constraint.hi : null,
+  lo:
+    constraint.mode === "hard" || constraint.mode === "soft"
+      ? constraint.lo
+      : 1,
+  hi:
+    constraint.mode === "hard" || constraint.mode === "soft"
+      ? constraint.hi
+      : null,
   hard: false,
   color: constraint.color,
 });
@@ -42,7 +48,10 @@ const handleHardMode = (constraint: SpaceConstraint): SpaceConstraint => ({
     constraint.mode === "hard" || constraint.mode === "soft"
       ? Math.max(1, constraint.lo)
       : 1,
-  hi: constraint.mode === "hard" || constraint.mode === "soft" ? constraint.hi : null,
+  hi:
+    constraint.mode === "hard" || constraint.mode === "soft"
+      ? constraint.hi
+      : null,
   hard: true,
   color: constraint.color,
 });

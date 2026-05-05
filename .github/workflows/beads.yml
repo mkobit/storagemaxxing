@@ -21,6 +21,6 @@ jobs:
 
       - name: Verify beads database
         run: bd list --json
-          
+
       - name: Lint issues
         run: bd lint

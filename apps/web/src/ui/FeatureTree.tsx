@@ -26,41 +26,91 @@ export const FeatureTree: React.FC = () => {
     addSketch(createSketch2D(sketchId, name, []));
     const featureId = createFeatureId();
     const sketchCount = timeline.filter((f) => f.type === "sketch").length;
-    addFeature(createSketchFeature(featureId, `Sketch Feature ${sketchCount + 1}`, sketchId));
+    addFeature(
+      createSketchFeature(
+        featureId,
+        `Sketch Feature ${sketchCount + 1}`,
+        sketchId,
+      ),
+    );
     setActiveFeatureId(featureId);
     setActiveSketchId(sketchId);
   };
 
   const handleAddFillSpaceFeature = () => {
-    const activeSketchFeature = timeline.find((f): f is SketchFeature => f.id === activeFeatureId && f.type === "sketch");
+    const activeSketchFeature = timeline.find(
+      (f): f is SketchFeature =>
+        f.id === activeFeatureId && f.type === "sketch",
+    );
     if (!activeSketchFeature) {
-      alert("Please select a Sketch Feature first to create a Fill Space from it.");
+      alert(
+        "Please select a Sketch Feature first to create a Fill Space from it.",
+      );
       return;
     }
     const featureId = createFeatureId();
     const fillCount = timeline.filter((f) => f.type === "fill_space").length;
-    addFeature(createFillSpaceFeature(featureId, `Fill Space ${fillCount + 1}`, activeSketchFeature.sketchId));
+    addFeature(
+      createFillSpaceFeature(
+        featureId,
+        `Fill Space ${fillCount + 1}`,
+        activeSketchFeature.sketchId,
+      ),
+    );
     setActiveFeatureId(featureId);
   };
 
-  const handleSelectFeature = (id: FeatureId, type: string, sketchId?: SketchId) => {
+  const handleSelectFeature = (
+    id: FeatureId,
+    type: string,
+    sketchId?: SketchId,
+  ) => {
     setActiveFeatureId(id);
     setActiveSketchId(type === "sketch" && sketchId ? sketchId : null);
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", width: "250px", borderRight: "1px solid #ccc", padding: "1rem", background: "#fafafa" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        width: "250px",
+        borderRight: "1px solid #ccc",
+        padding: "1rem",
+        background: "#fafafa",
+      }}
+    >
       <h3>Timeline / Features</h3>
       <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
-        <button onClick={handleAddSketchFeature} style={{ flex: 1 }}>+ Sketch</button>
-        <button onClick={handleAddFillSpaceFeature} style={{ flex: 1 }}>+ Fill Space</button>
+        <button onClick={handleAddSketchFeature} style={{ flex: 1 }}>
+          + Sketch
+        </button>
+        <button onClick={handleAddFillSpaceFeature} style={{ flex: 1 }}>
+          + Fill Space
+        </button>
       </div>
       <ul style={{ listStyleType: "none", padding: 0, margin: 0 }}>
         {timeline.map((feature) => (
-          <FeatureItem key={feature.id} feature={feature} activeFeatureId={activeFeatureId} onSelect={handleSelectFeature} />
+          <FeatureItem
+            key={feature.id}
+            feature={feature}
+            activeFeatureId={activeFeatureId}
+            onSelect={handleSelectFeature}
+          />
         ))}
       </ul>
-      {timeline.length === 0 && <div style={{ color: "#888", fontSize: "0.9rem", textAlign: "center", marginTop: "2rem" }}>Timeline is empty. Start by creating a sketch.</div>}
+      {timeline.length === 0 && (
+        <div
+          style={{
+            color: "#888",
+            fontSize: "0.9rem",
+            textAlign: "center",
+            marginTop: "2rem",
+          }}
+        >
+          Timeline is empty. Start by creating a sketch.
+        </div>
+      )}
     </div>
   );
 };

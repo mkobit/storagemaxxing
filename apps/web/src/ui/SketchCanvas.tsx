@@ -15,13 +15,8 @@ export const SketchCanvas: React.FC = () => {
   const mode = useStore((state) => state.mode);
   const pan = useStore((state) => state.pan);
 
-  const {
-    activeSketch,
-    activeSpace,
-    constraints,
-    packingResult,
-    lookupBin,
-  } = useSketchCanvasData();
+  const { activeSketch, activeSpace, constraints, packingResult, lookupBin } =
+    useSketchCanvasData();
 
   const sketchEvents = useSketchEvents(canvasRef);
 
@@ -45,7 +40,16 @@ export const SketchCanvas: React.FC = () => {
       currentPoint: sketchEvents.currentPoint,
       pan,
     });
-  }, [activeSketch, activeSpace, constraints, packingResult, sketchEvents, mode, pan, lookupBin]);
+  }, [
+    activeSketch,
+    activeSpace,
+    constraints,
+    packingResult,
+    sketchEvents,
+    mode,
+    pan,
+    lookupBin,
+  ]);
 
   if (!activeSketch && !activeSpace) {
     return (

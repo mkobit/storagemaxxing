@@ -9,11 +9,17 @@ export const useSketchCanvasData = () => {
 
   const activeSpaceId = useStore((state) => state.activeSpaceId);
   const spaces = useStore((state) => state.spaces);
-  const packingResultsBySpace = useStore((state) => state.packingResultsBySpace);
+  const packingResultsBySpace = useStore(
+    (state) => state.packingResultsBySpace,
+  );
 
-  const activeSpace = activeSpaceId ? spaces.find((s) => s.id === activeSpaceId) || null : null;
+  const activeSpace = activeSpaceId
+    ? spaces.find((s) => s.id === activeSpaceId) || null
+    : null;
   const constraints = activeSpace ? Object.values(activeSpace.constraints) : [];
-  const packingResult = activeSpaceId ? packingResultsBySpace[activeSpaceId] || null : null;
+  const packingResult = activeSpaceId
+    ? packingResultsBySpace[activeSpaceId] || null
+    : null;
 
   const lookupBin = (id: string) => findBinById(ALL_BINS, binId(id));
 

@@ -15,31 +15,21 @@
       "title": "Research {{system_name}} Specs",
       "type": "task",
       "priority": 2,
-      "labels": [
-        "scope:catalog",
-        "type:feature",
-        "type:research"
-      ]
+      "labels": ["scope:catalog", "type:feature", "type:research"]
     },
     {
       "id": "implement-system-name-binspecs",
       "title": "Implement {{system_name}} BinSpecs",
       "type": "task",
       "priority": 2,
-      "labels": [
-        "scope:catalog",
-        "type:feature"
-      ]
+      "labels": ["scope:catalog", "type:feature"]
     },
     {
       "id": "verify-system-name-layouts",
       "title": "Verify {{system_name}} Layouts",
       "type": "task",
       "priority": 2,
-      "labels": [
-        "scope:catalog",
-        "type:feature"
-      ]
+      "labels": ["scope:catalog", "type:feature"]
     }
   ]
 }
