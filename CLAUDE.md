@@ -10,8 +10,9 @@ Spatial planning and packing optimization for modular storage systems.
 
 ## 📖 Docs & Rails
 - **Workflows:** [docs/jules/workflows.md](docs/jules/workflows.md) (Triage, Tagging, Session Protocol)
-- **Architecture:** [AGENTS.md](AGENTS.md) (Standards, Types, Patterns)
-- **Tech:** [docs/jules/tech.md](docs/jules/tech.md) (Architecture, Two-layer engine)
+- **Architecture:** [AGENTS.md](AGENTS.md) (The Prime Directive, Standards, Patterns)
+- **Philosophy:** **Breadth of Rectangles** (Priority: Modular 2D Fitters)
+- **Tech:** [docs/jules/tech.md](docs/jules/tech.md) (Two-layer engine)
 
 ## 📌 Issue Tracking
 Managed via **Beads (bd)**. Run `bd prime` to load active context.

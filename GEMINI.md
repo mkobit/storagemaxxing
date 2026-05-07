@@ -10,8 +10,9 @@ Spatial planning and packing optimization for modular storage systems.
 
 ## 📖 Docs & Rails
 - **Workflows:** [docs/jules/workflows.md](docs/jules/workflows.md) (Triage, Tagging, Session Protocol)
-- **Tags:** [docs/jules/tagging.md](docs/jules/tagging.md) (Label taxonomy)
-- **Tech:** [docs/jules/tech.md](docs/jules/tech.md) (Architecture, Two-layer engine)
+- **Architecture:** [AGENTS.md](AGENTS.md) (The Prime Directive, Standards, Patterns)
+- **Philosophy:** **Breadth of Rectangles** (Priority: Modular 2D Fitters)
+- **Tech:** [docs/jules/tech.md](docs/jules/tech.md) (Two-layer engine)
 - **Product:** [docs/jules/product.md](docs/jules/product.md) (Philosophy, Personas)
 
 ## 📌 Issue Tracking
