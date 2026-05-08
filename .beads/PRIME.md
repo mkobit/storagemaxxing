@@ -9,21 +9,22 @@ Before finishing, you MUST run this checklist:
 3. **Git Sync:** `git add .` && `git commit -m "..."` && `git push`
 
 ## 🟢 AGENT OPERATIONAL LOOP
-Automated agents should autonomously:
-1. **Triage:** Scan `bd ready` and `bd stale`.
-2. **Label:** Apply `scope:`, `domain:`, and `type:` tags per [.beads/TAGS.md](TAGS.md).
-3. **Prune:** Defer or close issues that are no longer relevant.
-4. **Link:** Explicitly `bd link` dependencies to prevent duplicate effort.
+Automated agents MUST follow the **Agentic Prime** ([AGENTS.md](../AGENTS.md)):
+1. **Triage:** Scan `bd ready`.
+2. **Claim:** `bd update <id> --claim`.
+3. **Sync:** Check `openspec/` for design authority.
+4. **Execute:** Follow "Engineering Rails" (Functional, Immutable, Strict).
+5. **Close:** `bd close <ids>` with clear implementation summary.
 
 ## 🧪 WORK FORMULAS (`bd mol`)
-Use these templates to spawn structured epics for common loops:
-- `bd mol pour catalog-expansion --var system_name=<name>` - New storage system.
-- `bd mol pour engine-feature-loop --var feature_name=<name>` - New packer/solver logic.
-- `bd mol pour backlog-hygiene` - Periodic maintenance.
+Use these templates to bootstrap new feature probes and implementation syncs:
+- `bd mol pour feature-probe --var system_name=<name>` - Scoping and architectural discovery via OpenSpec.
+- `bd mol pour openspec-sync --var change_name=<name>` - Hydrate task graph from OpenSpec design.
+- `bd mol pour backlog-hygiene` - Periodic maintenance of the issue database.
 
 ## 🛠 ESSENTIAL COMMANDS
-- `bd ready` - Show unblocked work.
-- `bd create -t <type> -p <0-4> -l <labels>` - New issue.
-- `bd update <id> --claim` - Start work.
+- `bd ready` - Show work ready for execution.
+- `bd mol pour <formula>` - Bootstrap a new workflow.
+- `bd update <id> --claim` - Start work on a bead.
 - `bd close <ids> --reason "..."` - Complete work.
 - `bd query "label=..."` - Filter by taxonomy.

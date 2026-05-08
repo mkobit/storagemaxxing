@@ -1,0 +1,26 @@
+schema: spec-driven
+
+# Project context
+context: |
+  Tech stack: TypeScript (Strict), React 19, Bun, Zustand, Tailwind CSS.
+  Architecture: Two-Layer Packing Engine.
+    - Layer 1: Synchronous Geometric Placement (MaxRects) in `packages/packer`.
+    - Layer 2: Asynchronous Constraint Satisfaction (MIP) in `packages/solver`.
+  Domain: Spatial planning for modular storage systems (Gridfinity, Schaller, etc.).
+  Standards:
+    - Functional programming (immutability, pure functions) in all `packages/`.
+    - Strict types (no `any`).
+    - Zod for runtime validation.
+    - Vitest for unit tests, Playwright for E2E.
+
+# Per-artifact rules
+rules:
+  proposal:
+    - Always include a "Success Criteria" section.
+    - Explicitly state which layer (Packer/Solver) is affected.
+  design:
+    - Must include an ASCII diagram of the data flow.
+    - Must specify Zod schemas for new domain objects.
+  tasks:
+    - Every task must include a "Validation" step (e.g., specific test or command).
+    - Break tasks into chunks of max 30 minutes for AI execution.
