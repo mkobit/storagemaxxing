@@ -14,7 +14,7 @@ This file serves as the "Prime Directive" for all AI agents (Gemini, Claude, Jul
 
 ## 🟢 Operational Loop (Multi-Agent Handshake)
 
-All agents MUST coordinate through the filesystem using **Beads** and **OpenSpec**.
+All agents MUST coordinate through the filesystem using **Beads** and **OpenSpec**. **OpenSpec is the Canonical Source of Truth** for all architectural and design decisions; Beads is the execution derivative.
 
 1. **TRIAGE:** Scan `bd ready` for unclaimed tasks.
 2. **SYNC:** Check `openspec/changes/` for active designs and architectural contracts.
@@ -27,7 +27,8 @@ All agents MUST coordinate through the filesystem using **Beads** and **OpenSpec
    - Close the sync bead: `bd close <sync_id> --reason "Hydrated <change>."`.
 6. **EXECUTE:** Implement focused, surgical changes. Update `tasks.md` as you go.
 7. **VALIDATE:** Run `bun run lint && bun run typecheck && bun test`.
-8. **CLOSE:** Run `bd close <id> --reason "..."` and push changes.
+8. **FLOWBACK:** If implementation reveals necessary design changes, you MUST update the OpenSpec `design.md` or `proposal.md` BEFORE closing the bead.
+9. **CLOSE:** Run `bd close <id> --reason "..."` and push changes.
 
 ## 📐 Breadth of Rectangles (Product Strategy)
 
