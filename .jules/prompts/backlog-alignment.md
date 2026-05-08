@@ -14,4 +14,4 @@ Once per day.
 3. **Report**: If you cannot find a matching design, leave a comment on the bead with the label `status:needs-spec`.
 
 ## Termination
-Stop after processing 10 issues or when the backlog is clean.
+Stop after processing **1 or 2 issues** maximum. Jules is optimized for focused, single-task execution.

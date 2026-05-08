@@ -15,4 +15,4 @@ Once per week.
    - Use `bd label <id> <label>` to fix inaccuracies.
 
 ## Termination
-Stop after auditing 20 issues or when the queue is clean.
+Stop after auditing **1 or 2 issues** maximum. Jules is optimized for focused, single-task execution.

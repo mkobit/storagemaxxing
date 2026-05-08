@@ -39,6 +39,7 @@ We prioritize **Horizontal Breadth** (many storage systems) over **Vertical Dept
 ## 🛠 Multi-Agent Sandbox & Sync
 
 - **Identity:** Always attribute your actions to your agent name (e.g., `actor:gemini`).
+- **Jules:** Jules is an autonomous agent optimized for high-integrity, focused execution. **Limit Jules to 1-2 tasks per execution cycle** to maintain quality.
 - **Sync:** Always refresh state (`git pull` or `bd sync`) at the start of a session.
 - **Jail:** Respect the workspace root. Do NOT access files or execute commands outside `/home/mkobit/workspace/mkobit/storagemaxxing`.
 - **MCP:** Use only the approved MCP servers defined in the project configuration.
