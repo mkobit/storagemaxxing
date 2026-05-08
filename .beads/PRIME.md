@@ -5,8 +5,9 @@
 ## 🚨 SESSION CLOSE PROTOCOL
 Before finishing, you MUST run this checklist:
 1. **Validate:** `bun run lint` && `bun run typecheck` && `bun test`
-2. **Issue Sync:** `bd close <ids>` for completed work.
-3. **Git Sync:** `git add .` && `git commit -m "..."` && `git push`
+2. **Alignment:** Ensure all implemented logic is reflected in the canonical OpenSpec `design.md` or `specs/`.
+3. **Issue Sync:** `bd close <ids>` for completed work.
+4. **Git Sync:** `git add .` && `git commit -m "..."` && `git push`
 
 ## 🟢 AGENT OPERATIONAL LOOP
 Automated agents MUST follow the **Agentic Prime** ([AGENTS.md](../AGENTS.md)):
