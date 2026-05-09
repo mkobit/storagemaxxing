@@ -2,6 +2,8 @@
 ignoreScripts = true
 
 [run]
+# To disable loading .env file automatically
+envFile = "/dev/null"
 
 [env]
 OPENSPEC_TELEMETRY = "0"
