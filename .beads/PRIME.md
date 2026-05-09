@@ -5,16 +5,19 @@
 ## 🚨 SESSION CLOSE PROTOCOL
 Before finishing, you MUST run this checklist:
 1. **Validate:** `bun run lint` && `bun run typecheck` && `bun test`
-2. **Issue Sync:** `bd close <ids>` for completed work.
-3. **Git Sync:** `git add .` && `git commit -m "..."` && `git push`
+2. **Alignment:** Ensure all implemented logic is reflected in the canonical OpenSpec `design.md` or `specs/`.
+3. **Issue Sync:** `bd close <ids>` for completed work.
+4. **Git Sync:** `git add .` && `git commit -m "..."` && `git push`
 
 ## 🟢 AGENT OPERATIONAL LOOP
 Automated agents MUST follow the **Agentic Prime** ([AGENTS.md](../AGENTS.md)):
-1. **Triage:** Scan `bd ready`.
-2. **Claim:** `bd update <id> --claim`.
-3. **Sync:** Check `openspec/` for design authority.
-4. **Execute:** Follow "Engineering Rails" (Functional, Immutable, Strict).
-5. **Close:** `bd close <ids>` with clear implementation summary.
+
+1. **RESUME:** Run `bd prime` and **immediately check `openspec/changes/`** for any `active` designs or pending `tasks.md` that haven't been hydrated.
+2. **SYNC:** If a task has `type:sync`, you MUST hydrate it using the **Sync Handshake** before proceeding.
+3. **TRIAGE:** Scan `bd ready` for unclaimed tasks.
+4. **CLAIM:** `bd update <id> --claim` to signal you are working.
+5. **EXECUTE:** Follow "Engineering Rails" (Functional, Immutable, Strict).
+6. **CLOSE:** `bd close <ids>` with a summary and link to the relevant OpenSpec change.
 
 ## 🧪 WORK FORMULAS (`bd mol`)
 Use these templates to bootstrap new feature probes and implementation syncs:
