@@ -1,0 +1,30 @@
+{
+  "formula": "openspec-decompose",
+  "description": "Decompose an approved OpenSpec design into tasks.md",
+  "version": 1,
+  "type": "workflow",
+  "vars": {
+    "change_name": {
+      "description": "The name of the OpenSpec change folder",
+      "required": true
+    }
+  },
+  "steps": [
+    {
+      "id": "create-tasks-md",
+      "title": "Create tasks.md stub",
+      "type": "shell",
+      "command": "echo '# Tasks for {{change_name}}\n\n- [ ] Task 1: Description\n  - Validation: specific test or command\n' > openspec/changes/{{change_name}}/tasks.md"
+    },
+    {
+      "id": "create-decomposition-task",
+      "title": "Agent Decomposition Task",
+      "type": "task",
+      "labels": [
+        "type:research",
+        "meta:openspec"
+      ],
+      "description": "Read design.md for {{change_name}} and break it down into actionable `<30m` tasks in tasks.md."
+    }
+  ]
+}
