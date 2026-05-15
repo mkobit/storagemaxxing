@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Ensure system reliability and correctness through automated CI/CD pipelines and end-to-end verification of key user stories.
+
+## Requirements
 
 ### Requirement: Green Deploy Pipeline
 The system SHALL support a fully automated deployment pipeline to Cloudflare Pages that triggers on every push to `main`.

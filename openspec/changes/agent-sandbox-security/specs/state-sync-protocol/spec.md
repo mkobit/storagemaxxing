@@ -1,8 +1,4 @@
-## Purpose
-
-Define protocols for state synchronization and task claiming to coordinate work across multiple agents and prevent concurrent editing conflicts.
-
-## Requirements
+## ADDED Requirements
 
 ### Requirement: Refresh-Before-Read
 All agents SHALL pull the latest filesystem state before reading Beads or OpenSpec data.

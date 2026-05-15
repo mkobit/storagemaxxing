@@ -10,14 +10,16 @@ Before finishing, you MUST run this checklist:
 4. **Git Sync:** `git add .` && `git commit -m "..."` && `git push`
 
 ## 🟢 AGENT OPERATIONAL LOOP
-Automated agents MUST follow the **Agentic Prime** ([AGENTS.md](../AGENTS.md)):
+Automated agents MUST follow the **Spec-Driven Execution** model:
 
-1. **RESUME:** Run `bd prime` and **immediately check `openspec/changes/`** for any `active` designs or pending `tasks.md` that haven't been hydrated.
-2. **SYNC:** If a task has `type:sync`, you MUST hydrate it using the **Sync Handshake** before proceeding.
-3. **TRIAGE:** Scan `bd ready` for unclaimed tasks.
-4. **CLAIM:** `bd update <id> --claim` to signal you are working.
-5. **EXECUTE:** Follow "Engineering Rails" (Functional, Immutable, Strict).
-6. **CLOSE:** `bd close <ids>` with a summary and link to the relevant OpenSpec change.
+1. **RESUME:** Run `bunx openspec list --json` to find changes with `status: "in-progress"`.
+   - For each active change, run `bunx openspec status --change <name> --json` to locate its `design.md` and `tasks.md`.
+   - If a change is active but its tasks aren't in Beads, run `bd mol pour openspec-sync --var change_name=<name>`.
+2. **TRIAGE:** Use `bd ready` or `bd query "meta:openspec:<name>"` to find your next task.
+3. **CLAIM:** `bd update <id> --claim` to signal you are working.
+4. **EXECUTE:** Implement focused changes following "Engineering Rails".
+5. **FLOWBACK:** If the implementation deviates from the spec, you MUST update `design.md` or `tasks.md` in OpenSpec **FIRST**.
+6. **CLOSE:** Mark the task checkbox in OpenSpec `tasks.md` and run `bd close <id> --reason "..."`.
 
 ## 🧪 WORK FORMULAS (`bd mol`)
 Use these templates to bootstrap new feature probes and implementation syncs:

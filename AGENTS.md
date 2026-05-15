@@ -12,23 +12,23 @@ This file serves as the "Prime Directive" for all AI agents (Gemini, Claude, Jul
   - **Layer 1:** Synchronous 2D Geometric Fitting (Pure functions).
   - **Layer 2:** Asynchronous Constraint Validation (Layered on top, often in Workers).
 
-## 🟢 Operational Loop (Multi-Agent Handshake)
+## 🟢 Operational Loop (Spec-Driven & Bidirectional)
 
-All agents MUST coordinate through the filesystem using **Beads** and **OpenSpec**. **OpenSpec is the Canonical Source of Truth** for all architectural and design decisions; Beads is the execution derivative.
+All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (Execution/Tasking). OpenSpec is the source of truth; Beads is the engine.
 
-1. **TRIAGE:** Scan `bd ready` for unclaimed tasks.
-2. **SYNC:** Check `openspec/changes/` for active designs and architectural contracts.
-3. **CLAIM:** Run `bd update <id> --claim` to signal you are working on a task.
-4. **DESIGN:** For `scope:engine` or `meta:breaking` changes, an OpenSpec `design.md` MUST exist before implementation.
-5. **HYDRATE (The Bridge):** When picking up a `type:sync` task:
-   - Locate `openspec/changes/{{change_name}}/`.
-   - Dry run: `bd create --file tasks.md --dry-run`.
-   - Hydrate with links: `bd create --file tasks.md --parent <sync_id> --labels <domain>,<scope>,meta:openspec --design openspec/changes/<change>/design.md --spec-id openspec/changes/<change>/proposal.md`.
-   - Close the sync bead: `bd close <sync_id> --reason "Hydrated <change>."`.
-6. **EXECUTE:** Implement focused, surgical changes. Update `tasks.md` as you go.
-7. **VALIDATE:** Run `bun run lint && bun run typecheck && bun test`.
-8. **FLOWBACK:** If implementation reveals necessary design changes, you MUST update the OpenSpec `design.md` or `proposal.md` BEFORE closing the bead.
-9. **CLOSE:** Run `bd close <id> --reason "..."` and push changes.
+1. **SYNC & DISCOVER:** 
+   - Run `bd prime` to load the latest operational context.
+   - Run `bunx openspec list --json` to identify active changes.
+   - Use `bunx openspec status --change <name>` to locate the relevant `design.md` and `tasks.md`.
+2. **PLAN:** Before coding, ensure an OpenSpec `design.md` and `tasks.md` exist and are synced to Beads via `bd mol pour openspec-sync`.
+3. **CLAIM:** Always claim a Bead with `bd update <id> --claim` before starting execution.
+4. **EXECUTE & FLOWBACK:** Implement changes. If the design needs to change, update OpenSpec **BEFORE** proceeding with implementation or closing Beads.
+5. **VALIDATE & CLOSE:** 
+   - Run `bunx openspec validate` to ensure spec integrity.
+   - Mark `tasks.md` checkboxes and run `bd close <id>`.
+   - Run `bunx openspec archive` only after all linked Beads are closed.
+
+Refer to **[.beads/PRIME.md](.beads/PRIME.md)** for detailed CLI instructions and **[openspec/config.yaml](openspec/config.yaml)** for schema-specific rules.
 
 ## 📐 Breadth of Rectangles (Product Strategy)
 

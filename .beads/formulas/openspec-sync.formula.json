@@ -24,7 +24,8 @@
       "type": "task",
       "labels": [
         "type:sync",
-        "meta:openspec"
+        "meta:openspec",
+        "meta:openspec:{{change_name}}"
       ]
     }
   ]

@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Define the "Agentic Prime" directive that serves as the foundational operational contract for all AI agents in the Storagemaxxing repository.
+
+## Requirements
 
 ### Requirement: Unified Agentic Prime
 All AI agents SHALL reference `AGENTS.md` at the root of the repository as their primary source of architectural and operational truth.
