@@ -1,0 +1,20 @@
+formula = "feature-probe"
+description = "Scoping and architectural discovery for a new storage system"
+version = 1
+type = "workflow"
+
+[vars.system_name]
+description = "The name of the storage system (e.g., opengrid, neogrid)"
+required = true
+
+[[steps]]
+id = "create-openspec-probe"
+title = "Create OpenSpec Probe for {{system_name}}"
+type = "task"
+labels = ["type:research", "status:needs-spec"]
+
+[[steps]]
+id = "design-2d-fitter"
+title = "Design 2D Fitter for {{system_name}}"
+type = "task"
+labels = ["type:feature", "status:needs-design"]

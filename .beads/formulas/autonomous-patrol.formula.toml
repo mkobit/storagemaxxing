@@ -1,0 +1,19 @@
+formula = "autonomous-patrol"
+description = "Recurring duty for autonomous agents"
+version = 1
+type = "workflow"
+
+[vars.duty_name]
+description = "Filename in .jules/prompts/"
+required = true
+
+[vars.agent_id]
+description = "Target agent (e.g., jules, opencode)"
+required = true
+
+[[steps]]
+id = "execute-patrol"
+title = "Patrol: {{duty_name}}"
+type = "task"
+labels = ["meta:patrol", "actor:{{agent_id}}"]
+description = "Read the protocol at `.jules/prompts/{{duty_name}}.md` and execute it fully. Log your findings as a comment on this bead."
