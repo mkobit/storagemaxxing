@@ -1,7 +1,7 @@
 {
   "formula": "openspec-sync",
-  "description": "Hydrate Beads from OpenSpec tasks",
-  "version": 1,
+  "description": "Hydrate Beads from OpenSpec tasks.md. Transitions change to 'Implemented' stage.",
+  "version": 2,
   "type": "workflow",
   "vars": {
     "change_name": {
@@ -25,7 +25,8 @@
       "labels": [
         "type:sync",
         "meta:openspec"
-      ]
+      ],
+      "description": "Run `bd create --file openspec/changes/{{change_name}}/tasks.md` to map all tasks into Beads."
     }
   ]
 }

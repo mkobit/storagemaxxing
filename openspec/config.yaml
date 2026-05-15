@@ -1,4 +1,5 @@
-schema: spec-driven
+schema: custom
+workflow_file: openspec/workflow.yaml
 
 # Project context
 context: |
