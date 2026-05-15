@@ -24,4 +24,4 @@ run = "bunx openspec validate --all --no-interactive"
 
 [tasks.bootstrap]
 description = "Bootstrap Beads database"
-run = "rm -f .beads/config.yaml && bd bootstrap --yes"
+run = "bd bootstrap --yes"
