@@ -9,6 +9,8 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    env:
+      BD_SYNC_REMOTE: ""
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -21,7 +23,7 @@ jobs:
           cache: true
 
       - name: Initialize Beads (Local-First)
-        run: BD_SYNC_REMOTE="" bd init --non-interactive --from-jsonl --skip-agents --skip-hooks
+        run: bd init --non-interactive --from-jsonl --skip-agents --skip-hooks
 
       - name: Lint Beads
         run: bd lint
