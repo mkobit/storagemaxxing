@@ -21,7 +21,7 @@ jobs:
           cache: true
 
       - name: Initialize Beads (Local-First)
-        run: bd init --yes --from-jsonl --skip-agents --skip-hooks
+        run: bd init --non-interactive --from-jsonl --skip-agents --skip-hooks
 
       - name: Lint Beads
         run: bd lint
