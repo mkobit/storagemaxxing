@@ -12,7 +12,9 @@ Before finishing, you MUST run this checklist:
 ## 🟢 AGENT OPERATIONAL LOOP
 Automated agents MUST follow the **Spec-Driven Execution** model:
 
-1. **RESUME:** Run `bunx openspec list --json` to find changes with `status: "in-progress"`.
+1. **RESUME:** 
+   - Run `bd recall` or `bd memories` to check for shared operational context from other agents.
+   - Run `bunx openspec list --json` to find changes with `status: "in-progress"`.
    - For each active change, run `bunx openspec status --change <name> --json` to locate its `design.md` and `tasks.md`.
    - If a change is active but its tasks aren't in Beads, run `bd mol pour openspec-sync --var change_name=<name>`.
 2. **TRIAGE:** Use `bd ready` or `bd query "meta:openspec:<name>"` to find your next task.

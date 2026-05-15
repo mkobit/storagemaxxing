@@ -30,6 +30,11 @@ All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (E
 
 Refer to **[.beads/PRIME.md](.beads/PRIME.md)** for detailed CLI instructions and **[openspec/config.yaml](openspec/config.yaml)** for schema-specific rules.
 
+## 🧠 Shared Memory & Audit
+- **Coordination:** Use `bd remember "<insight>"` to store operational knowledge (e.g., "The solver is currently hitting memory limits") that isn't a design spec but is critical for other agents.
+- **Recall:** Use `bd recall` or `bd memories` to retrieve shared context at the start of a session.
+- **Audit:** All interactions are recorded locally; use `bd audit record` if you need to explicitly log an architectural justification.
+
 ## 📐 Breadth of Rectangles (Product Strategy)
 
 We prioritize **Horizontal Breadth** (many storage systems) over **Vertical Depth** (complex 3D/WASM solvers). 
