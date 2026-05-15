@@ -16,7 +16,7 @@ Automated agents MUST follow the **Spec-Driven Execution** model:
    - Run `bd recall` or `bd memories` to check for shared operational context from other agents.
    - Run `bunx openspec list --json` to find changes with `status: "in-progress"`.
    - For each active change, run `bunx openspec status --change <name> --json` to locate its `design.md` and `tasks.md`.
-   - If a change is active but its tasks aren't in Beads, run `bd mol pour openspec-sync --var change_name=<name>`.
+   - If a change is active but its tasks aren't in Beads, run `bd mol pour openspec-sync --var change_name=<name>`. This will parse the checkboxes in `tasks.md` into linked Beads issues.
 2. **TRIAGE:** Use `bd ready` or `bd query "meta:openspec:<name>"` to find your next task.
 3. **CLAIM:** `bd update <id> --claim` to signal you are working.
 4. **EXECUTE:** Implement focused changes following "Engineering Rails".
