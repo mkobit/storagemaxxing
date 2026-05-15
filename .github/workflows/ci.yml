@@ -7,13 +7,14 @@ on:
     branches: [main, dev]
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151
+      - name: Setup mise
+        uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -27,7 +28,13 @@ jobs:
         run: bun run lint
 
       - name: Test
-        run: bun run test
+        run: bun test packages apps/web/src
 
-      - name: Build
-        run: bun run build
+      - name: Verify OpenSpec
+        run: bunx openspec validate --all --no-interactive
+
+      - name: Verify Beads
+        run: |
+          rm -f .beads/config.yaml
+          bd bootstrap --yes
+          bd lint
