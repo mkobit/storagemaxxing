@@ -9,8 +9,6 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    env:
-      BD_NO_DB: "true"
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -21,6 +19,9 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           version: 2026.5.6
           cache: true
+
+      - name: Bootstrap Beads
+        run: bd bootstrap --yes
 
       - name: Lint Beads
         run: bd lint
