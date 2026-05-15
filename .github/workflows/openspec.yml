@@ -17,6 +17,7 @@ jobs:
         uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          version: 2026.3.10
           cache: true
 
       - name: Cache bun dependencies
