@@ -18,3 +18,10 @@ id = "design-architecture"
 title = "Design technical architecture for {{feature_name}}"
 type = "task"
 labels = ["type:feature", "status:needs-design"]
+
+[[steps]]
+id = "human-review"
+title = "Human Review & Adversarial Sign-off"
+type = "task"
+labels = ["status:needs-review"]
+description = "Stop here. Present the proposal and design to a human. After quirks are resolved and design is approved, proceed to hydrate the task graph."

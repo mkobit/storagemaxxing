@@ -21,6 +21,7 @@ All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (E
    - Run `bunx openspec list --json` to identify active changes.
    - Use `bunx openspec status --change <name>` to locate the relevant `design.md` and `tasks.md`.
 2. **PLAN:** Before coding, ensure an OpenSpec `design.md` and `tasks.md` exist and are synced to Beads via `bd mol pour openspec-sync`.
+   - **Checkpoint:** All designs MUST be reviewed and approved by a human (using `status:needs-review`) before an agent starts the implementation phase.
 3. **CLAIM:** Always claim a Bead with `bd update <id> --claim` before starting execution.
 4. **EXECUTE & FLOWBACK:** Implement changes. If the design needs to change, update OpenSpec **BEFORE** proceeding with implementation or closing Beads.
 5. **VALIDATE & CLOSE:** 
