@@ -24,11 +24,17 @@ bd show <issue-id>
 
 # Update issue status
 bd update <issue-id> --claim
-bd update <issue-id> --status done
-
-# Sync with Dolt remote
-bd dolt push
+bd close <issue-id>
 ```
+
+### 🔄 Syncing
+
+This repository uses **Git + JSONL** as the source of truth for issues.
+- **Issues**: Stored in `.beads/issues.jsonl`.
+- **Sync**: Simply `git add .` and `git push`.
+- **Fresh Clones**: Run `bd bootstrap` to hydrate the local database from the JSONL file.
+
+We do **NOT** use a remote Dolt database or `bd dolt push`.
 
 ### Working with Issues
 
