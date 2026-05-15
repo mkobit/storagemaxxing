@@ -12,26 +12,29 @@ This file serves as the "Prime Directive" for all AI agents (Gemini, Claude, Jul
   - **Layer 1:** Synchronous 2D Geometric Fitting (Pure functions).
   - **Layer 2:** Asynchronous Constraint Validation (Layered on top, often in Workers).
 
-## 🟢 Operational Loop (Multi-Agent Handshake)
+## 🟢 Operational Loop (Spec-Driven & Bidirectional)
 
-All agents MUST coordinate through the filesystem using **Beads** and **OpenSpec**. **OpenSpec is the Canonical Source of Truth** for all architectural and design decisions; Beads is the execution derivative.
+All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (Execution/Tasking). OpenSpec is the source of truth; Beads is the engine.
 
-### The Pipeline (`openspec/workflow.yaml`):
-1. **DRAFT & PROPOSE:** Changes begin as proposals in `openspec/changes/`.
-2. **DESIGN:** AI or human establishes the technical design, data flow, and schemas.
-3. **DECOMPOSE:** Once the design is approved, AI agents break the design down into `<30m` tasks using `tasks.md` (via `bd mol pour openspec-decompose`).
-4. **HYDRATE:** Tasks are synced into the Beads database (via `bd mol pour openspec-sync`).
-5. **IMPLEMENT:** Agents claim and execute hydrated tasks.
+1. **SYNC & DISCOVER:** 
+   - Run `bd prime` to load the latest operational context.
+   - Run `bunx openspec list --json` to identify active changes.
+   - Use `bunx openspec status --change <name>` to locate the relevant `design.md` and `tasks.md`.
+2. **PLAN:** Before coding, ensure an OpenSpec `design.md` and `tasks.md` exist and are synced to Beads via `bd mol pour openspec-sync`.
+   - **Checkpoint:** All designs MUST be reviewed and approved by a human (using `status:needs-review`) before an agent starts the implementation phase.
+3. **CLAIM:** Always claim a Bead with `bd update <id> --claim` before starting execution.
+4. **EXECUTE & FLOWBACK:** Implement changes. If the design needs to change, update OpenSpec **BEFORE** proceeding with implementation or closing Beads.
+5. **VALIDATE & CLOSE:** 
+   - Run `bunx openspec validate` to ensure spec integrity.
+   - Mark `tasks.md` checkboxes and run `bd close <id>`.
+   - Run `bunx openspec archive` only after all linked Beads are closed.
 
-### Agent Execution Workflow:
-1. **TRIAGE:** Scan `bd ready` for unclaimed tasks. **DO NOT execute code implementation tasks unless they are explicitly in the `Implemented` stage of the OpenSpec pipeline.**
-2. **SYNC:** Check `openspec/changes/` for active designs and architectural contracts.
-3. **CLAIM:** Run `bd update <id> --claim` to signal you are working on a task.
-4. **PIPELINE AWARENESS:** If a task requires human review (e.g., proposing a design), draft the change and set the issue to `status:blocked-by-human`. **Halt execution until review is complete.**
-5. **EXECUTE:** Implement focused, surgical changes. Update `tasks.md` as you go.
-6. **VALIDATE:** Run `bun run lint && bun run typecheck && bun test`.
-7. **FLOWBACK:** If implementation reveals necessary design changes, you MUST update the OpenSpec `design.md` or `proposal.md` BEFORE closing the bead.
-8. **CLOSE:** Run `bd close <id> --reason "..."` and push changes.
+Refer to **[.beads/PRIME.md](.beads/PRIME.md)** for detailed CLI instructions and **[openspec/config.yaml](openspec/config.yaml)** for schema-specific rules.
+
+## 🧠 Shared Memory & Audit
+- **Coordination:** Use `bd remember "<insight>"` to store operational knowledge (e.g., "The solver is currently hitting memory limits") that isn't a design spec but is critical for other agents.
+- **Recall:** Use `bd recall` or `bd memories` to retrieve shared context at the start of a session.
+- **Audit:** All interactions are recorded locally; use `bd audit record` if you need to explicitly log an architectural justification.
 
 ## 📐 Breadth of Rectangles (Product Strategy)
 
@@ -41,7 +44,7 @@ We prioritize **Horizontal Breadth** (many storage systems) over **Vertical Dept
 
 ## 🛠 Multi-Agent Sandbox & Sync
 
-- **Identity:** Always attribute your actions to your agent name (e.g., `actor:gemini` or `actor:jules`).
+- **Identity:** Always attribute your actions to your agent name (e.g., `actor:gemini`).
 - **Jules:** Jules is an autonomous agent optimized for high-integrity, focused execution. **Limit Jules to 1-2 tasks per execution cycle** to maintain quality.
 - **Sync:** Always refresh state (`git pull` or `bd sync`) at the start of a session.
 - **Jail:** Respect the workspace root. Do NOT access files or execute commands outside `/home/mkobit/workspace/mkobit/storagemaxxing`.

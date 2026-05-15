@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Define protocols for agents to synchronize with OpenSpec designs and ensure implementation findings are reflected back in the canonical documentation.
+
+## Requirements
 
 ### Requirement: Mandatory Resume Check
 All agents SHALL perform a "Design Authority Check" immediately upon session start.

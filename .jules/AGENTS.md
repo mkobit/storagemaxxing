@@ -15,8 +15,12 @@ The following canonical documentation defines our technical and product constrai
 - [System & Bin Definitions](../docs/jules/catalog.md)
 - [Supplemental Workflows](../docs/jules/workflows.md)
 
-## Session Protocol
-1. Check `bd ready` for assigned or available work.
-2. Claim an issue with `bd update <id> --claim` before starting.
-3. Once complete, close the issue with `bd close <id>`.
-4. **MANDATORY**: Run `bd dolt push` followed by `git push` to synchronize all task and code changes.
+## Session Protocol (Spec-Driven)
+1. Run `bd prime` to load latest operational context.
+2. Follow the **Operational Loop** defined in [AGENTS.md](../AGENTS.md):
+   - **Discover**: Identify active OpenSpec designs.
+   - **Hydrate**: Use `bd mol pour openspec-sync` if tasks aren't in Beads.
+   - **Claim**: `bd update <id> --claim`.
+   - **Execute & Flowback**: Update specs if design shifts.
+   - **Close**: Check off `tasks.md` and run `bd close <id>`.
+3. **MANDATORY**: Run `git add .` and `git push` to synchronize all task and code changes. We use **Git-backed JSONL** for issues, so `bd dolt push` is NOT required.

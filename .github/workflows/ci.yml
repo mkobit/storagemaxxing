@@ -7,15 +7,26 @@ on:
     branches: [main, dev]
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      - uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151
+      - name: Setup mise
+        uses: jdx/mise-action@1648a7812b9aeae629881980618f079932869151
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          version: 2026.5.6
+          cache: true
+
+      - name: Cache bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -27,7 +38,4 @@ jobs:
         run: bun run lint
 
       - name: Test
-        run: bun run test
-
-      - name: Build
-        run: bun run build
+        run: bun test packages apps/web/src

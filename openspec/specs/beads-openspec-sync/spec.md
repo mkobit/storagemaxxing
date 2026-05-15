@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Automate the process of hydrating Beads implementation tasks from OpenSpec design documents to maintain synchronization between design and execution.
+
+## Requirements
 
 ### Requirement: Swarm-Based Task Hydration
 The system SHALL use a Beads "Swarm" formula to initiate the hydration of the task graph from an OpenSpec design.

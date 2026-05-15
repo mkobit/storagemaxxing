@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Enforce a directed acyclic dependency graph and clear package boundaries within the monorepo to ensure architectural integrity.
+
+## Requirements
 
 ### Requirement: Directed Acyclic Dependency Graph
 The monorepo dependency graph SHALL remain acyclic and follow a clear hierarchy: Geometry -> Catalog -> Packer/Solver -> Web App.

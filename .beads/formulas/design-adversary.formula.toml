@@ -1,0 +1,22 @@
+formula = "design-adversary"
+description = "Adversarial review of an existing design to identify gaps and edge cases"
+version = 1
+type = "workflow"
+
+[vars.change_name]
+description = "The OpenSpec change name to audit"
+required = true
+
+[[steps]]
+id = "hole-poking"
+title = "Poke holes in {{change_name}} design"
+type = "task"
+labels = ["type:audit", "meta:adversary"]
+description = "Systematically analyze the design for: (1) Missing failure scenarios, (2) Performance bottlenecks/complexity gaps, (3) Boundary condition errors (zero state, invalid inputs), and (4) Multi-agent race conditions. Log gaps as new OpenSpec requirements."
+
+[[steps]]
+id = "remediation-plan"
+title = "Draft remediation specs for {{change_name}}"
+type = "task"
+labels = ["type:sync", "meta:openspec"]
+description = "Update design.md and tasks.md in {{change_name}} to address the identified holes."

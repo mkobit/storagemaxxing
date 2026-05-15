@@ -1,5 +1,4 @@
-schema: custom
-workflow_file: openspec/workflow.yaml
+schema: beads-driven
 
 # Project context
 context: |

@@ -1,0 +1,27 @@
+formula = "feature-probe"
+description = "Scoping and architectural discovery for a new feature"
+version = 1
+type = "workflow"
+
+[vars.feature_name]
+description = "The name of the feature (e.g., user-auth, data-export)"
+required = true
+
+[[steps]]
+id = "create-openspec-proposal"
+title = "Create OpenSpec Proposal for {{feature_name}}"
+type = "task"
+labels = ["type:research", "status:needs-spec"]
+
+[[steps]]
+id = "design-architecture"
+title = "Design technical architecture for {{feature_name}}"
+type = "task"
+labels = ["type:feature", "status:needs-design"]
+
+[[steps]]
+id = "human-review"
+title = "Human Review & Adversarial Sign-off"
+type = "task"
+labels = ["status:needs-review"]
+description = "Stop here. Mark this task as `blocked` (using `bd update <id> --status blocked`) to signal it is waiting for human approval. Only proceed to hydration after a human approves the design."

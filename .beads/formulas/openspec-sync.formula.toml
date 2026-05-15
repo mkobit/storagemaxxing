@@ -1,0 +1,22 @@
+formula = "openspec-sync"
+description = "Hydrate Beads from OpenSpec tasks. Protocol: Parses hierarchal checkboxes (- [ ]) in tasks.md to create linked Beads issues."
+version = 1
+type = "workflow"
+
+[vars.change_name]
+description = "The OpenSpec change folder name"
+required = true
+
+[vars.domain]
+description = "Target domain label"
+required = false
+
+[vars.scope]
+description = "Target scope label"
+required = false
+
+[[steps]]
+id = "expand-tasks"
+title = "Expand Tasks from {{change_name}}"
+type = "task"
+labels = ["type:sync", "meta:openspec", "meta:openspec:{{change_name}}"]

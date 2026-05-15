@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Establish core engineering standards for the repository, focusing on functional programming principles and strict type safety to ensure code quality.
+
+## Requirements
 
 ### Requirement: Functional Purity in Logic Packages
 All code in `packages/geometry`, `packages/catalog`, and `packages/packer` SHALL be functional and free of side effects.

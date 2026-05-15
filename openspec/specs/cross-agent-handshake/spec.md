@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Standardize coordination and task handover processes between autonomous agents, ensuring architectural decisions are grounded in OpenSpec designs.
+
+## Requirements
 
 ### Requirement: Beads-Based Task Handover
 Agents SHALL use the `bd` CLI to claim, update, and close tasks to coordinate work across sessions and agents.

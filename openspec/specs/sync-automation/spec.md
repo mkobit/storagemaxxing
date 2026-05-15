@@ -1,4 +1,8 @@
-## ADDED Requirements
+## Purpose
+
+Ensure consistency and compatibility during the automated synchronization of task lists from OpenSpec documents into the Beads task management system.
+
+## Requirements
 
 ### Requirement: Task List Compatibility
 The OpenSpec `tasks.md` format SHALL be strictly compatible with the `bd create --file` command to enable automated batch creation.
