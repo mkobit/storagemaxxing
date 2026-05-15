@@ -21,7 +21,9 @@ jobs:
           cache: true
 
       - name: Initialize Beads (Local-First)
-        run: bd init --non-interactive --from-jsonl --skip-agents --skip-hooks
+        run: bd bootstrap --yes
+        env:
+          BD_SYNC_REMOTE: ""
 
       - name: Lint Beads
         run: bd lint
