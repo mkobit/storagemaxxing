@@ -23,7 +23,3 @@ run = "bun run test"
 [tasks.validate]
 description = "Validate OpenSpec specs and changes"
 run = "bunx openspec validate --all --no-interactive"
-
-[tasks.bootstrap]
-description = "Bootstrap Beads database"
-run = "bd bootstrap --yes"
