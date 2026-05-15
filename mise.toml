@@ -1,4 +1,4 @@
-min_version = "2026.5.8"
+min_version = "2026.5.6"
 
 [tools]
 "github:gastownhall/beads" = "1.0.3"
