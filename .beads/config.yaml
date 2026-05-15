@@ -54,4 +54,4 @@
 # - github.repo
 
 issue-id-length: 8
-sync.remote: "git+ssh://git@github.com/mkobit/storagemaxxing.git"
+# sync.remote: "git+ssh://git@github.com/mkobit/storagemaxxing.git"
