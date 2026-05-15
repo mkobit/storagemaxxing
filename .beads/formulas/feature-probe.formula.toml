@@ -1,27 +1,20 @@
 formula = "feature-probe"
-description = "Scoping and architectural discovery for a new storage system"
+description = "Scoping and architectural discovery for a new feature"
 version = 1
 type = "workflow"
 
-[vars.system_name]
-description = "The name of the storage system (e.g., opengrid, neogrid)"
+[vars.feature_name]
+description = "The name of the feature (e.g., user-auth, data-export)"
 required = true
 
 [[steps]]
-id = "create-openspec-probe"
-title = "Create OpenSpec Probe for {{system_name}}"
+id = "create-openspec-proposal"
+title = "Create OpenSpec Proposal for {{feature_name}}"
 type = "task"
 labels = ["type:research", "status:needs-spec"]
 
 [[steps]]
-id = "design-2d-fitter"
-title = "Design 2D Fitter for {{system_name}}"
+id = "design-architecture"
+title = "Design technical architecture for {{feature_name}}"
 type = "task"
 labels = ["type:feature", "status:needs-design"]
-
-[[steps]]
-id = "poke-holes"
-title = "Poke holes in {{system_name}} architecture"
-type = "task"
-labels = ["type:audit", "meta:adversary"]
-description = "Stress test the 2D fitter design: What if grid units are fractional? What if tolerances overlap? Define failure modes."

@@ -148,6 +148,17 @@ artifacts:
       Create the design document that explains HOW to implement the change.
 
 
+      **ADVERSARIAL MANDATE:** You MUST include an "Adversarial Audit" section
+      at the end of the design. Systematically poke holes in your own
+      architecture:
+
+      - Identify failure modes (e.g., performance bottlenecks, edge cases).
+
+      - Identify race conditions or multi-agent sync conflicts.
+
+      - Address boundary conditions (e.g., zero state, invalid inputs).
+
+
       When to include design.md (create only if any apply):
 
       - Cross-cutting change (multiple services/modules) or new architectural
@@ -174,6 +185,8 @@ artifacts:
 
       - **Migration Plan**: Steps to deploy, rollback strategy (if applicable)
 
+      - **Adversarial Audit**: Results of the hole-poking mandate above.
+
       - **Open Questions**: Outstanding decisions or unknowns to resolve
 
 
@@ -198,6 +211,11 @@ artifacts:
       After generating `tasks.md`, you MUST run:
 
       `bd mol pour openspec-sync --var change_name=<name>`
+
+
+      **ADVERSARIAL TASKS:** You MUST include a specific task group for
+      "Validation & Stress Testing" that addresses the risks identified in the
+      design's Adversarial Audit.
 
 
       This hydrates the tasks into the Beads database. 
