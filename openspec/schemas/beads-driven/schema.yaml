@@ -88,8 +88,12 @@ artifacts:
 
 
       **FOLLOW-UPS**: Propose 1-3 specific actions to improve the project's rails.
-      Each follow-up MUST be created as a Beads task with the label `meta:beads-flow`.
-      Format: `bd create "Improve: <topic>" -l meta:beads-flow -d "From <change-name> reflection..."`
+      Each follow-up MUST be created as a Beads task with high-fidelity labels:
+      - `meta:beads-flow`: For operational loop or formula improvements.
+      - `meta:openspec-schema`: For schema.yaml or instruction refinement.
+      - `meta:agent-automation`: For slash command or automated tool improvements.
+
+      Format: `bd create "Improve: <topic>" -l meta:<category> -d "From <change-name> reflection..."`
 
 
       **OUTPUT**: Document the process insights and list the created follow-up Beads IDs.
