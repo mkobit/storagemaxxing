@@ -16,6 +16,13 @@ When ready to implement, run /opsx:apply
 
 **Steps**
 
+0. **Sync**
+
+   Ensure your local state is up to date with the remote source of truth before starting work.
+   ```bash
+   git pull && bd dolt pull
+   ```
+
 1. **Check Architectural Rails**
    Read `AGENTS.md` to ensure the proposal aligns with the monorepo topology and functional purity requirements.
 

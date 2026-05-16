@@ -26,7 +26,7 @@
 
 ## 3. State Sync Protocol (The Handshake)
 
-- [ ] 3.1 **Refresh-Before-Read Enforcement**: Update the `/opsx-apply` and `/opsx-propose` slash command definitions to include a mandatory `git pull` or `bd sync` step at the session start.
+- [x] 3.1 **Refresh-Before-Read Enforcement**: Update the `/opsx-apply` and `/opsx-propose` slash command definitions to include a mandatory `git pull` or `bd sync` step at the session start.
   - **Validation**: Verify command files in `.gemini/commands/opsx/` and `.claude/commands/opsx/`.
   - **Labels**: `scope:infra`, `type:feature`, `meta:beads-flow`
 - [ ] 3.2 **Task Claiming (Locking) Enforcement**: Ensure the `/opsx-apply` workflow strictly requires a `bd update <id> --claim` before any file modifications.

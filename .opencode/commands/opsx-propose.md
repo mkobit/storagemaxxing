@@ -17,6 +17,13 @@ When ready to implement, run /opsx-apply
 
 **Steps**
 
+0. **Sync**
+
+   Ensure your local state is up to date with the remote source of truth before starting work.
+   ```bash
+   git pull && bd dolt pull
+   ```
+
 1. **If no input provided, ask what they want to build**
 
    Use the **AskUserQuestion tool** (open-ended, no preset options) to ask:
