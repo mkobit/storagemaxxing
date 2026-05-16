@@ -7,14 +7,13 @@ Synchronization operations (git + beads) SHALL NOT exceed a 10-second threshold 
 
 The following measurements were taken to evaluate the overhead of the "Refresh-Before-Read" protocol.
 
-- **Operation**: `git pull origin <branch> && bd dolt pull`
-- **Total Latency**: 5.27s
+- **Operation**: `git pull origin <branch>`
+- **Total Latency**: ~0.8s
 - **Breakdown**:
   - Git overhead: ~0.8s
-  - Dolt pull overhead: ~4.4s
 
 #### Conclusion
-Current latency is slightly above the desired 5-second target but remains well within the 10-second "degraded" threshold. No immediate architectural changes to the sync protocol are required at this time.
+Current latency is well within the 5-second target. No immediate architectural changes to the sync protocol are required.
 
 #### Recommendations
 - Monitor Dolt database size. If it grows significantly, use `bd compact` or `bd gc` to reduce history size and pull latency.

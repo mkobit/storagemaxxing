@@ -87,7 +87,7 @@ Implement tasks from an OpenSpec change.
    Display:
    - Tasks completed this session
    - Overall progress: "N/M tasks complete"
-   - **CHECKOUT**: Explicitly state: "Session complete. Ensure all changes are pushed: `git push && bd dolt push`"
+   - **CHECKOUT**: Explicitly state: "Session complete. Ensure all changes are pushed: `git push`"
    - If all done: suggest archive
    - If paused: explain why and wait for guidance
 

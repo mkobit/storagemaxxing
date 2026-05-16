@@ -24,7 +24,7 @@ When ready to implement, run /opsx:apply
 
    Ensure your local state is up to date with the remote source of truth before starting work.
    ```bash
-   git pull && bd dolt pull
+   git pull
    ```
 
 1. **Check Architectural Rails**

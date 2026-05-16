@@ -107,7 +107,7 @@ apply:
     **STRICT BEADS-DRIVEN APPLY PROTOCOL:**
 
 
-    1. **SYNC**: Run `git pull` and `bd sync` to ensure cross-agent state consistency.
+    1. **SYNC**: Run `git pull` to ensure cross-agent state consistency.
 
     2. **CLAIM**: Find open work for this change: `bd query "status=open meta:openspec:<name>"`.
 
@@ -117,7 +117,7 @@ apply:
 
     5. **CLOSE**: Finalize the implementation: `bd close <id> --reason "..."`.
 
-    6. **PUSH**: Run `git pull --rebase && git push` and `bd dolt push` IMMEDIATELY after every task completion.
+    6. **PUSH**: Run `git pull --rebase && git push` IMMEDIATELY after every task completion.
 
 
     Repeat until all Beads with the `meta:openspec:<name>` label are closed. Once all work is done, proceed sequentially to the `retrospective` and `reflection` artifacts.

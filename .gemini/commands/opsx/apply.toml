@@ -72,7 +72,7 @@ Implement tasks from an OpenSpec change.
    - Keep changes minimal and focused
    - Mark task complete in the tasks file: `- [ ]` → `- [x]`
    - **CLOSE**: Close the bead immediately after completion: `bd close <id> --reason "..."`
-   - **PUSH**: Push changes to ensure sync: `git push && bd dolt push`
+   - **PUSH**: Push changes to ensure sync: `git push`
    - Continue to next task
 
    **Pause if:**
