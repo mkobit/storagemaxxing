@@ -38,6 +38,12 @@ To manage sync overhead, agents must follow the **Refresh-Before-Read** rule:
 - **Local Agents**: Use MCP via local sockets (`stdio` or `http`).
 - **Rule**: All local MCP servers MUST be bound to `localhost` and restricted to the `storagemaxxing` workspace directory.
 
+### 4. Generalized Agent Sandbox Pattern (Universal Jail)
+To ensure consistency across disparate agents, we adopt the **Universal Agent Jail (UAJ)** pattern:
+- **Centralized Policy**: A `.sandbox.yaml` manifest defines the source of truth for all agent boundaries.
+- **Harness/Compute Separation**: Agent runners (Harness) are responsible for verifying actions against the policy before executing them in an isolated environment (Compute).
+- **Unified Nudge**: All agents receive the same "Prime Directive" keywords, mapping directly to the boundaries defined in the manifest.
+
 ## Risks / Trade-offs
 
 - **[Risk]**: Conflict between remote Jules and local Opencode on the same file.
