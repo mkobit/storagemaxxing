@@ -70,10 +70,13 @@ Implement tasks from an OpenSpec change.
 6. **Implement tasks (loop until done or blocked)**
 
    For each pending task:
+   - **CLAIM**: You MUST claim the task before starting: `bd update <id> --claim`
    - Show which task is being worked on
    - Make the code changes required
    - Keep changes minimal and focused
    - Mark task complete in the tasks file: `- [ ]` → `- [x]`
+   - **CLOSE**: Close the bead immediately after completion: `bd close <id> --reason "..."`
+   - **PUSH**: Push changes to ensure sync: `git push && bd dolt push`
    - Continue to next task
 
    **Pause if:**

@@ -29,7 +29,7 @@
 - [x] 3.1 **Refresh-Before-Read Enforcement**: Update the `/opsx-apply` and `/opsx-propose` slash command definitions to include a mandatory `git pull` or `bd sync` step at the session start.
   - **Validation**: Verify command files in `.gemini/commands/opsx/` and `.claude/commands/opsx/`.
   - **Labels**: `scope:infra`, `type:feature`, `meta:beads-flow`
-- [ ] 3.2 **Task Claiming (Locking) Enforcement**: Ensure the `/opsx-apply` workflow strictly requires a `bd update <id> --claim` before any file modifications.
+- [x] 3.2 **Task Claiming (Locking) Enforcement**: Ensure the `/opsx-apply` workflow strictly requires a `bd update <id> --claim` before any file modifications.
   - **Validation**: (Already partially done, but verify full compliance in all command variants).
   - **Labels**: `scope:infra`, `type:feature`, `meta:beads-flow`
 - [ ] 3.3 **Session Boundary Sync**: Implement a "Check-out" protocol at the end of agent sessions that ensures `git push` and `bd dolt push` are executed.
