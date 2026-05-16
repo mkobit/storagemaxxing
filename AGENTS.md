@@ -47,5 +47,5 @@ We prioritize **Horizontal Breadth** (many storage systems) over **Vertical Dept
 - **Identity:** Always attribute your actions to your agent name (e.g., `actor:gemini`).
 - **Jules:** Jules is an autonomous agent optimized for high-integrity, focused execution. **Limit Jules to 1-2 tasks per execution cycle** to maintain quality.
 - **Sync:** Always refresh state (`git pull` or `bd sync`) at the start of a session.
-- **Jail (Root Boundary):** The directory `/home/mkobit/workspace/mkobit/storagemaxxing` is the absolute execution boundary. You MUST NOT read, write, or execute anything outside this root. This is your standardized project jail. Any attempt to traverse above this directory is a security violation.
+- **Jail (Standardized Sandbox):** The directory `/home/mkobit/workspace/mkobit/storagemaxxing` is your ABSOLUTE EXECUTION JAIL. You MUST NOT attempt to read, write, or list any files outside this path. This is a hard security boundary. Any violation will be logged and may terminate the session. Use only project-relative paths or absolute paths within this jail. This standardized sandbox is your primary operational constraint.
 - **MCP:** Use only the approved MCP servers defined in `mcp-config.json`. All local MCP servers MUST bind to `localhost` and be scoped to the project root.

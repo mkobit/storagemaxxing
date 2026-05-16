@@ -20,7 +20,7 @@
 - [x] 2.1 **Native Sandbox Documentation**: Audit and document the native sandboxing capabilities of Gemini and Claude platforms as they relate to our workspace.
   - **Validation**: New section in `openspec/changes/agent-sandbox-security/specs/hybrid-sandbox-policy/spec.md`.
   - **Labels**: `scope:infra`, `type:research`, `meta:agent-rails`
-- [ ] 2.2 **Prime Nudge Calibration**: Refine the "Prime Directive" in `AGENTS.md` to use specific, platform-native keywords that improve sandbox compliance (e.g., using "jail" vs "boundary").
+- [x] 2.2 **Prime Nudge Calibration**: Refine the \"Prime Directive\" in `AGENTS.md` to use specific, platform-native keywords that improve sandbox compliance (e.g., using \"jail\" vs \"boundary\").
   - **Validation**: Verify that agents acknowledge the refined nudge in session start.
   - **Labels**: `scope:infra`, `type:feature`, `meta:agent-rails`
 
