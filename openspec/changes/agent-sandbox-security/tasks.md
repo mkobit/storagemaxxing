@@ -5,7 +5,7 @@
 
 ## 1. Agent Guardrails (Local Jail)
 
-- [ ] 1.1 **Standardize Root Boundary**: Update `AGENTS.md` and `GEMINI.md` to explicitly define the project root as the absolute execution boundary for all agents. 
+- [x] 1.1 **Standardize Root Boundary**: Update `AGENTS.md` and `GEMINI.md` to explicitly define the project root as the absolute execution boundary for all agents. 
   - **Validation**: Check that both files contain the updated boundary text.
   - **Labels**: `scope:infra`, `type:feature`, `meta:agent-rails`
 - [ ] 1.2 **Local Execution Restrictions**: Research and document specific OS-level or environment-level restrictions for local agents (Ollama, Opencode) to prevent access outside the `storagemaxxing` folder.
