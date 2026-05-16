@@ -11,7 +11,7 @@
 - [x] 1.2 **Local Execution Restrictions**: Research and document specific OS-level or environment-level restrictions for local agents (Ollama, Opencode) to prevent access outside the `storagemaxxing` folder.
   - **Validation**: Added as a new section in `openspec/changes/agent-sandbox-security/specs/local-boundary-enforcement/spec.md`.
   - **Labels**: `scope:infra`, `type:research`, `meta:agent-rails`
-- [ ] 1.3 **Local MCP Jail**: Update all local MCP server configurations to strictly bind to `localhost` and limit their scope to the current working directory.
+- [x] 1.3 **Local MCP Jail**: Update all local MCP server configurations to strictly bind to `localhost` and limit their scope to the current working directory.
   - **Validation**: Inspect `mcp-config.json` (or equivalent) for host/path restrictions.
   - **Labels**: `scope:infra`, `type:feature`, `meta:agent-rails`
 

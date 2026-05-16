@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "local-bridge": {
+      "command": "bun",
+      "args": ["run", "scripts/mcp-bridge.ts"],
+      "env": {
+        "MCP_HOST": "localhost",
+        "MCP_PORT": "3001",
+        "WORKSPACE_ROOT": "/home/mkobit/workspace/mkobit/storagemaxxing"
+      }
+    }
+  },
+  "security": {
+    "bind": "localhost",
+    "scope": "/home/mkobit/workspace/mkobit/storagemaxxing",
+    "enforce": "strict"
+  }
+}
