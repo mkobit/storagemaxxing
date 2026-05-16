@@ -200,77 +200,64 @@ artifacts:
       - proposal
   - id: tasks
     generates: tasks.md
-    description: Implementation checklist with trackable tasks (Beads Integrated)
+    description: Metadata-rich implementation checklist (Beads Source)
     template: tasks.md
     instruction: >
-      Create the task list that breaks down the implementation work.
+      Break the implementation work into 30-60 min chunks and generate granular tasks directly into the Beads database.
 
 
-      **BEADS SYNC MANDATE:** This workflow uses Beads for execution. 
+      **GENERATION**: For each task, execute `bd create "<description>"` with the following mandates:
 
-      After generating `tasks.md`, you MUST run:
+      1. **Labeling**: Add `meta:openspec:<change-name>` AND relevant `scope:`, `type:`, and `domain:` tags.
 
-      `bd mol pour openspec-sync --var change_name=<name>`
+      2. **Documentation**: Add a detailed `--description` including the "Validation" step (test/command).
 
-
-      **ADVERSARIAL TASKS:** You MUST include a specific task group for
-      "Validation & Stress Testing" that addresses the risks identified in the
-      design's Adversarial Audit.
+      3. **Hierarchy**: Use `--parent` if the task belongs to a specific feature molecule.
 
 
-      This hydrates the tasks into the Beads database. 
+      **OUTPUT**: Once all Beads are created, generate the `tasks.md` file as a snapshot report:
 
-      All tasks created MUST include the label `meta:openspec:<name>`.
-
-
-      **Task Formatting:**
-
-      - Group related tasks under ## numbered headings.
-
-      - Each task MUST be a checkbox: `- [ ] X.Y Task description`.
-
-      - Tasks should be small enough (30-60 mins) for AI execution.
+      `bd query "meta:openspec:<change-name>" > tasks.md`
 
 
-      Example:
-
-      ```
-
-      ## 1. Setup
-
-
-      - [ ] 1.1 Create new module structure
-
-      - [ ] 1.2 Add dependencies to package.json
-
-
-      ## 2. Core Implementation
-
-
-      - [ ] 2.1 Implement data export function
-
-      - [ ] 2.2 Add CSV formatting utilities
-
-      ```
-
-
-      Reference specs for what needs to be built, design for how to build it.
+      Do NOT manually author checkboxes in this file. It is a generated view of the Beads database.
     requires:
       - design
+  - id: retrospective
+    generates: retrospective.md
+    description: Post-implementation review and evidence capture
+    template: retrospective.md
+    instruction: >
+      Conduct an evidence-first retrospective of the completed change.
+
+      **EVIDENCE**: Gather data from:
+      1. Git history: `git log <base>..HEAD --stat`
+      2. Beads: `bd query "meta:openspec:<change-name> status=closed"`
+      3. Tests: Review latest `bun run test` and `playwright` results.
+
+      **ANALYSIS**: Summarize Wins, Misses, Surprises, and Promote candidates.
+    requires:
+      - tasks
 apply:
   requires:
     - tasks
   tracks: tasks.md
   instruction: >
-    **BIDIRECTIONAL EXECUTION LOOP:**
-
-    1. **CLAIM:** Find your task in Beads using `bd ready` or `bd query "meta:openspec:<name>"`. Claim it with `bd update <id> --claim`.
-
-    2. **EXECUTE:** Implement the task logic.
-
-    3. **FLOWBACK:** If the plan changes during implementation, update `tasks.md` and `design.md` FIRST, then update/add Beads.
-
-    4. **CLOSE:** Mark the task complete in `tasks.md` AND run `bd close <id> --reason "..."`.
+    **STRICT BEADS-DRIVEN APPLY PROTOCOL:**
 
 
-    A change is only complete when all Beads are closed and all `tasks.md` checkboxes are checked.
+    1. **SYNC**: Run `git pull` and `bd sync` to ensure cross-agent state consistency.
+
+    2. **CLAIM**: Find open work for this change: `bd query "status=open meta:openspec:<name>"`.
+
+    3. **LOCK**: Claim a specific Bead with `bd update <id> --claim`.
+
+    4. **EXECUTE**: Implement the code changes required for the claimed Bead.
+
+    5. **CLOSE**: Finalize the implementation: `bd close <id> --reason "..."`.
+
+    6. **PUSH**: Run `git pull --rebase && git push` and `bd dolt push` IMMEDIATELY after every task completion.
+
+
+    Repeat until all Beads with the `meta:openspec:<name>` label are closed. Once all work is done, proceed to the `retrospective` artifact.
+
