@@ -32,7 +32,7 @@
 - [x] 3.2 **Task Claiming (Locking) Enforcement**: Ensure the `/opsx-apply` workflow strictly requires a `bd update <id> --claim` before any file modifications.
   - **Validation**: (Already partially done, but verify full compliance in all command variants).
   - **Labels**: `scope:infra`, `type:feature`, `meta:beads-flow`
-- [ ] 3.3 **Session Boundary Sync**: Implement a "Check-out" protocol at the end of agent sessions that ensures `git push` and `bd dolt push` are executed.
+- [x] 3.3 **Session Boundary Sync**: Implement a \"Check-out\" protocol at the end of agent sessions that ensures `git push` and `bd dolt push` are executed.
   - **Validation**: Verify session end hooks or command instructions.
   - **Labels**: `scope:infra`, `type:feature`, `meta:beads-flow`
 
