@@ -15,7 +15,7 @@
   - **Validation**: Inspect `mcp-config.json` (or equivalent) for host/path restrictions.
   - **Labels**: `scope:infra`, `type:feature`, `meta:agent-rails`
 
-- [ ] 1.4 **Universal Sandbox Pattern**: Investigate and define a generalized 'Universal Agent Jail' (UAJ) pattern that applies consistent security boundaries to Gemini, Claude, and Opencode.
+- [x] 1.4 **Universal Sandbox Pattern**: Investigate and define a generalized 'Universal Agent Jail' (UAJ) pattern that applies consistent security boundaries to Gemini, Claude, and Opencode.
   - **Validation**: New spec added at `openspec/changes/agent-sandbox-security/specs/universal-agent-jail/spec.md`.
   - **Labels**: `scope:infra`, `type:research`, `meta:agent-rails`
 
