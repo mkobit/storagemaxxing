@@ -38,7 +38,7 @@
 
 ## 4. Validation & Stress Testing (Adversarial Audit)
 
-- [ ] 4.1 **Cross-Agent Conflict Simulation**: Manually simulate a conflict between two agents (e.g., Gemini and Opencode) attempting to claim the same Bead.
+- [x] 4.1 **Cross-Agent Conflict Simulation**: Manually simulate a conflict between two agents (e.g., Gemini and Opencode) attempting to claim the same Bead.
   - **Validation**: Confirm that Beads correctly prevents the second claim and provides a clear error.
   - **Labels**: `scope:infra`, `type:research`, `meta:beads-infra`
 - [ ] 4.2 **Boundary Violation Spike**: Attempt to have a local agent read a file outside the repo (e.g., `~/.ssh/config`) to test the effectiveness of the new guardrails.
