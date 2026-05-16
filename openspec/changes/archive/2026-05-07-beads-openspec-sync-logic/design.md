@@ -5,16 +5,19 @@ We need a deterministic way to move from "Thinking" (OpenSpec) to "Doing" (Beads
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Automate the hydration of the Beads backlog from `tasks.md`.
 - Inherit metadata (labels, parent IDs) from the design context.
 - Maintain a link between every Bead and its originating OpenSpec change.
 
 **Non-Goals:**
-- Auto-syncing *backwards* from Beads to OpenSpec (OpenSpec is the authority).
+
+- Auto-syncing _backwards_ from Beads to OpenSpec (OpenSpec is the authority).
 
 ## Decisions
 
 ### 1. The `openspec-sync` Formula
+
 The formula will be a "Swarm" type, which signals to agents that it requires active processing rather than just static expansion.
 
 ```json
@@ -23,7 +26,10 @@ The formula will be a "Swarm" type, which signals to agents that it requires act
   "description": "Hydrate Beads from OpenSpec {{change_name}}",
   "type": "workflow",
   "vars": {
-    "change_name": { "description": "The OpenSpec change folder name", "required": true },
+    "change_name": {
+      "description": "The OpenSpec change folder name",
+      "required": true
+    },
     "domain": { "description": "Target domain label", "required": false },
     "scope": { "description": "Target scope label", "required": false }
   },
@@ -39,6 +45,7 @@ The formula will be a "Swarm" type, which signals to agents that it requires act
 ```
 
 ### 2. The Agent Handshake (The "Bridge")
+
 When an agent sees a task with `type:sync` and `meta:openspec`, it must follow this protocol:
 
 1.  **Locate Context**: Find `openspec/changes/{{change_name}}/`.
@@ -51,11 +58,14 @@ When an agent sees a task with `type:sync` and `meta:openspec`, it must follow t
 4.  **Close**: Run `bd close {{sync_bead_id}} --reason "Hydrated {{change_name}} into task graph with bidirectional links."`
 
 ### 3. Markdown Formatting Standards
+
 To be `bd create --file` compatible, `tasks.md` MUST follow the hierarchical checkbox format:
+
 ```markdown
 # Epic Title (Optional)
 
 ## 1. Group Name
+
 - [ ] 1.1 Task Description
 - [ ] 1.2 Task Description
 ```

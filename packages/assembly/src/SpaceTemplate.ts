@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { Point2D } from "@storagemaxxing/geometry/Point2D.js";
-import { Dimensions3D } from "@storagemaxxing/geometry/Dimensions3D.js";
+import { Point2D } from "@storagemaxxing/geometry/Point2D";
+import { Dimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
 import {
   SpaceTypeIdSchema,
   InstallationConstraintSchema,

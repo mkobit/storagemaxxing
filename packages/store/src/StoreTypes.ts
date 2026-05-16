@@ -1,15 +1,15 @@
-import { ToolMode } from "./ToolMode.js";
-import { Sketch2D } from "@storagemaxxing/assembly/Sketch2D.js";
-import { SketchElement } from "@storagemaxxing/assembly/SketchElement.js";
-import { SketchId } from "@storagemaxxing/assembly/SketchId.js";
-import { Feature, FeatureId } from "@storagemaxxing/assembly/Feature.js";
+import { ToolMode } from "./ToolMode";
+import { Sketch2D } from "@storagemaxxing/assembly/Sketch2D";
+import { SketchElement } from "@storagemaxxing/assembly/SketchElement";
+import { SketchId } from "@storagemaxxing/assembly/SketchId";
+import { Feature, FeatureId } from "@storagemaxxing/assembly/Feature";
 import {
   SpaceInstance,
   SpaceInstanceId,
-} from "@storagemaxxing/assembly/SpaceInstance.js";
-import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate.js";
-import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint.js";
-import { PackingResult } from "@storagemaxxing/packer/types.js";
+} from "@storagemaxxing/assembly/SpaceInstance";
+import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate";
+import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
+import { PackingResult } from "@storagemaxxing/packer/types";
 
 export type AppState = {
   readonly _hasHydrated: boolean;

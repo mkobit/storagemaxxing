@@ -1,16 +1,10 @@
 /* eslint-disable functional/no-let, functional/no-expression-statements, functional/no-try-statements, functional/prefer-readonly-type */
 import GLPK from "glpk.js";
-import {
-  SolverRequest,
-  SolverResult,
-  LinearModel,
-} from "./index.js";
-import {
-  SpaceInstance,
-  BinSpec,
-  SpaceTemplate,
-  SpaceConstraint,
-} from "@storagemaxxing/assembly/index.js";
+import { SolverRequest, SolverResult, LinearModel } from "./types";
+import { SpaceInstance } from "@storagemaxxing/assembly/SpaceInstance";
+import { BinSpec } from "@storagemaxxing/assembly/BinSpec";
+import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
+import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 
 export const GLP_MAX = 2;
 export const GLP_LO = 2;
@@ -74,7 +68,8 @@ export type GLPKSubjTo = {
   };
 };
 
-export const getVarName = (spaceId: string, binId: string) => `c_${spaceId}_${binId}`;
+export const getVarName = (spaceId: string, binId: string) =>
+  `c_${spaceId}_${binId}`;
 
 export const getBinBoundInfo = (constraint: SpaceConstraint | undefined) => {
   if (!constraint) return { lb: 0, ub: 0, type: GLP_LO };
@@ -117,56 +112,68 @@ export const buildSpaceModelParts = (
   const emptySubj: readonly GLPKSubjTo[] = [];
   const emptyGenerals: readonly string[] = [];
 
-  return spaces.reduce<SpaceModelParts>((acc, space) => {
-    const template = templateMap.get(space.templateId);
-    if (!template) return acc;
+  return spaces.reduce<SpaceModelParts>(
+    (acc, space) => {
+      const template = templateMap.get(space.templateId);
+      if (!template) return acc;
 
-    const spaceArea = (template.w ?? 1000000) * (template.l ?? 1000000);
+      const spaceArea = (template.w ?? 1000000) * (template.l ?? 1000000);
 
-    const initialBinModelParts: Readonly<BinModelParts> = {
+      const initialBinModelParts: Readonly<BinModelParts> = {
+        vars: emptyVars,
+        bounds: emptyBounds,
+        geomVars: emptyVars,
+        generals: emptyGenerals,
+      };
+
+      const binModelParts = bins.reduce<Readonly<BinModelParts>>(
+        (binAcc, bin) => {
+          const vName = getVarName(space.id, bin.id);
+          const binArea = binAreaMap.get(bin.id) ?? 1;
+          const v: GLPKVar = { name: vName, coef: binArea };
+          const constraints: Record<string, SpaceConstraint> =
+            space.constraints;
+          const constraint = constraints[bin.id];
+          const boundInfo = getBinBoundInfo(constraint);
+
+          return {
+            vars: [...binAcc.vars, v],
+            bounds: [
+              ...binAcc.bounds,
+              {
+                name: vName,
+                type: boundInfo.type,
+                lb: boundInfo.lb,
+                ub: boundInfo.ub,
+              },
+            ],
+            geomVars: [...binAcc.geomVars, v],
+            generals: [...binAcc.generals, vName],
+          };
+        },
+        initialBinModelParts,
+      );
+
+      const geomConstraint: GLPKSubjTo = {
+        name: `geom_cap_${space.id}`,
+        vars: binModelParts.geomVars,
+        bnds: { type: GLP_UP, lb: 0, ub: spaceArea },
+      };
+
+      return {
+        vars: [...acc.vars, ...binModelParts.vars],
+        bounds: [...acc.bounds, ...binModelParts.bounds],
+        subjectTo: [...acc.subjectTo, geomConstraint],
+        generals: [...acc.generals, ...binModelParts.generals],
+      };
+    },
+    {
       vars: emptyVars,
       bounds: emptyBounds,
-      geomVars: emptyVars,
+      subjectTo: emptySubj,
       generals: emptyGenerals,
-    };
-
-    const binModelParts = bins.reduce<Readonly<BinModelParts>>(
-      (binAcc, bin) => {
-        const vName = getVarName(space.id, bin.id);
-        const binArea = binAreaMap.get(bin.id) ?? 1;
-        const v: GLPKVar = { name: vName, coef: binArea };
-        const constraints: Record<string, SpaceConstraint> = space.constraints;
-        const constraint = constraints[bin.id];
-        const boundInfo = getBinBoundInfo(constraint);
-
-        return {
-          vars: [...binAcc.vars, v],
-          bounds: [...binAcc.bounds, { name: vName, type: boundInfo.type, lb: boundInfo.lb, ub: boundInfo.ub }],
-          geomVars: [...binAcc.geomVars, v],
-          generals: [...binAcc.generals, vName],
-        };
-      },
-      initialBinModelParts,
-    );
-
-    const geomConstraint: GLPKSubjTo = {
-      name: `geom_cap_${space.id}`,
-      vars: binModelParts.geomVars,
-      bnds: { type: GLP_UP, lb: 0, ub: spaceArea },
-    };
-
-    return {
-      vars: [...acc.vars, ...binModelParts.vars],
-      bounds: [...acc.bounds, ...binModelParts.bounds],
-      subjectTo: [...acc.subjectTo, geomConstraint],
-      generals: [...acc.generals, ...binModelParts.generals],
-    };
-  }, {
-    vars: emptyVars,
-    bounds: emptyBounds,
-    subjectTo: emptySubj,
-    generals: emptyGenerals,
-  });
+    },
+  );
 };
 
 export const buildAggregateConstraints = (
@@ -197,23 +204,17 @@ export const extractSuggestedCounts = (
   bins: readonly BinSpec[],
 ): Record<string, Record<string, number>> => {
   const initialSpaceAcc: Record<string, Record<string, number>> = {};
-  return spaces.reduce(
-    (spaceAcc, space) => {
-      const initialBinAcc: Record<string, number> = {};
-      const binCounts = bins.reduce(
-        (binAcc, bin) => {
-          const val = vars[getVarName(space.id, bin.id)];
-          if (typeof val === "number") {
-            return { ...binAcc, [bin.id]: Math.round(val) };
-          }
-          return binAcc;
-        },
-        initialBinAcc,
-      );
-      return { ...spaceAcc, [space.id]: binCounts };
-    },
-    initialSpaceAcc,
-  );
+  return spaces.reduce((spaceAcc, space) => {
+    const initialBinAcc: Record<string, number> = {};
+    const binCounts = bins.reduce((binAcc, bin) => {
+      const val = vars[getVarName(space.id, bin.id)];
+      if (typeof val === "number") {
+        return { ...binAcc, [bin.id]: Math.round(val) };
+      }
+      return binAcc;
+    }, initialBinAcc);
+    return { ...spaceAcc, [space.id]: binCounts };
+  }, initialSpaceAcc);
 };
 
 export const checkFeasibility = async (
@@ -225,8 +226,16 @@ export const checkFeasibility = async (
   const templateMap = new Map(templates.map((t) => [t.id, t]));
   const binAreaMap = new Map(bins.map((b) => [b.id, b.w * b.l]));
 
-  const spaceModelParts = buildSpaceModelParts(spaces, bins, templateMap, binAreaMap);
-  const aggConstraints = buildAggregateConstraints(aggregateConstraints, spaces);
+  const spaceModelParts = buildSpaceModelParts(
+    spaces,
+    bins,
+    templateMap,
+    binAreaMap,
+  );
+  const aggConstraints = buildAggregateConstraints(
+    aggregateConstraints,
+    spaces,
+  );
 
   const model: LinearModel = {
     name: "Feasibility",
@@ -241,11 +250,16 @@ export const checkFeasibility = async (
   };
 
   const result = glpk.solve(model, glpk.GLP_MSG_OFF);
-  const isFeasible = result.result.status === glpk.GLP_OPT || result.result.status === glpk.GLP_FEAS;
+  const isFeasible =
+    result.result.status === glpk.GLP_OPT ||
+    result.result.status === glpk.GLP_FEAS;
 
   return {
     feasible: isFeasible,
     conflicts: isFeasible ? [] : ["Infeasible constraints"],
-    suggestedCounts: isFeasible && result.result.vars ? extractSuggestedCounts(result.result.vars, spaces, bins) : {},
+    suggestedCounts:
+      isFeasible && result.result.vars
+        ? extractSuggestedCounts(result.result.vars, spaces, bins)
+        : {},
   };
 };

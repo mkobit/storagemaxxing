@@ -11,6 +11,7 @@ We are operating in a multi-agent environment (Gemini CLI, Claude, Jules, and po
 ## Capabilities
 
 ### New Capabilities
+
 - `agentic-prime`: The canonical instruction set for all AI agents in the monorepo.
 - `cross-agent-handshake`: Protocols for one agent leaving context for the next via Beads/OpenSpec.
 - `tool-governance`: Rules for using `bd`, `openspec`, `bun`, and `gh` programmatically.

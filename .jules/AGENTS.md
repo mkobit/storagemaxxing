@@ -3,11 +3,14 @@
 You are working in the Storagemaxxing Jules environment.
 
 ## Task & Issue Tracking
-This project uses **[Beads (bd)](https://github.com/gastownhall/beads)** for all task and issue tracking. 
+
+This project uses **[Beads (bd)](https://github.com/gastownhall/beads)** for all task and issue tracking.
 At the start of every session, you MUST run `bd prime` to load the full operational workflow and command reference into your context.
 
 ## Project Rails
+
 The following canonical documentation defines our technical and product constraints. You must strictly adhere to these while implementing tasks:
+
 - [Architecture & Standards](../AGENTS.md)
 - [Technical Stack](../docs/jules/tech.md)
 - [Product Philosophy](../docs/jules/product.md)
@@ -16,6 +19,7 @@ The following canonical documentation defines our technical and product constrai
 - [Supplemental Workflows](../docs/jules/workflows.md)
 
 ## Session Protocol (Spec-Driven)
+
 1. Run `bd prime` to load latest operational context.
 2. Follow the **Operational Loop** defined in [AGENTS.md](../AGENTS.md):
    - **Discover**: Identify active OpenSpec designs.

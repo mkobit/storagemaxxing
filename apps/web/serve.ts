@@ -6,7 +6,7 @@ const server = serve({
   async fetch(req) {
     const url = new URL(req.url);
     const pathname = url.pathname === "/" ? "/index.html" : url.pathname;
-    
+
     // Attempt to serve from package root (for index.html)
     const rootFile = Bun.file(path.join(import.meta.dir, pathname));
     if (await rootFile.exists()) {

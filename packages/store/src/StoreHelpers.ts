@@ -1,11 +1,11 @@
 import { AppState } from "./StoreTypes.js";
-import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint.js";
-import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate.js";
+import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
+import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate";
 
 export const updateConstraintInState = (
   state: AppState,
   templateId: SpaceTemplateId,
-  constraint: SpaceConstraint
+  constraint: SpaceConstraint,
 ) => {
   const existing = state.constraintsBySpace[templateId] || [];
   const filtered = existing.filter((c) => c.binId !== constraint.binId);

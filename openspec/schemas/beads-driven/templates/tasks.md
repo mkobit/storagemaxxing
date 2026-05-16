@@ -1,4 +1,4 @@
-<!-- 
+<!--
   IMPORTANT: After creating this file, you MUST hydrate it into Beads:
   bd mol pour openspec-sync --var change_name=<name>
 -->

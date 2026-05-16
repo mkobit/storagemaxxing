@@ -11,6 +11,7 @@ Moving from an OpenSpec design to a Beads execution graph is currently a manual 
 ## Capabilities
 
 ### New Capabilities
+
 - `beads-openspec-sync`: The protocol for "pouring" a design into the task graph.
 - `sync-automation`: Beads formulas that automate the creation of implementation epics.
 
