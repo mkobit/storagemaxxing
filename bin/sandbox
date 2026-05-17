@@ -1,0 +1,36 @@
+#!/bin/bash
+# Hard Sandbox Wrapper for Local Agents (Opencode/Ollama)
+# Uses Bubblewrap to physically jail the process to the workspace root.
+
+PROJECT_ROOT="/home/mkobit/workspace/mkobit/storagemaxxing"
+TARGET_CMD="$@"
+
+if [ -z "$TARGET_CMD" ]; then
+  echo "Usage: bin/sandbox <command> [args...]"
+  exit 1
+fi
+
+# --ro-bind: Read-only access to system binaries and libs
+# --bind: Read-write access ONLY to the project root
+# --dev: Necessary for some tools to function
+# --proc: Necessary for process monitoring
+# --unshare-all: Disconnect from network, IPC, and other namespaces
+# --new-session: Prevent escaping via terminal controls
+
+bwrap \
+  --ro-bind /usr /usr \
+  --ro-bind /bin /bin \
+  --ro-bind /lib /lib \
+  --ro-bind /lib64 /lib64 \
+  --ro-bind /etc/alternatives /etc/alternatives \
+  --bind "$PROJECT_ROOT" "$PROJECT_ROOT" \
+  --tmpfs /tmp \
+  --tmpfs /var \
+  --tmpfs /run \
+  --dev /dev \
+  --proc /proc \
+  --die-with-parent \
+  --unshare-all \
+  --new-session \
+  --chdir "$PROJECT_ROOT" \
+  $TARGET_CMD

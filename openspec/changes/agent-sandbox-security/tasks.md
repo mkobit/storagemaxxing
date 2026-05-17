@@ -3,51 +3,44 @@
   bd mol pour openspec-sync --var change_name=agent-sandbox-security
 -->
 
-## 1. Agent Guardrails (Local Jail)
+## 1. Hard Isolation Infrastructure (CLI Wrappers)
 
-- [x] 1.1 **Standardize Root Boundary**: Update `AGENTS.md` and `GEMINI.md` to explicitly define the project root as the absolute execution boundary for all agents. 
-  - **Validation**: Check that both files contain the updated boundary text.
+- [ ] 1.1 **Universal Sandbox Wrapper**: Create `bin/sandbox` using `bwrap` (Linux) that creates a restricted namespace with project-root write access and SSH/GPG socket forwarding.
+  - **Validation**: `bin/sandbox cat /etc/passwd` fails; `bin/sandbox git push` succeeds.
   - **Labels**: `scope:infra`, `type:feature`, `meta:agent-rails`
-- [x] 1.2 **Local Execution Restrictions**: Research and document specific OS-level or environment-level restrictions for local agents (Ollama, Opencode) to prevent access outside the `storagemaxxing` folder.
-  - **Validation**: Added as a new section in `openspec/changes/agent-sandbox-security/specs/local-boundary-enforcement/spec.md`.
-  - **Labels**: `scope:infra`, `type:research`, `meta:agent-rails`
-- [x] 1.3 **Local MCP Jail**: Update all local MCP server configurations to strictly bind to `localhost` and limit their scope to the current working directory.
-  - **Validation**: Inspect `mcp-config.json` (or equivalent) for host/path restrictions.
+- [ ] 1.2 **Docker Provider**: Develop a `Dockerfile.agent` that provides a mirrored execution environment for agents, including necessary host config mounts.
+  - **Validation**: `docker build -t agent-sandbox -f Dockerfile.agent .` succeeds.
   - **Labels**: `scope:infra`, `type:feature`, `meta:agent-rails`
-
-- [x] 1.4 **Universal Sandbox Pattern**: Investigate and define a generalized 'Universal Agent Jail' (UAJ) pattern that applies consistent security boundaries to Gemini, Claude, and Opencode.
-  - **Validation**: New spec added at `openspec/changes/agent-sandbox-security/specs/universal-agent-jail/spec.md`.
-  - **Labels**: `scope:infra`, `type:research`, `meta:agent-rails`
-
-## 2. Platform Policy Alignment (Cloud Sandbox)
-
-- [x] 2.1 **Native Sandbox Documentation**: Audit and document the native sandboxing capabilities of Gemini and Claude platforms as they relate to our workspace.
-  - **Validation**: New section in `openspec/changes/agent-sandbox-security/specs/hybrid-sandbox-policy/spec.md`.
-  - **Labels**: `scope:infra`, `type:research`, `meta:agent-rails`
-- [x] 2.2 **Prime Nudge Calibration**: Refine the \"Prime Directive\" in `AGENTS.md` to use specific, platform-native keywords that improve sandbox compliance (e.g., using \"jail\" vs \"boundary\").
-  - **Validation**: Verify that agents acknowledge the refined nudge in session start.
+- [ ] 1.3 **Agent-Specific Wrappers**: Implement `bin/gemini`, `bin/claude`, and `bin/opencode` that invoke their respective global binaries through `bin/sandbox`.
+  - **Validation**: Running `bin/gemini --help` works correctly but runs within the restricted namespace.
   - **Labels**: `scope:infra`, `type:feature`, `meta:agent-rails`
 
-## 3. State Sync Protocol (The Handshake)
+## 2. Secure Credential Forwarding
 
-- [x] 3.1 **Refresh-Before-Read Enforcement**: Update the `/opsx-apply` and `/opsx-propose` slash command definitions to include a mandatory `git pull` or `bd sync` step at the session start.
-  - **Validation**: Verify command files in `.gemini/commands/opsx/` and `.claude/commands/opsx/`.
-  - **Labels**: `scope:infra`, `type:feature`, `meta:beads-flow`
-- [x] 3.2 **Task Claiming (Locking) Enforcement**: Ensure the `/opsx-apply` workflow strictly requires a `bd update <id> --claim` before any file modifications.
-  - **Validation**: (Already partially done, but verify full compliance in all command variants).
-  - **Labels**: `scope:infra`, `type:feature`, `meta:beads-flow`
-- [x] 3.3 **Session Boundary Sync**: Implement a \"Check-out\" protocol at the end of agent sessions that ensures `git push` and `bd dolt push` are executed.
-  - **Validation**: Verify session end hooks or command instructions.
-  - **Labels**: `scope:infra`, `type:feature`, `meta:beads-flow`
+- [ ] 2.1 **SSH Agent Bridge**: Update `bin/sandbox` to automatically detect and bind-mount the host's `$SSH_AUTH_SOCK` into the jail.
+  - **Validation**: `bin/sandbox ssh-add -l` shows the host's keys within the jail.
+  - **Labels**: `scope:infra`, `type:feature`, `meta:security`
+- [ ] 2.2 **GPG Agent Bridge**: Update `bin/sandbox` to bind-mount the `gpg-agent` socket and set `GPG_TTY`.
+  - **Validation**: `bin/sandbox git commit -S` signs the commit using the host's GPG identity.
+  - **Labels**: `scope:infra`, `type:feature`, `meta:security`
+- [ ] 2.3 **User Config Mapping**: Implement read-only mounting of `~/.gitconfig` into the sandbox.
+  - **Validation**: `bin/sandbox git config user.name` returns the user's host name.
+  - **Labels**: `scope:infra`, `type:feature`, `meta:security`
 
-## 4. Validation & Stress Testing (Adversarial Audit)
+## 3. Enforcement & Hook Integration
 
-- [x] 4.1 **Cross-Agent Conflict Simulation**: Manually simulate a conflict between two agents (e.g., Gemini and Opencode) attempting to claim the same Bead.
-  - **Validation**: Confirm that Beads correctly prevents the second claim and provides a clear error.
-  - **Labels**: `scope:infra`, `type:research`, `meta:beads-infra`
-- [x] 4.2 **Boundary Violation Spike**: Attempt to have a local agent read a file outside the repo (e.g., `~/.ssh/config`) to test the effectiveness of the new guardrails.
-  - **Validation**: The request must be blocked or the agent must refuse based on its directive.
-  - **Labels**: `scope:infra`, `type:research`, `status:needs-repro`
-- [x] 4.3 **Sync Latency Audit**: Measure the time overhead of frequent `bd sync` operations and adjust the "Session Boundary" rules if latency exceeds 5 seconds.
-  - **Validation**: Documented latency results and updated sync rules if necessary.
-  - **Labels**: `scope:infra`, `type:performance`, `meta:beads-flow`
+- [ ] 3.1 **Sandbox Detection Hook**: Create `bin/validate-sandbox`, a lightweight script that returns 0 if running inside the sandbox and 1 otherwise.
+  - **Validation**: Script returns 1 on host, 0 when run via `bin/sandbox`.
+  - **Labels**: `scope:infra`, `type:feature`, `meta:security`
+- [ ] 3.2 **Gemini/Claude Integration**: Update `.gemini/settings.json` and `.claude/settings.json` to use `bin/validate-sandbox` in the `SessionStart` hook.
+  - **Validation**: Agent session fails to start if not invoked via the project-local wrapper.
+  - **Labels**: `scope:infra`, `type:feature`, `meta:agent-rails`
+
+## 4. Adversarial Audit & Verification
+
+- [ ] 4.1 **Credential Leak Spike**: Attempt to have an agent read its own forwarded socket to extract private keys.
+  - **Validation**: Confirm sockets only allow signing operations and do not reveal key material.
+  - **Labels**: `scope:infra`, `type:research`, `meta:security`
+- [ ] 4.2 **Bypass Simulation**: Attempt to invoke the global `gemini-cli` directly and verify the `SessionStart` hook correctly blocks execution.
+  - **Validation**: Explicit "Security Violation" error message and session termination.
+  - **Labels**: `scope:infra`, `type:research`, `meta:security`

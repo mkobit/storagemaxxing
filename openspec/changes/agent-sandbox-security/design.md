@@ -1,52 +1,69 @@
 ## Context
 
-Our multi-agent environment is hybrid:
-- **Cloud-Hosted (Claude, Gemini)**: Built-in sandboxing for tool execution.
-- **Remote-Isolated (Jules)**: Physically separate, communicating via git/api.
-- **Local-Resident (Ollama, Opencode)**: Running directly on the host, requiring strict local guardrails.
-
-This design moves from "Manual Regex" to "Platform Policy Alignment" and defines the "Sync Protocol" to handle state consistency across these environments.
+Previous security designs relied on "Agentic Nudges" (e.g., Prime Directives in `AGENTS.md`) which do not provide a physical security boundary. We are moving to **Hard Isolation** using the CLI Wrapper Pattern.
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Leverage platform-native sandboxing (Claude/Gemini) where available.
-- Enforce strict workspace boundaries for local agents (Ollama/Opencode).
-- Minimize sync overhead for remote agents (Jules) by defining clear "Check-in/Check-out" points.
+- Enforce a physical filesystem and network boundary for all agent execution.
+- Preserve developer ergonomics (access to `.gitconfig`, aliases).
+- Securely forward SSH and GPG identities via sockets (No private keys in sandbox).
+- Unify the sandboxing experience across Claude, Gemini, and Opencode.
 
 **Non-Goals:**
-- Creating a unified "Agent OS."
-- Redundant sandboxing of already-sandboxed cloud tools.
+- Perfect kernel-level isolation against 0-day escapes (Docker/bwrap is the target).
+- Virtualizing the entire OS (only project-relevant paths are exposed).
 
 ## Decisions
 
-### 1. Platform-Specific Security Profiles
-- **Gemini/Claude**: Rely on native `sandbox` tools for FS/Network. Use `AGENTS.md` to nudge them toward project-specific pathing.
-- **Jules**: Since Jules is remote, "Security" is handled at the **Merge/Review** level. Jules must submit changes that are then validated by the local build.
-- **Ollama/Opencode**: These agents must be "Jailed" to the workspace root using the agentic "Prime" (self-monitoring) and, if possible, OS-level execution restrictions (e.g., specific user account).
+### 1. The CLI Wrapper Pattern (The Harness)
+All agents MUST be invoked via project-local wrappers in `bin/`. These wrappers are the "Harness" that sets up the sandbox before the agent starts.
 
-### 2. State Sync Protocol (The "Blackboard" Handshake)
-To manage sync overhead, agents must follow the **Refresh-Before-Read** rule:
-1.  **START**: Agent pulls latest state (`git pull` or `bd sync`).
-2.  **LOCK**: Agent claims a bead (`bd update <id> --claim`).
-3.  **WORK**: Agent executes in its native sandbox (Cloud, Remote, or Local).
-4.  **COMMIT**: Agent writes result back to the filesystem.
-5.  **UNLOCK**: Agent releases bead and pushes/syncs.
+```ascii
+User -> bin/gemini -> [bwrap/docker jail] -> gemini-cli
+User -> bin/claude -> [bwrap/docker jail] -> claude
+```
 
-### 3. MCP & Sockets in a Hybrid World
-- **Cloud Agents**: Use MCP via the hosted provider.
-- **Local Agents**: Use MCP via local sockets (`stdio` or `http`).
-- **Rule**: All local MCP servers MUST be bound to `localhost` and restricted to the `storagemaxxing` workspace directory.
+### 2. Isolation Mechanism: Docker vs. OS-Native (bwrap)
+We support two primary providers to balance isolation and performance:
 
-### 4. Generalized Agent Sandbox Pattern (Universal Jail)
-To ensure consistency across disparate agents, we adopt the **Universal Agent Jail (UAJ)** pattern:
-- **Centralized Policy**: A `.sandbox.yaml` manifest defines the source of truth for all agent boundaries.
-- **Harness/Compute Separation**: Agent runners (Harness) are responsible for verifying actions against the policy before executing them in an isolated environment (Compute).
-- **Unified Nudge**: All agents receive the same "Prime Directive" keywords, mapping directly to the boundaries defined in the manifest.
+- **Option A: Container-Based (Docker)**
+  - Hard kernel boundary.
+  - Requires explicit bind-mounts for `.gitconfig` and sockets.
+- **Option B: OS-Native (Bubblewrap/bwrap)**
+  - Lower overhead, high ergonomics.
+  - Easier access to host binaries (e.g., the correct version of `bun`).
+  - Mandatory for environments where Docker is restricted.
+
+### 3. Secure Credential Bridge (Socket Forwarding)
+Private keys (`~/.ssh/id_rsa`, etc.) MUST NEVER be visible inside the jail. Instead:
+- **SSH**: The host `$SSH_AUTH_SOCK` is bind-mounted into the sandbox.
+- **GPG**: The host `gpg-agent` socket is bind-mounted.
+- **Result**: The agent can sign git commits and push to remotes, but `cat ~/.ssh/id_rsa` will fail.
+
+### 4. Hook-Based Enforcement
+Agents will detect their execution environment via a `SessionStart` hook.
+
+```json
+// Example .gemini/settings.json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "command": "bin/validate-sandbox",
+        "type": "command"
+      }
+    ]
+  }
+}
+```
+If `bin/validate-sandbox` fails (detects host execution), the agent session is terminated.
 
 ## Risks / Trade-offs
 
-- **[Risk]**: Conflict between remote Jules and local Opencode on the same file.
-- **[Mitigation]**: Beads' lock-based state (`--claim`) is the source of truth. Agents MUST NOT touch a file unless they own the claiming bead.
-- **[Trade-off]**: Frequent git/beads syncing adds latency.
-- **[Mitigation]**: Agents only sync on "Session Boundary" (Start/End), not on every tool call.
+- **[Risk]**: Over-isolation breaks tool functionality (e.g., missing libs).
+- **[Mitigation]**: The `bin/sandbox` wrapper will support an "allowlist" for system paths (`/usr`, `/lib`).
+- **[Risk]**: Credential sockets are still powerful if hijacked.
+- **[Mitigation]**: Sockets only allow signing, not extraction. The agent has "identity" but not "ownership" of the keys.
+- **[Trade-off]**: Docker images need to be kept in sync with host tooling.
+- **[Mitigation]**: Prefer `bwrap` for local dev to reuse host binaries while maintaining path isolation.
