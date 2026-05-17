@@ -1,0 +1,14 @@
+#!/bin/bash
+# Storagemaxxing | Gemini CLI Wrapper
+# Invokes Gemini CLI within the hard Bubblewrap sandbox.
+
+# Path to the universal sandbox script
+SANDBOX_BIN="$(dirname "$0")/sandbox"
+
+# 1. Forward dynamic environment variables for Gemini
+# (The sandbox wrapper handles the physical mounts)
+
+# 2. Launch through sandbox
+# We use the global 'gemini' binary.
+exec "$SANDBOX_BIN" gemini "$@"
+

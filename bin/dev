@@ -1,0 +1,14 @@
+#!/bin/bash
+# Storagemaxxing | Developer Sandbox Shell
+# Enters a hard isolated Bubblewrap environment for project work.
+
+SANDBOX_BIN="$(dirname "$0")/sandbox"
+
+# Detect preferred shell
+USER_SHELL="$SHELL"
+if [ -z "$USER_SHELL" ]; then
+  USER_SHELL="/bin/bash"
+fi
+
+echo "Entering Hard Sandbox Shell ($USER_SHELL)..."
+exec "$SANDBOX_BIN" "$USER_SHELL"

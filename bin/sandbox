@@ -1,36 +1,73 @@
 #!/bin/bash
-# Hard Sandbox Wrapper for Local Agents (Opencode/Ollama)
-# Uses Bubblewrap to physically jail the process to the workspace root.
+# Storagemaxxing | Universal Agent Sandbox
+# Enforces hard isolation via Bubblewrap (bwrap).
 
-PROJECT_ROOT="/home/mkobit/workspace/mkobit/storagemaxxing"
-TARGET_CMD="$@"
+# 1. Dynamic Environment Discovery
+PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+REAL_HOME="$HOME"
+USER_ID=$(id -u)
 
-if [ -z "$TARGET_CMD" ]; then
-  echo "Usage: bin/sandbox <command> [args...]"
-  exit 1
+# Detect SSH Agent Socket
+if [ -n "$SSH_AUTH_SOCK" ] && [ -S "$SSH_AUTH_SOCK" ]; then
+  SSH_SOCK_MOUNT="--bind $SSH_AUTH_SOCK $SSH_AUTH_SOCK"
+else
+  SSH_SOCK_MOUNT=""
 fi
 
-# --ro-bind: Read-only access to system binaries and libs
-# --bind: Read-write access ONLY to the project root
-# --dev: Necessary for some tools to function
-# --proc: Necessary for process monitoring
-# --unshare-all: Disconnect from network, IPC, and other namespaces
-# --new-session: Prevent escaping via terminal controls
+# Detect Mise (if present)
+if [ -d "$REAL_HOME/.local/share/mise" ]; then
+  MISE_MOUNT="--ro-bind $REAL_HOME/.local/share/mise $REAL_HOME/.local/share/mise --ro-bind $REAL_HOME/.local/bin $REAL_HOME/.local/bin"
+  MISE_PATH=":$REAL_HOME/.local/share/mise/shims:$REAL_HOME/.local/share/mise/bin:$REAL_HOME/.local/bin"
+else
+  MISE_MOUNT=""
+  MISE_PATH=""
+fi
 
+
+# Detect Core Configs (Read-Only)
+[ -f "$REAL_HOME/.gitconfig" ] && GIT_MOUNT="--ro-bind $REAL_HOME/.gitconfig $REAL_HOME/.gitconfig" || GIT_MOUNT=""
+[ -d "$REAL_HOME/.config/gh" ] && GH_MOUNT="--ro-bind $REAL_HOME/.config/gh $REAL_HOME/.config/gh" || GH_MOUNT=""
+[ -d "$REAL_HOME/.ssh" ] && SSH_MOUNT="--ro-bind $REAL_HOME/.ssh $REAL_HOME/.ssh" || SSH_MOUNT=""
+
+# Determine target command
+if [ "$#" -eq 0 ]; then
+  TARGET_CMD="/bin/bash"
+else
+  TARGET_CMD="$@"
+fi
+
+# 2. Execution Jail (Physical Namespace Isolation)
+# --unshare-all: Disconnect IPC, PID, User, and Mount namespaces
+# --share-net: Allow network (needed for git push/pull)
+# --dev / --proc: Necessary system virtual filesystems
+# --tmpfs: Isolated ephemeral storage for /tmp, /run, /var
 bwrap \
+  --unshare-all \
+  --share-net \
+  --new-session \
+  --die-with-parent \
+  --dev /dev \
+  --proc /proc \
+  --tmpfs /tmp \
+  --tmpfs /run \
+  --tmpfs /var \
+  --dir "/run/user/$USER_ID" \
   --ro-bind /usr /usr \
   --ro-bind /bin /bin \
   --ro-bind /lib /lib \
   --ro-bind /lib64 /lib64 \
+  --ro-bind /etc/resolv.conf /etc/resolv.conf \
+  --ro-bind /etc/hosts /etc/hosts \
+  --ro-bind /etc/ssl/certs /etc/ssl/certs \
   --ro-bind /etc/alternatives /etc/alternatives \
+  $MISE_MOUNT \
+  $GIT_MOUNT \
+  $GH_MOUNT \
+  $SSH_MOUNT \
   --bind "$PROJECT_ROOT" "$PROJECT_ROOT" \
-  --tmpfs /tmp \
-  --tmpfs /var \
-  --tmpfs /run \
-  --dev /dev \
-  --proc /proc \
-  --die-with-parent \
-  --unshare-all \
-  --new-session \
+  $SSH_SOCK_MOUNT \
   --chdir "$PROJECT_ROOT" \
+  --setenv PATH "$(getconf PATH)${MISE_PATH}:$PROJECT_ROOT/node_modules/.bin" \
+  --setenv HOME "$REAL_HOME" \
+  --setenv BWRAP_SANDBOX_ACTIVE "1" \
   $TARGET_CMD

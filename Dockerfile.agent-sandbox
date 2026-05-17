@@ -1,0 +1,18 @@
+# Use the official Bun image for the exact project version
+FROM oven/bun:1.3.13-slim
+
+# Install necessary system dependencies (git, build-essentials, etc.)
+RUN apt-get update && apt-get install -y \
+    git \
+    openssh-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set the working directory to the project root
+WORKDIR /home/mkobit/workspace/mkobit/storagemaxxing
+
+# Ensure the container environment mirrors the host's expectations for git config location
+# (The wrapper will mount ~/.gitconfig and ~/.ssh here)
+ENV HOME=/root
+
+# Default command
+CMD ["bash"]

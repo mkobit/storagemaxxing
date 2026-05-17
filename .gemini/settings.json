@@ -1,17 +1,15 @@
 {
+  "tools": {
+    "sandbox": false
+  },
   "hooks": {
-    "PreCompress": [
+    "SessionStart": [
       {
-        "hooks": [
-          {
-            "command": "bd prime",
-            "type": "command"
-          }
-        ],
-        "matcher": ""
+        "command": "bd prime",
+        "type": "command"
       }
     ],
-    "SessionStart": [
+    "PreCompress": [
       {
         "hooks": [
           {

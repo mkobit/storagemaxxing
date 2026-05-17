@@ -1,0 +1,15 @@
+#!/bin/bash
+# Storagemaxxing | Sandbox Validation Hook
+# Returns 0 if running inside the Bubblewrap sandbox, 1 otherwise.
+
+if [ "$BWRAP_SANDBOX_ACTIVE" = "1" ]; then
+  exit 0
+fi
+
+# Fallback check for missing host indicators
+if [ ! -f /etc/passwd ]; then
+  exit 0
+fi
+
+echo "Security Violation: Process is running on the host. MUST use 'bin/sandbox'."
+exit 1
