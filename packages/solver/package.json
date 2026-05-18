@@ -12,6 +12,6 @@
     "@storagemaxxing/geometry": "workspace:*",
     "@storagemaxxing/packer": "workspace:*",
     "glpk.js": "^5.0.0",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   }
 }

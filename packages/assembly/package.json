@@ -10,6 +10,6 @@
     "@storagemaxxing/catalog": "workspace:*",
     "@storagemaxxing/geometry": "workspace:*",
     "@storagemaxxing/packer": "workspace:*",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   }
 }
