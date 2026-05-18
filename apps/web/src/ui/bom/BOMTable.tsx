@@ -1,5 +1,5 @@
 import React from "react";
-import { BOM } from "@storagemaxxing/assembly/BaseTypes.js";
+import { BOM } from "@storagemaxxing/assembly/BaseTypes";
 import { BOMHeader } from "./BOMHeader";
 import { BOMRow } from "./BOMRow";
 import { BOMSummary } from "./BOMSummary";

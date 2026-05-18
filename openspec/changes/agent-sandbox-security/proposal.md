@@ -11,6 +11,7 @@ As we operate across cloud-hosted agents (Gemini, Claude), remote autonomous age
 ## Capabilities
 
 ### New Capabilities
+
 - `hybrid-sandbox-policy`: Unified security rules that respect platform-native sandboxes.
 - `state-sync-protocol`: Mechanisms for managing sync overhead and state consistency across environments.
 - `local-boundary-enforcement`: Specific guardrails for un-sandboxed local agents like Ollama.

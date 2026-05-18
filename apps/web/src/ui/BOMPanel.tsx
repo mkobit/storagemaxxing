@@ -1,9 +1,9 @@
 import React from "react";
-import { useStore } from "@storagemaxxing/store/useStore.js";
+import { useStore } from "@storagemaxxing/store/useStore";
 import { BOMTable } from "./bom/BOMTable";
-import { computeAggregateBom } from "@storagemaxxing/assembly/bom.js";
-import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup.js";
-import { binId } from "@storagemaxxing/catalog/bin.js";
+import { computeAggregateBom } from "@storagemaxxing/assembly/bom";
+import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
+import { binId } from "@storagemaxxing/catalog/bin";
 
 export const BOMPanel: React.FC = () => {
   const spaces = useStore((state) => state.spaces);

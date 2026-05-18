@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Toolbar } from "./Toolbar";
 import { SketchCanvas } from "./SketchCanvas";
 import { FeatureTree } from "./FeatureTree";
-import { useStore } from "@storagemaxxing/store/useStore.js";
+import { useStore } from "@storagemaxxing/store/useStore";
 import { BOMPanel } from "./BOMPanel";
 
 export const App: React.FC = () => {

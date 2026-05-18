@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { PartIdSchema } from "@storagemaxxing/catalog/BasePart.js";
-import { inches } from "@storagemaxxing/geometry/Inches.js";
+import { PartIdSchema } from "@storagemaxxing/catalog/BasePart";
+import { inches } from "@storagemaxxing/geometry/Inches";
 
 export const SpaceTypeIdSchema = z.enum([
   "drawer",

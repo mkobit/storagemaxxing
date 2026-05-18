@@ -5,23 +5,28 @@ In a multi-agent system, the "State" is often fragmented across agent memory win
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Define a "Handshake Protocol" where Agent A can leave a Bead for Agent B.
 - Enforce the "Breadth of Rectangles" philosophy programmatically.
 - Ensure Jules (autonomous) and Gemini/Claude (guided) operate under the same architectural "Prime."
 
 **Non-Goals:**
+
 - Creating a centralized "Agent Manager" service (we use the filesystem).
 - Defining specific domain logic for bins.
 
 ## Decisions
 
 ### 1. The Filesystem as the "Blackboard"
+
 All agent coordination happens via:
+
 - **Beads (`.beads/`)**: For task status, claims, and dependencies.
 - **OpenSpec (`openspec/`)**: For design authority and architectural constraints.
 - **Agent Context Files (`AGENTS.md`, etc.)**: For high-level operational rules.
 
 ### 2. Multi-Agent Handshake Loop
+
 ```
 1. TRIAGE: Agent checks `bd ready` for unclaimed work.
 2. SYNC: Agent reads `openspec/` for active changes and designs.
@@ -33,7 +38,9 @@ All agent coordination happens via:
 ```
 
 ### 3. "Breadth of Rectangles" Enforcement
+
 Agents are explicitly forbidden from implementing 3D or WASM-based global solvers unless a specific OpenSpec "Architectural Exception" exists.
+
 - **Rule**: Default to "Modular 2D Fitters" (Pure functions, 2D math).
 
 ## Risks / Trade-offs

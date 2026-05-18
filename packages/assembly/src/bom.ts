@@ -1,6 +1,6 @@
 import { BOM, BOMItem, BinSpecIdSchema } from "./BaseTypes.js";
-import type { PackingResult } from "@storagemaxxing/packer/types.js";
-import type { BinSpec } from "@storagemaxxing/catalog/bin.js";
+import type { PackingResult } from "@storagemaxxing/packer/types";
+import type { BinSpec } from "@storagemaxxing/catalog/bin";
 import type { SpaceInstance } from "./SpaceInstance.js";
 
 export type LookupBinFunction = (id: string) => BinSpec | undefined;

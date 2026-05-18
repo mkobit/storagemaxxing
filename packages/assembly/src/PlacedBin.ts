@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Point3D } from "@storagemaxxing/geometry/Point3D.js";
+import { Point3D } from "@storagemaxxing/geometry/Point3D";
 
 export type PlacedBin = {
   readonly binId: string;

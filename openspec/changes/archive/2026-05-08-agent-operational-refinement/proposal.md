@@ -11,9 +11,11 @@ The initial "Agentic Prime" established the foundation, but early implementation
 ## Capabilities
 
 ### New Capabilities
+
 - `operational-refinement`: The updated 9-step Multi-Agent Handshake protocol.
 
 ### Modified Capabilities
+
 - `agentic-prime`: Update to include the "Resume" and "Flowback" requirements.
 - `cross-agent-handshake`: Update to emphasize the canonical authority of the filesystem.
 

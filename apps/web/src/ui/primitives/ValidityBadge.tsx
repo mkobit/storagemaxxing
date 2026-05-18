@@ -1,5 +1,5 @@
 import React from "react";
-import type { ValidityState } from "@storagemaxxing/packer/types.js";
+import type { ValidityState } from "@storagemaxxing/packer/types";
 
 export type ValidityBadgeProps = {
   readonly isFeasible?: boolean;

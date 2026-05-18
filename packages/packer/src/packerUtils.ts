@@ -1,6 +1,6 @@
 import { MaxRectsPacker } from "maxrects-packer";
-import { BinSpec } from "@storagemaxxing/assembly/BinSpec.js";
-import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint.js";
+import { BinSpec } from "@storagemaxxing/assembly/BinSpec";
+import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import {
   ConstraintFailure,
   createConstraintFailure,

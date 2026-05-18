@@ -26,36 +26,36 @@ Call log:
 
 ```ts
   1  | import { test, expect } from '@playwright/test';
-  2  | 
+  2  |
   3  | test.describe('Major User Stories', () => {
   4  |   test('New User: should see the initial scaffold and be able to start', async ({ page }) => {
   5  |     await page.goto('/');
-  6  |     
+  6  |
   7  |     // Check for title or specific starting element
   8  |     await expect(page).toHaveTitle(/StorageMaxxing/);
-  9  |     
+  9  |
   10 |     // Check for the timeline
   11 |     await expect(page.getByText('Timeline / Features')).toBeVisible();
-  12 |     
+  12 |
   13 |     // Check for the canvas (or the message if empty)
   14 |     await expect(page.getByText('Select or create a sketch, or select a space to view.')).toBeVisible();
   15 |   });
-  16 | 
+  16 |
   17 |   test('User Story: Create a simple Sketch and Fill Space', async ({ page }) => {
   18 |     await page.goto('/');
-  19 | 
+  19 |
   20 |     // 1. Create a Sketch
 > 21 |     await page.getByRole('button', { name: '+ Sketch' }).click();
      |                                                          ^ Error: locator.click: Test timeout of 30000ms exceeded.
   22 |     await expect(page.getByText('Sketch Feature 1')).toBeVisible();
-  23 | 
+  23 |
   24 |     // 2. Create a Fill Space from that sketch
   25 |     await page.getByRole('button', { name: '+ Fill Space' }).click();
   26 |     await expect(page.getByText('Fill Space 1')).toBeVisible();
-  27 | 
+  27 |
   28 |     // 3. Verify Constraint Editor appears
   29 |     await expect(page.getByText('Space Constraints')).toBeVisible();
   30 |   });
   31 | });
-  32 | 
+  32 |
 ```

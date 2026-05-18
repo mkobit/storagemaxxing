@@ -1,5 +1,5 @@
 import { BinSpec, binId } from "./bin.js";
-import { inches } from "@storagemaxxing/geometry/Inches.js";
+import { inches } from "@storagemaxxing/geometry/Inches";
 
 const FOOTPRINTS = [
   [1, 1],

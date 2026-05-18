@@ -2,7 +2,7 @@ import { expect, test, describe } from "bun:test";
 import { ALL_BINS, findBinById, binsForDepth } from "./lookup";
 import { SCHALLER_CATALOG } from "./schaller";
 import { AKROMILS_CATALOG } from "./akromils";
-import { inches } from "@storagemaxxing/geometry/Inches.js";
+import { inches } from "@storagemaxxing/geometry/Inches";
 import { binId } from "./bin";
 
 describe("Catalog Lookup", () => {
