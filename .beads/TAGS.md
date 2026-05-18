@@ -51,14 +51,17 @@ Beyond the core Beads `issue_type`, these labels provide stylistic nuance.
 - `meta:client-only`: Ensuring logic remains zero-backend compatible.
 - `meta:breaking`: Indicates a change to the core `Project` or `Assembly` schema.
 
-## 6. Project & Beads Hygiene (`meta:beads-*`)
+## 6. Project & Beads Hygiene (`meta:*`)
 
 Specialized tags for maintaining the issue database and agent operational rails.
 
 - `meta:beads-flow`: Improvements to the Beads operational loop, `PRIME.md`, or workflow formulas.
 - `meta:beads-infra`: Tasks related to the Dolt database, git hooks, or CI integrations for beads.
+- `meta:openspec-schema`: Enhancements to OpenSpec `schema.yaml` definitions and instruction logic.
+- `meta:agent-automation`: Improvements to slash commands, agent skills, and automated "guidewires".
 - `meta:hygiene`: General maintenance of the backlog, such as re-triaging, adding detail to existing specs, or cleaning up stale issues.
 - `meta:agent-rails`: Updates to `GEMINI.md`, `AGENTS.md`, or other agent-facing operational documentation.
+
 
 ---
 
