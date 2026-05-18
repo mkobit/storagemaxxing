@@ -5,15 +5,18 @@ This design formalizes the "Patrol" pattern for autonomous agents. A Patrol is a
 ## Decisions
 
 ### 1. Stored Prompt Architecture
+
 Prompts are stored as Markdown files in `.jules/prompts/`. Each file defines a **Protocol** for a specific duty.
+
 - **Example**: `.jules/prompts/backlog-hygiene.md`
 - **Structure**:
-    - **Goal**: What this duty achieves.
-    - **Frequency**: How often it should be performed.
-    - **Step-by-Step Protocol**: Precise CLI commands for the agent to run.
-    - **Reporting**: How to log the results.
+  - **Goal**: What this duty achieves.
+  - **Frequency**: How often it should be performed.
+  - **Step-by-Step Protocol**: Precise CLI commands for the agent to run.
+  - **Reporting**: How to log the results.
 
 ### 2. The `autonomous-patrol` Formula
+
 A new Beads formula that instantiates a recurring duty.
 
 ```json
@@ -22,8 +25,14 @@ A new Beads formula that instantiates a recurring duty.
   "description": "Recurring duty for autonomous agents",
   "type": "workflow",
   "vars": {
-    "duty_name": { "description": "Filename in .jules/prompts/", "required": true },
-    "agent_id": { "description": "Target agent (e.g., jules, opencode)", "required": true }
+    "duty_name": {
+      "description": "Filename in .jules/prompts/",
+      "required": true
+    },
+    "agent_id": {
+      "description": "Target agent (e.g., jules, opencode)",
+      "required": true
+    }
   },
   "steps": [
     {
@@ -38,10 +47,13 @@ A new Beads formula that instantiates a recurring duty.
 ```
 
 ### 3. Jules Integration
+
 Since Jules is "fully autonomous with no hooks," we bootstrap Jules by ensuring the first instruction in its native environment is:
+
 > "Read `.beads/PRIME.md` and check for any `meta:patrol` beads assigned to `actor:jules`."
 
 ## Initial Patrol Registry (Candidates)
+
 1. **`backlog-alignment`**: Ensures every Beads issue matches an OpenSpec design.
 2. **`tag-auditor`**: Corrects and updates labels per `.beads/TAGS.md`.
 3. **`design-linker`**: Uses `bd update --design` to ensure all tasks have proper context.

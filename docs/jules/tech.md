@@ -5,6 +5,7 @@
 Storagemaxxing uses a hybrid approach to spatial optimization, splitting the problem between synchronous geometric placement and asynchronous constraint satisfaction.
 
 ### Layer 1: Geometric Placement (MaxRects BAF)
+
 - **Tool:** `packages/packer/src/packer.ts`
 - **Algorithm:** MaxRects Best Area Fit.
 - **Runtime:** Synchronous, running on the main UI thread.
@@ -12,6 +13,7 @@ Storagemaxxing uses a hybrid approach to spatial optimization, splitting the pro
 - **Output:** `PlacedBin[]` and geometric validity.
 
 ### Layer 2: Constraint Satisfaction (GLPK.js)
+
 - **Tool:** `packages/solver/src/workers/constraintWorker.ts`
 - **Algorithm:** Mixed-Integer Programming (MIP).
 - **Runtime:** Asynchronous, running in a Web Worker.
@@ -19,6 +21,7 @@ Storagemaxxing uses a hybrid approach to spatial optimization, splitting the pro
 - **Output:** Feasibility status (`feasible: boolean`), suggested counts, and conflict reports.
 
 ## Frontend Standards
+
 - **Framework:** React 19 (TypeScript).
 - **State Management:** Zustand (`packages/store/src/useStore.ts`).
 - **Styling:** Tailwind CSS.
@@ -26,6 +29,7 @@ Storagemaxxing uses a hybrid approach to spatial optimization, splitting the pro
 - **Interactions:** Use standard React hooks (`useMemo`, `useEffect`) but offload heavy computation (Solver) to Web Workers.
 
 ## Coding Standards
+
 - **Strict Types:** No `any`. Use Zod for runtime validation where appropriate.
 - **Functional Style:** Prefer immutability and pure functions in the engine packages.
 - **Testing:**
@@ -34,6 +38,7 @@ Storagemaxxing uses a hybrid approach to spatial optimization, splitting the pro
 - **Package Management:** Bun for execution and lockfile management.
 
 ## Project Structure
+
 - `apps/web/`: The React application.
 - `packages/assembly/`: High-level project and assembly models.
 - `packages/catalog/`: Vendor and open-system bin specifications.

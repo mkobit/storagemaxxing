@@ -1,5 +1,5 @@
 import React from "react";
-import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint.js";
+import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 
 export type ConstraintInputsProps = {
   readonly constraint: SpaceConstraint;

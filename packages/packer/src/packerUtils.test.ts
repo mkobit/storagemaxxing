@@ -1,7 +1,11 @@
 import { describe, it, expect } from "bun:test";
 import { MaxRectsPacker } from "maxrects-packer";
-import { getPlacedCounts, checkPhaseFailures, getHardMin } from "./packerUtils.js";
-import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint.js";
+import {
+  getPlacedCounts,
+  checkPhaseFailures,
+  getHardMin,
+} from "./packerUtils.js";
+import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 
 describe("packerUtils", () => {
   describe("getPlacedCounts", () => {
@@ -35,7 +39,12 @@ describe("packerUtils", () => {
       ];
       const placedCounts = new Map([["bin1", 3]]);
 
-      const failures = checkPhaseFailures(constraints, placedCounts, getHardMin, "hardMin");
+      const failures = checkPhaseFailures(
+        constraints,
+        placedCounts,
+        getHardMin,
+        "hardMin",
+      );
       expect(failures.length).toBe(1);
       expect(failures[0].binId).toBe("bin1");
       expect(failures[0].placed).toBe(3);
@@ -48,7 +57,12 @@ describe("packerUtils", () => {
       ];
       const placedCounts = new Map([["bin1", 5]]);
 
-      const failures = checkPhaseFailures(constraints, placedCounts, getHardMin, "hardMin");
+      const failures = checkPhaseFailures(
+        constraints,
+        placedCounts,
+        getHardMin,
+        "hardMin",
+      );
       expect(failures.length).toBe(0);
     });
   });

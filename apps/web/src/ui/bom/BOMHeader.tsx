@@ -1,6 +1,6 @@
 import React from "react";
-import { BOM } from "@storagemaxxing/assembly/BaseTypes.js";
-import { ALL_BINS } from "@storagemaxxing/catalog/lookup.js";
+import { BOM } from "@storagemaxxing/assembly/BaseTypes";
+import { ALL_BINS } from "@storagemaxxing/catalog/lookup";
 import { exportBOMToCSV } from "./exportCSV";
 
 export interface BOMHeaderProps {

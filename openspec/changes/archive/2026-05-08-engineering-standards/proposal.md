@@ -11,6 +11,7 @@ Establishing clear, programmatic engineering standards is the first step in our 
 ## Capabilities
 
 ### New Capabilities
+
 - `engineering-standards`: Canonical rules for code style, architecture, and package structure.
 - `monorepo-topology`: Definitions for how `packages/` interact and where specific logic lives.
 - `automated-verification`: Requirements for CI/CD gates, linting, and "UX automation" (Playwright).

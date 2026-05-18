@@ -1,0 +1,10 @@
+formula = "engineering-sync"
+description = "Sync Engineering Standards from OpenSpec to Beads."
+version = 1
+type = "workflow"
+
+[[steps]]
+id = "expand-tasks"
+title = "Expand Tasks from engineering-standards"
+type = "task"
+labels = ["type:sync", "meta:openspec", "meta:openspec:engineering-standards"]

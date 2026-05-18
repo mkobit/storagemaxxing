@@ -26,13 +26,11 @@ beforeAll(() => {
 });
 
 // Important: import after polyfill or use await import
-const { checkFeasibility } = await import("./feasibility.js");
-import type { SolverRequest } from "./index.js";
-import type {
-  SpaceInstance,
-  SpaceTemplate,
-  BinSpec,
-} from "@storagemaxxing/assembly/index.js";
+const { checkFeasibility } = await import("./feasibility");
+import type { SolverRequest } from "./types";
+import { SpaceInstance } from "@storagemaxxing/assembly/SpaceInstance";
+import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
+import { BinSpec } from "@storagemaxxing/assembly/BinSpec";
 
 describe("feasibility", () => {
   const mockBin: BinSpec = {

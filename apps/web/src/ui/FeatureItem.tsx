@@ -1,6 +1,6 @@
 import React from "react";
-import { Feature, FeatureId } from "@storagemaxxing/assembly/Feature.js";
-import { SketchId } from "@storagemaxxing/assembly/SketchId.js";
+import { Feature, FeatureId } from "@storagemaxxing/assembly/Feature";
+import { SketchId } from "@storagemaxxing/assembly/SketchId";
 import { ConstraintEditor } from "./constraints/ConstraintEditor";
 
 export interface FeatureItemProps {

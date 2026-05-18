@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, expect, test } from "bun:test";
 import { exportBOMToCSV } from "./exportCSV.js";
-import { BinSpec, binId } from "@storagemaxxing/catalog/bin.js";
-import { BOM, BinSpecIdSchema } from "@storagemaxxing/assembly/BaseTypes.js";
+import { BinSpec, binId } from "@storagemaxxing/catalog/bin";
+import { BOM, BinSpecIdSchema } from "@storagemaxxing/assembly/BaseTypes";
 
 const parseId = (id: string) => BinSpecIdSchema.parse(id);
 

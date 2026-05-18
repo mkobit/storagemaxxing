@@ -1,6 +1,6 @@
-import { BinSpec } from "@storagemaxxing/assembly/BinSpec.js";
-import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate.js";
-import { Dimensions3D } from "@storagemaxxing/geometry/Dimensions3D.js";
+import { BinSpec } from "@storagemaxxing/assembly/BinSpec";
+import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
+import { Dimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
 
 export const getEffectiveFootprint = (
   bin: BinSpec,

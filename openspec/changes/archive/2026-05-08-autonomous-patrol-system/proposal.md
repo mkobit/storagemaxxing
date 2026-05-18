@@ -11,6 +11,7 @@ Autonomous agents like Jules need a deterministic way to find and execute recurr
 ## Capabilities
 
 ### New Capabilities
+
 - `stored-prompts`: A directory-based system for persistent agent protocols.
 - `autonomous-patrols`: Beads formulas for recurring tasks (Backlog Hygiene, Design Linking, Tagging).
 - `duty-stations`: A protocol for agents to report their "Patrol Results" back to the task graph.

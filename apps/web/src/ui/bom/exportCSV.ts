@@ -1,5 +1,5 @@
-import { BOM, BOMItem } from "@storagemaxxing/assembly/BaseTypes.js";
-import { BinSpec, binId } from "@storagemaxxing/catalog/bin.js";
+import { BOM, BOMItem } from "@storagemaxxing/assembly/BaseTypes";
+import { BinSpec, binId } from "@storagemaxxing/catalog/bin";
 
 const getSpecField = <K extends keyof BinSpec>(
   spec: BinSpec | undefined,

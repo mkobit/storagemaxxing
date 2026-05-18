@@ -3,10 +3,10 @@ import { packSpace } from "./packer.js";
 import {
   createBinSpec,
   createBinSpecBasic,
-} from "@storagemaxxing/assembly/BinSpec.js";
-import { createSpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate.js";
-import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint.js";
-import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D.js";
+} from "@storagemaxxing/assembly/BinSpec";
+import { createSpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
+import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
+import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
 
 describe("Packer Engine", () => {
   it("basic fill of a 24x24 drawer", () => {

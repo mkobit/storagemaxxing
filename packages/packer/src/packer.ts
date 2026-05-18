@@ -1,9 +1,9 @@
 import { MaxRectsPacker } from "maxrects-packer";
-import { BinSpec } from "@storagemaxxing/assembly/BinSpec.js";
-import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate.js";
-import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint.js";
-import { createPlacedBin } from "@storagemaxxing/assembly/PlacedBin.js";
-import { createPoint3D } from "@storagemaxxing/geometry/Point3D.js";
+import { BinSpec } from "@storagemaxxing/assembly/BinSpec";
+import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
+import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
+import { createPlacedBin } from "@storagemaxxing/assembly/PlacedBin";
+import { createPoint3D } from "@storagemaxxing/geometry/Point3D";
 import {
   PackingResult,
   createPackingMetrics,
@@ -36,11 +36,11 @@ const executePhases = (
     rects: RectsAccumulator, // @ts-expect-error MaxRectsPacker TS definitions are missing readonly annotations
   ) => packer.addArray(Array.from(rects));
 
-  // eslint-disable-next-line functional/no-expression-statements
+   
   add(sortRects(generatePhaseRects(constraints, binMap, getHardMin)));
   const hmCheck = checkHardMinPhase(constraints, packer);
 
-  // eslint-disable-next-line functional/no-expression-statements
+   
   add(
     sortRects(
       generatePhaseRects(constraints, binMap, (c) =>
@@ -50,7 +50,7 @@ const executePhases = (
   );
   const smCheck = checkSoftMinPhase(constraints, packer, hmCheck.validity);
 
-  // eslint-disable-next-line functional/no-expression-statements
+   
   add(
     sortRects(
       generatePhaseRects(constraints, binMap, (c) => {
@@ -64,7 +64,7 @@ const executePhases = (
     ),
   );
 
-  // eslint-disable-next-line functional/no-expression-statements
+   
   add(generateAutoFillRects(constraints, binMap, spaceArea));
 
   return {

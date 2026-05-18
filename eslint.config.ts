@@ -10,9 +10,19 @@ import * as jsoncParser from "jsonc-eslint-parser";
 import globals from "globals";
 import { fixupPluginRules } from "@eslint/compat";
 
-export default tseslint.config({
-  ignores: ["**/dist/**", "node_modules/**", ".claude/**", ".beads/**", "apps/web/test-results/**", "apps/web/e2e/**", "apps/web/playwright.config.ts", "apps/web/vitest.shims.d.ts"],
-},
+export default tseslint.config(
+  {
+    ignores: [
+      "**/dist/**",
+      "node_modules/**",
+      ".claude/**",
+      ".beads/**",
+      "apps/web/test-results/**",
+      "apps/web/e2e/**",
+      "apps/web/playwright.config.ts",
+      "apps/web/vitest.shims.d.ts",
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -52,6 +62,7 @@ export default tseslint.config({
       "@typescript-eslint/switch-exhaustiveness-check": "error",
       complexity: ["error", 8],
       "functional/immutable-data": ["error", { ignoreImmediateMutation: true }],
+      "functional/no-expression-statements": ["error", { ignoreVoid: true }],
       "functional/no-let": "error",
       "functional/no-loop-statements": "error",
       "functional/prefer-readonly-type": "error",
@@ -65,6 +76,12 @@ export default tseslint.config({
         { patterns: ["**/index", "**/index.ts", "**/index.tsx"] },
       ],
       "react/react-in-jsx-scope": "off",
+    },
+  },
+  {
+    files: ["apps/web/src/**/*.{ts,tsx}", "apps/web/serve.ts"],
+    rules: {
+      "functional/no-expression-statements": "off",
     },
   },
   {
@@ -99,7 +116,7 @@ export default tseslint.config({
       jsonc,
     },
     rules: {
-      ...(jsonc.configs["recommended-with-json"].rules as any),
+      ...(jsonc.configs["recommended-with-json"] as any).rules,
       "jsonc/no-comments": "error",
       "jsonc/sort-keys": ["error", "asc"],
     },
