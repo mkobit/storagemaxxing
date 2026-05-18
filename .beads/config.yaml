@@ -56,4 +56,3 @@ no-db: true
 # - github.repo
 
 issue-id-length: 8
-sync.remote: "git+ssh://git@github.com/mkobit/storagemaxxing.git"
