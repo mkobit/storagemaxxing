@@ -12,6 +12,7 @@ export default defineConfig({
     setupFiles: ["./src/test-setup.ts"],
   },
   resolve: {
+    dedupe: ["react", "react-dom"],
     alias: {
       "@storagemaxxing/geometry": path.resolve(__dirname, "../../packages/geometry/src"),
       "@storagemaxxing/catalog": path.resolve(__dirname, "../../packages/catalog/src"),

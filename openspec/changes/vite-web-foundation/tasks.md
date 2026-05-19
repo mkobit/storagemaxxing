@@ -25,5 +25,5 @@
 
 - [x] 3.1 Initialize new Vitest baseline (sm-eomo)
   - **Validation**: Setup Vitest in apps/web. Create a sanity test. bun run test passes.
-- [ ] 3.2 Initialize new Playwright smoke test (sm-5uqm)
+- [x] 3.2 Initialize new Playwright smoke test (sm-5uqm)
   - **Validation**: Setup basic Playwright config and a smoke test. bun run test:e2e passes.
