@@ -5,7 +5,7 @@
 
 ## 1. Infrastructure & Build
 
-- [ ] 1.1 Clean Slate: Remove legacy web infrastructure (sm-pu05)
+- [x] 1.1 Clean Slate: Remove legacy web infrastructure (sm-pu05)
   - **Validation**: Remove apps/web/serve.ts, start_app.sh, and apps/web/e2e/*.spec.ts. ls apps/web/serve.ts should fail.
 - [ ] 1.2 Install Vite and core plugins (sm-vp9q)
   - **Validation**: bun add -D vite @vitejs/plugin-react in apps/web. bun run vite --version.
