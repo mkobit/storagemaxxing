@@ -4,35 +4,35 @@ import { inches } from "./testing.js";
 
 describe("parseDim", () => {
   test("integers", () => {
-    expect(parseDim("24")).toBeIn(24);
-    expect(parseDim("0")).toBeIn(0);
+    expect(parseDim("24")).toBeInches(24);
+    expect(parseDim("0")).toBeInches(0);
   });
 
   test("decimals", () => {
-    expect(parseDim("15.75")).toBeIn(15.75);
-    expect(parseDim("0.5")).toBeIn(0.5);
-    expect(parseDim("-1.5")).toBeIn(-1.5);
+    expect(parseDim("15.75")).toBeInches(15.75);
+    expect(parseDim("0.5")).toBeInches(0.5);
+    expect(parseDim("-1.5")).toBeInches(-1.5);
   });
 
   test("pure fractions", () => {
-    expect(parseDim("1/8")).toBeIn(0.125);
-    expect(parseDim("1/4")).toBeIn(0.25);
-    expect(parseDim("3/8")).toBeIn(0.375);
-    expect(parseDim("1/2")).toBeIn(0.5);
-    expect(parseDim("5/8")).toBeIn(0.625);
-    expect(parseDim("3/4")).toBeIn(0.75);
-    expect(parseDim("7/8")).toBeIn(0.875);
-    expect(parseDim("7/16")).toBeIn(0.4375);
+    expect(parseDim("1/8")).toBeInches(0.125);
+    expect(parseDim("1/4")).toBeInches(0.25);
+    expect(parseDim("3/8")).toBeInches(0.375);
+    expect(parseDim("1/2")).toBeInches(0.5);
+    expect(parseDim("5/8")).toBeInches(0.625);
+    expect(parseDim("3/4")).toBeInches(0.75);
+    expect(parseDim("7/8")).toBeInches(0.875);
+    expect(parseDim("7/16")).toBeInches(0.4375);
   });
 
   test("mixed numbers with space", () => {
-    expect(parseDim("15 3/4")).toBeIn(15.75);
-    expect(parseDim("16 1/8")).toBeIn(16.125);
-    expect(parseDim("-1 1/2")).toBeIn(-1.5);
+    expect(parseDim("15 3/4")).toBeInches(15.75);
+    expect(parseDim("16 1/8")).toBeInches(16.125);
+    expect(parseDim("-1 1/2")).toBeInches(-1.5);
   });
 
   test("mixed numbers with hyphen", () => {
-    expect(parseDim("16-1/8")).toBeIn(16.125);
+    expect(parseDim("16-1/8")).toBeInches(16.125);
   });
 
   test("invalid inputs", () => {

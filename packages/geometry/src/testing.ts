@@ -36,7 +36,7 @@ export const inSize = (w: number, l: number): Size<Inches> =>
  */
 interface BrandedMatchers {
   toBeMm(expected: number): void;
-  toBeIn(expected: number): void;
+  toBeInches(expected: number): void;
 }
 
 declare module "bun:test" {
@@ -55,7 +55,7 @@ expect.extend({
       pass,
     };
   },
-  toBeIn(actual: unknown, expected: number) {
+  toBeInches(actual: unknown, expected: number) {
     const pass = (actual as number) === expected;
     return {
       message: () =>

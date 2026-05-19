@@ -17,15 +17,15 @@ describe("metric conversion", () => {
 
   describe("mmToIn()", () => {
     test("converts millimeters to inches correctly", () => {
-      expect(mmToIn(mm(25.4))).toBeIn(1);
-      expect(mmToIn(mm(0))).toBeIn(0);
-      expect(mmToIn(mm(50.8))).toBeIn(2);
-      expect(mmToIn(mm(12.7))).toBeIn(0.5);
+      expect(mmToIn(mm(25.4))).toBeInches(1);
+      expect(mmToIn(mm(0))).toBeInches(0);
+      expect(mmToIn(mm(50.8))).toBeInches(2);
+      expect(mmToIn(mm(12.7))).toBeInches(0.5);
     });
 
     test("converts negative millimeters to negative inches", () => {
-      expect(mmToIn(mm(-25.4))).toBeIn(-1);
-      expect(mmToIn(mm(-12.7))).toBeIn(-0.5);
+      expect(mmToIn(mm(-25.4))).toBeInches(-1);
+      expect(mmToIn(mm(-12.7))).toBeInches(-0.5);
     });
   });
 
