@@ -91,6 +91,9 @@ export const useStore = create<StoreState>()(
       setSolverConflicts: (solverConflicts) => set({ solverConflicts }),
       setSolverSuggestedCounts: (solverSuggestedCounts) =>
         set({ solverSuggestedCounts }),
+      setSpatialInputs: (spatialInputs) => set({ spatialInputs }),
+      setPrinterBedSize: (printerBedSize) => set({ printerBedSize }),
+      setCalculationMode: (calculationMode) => set({ calculationMode }),
     }),
     {
       name: "storagemaxxing-db",
@@ -106,6 +109,9 @@ export const useStore = create<StoreState>()(
         spaces: state.spaces,
         activeSpaceId: state.activeSpaceId,
         constraintsBySpace: state.constraintsBySpace,
+        spatialInputs: state.spatialInputs,
+        printerBedSize: state.printerBedSize,
+        calculationMode: state.calculationMode,
       }),
       onRehydrateStorage: () => (state) => {
         // eslint-disable-next-line functional/no-expression-statements
