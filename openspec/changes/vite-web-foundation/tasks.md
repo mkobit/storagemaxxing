@@ -9,7 +9,7 @@
   - **Validation**: Remove apps/web/serve.ts, start_app.sh, and apps/web/e2e/*.spec.ts. ls apps/web/serve.ts should fail.
 - [x] 1.2 Install Vite and core plugins (sm-vp9q)
   - **Validation**: bun add -D vite @vitejs/plugin-react in apps/web. bun run vite --version.
-- [ ] 1.3 Configure vite.config.ts (sm-dgto)
+- [x] 1.3 Configure vite.config.ts (sm-dgto)
   - **Validation**: Create apps/web/vite.config.ts with React and static build settings. bun run build generates a dist folder.
 - [ ] 1.4 Update package.json scripts (sm-0i1g)
   - **Validation**: Update dev, build, preview scripts in apps/web/package.json. bun run dev starts Vite.
