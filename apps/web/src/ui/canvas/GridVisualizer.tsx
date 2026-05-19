@@ -4,9 +4,9 @@ import { Size } from "@storagemaxxing/geometry/Dimensions2D";
 import { Millimeters } from "@storagemaxxing/geometry/Millimeters";
 
 interface GridVisualizerProps {
-  containerSize: Size<Millimeters>;
-  calculation: GridCalculationResult;
-  printerBedSize?: Size<Millimeters>;
+  readonly containerSize: Size<Millimeters>;
+  readonly calculation: GridCalculationResult;
+  readonly printerBedSize?: Size<Millimeters>;
 }
 
 export const GridVisualizer: React.FC<GridVisualizerProps> = ({

@@ -1,5 +1,5 @@
 import { expect, test, describe } from "bun:test";
-import { calculateOpenGrid, OPENGRID_PITCH_MM } from "./OpenGrid";
+import { calculateOpenGrid } from "./OpenGrid";
 import { mm } from "./Millimeters";
 import { createSize } from "./Dimensions2D";
 

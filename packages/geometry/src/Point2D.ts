@@ -12,6 +12,7 @@ export const Point2DSchema = z.union([
   }),
 ]).transform((val): ReadonlyVec2 => {
   if (val instanceof Float32Array) {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     return val as ReadonlyVec2;
   }
   return vec2.fromValues(val[0], val[1]);

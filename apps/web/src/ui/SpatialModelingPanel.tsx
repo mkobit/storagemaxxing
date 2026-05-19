@@ -65,7 +65,13 @@ export const SpatialModelingPanel: React.FC = () => {
 
       <div>
         <h3>Calculation Mode</h3>
-        <select value={calculationMode} onChange={(e) => setCalculationMode(e.target.value as any)}>
+        <select 
+          value={calculationMode} 
+          onChange={(e) => {
+            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+            setCalculationMode(e.target.value as import("@storagemaxxing/geometry/OpenGrid").GridCalculationMode);
+          }}
+        >
           <option value="truncate">Truncate</option>
           <option value="round">Round</option>
           <option value="expand">Expand</option>

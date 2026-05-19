@@ -1,8 +1,7 @@
 import { expect, test, describe } from "bun:test";
 import { Point2DSchema, createPoint2D } from "./Point2D";
-import { Dimensions2DSchema, createDimensions2D } from "./Dimensions2D";
-import { Rect2DSchema, createRect2D } from "./Rect2D";
-import { vec2 } from "gl-matrix";
+import { Dimensions2DSchema } from "./Dimensions2D";
+import { Rect2DSchema } from "./Rect2D";
 
 describe("Point2D", () => {
   test("validates a tuple [x, y]", () => {
