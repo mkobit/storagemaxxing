@@ -7,7 +7,7 @@
 
 - [x] 1.1 Clean Slate: Remove legacy web infrastructure (sm-pu05)
   - **Validation**: Remove apps/web/serve.ts, start_app.sh, and apps/web/e2e/*.spec.ts. ls apps/web/serve.ts should fail.
-- [ ] 1.2 Install Vite and core plugins (sm-vp9q)
+- [x] 1.2 Install Vite and core plugins (sm-vp9q)
   - **Validation**: bun add -D vite @vitejs/plugin-react in apps/web. bun run vite --version.
 - [ ] 1.3 Configure vite.config.ts (sm-dgto)
   - **Validation**: Create apps/web/vite.config.ts with React and static build settings. bun run build generates a dist folder.
