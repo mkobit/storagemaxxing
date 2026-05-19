@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "bun build ./index.html --outdir ./dist --minify --target browser",
-    "preview": "bun x serve dist",
-    "dev": "bun run serve.ts",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit"
   },
