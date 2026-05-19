@@ -56,3 +56,5 @@ no-db: false
 # - github.repo
 
 issue-id-length: 8
+
+export.auto: false

@@ -17,7 +17,9 @@ This file serves as the "Prime Directive" for all AI agents (Gemini, Claude, Jul
 All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (Execution/Tasking). OpenSpec is the source of truth; Beads is the engine.
 
 1. **SYNC & DISCOVER:**
-   - Run `bd prime` to load the latest operational context.
+   - Run `bd bootstrap --yes` to ensure the local database is initialized.
+   - Run `bd dolt pull` to fetch the latest operational context.
+   - Run `bd prime` to load the context into your session.
    - Run `bunx openspec list --json` to identify active changes.
    - Use `bunx openspec status --change <name>` to locate the relevant `design.md` and `tasks.md`.
 2. **PLAN:** Before coding, ensure an OpenSpec `design.md` and `tasks.md` exist and are synced to Beads via `bd mol pour openspec-sync`.

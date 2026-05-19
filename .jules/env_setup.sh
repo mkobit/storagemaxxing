@@ -48,3 +48,8 @@ echo "Installing dependencies..."
 bun install --frozen-lockfile
 
 echo "Environment ready"
+
+# Initialize/Sync Beads operational context
+echo "Initializing Beads..."
+bd bootstrap --yes
+bd dolt pull
