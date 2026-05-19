@@ -6,6 +6,11 @@ import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: ["./src/test-setup.ts"],
+  },
   resolve: {
     alias: {
       "@storagemaxxing/geometry": path.resolve(__dirname, "../../packages/geometry/src"),
