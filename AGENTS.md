@@ -29,6 +29,12 @@ All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (E
    - Mark `tasks.md` checkboxes and run `bd close <id>`.
    - Run `bunx openspec archive` only after all linked Beads are closed.
 
+6. **META-PROCESS REFLECTION (MANDATORY):**
+   - Before ending a session, you MUST reflect on the workflow itself.
+   - Did you hit a tool limitation? Was a spec ambiguous? Was there manual friction?
+   - **Action:** Record these as "Meta" beads: `bd create "Meta: <insight>" -t task -p 3 -l meta:beads-flow`.
+   - **Action:** Use `bd remember "<insight>"` for transient operational tips.
+
 Refer to **[.beads/PRIME.md](.beads/PRIME.md)** for detailed CLI instructions and **[openspec/config.yaml](openspec/config.yaml)** for schema-specific rules.
 
 ## 🧠 Shared Memory & Audit
