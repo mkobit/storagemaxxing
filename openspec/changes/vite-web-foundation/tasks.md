@@ -18,7 +18,7 @@
 
 - [x] 2.1 Install and configure Tailwind CSS via Vite (sm-34op)
   - **Validation**: bun add -D tailwindcss @tailwindcss/vite. Add plugin to vite.config.ts. Verify styles render in dev mode.
-- [ ] 2.2 Refactor Toolbar to use Tailwind tokens (sm-ytwn)
+- [x] 2.2 Refactor Toolbar to use Tailwind tokens (sm-ytwn)
   - **Validation**: Apply Tailwind classes and data-testid to Toolbar.tsx. Visual check and test selector check.
 
 ## 3. Testing Baseline

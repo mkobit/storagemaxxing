@@ -7,36 +7,51 @@ export const Toolbar: React.FC = () => {
 
   return (
     <div
-      style={{
-        padding: "1rem",
-        display: "flex",
-        gap: "1rem",
-        background: "#eee",
-        borderBottom: "1px solid #ccc",
-      }}
+      className="flex gap-4 p-4 bg-gray-100 border-b border-gray-300"
+      data-testid="toolbar"
     >
       <button
-        style={{ fontWeight: mode === "select" ? "bold" : "normal" }}
+        className={`px-3 py-1 rounded transition-colors ${
+          mode === "select"
+            ? "bg-brand-primary text-white font-bold"
+            : "bg-white border border-gray-300 hover:bg-gray-50"
+        }`}
         onClick={() => setMode("select")}
+        data-testid="mode-select"
       >
         Select
       </button>
       <button
-        style={{ fontWeight: mode === "pan" ? "bold" : "normal" }}
+        className={`px-3 py-1 rounded transition-colors ${
+          mode === "pan"
+            ? "bg-brand-primary text-white font-bold"
+            : "bg-white border border-gray-300 hover:bg-gray-50"
+        }`}
         onClick={() => setMode("pan")}
+        data-testid="mode-pan"
       >
         Pan
       </button>
-      <div style={{ width: "1px", background: "#ccc", margin: "0 0.5rem" }} />
+      <div className="w-px bg-gray-300 my-1 mx-2" />
       <button
-        style={{ fontWeight: mode === "two_point_rect" ? "bold" : "normal" }}
+        className={`px-3 py-1 rounded transition-colors ${
+          mode === "two_point_rect"
+            ? "bg-brand-primary text-white font-bold"
+            : "bg-white border border-gray-300 hover:bg-gray-50"
+        }`}
         onClick={() => setMode("two_point_rect")}
+        data-testid="mode-two-point-rect"
       >
         2-Point Rectangle
       </button>
       <button
-        style={{ fontWeight: mode === "center_rect" ? "bold" : "normal" }}
+        className={`px-3 py-1 rounded transition-colors ${
+          mode === "center_rect"
+            ? "bg-brand-primary text-white font-bold"
+            : "bg-white border border-gray-300 hover:bg-gray-50"
+        }`}
         onClick={() => setMode("center_rect")}
+        data-testid="mode-center-rect"
       >
         Center Rectangle
       </button>
