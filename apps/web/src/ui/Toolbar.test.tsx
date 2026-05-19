@@ -4,7 +4,8 @@ import { Toolbar } from "./Toolbar";
 
 // Mock the store
 vi.mock("@storagemaxxing/store/useStore", () => ({
-  useStore: (selector: any) => selector({ mode: "select", setMode: vi.fn() }),
+  useStore: (selector: (state: unknown) => unknown) =>
+    selector({ mode: "select", setMode: vi.fn() }),
 }));
 
 describe("Toolbar", () => {

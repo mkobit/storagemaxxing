@@ -128,7 +128,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ["eslint.config.ts"],
+    files: ["eslint.config.ts", "apps/web/vite.config.ts"],
     rules: {
       "import/no-default-export": "off",
       "@typescript-eslint/no-explicit-any": "off",
