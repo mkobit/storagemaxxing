@@ -2,6 +2,7 @@
 ignoreScripts = true
 
 [run]
+bun = true
 
 [env]
 OPENSPEC_TELEMETRY = "0"
