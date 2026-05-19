@@ -58,6 +58,19 @@ We prioritize **Horizontal Breadth** (many storage systems) over **Vertical Dept
 - **Jail:** Respect the workspace root. Do NOT access files or execute commands outside `/home/mkobit/workspace/mkobit/storagemaxxing`.
 - **MCP:** Use only the approved MCP servers defined in the project configuration.
 
+## ⚡️ High-Velocity Bun Patterns
+
+- **Runtime Enforcement:** We use `[run] bun = true` in `bunfig.toml` to ensure all scripts (Vite, ESLint, etc.) run with the Bun runtime for maximum speed.
+- **Root-Level Execution:** To run a script in a subproject from the root, use the `--cwd` flag:
+  ```bash
+  bun --cwd apps/web dev
+  bun --cwd packages/geometry test
+  ```
+- **Filter-based:** Alternatively, use `--filter` for workspace-aware execution:
+  ```bash
+  bun run --filter @storagemaxxing/web dev
+  ```
+
 <!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f65d5d33 -->
 
 ## Issue Tracking with bd (beads)

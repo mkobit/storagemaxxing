@@ -4,9 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "bun build ./index.html --outdir ./dist --minify --target browser",
-    "preview": "bun x serve dist",
-    "dev": "bun run serve.ts",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit"
   },
@@ -22,7 +23,16 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
+    "@tailwindcss/vite": "^4.3.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3"
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "jsdom": "^29.1.1",
+    "tailwindcss": "^4.3.0",
+    "vite": "^8.0.12",
+    "vitest": "^4.1.6"
   }
 }
