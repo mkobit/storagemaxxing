@@ -10,6 +10,9 @@ import {
 import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { PackingResult } from "@storagemaxxing/packer/types";
+import { Millimeters, mm } from "@storagemaxxing/geometry/Millimeters";
+import { Size, createSize } from "@storagemaxxing/geometry/Dimensions2D";
+import { GridCalculationMode } from "@storagemaxxing/geometry/OpenGrid";
 
 export type AppState = {
   readonly _hasHydrated: boolean;
@@ -32,6 +35,11 @@ export type AppState = {
   readonly solverFeasibility: boolean;
   readonly solverConflicts: readonly string[];
   readonly solverSuggestedCounts: Readonly<Record<string, number>>;
+
+  // Spatial Modeling
+  readonly spatialInputs: Size<Millimeters>;
+  readonly printerBedSize: Size<Millimeters>;
+  readonly calculationMode: GridCalculationMode;
 };
 
 export type AppActions = {
@@ -66,6 +74,10 @@ export type AppActions = {
   readonly setSolverSuggestedCounts: (
     counts: Readonly<Record<string, number>>,
   ) => void;
+
+  readonly setSpatialInputs: (inputs: Size<Millimeters>) => void;
+  readonly setPrinterBedSize: (size: Size<Millimeters>) => void;
+  readonly setCalculationMode: (mode: GridCalculationMode) => void;
 };
 
 export type StoreState = AppState & AppActions;
@@ -85,4 +97,8 @@ export const initialState: AppState = {
   solverFeasibility: true,
   solverConflicts: [],
   solverSuggestedCounts: {},
+
+  spatialInputs: createSize(mm(300), mm(300)),
+  printerBedSize: createSize(mm(256), mm(256)),
+  calculationMode: "truncate",
 };
