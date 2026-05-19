@@ -60,6 +60,7 @@ backup/
 .env
 
 # Legacy files (from pre-Dolt versions)
+issues.jsonl
 *.db
 *.db?*
 *.db-journal
