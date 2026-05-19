@@ -81,13 +81,20 @@ Implement tasks from an OpenSpec change.
    - Error or blocker encountered → report and wait for guidance
    - User interrupts
 
-7. **On completion or pause, show status**
+7. **On completion or pause, show status & meta-reflect**
 
    Display:
    - Tasks completed this session
    - Overall progress: "N/M tasks complete"
-   - If all done: suggest archive
-   - If paused: explain why and wait for guidance
+   - If all done: 
+     - Check `openspec status` for post-implementation artifacts (e.g., `retrospective`, `reflection`).
+     - If they exist, announce they are now `ready` and should be the next focus.
+     - Suggest archive only AFTER all artifacts are `done`.
+   - **MANDATORY**: Create a `meta:beads-flow` bead or use `bd remember` for any process friction encountered.
+
+8. **Closing the session**
+
+   Follow the **Session Close Protocol** in `PRIME.md`.
 
 **Output During Implementation**
 
