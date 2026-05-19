@@ -12,12 +12,16 @@ export type { Millimeters, Inches, Size };
 /**
  * Test factory for Millimeters.
  */
-export const mms = (...values: number[]): Millimeters[] => values.map(mm);
+export const mms = (
+  ...values: ReadonlyArray<number>
+): ReadonlyArray<Millimeters> => values.map(mm);
 
 /**
  * Test factory for Inches.
  */
-export const ins = (...values: number[]): Inches[] => values.map(inches);
+export const ins = (
+  ...values: ReadonlyArray<number>
+): ReadonlyArray<Inches> => values.map(inches);
 
 /**
  * Test factory for Dimensions2D in Millimeters.
@@ -46,6 +50,7 @@ declare module "bun:test" {
 
 expect.extend({
   toBeMm(actual: unknown, expected: number) {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const pass = (actual as number) === expected;
     return {
       message: () =>
@@ -56,6 +61,7 @@ expect.extend({
     };
   },
   toBeInches(actual: unknown, expected: number) {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const pass = (actual as number) === expected;
     return {
       message: () =>

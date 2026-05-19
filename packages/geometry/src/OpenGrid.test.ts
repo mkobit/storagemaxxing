@@ -1,6 +1,6 @@
 import { expect, test, describe } from "bun:test";
 import { calculateOpenGrid } from "./OpenGrid";
-import { mmSize, mm } from "./testing";
+import { mmSize } from "./testing";
 
 describe("calculateOpenGrid", () => {
   test("exact fit 2x2", () => {
