@@ -14,7 +14,7 @@ echo "------------------------------"
 # Install mise if missing
 if ! command -v mise &> /dev/null; then
     echo "Installing mise..."
-    MISE_VERSION="v2025.1.0"
+    MISE_VERSION="v2026.5.15"
     curl -L "https://github.com/jdx/mise/releases/download/${MISE_VERSION}/mise-${MISE_VERSION}-linux-x64" > ~/.local/bin/mise
     chmod +x ~/.local/bin/mise
     export PATH="$HOME/.local/bin:$PATH"
