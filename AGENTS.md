@@ -60,6 +60,33 @@ We prioritize **Horizontal Breadth** (many storage systems) over **Vertical Dept
 - **Jail:** Respect the workspace root. Do NOT access files or execute commands outside `/home/mkobit/workspace/mkobit/storagemaxxing`.
 - **MCP:** Use only the approved MCP servers defined in the project configuration.
 
+## 👁 Visual Inspection (All Agents)
+
+Before and after any UI change, capture the current state so you can see what you're building against.
+
+**Prerequisites (one-time setup):**
+
+```bash
+bun run --cwd apps/web playwright:install
+```
+
+**Capture a screenshot:**
+
+```bash
+bun run screenshot              # captures http://localhost:5173/
+bun run screenshot -- /canvas   # captures a specific route
+```
+
+Output: `.screenshots/latest.png` at workspace root.
+Read this file to verify visual state — it shows exactly what the UI looks like.
+
+**Rules:**
+
+- The dev server MUST be running first (`bun run dev`).
+- Always take a screenshot before starting UI work (baseline) and after (verify).
+- `.screenshots/` is gitignored — these are ephemeral dev-time files.
+- Timestamped copies are also saved (e.g., `.screenshots/2026-05-30T04-00-00-000Z.png`) for session history.
+
 ## ⚡️ High-Velocity Bun Patterns
 
 - **Runtime Enforcement:** We use `[run] bun = true` in `bunfig.toml` to ensure all scripts (Vite, ESLint, etc.) run with the Bun runtime for maximum speed.
