@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:e2e": "playwright test",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "screenshot": "bun scripts/screenshot.ts",
+    "playwright:install": "playwright install chromium --with-deps"
   },
   "dependencies": {
     "@storagemaxxing/assembly": "workspace:*",
