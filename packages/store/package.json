@@ -13,6 +13,6 @@
     "@storagemaxxing/packer": "workspace:*",
     "idb-keyval": "^6.2.2",
     "zod": "^4.4.3",
-    "zustand": "^5.0.12"
+    "zustand": "^5.0.13"
   }
 }
