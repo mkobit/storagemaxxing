@@ -99,9 +99,11 @@ bd ready --json
 
 **Create new issues:**
 
+Always include `--validate` and `--acceptance` for task/feature/bug types:
+
 ```bash
-bd create "Issue title" --description="Detailed context" -t bug|feature|task -p 0-4 --json
-bd create "Issue title" --description="What this issue is about" -p 1 --deps discovered-from:bd-123 --json
+bd create "Issue title" --description="Detailed context" -t task -p 2 --validate --acceptance "Given ..., when ..., then ..." --json
+bd create "Issue title" --description="What this issue is about" -t bug -p 1 --validate --acceptance "Bug no longer reproduces" --deps discovered-from:bd-123 --json
 ```
 
 **Claim and update:**
@@ -186,6 +188,7 @@ For more details, see README.md and docs/QUICKSTART.md.
 4. **PUSH TO REMOTE** - This is MANDATORY:
    ```bash
    git pull --rebase
+   bd lint       # MUST pass before pushing — fix any missing Acceptance Criteria
    bd dolt push
    git push
    git status  # MUST show "up to date with origin"

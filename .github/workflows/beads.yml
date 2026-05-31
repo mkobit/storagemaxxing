@@ -1,13 +1,12 @@
-name: Beads Validation
+name: Beads lint
 
 on:
-  push:
-    branches: [main, dev]
-  pull_request:
-    branches: [main, dev]
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
 
 jobs:
-  validate:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -22,6 +21,9 @@ jobs:
 
       - name: Bootstrap Beads
         run: bd bootstrap --yes
+
+      - name: Sync Beads from remote
+        run: bd dolt pull
 
       - name: Lint Beads
         run: bd lint
