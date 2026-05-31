@@ -24,3 +24,4 @@ rules:
   tasks:
     - Every task must include a "Validation" step (e.g., specific test or command).
     - Break tasks into chunks of max 30 minutes for AI execution.
+    - When creating Beads issues, always use `bd create --validate --acceptance "..."` so the issue passes `bd lint` immediately.
