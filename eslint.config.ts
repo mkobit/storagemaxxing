@@ -19,6 +19,7 @@ export default tseslint.config(
       ".beads/**",
       "apps/web/test-results/**",
       "apps/web/e2e/**",
+      "apps/web/scripts/**",
       "apps/web/playwright.config.ts",
       "apps/web/vitest.shims.d.ts",
     ],

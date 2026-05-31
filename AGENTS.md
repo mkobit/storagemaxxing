@@ -7,6 +7,7 @@ This file serves as the "Prime Directive" for all AI agents (Gemini, Claude, Jul
 - **Functional Purity:** All logic in `packages/geometry`, `packages/catalog`, and `packages/packer` MUST be pure functional. No side effects.
 - **Immutability:** Use `const` and `readonly`. No `let`, no object mutation. Enforced by ESLint `functional/*` rules.
 - **Strict Typing:** `strict: true` in all packages. No `any`. Use `unknown` + narrowing/validation.
+- **tsconfig Scope:** When adding TypeScript files outside a package's `src/` directory (e.g., `scripts/`, `e2e/`), verify the directory is listed in that package's `tsconfig.json` `include` array or ESLint will fail to parse it.
 - **Monorepo Topology:** Directed acyclic graph: Geometry → Catalog → Packer/Solver → Web UI.
 - **Two-Layer Engine:**
   - **Layer 1:** Synchronous 2D Geometric Fitting (Pure functions).
@@ -22,6 +23,7 @@ All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (E
    - Run `bd prime` to load the context into your session.
    - Run `bunx openspec list --json` to identify active changes.
    - Use `bunx openspec status --change <name>` to locate the relevant `design.md` and `tasks.md`.
+   - If working on `apps/web`, run `bun run dev` then `bun run screenshot` to capture the baseline UI before touching anything.
 2. **PLAN:** Before coding, ensure an OpenSpec `design.md` and `tasks.md` exist and are synced to Beads via `bd mol pour openspec-sync`.
    - **Checkpoint:** All designs MUST be reviewed and approved by a human (using `status:needs-review`) before an agent starts the implementation phase.
 3. **CLAIM:** Always claim a Bead with `bd update <id> --claim` before starting execution.
@@ -29,6 +31,7 @@ All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (E
 5. **VALIDATE & CLOSE:**
    - Run `bunx openspec validate` to ensure spec integrity.
    - Mark `tasks.md` checkboxes and run `bd close <id>`.
+   - **Commit immediately after every closed Bead:** `git add <changed files> && git commit -m "task(<id>): <description>"`. Never accumulate multiple tasks in one commit.
    - Run `bunx openspec archive` only after all linked Beads are closed.
 
 6. **META-PROCESS REFLECTION (MANDATORY):**
@@ -59,33 +62,6 @@ We prioritize **Horizontal Breadth** (many storage systems) over **Vertical Dept
 - **Sync:** Always refresh state (`git pull` or `bd sync`) at the start of a session.
 - **Jail:** Respect the workspace root. Do NOT access files or execute commands outside `/home/mkobit/workspace/mkobit/storagemaxxing`.
 - **MCP:** Use only the approved MCP servers defined in the project configuration.
-
-## 👁 Visual Inspection (All Agents)
-
-Before and after any UI change, capture the current state so you can see what you're building against.
-
-**Prerequisites (one-time setup):**
-
-```bash
-bun run --cwd apps/web playwright:install
-```
-
-**Capture a screenshot:**
-
-```bash
-bun run screenshot              # captures http://localhost:5173/
-bun run screenshot -- /canvas   # captures a specific route
-```
-
-Output: `.screenshots/latest.png` at workspace root.
-Read this file to verify visual state — it shows exactly what the UI looks like.
-
-**Rules:**
-
-- The dev server MUST be running first (`bun run dev`).
-- Always take a screenshot before starting UI work (baseline) and after (verify).
-- `.screenshots/` is gitignored — these are ephemeral dev-time files.
-- Timestamped copies are also saved (e.g., `.screenshots/2026-05-30T04-00-00-000Z.png`) for session history.
 
 ## ⚡️ High-Velocity Bun Patterns
 
