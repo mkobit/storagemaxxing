@@ -55,7 +55,6 @@ export default tseslint.config(
       "apps/web/e2e/**",
       "apps/web/scripts/**",
       "apps/web/playwright.config.ts",
-      "apps/web/vitest.shims.d.ts",
     ],
   },
   js.configs.recommended,

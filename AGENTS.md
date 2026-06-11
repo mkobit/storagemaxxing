@@ -77,7 +77,8 @@ We prioritize **Horizontal Breadth** (many storage systems) over **Vertical Dept
 ## ⚡️ High-Velocity Bun Patterns
 
 - **Runtime caveat:** Do NOT set `[run] bun = true` in `bunfig.toml`.
-  It shims `node` to Bun inside `bun run` scripts, and vitest workers crash under the Bun runtime (zod ESM named exports resolve `undefined`).
+  It shims `node` to Bun inside `bun run` scripts, and Playwright's runner spawns `node` workers that are not supported under the Bun runtime.
+- **Unit tests run on `bun test` everywhere:** packages directly, and `apps/web` with a happy-dom preload (`apps/web/bunfig.toml`).
 - **Package tests:** Run package tests with `bun test packages/<pkg>` from the repo root.
   Packages have no `test` script, so `bun --cwd packages/<pkg> test` fails with "Script not found".
 - **Root-Level Execution:** To run a script in a subproject from the root, use the `--cwd` flag:

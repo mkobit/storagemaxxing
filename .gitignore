@@ -4,3 +4,5 @@ dist
 *.log
 *.pid
 .screenshots/
+playwright-report/
+test-results/

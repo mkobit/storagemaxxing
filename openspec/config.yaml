@@ -11,7 +11,7 @@ context: |
     - Functional programming (immutability, pure functions) in all `packages/`.
     - Strict types (no `any`).
     - Zod for runtime validation.
-    - Vitest for unit tests, Playwright for E2E.
+    - bun test for unit tests (happy-dom for web), Playwright for E2E.
 
 # Per-artifact rules
 rules:

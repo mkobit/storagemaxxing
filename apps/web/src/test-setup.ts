@@ -1,8 +1,10 @@
-import "@testing-library/jest-dom";
-import { cleanup } from "@testing-library/react";
-import { afterEach } from "vitest";
+import { afterEach } from "bun:test";
+import { GlobalRegistrator } from "@happy-dom/global-registrator";
 
-// Automatically cleanup after each test
+GlobalRegistrator.register();
+
+const { cleanup } = await import("@testing-library/react");
+
 afterEach(() => {
   cleanup();
 });

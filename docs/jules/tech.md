@@ -33,7 +33,7 @@ Storagemaxxing uses a hybrid approach to spatial optimization, splitting the pro
 - **Strict Types:** No `any`. Use Zod for runtime validation where appropriate.
 - **Functional Style:** Prefer immutability and pure functions in the engine packages.
 - **Testing:**
-  - Unit tests: `vitest` for all logic in `packages/`.
+  - Unit tests: `bun test` for all logic in `packages/` and `apps/web` (happy-dom preload).
   - E2E: Playwright for user flows in `apps/web/e2e/`.
 - **Package Management:** Bun for execution and lockfile management.
 
