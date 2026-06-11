@@ -4,16 +4,20 @@
 import { ToolMode } from "@storagemaxxing/store/ToolMode";
 import { Sketch2D } from "@storagemaxxing/assembly/Sketch2D";
 import { SpaceInstance } from "@storagemaxxing/assembly/SpaceInstance";
+import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { BinSpec } from "@storagemaxxing/catalog/bin";
 import { Point } from "./SketchCanvasHooks";
+
+export const PIXELS_PER_INCH = 24;
 
 export type DrawContext = {
   readonly canvas: HTMLCanvasElement;
   readonly ctx: CanvasRenderingContext2D;
   readonly activeSketch: Sketch2D | null;
   readonly activeSpace: SpaceInstance | null;
+  readonly activeTemplate: SpaceTemplate | null;
   readonly constraints: readonly SpaceConstraint[];
   readonly packingResult: PackingResult | null;
   readonly lookupBin: (id: string) => BinSpec | undefined;
@@ -103,12 +107,31 @@ const drawActiveSketch = (
   });
 };
 
-const drawActiveSpace = (
+const drawSpaceBounds = (
   ctx: CanvasRenderingContext2D,
-  packingResult: PackingResult,
-  constraints: readonly SpaceConstraint[],
-  lookupBin: (id: string) => BinSpec | undefined,
+  template: SpaceTemplate,
 ) => {
+  if (template.w === undefined || template.l === undefined) return;
+  ctx.strokeStyle = "#666666";
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 2]);
+  ctx.strokeRect(
+    0,
+    0,
+    template.w * PIXELS_PER_INCH,
+    template.l * PIXELS_PER_INCH,
+  );
+  ctx.setLineDash([]);
+};
+
+type SpaceView = {
+  readonly packingResult: PackingResult;
+  readonly constraints: readonly SpaceConstraint[];
+  readonly lookupBin: (id: string) => BinSpec | undefined;
+};
+
+const drawActiveSpace = (ctx: CanvasRenderingContext2D, view: SpaceView) => {
+  const { packingResult, constraints, lookupBin } = view;
   packingResult.placedBins.forEach((placed) => {
     const spec = lookupBin(placed.binId);
     if (!spec) return;
@@ -117,16 +140,16 @@ const drawActiveSpace = (
     ctx.strokeStyle = "#000000";
     ctx.lineWidth = 1;
     ctx.fillRect(
-      placed.origin[0],
-      placed.origin[2],
-      spec.nominal.w,
-      spec.nominal.l,
+      placed.origin[0] * PIXELS_PER_INCH,
+      placed.origin[2] * PIXELS_PER_INCH,
+      spec.nominal.w * PIXELS_PER_INCH,
+      spec.nominal.l * PIXELS_PER_INCH,
     );
     ctx.strokeRect(
-      placed.origin[0],
-      placed.origin[2],
-      spec.nominal.w,
-      spec.nominal.l,
+      placed.origin[0] * PIXELS_PER_INCH,
+      placed.origin[2] * PIXELS_PER_INCH,
+      spec.nominal.w * PIXELS_PER_INCH,
+      spec.nominal.l * PIXELS_PER_INCH,
     );
   });
 };
@@ -159,6 +182,7 @@ export const drawCanvas = (context: DrawContext) => {
     ctx,
     activeSketch,
     activeSpace,
+    activeTemplate,
     constraints,
     packingResult,
     lookupBin,
@@ -173,8 +197,9 @@ export const drawCanvas = (context: DrawContext) => {
   ctx.save();
   ctx.translate(pan.x, pan.y);
   if (activeSketch) drawActiveSketch(ctx, activeSketch);
+  if (activeTemplate) drawSpaceBounds(ctx, activeTemplate);
   if (activeSpace && packingResult)
-    drawActiveSpace(ctx, packingResult, constraints, lookupBin);
+    drawActiveSpace(ctx, { packingResult, constraints, lookupBin });
   if (isDrawing && startPoint && currentPoint)
     drawCurrentAction(ctx, mode, startPoint, currentPoint);
   ctx.restore();

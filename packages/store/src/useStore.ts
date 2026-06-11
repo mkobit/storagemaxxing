@@ -61,6 +61,10 @@ export const useStore = create<StoreState>()(
             ],
           };
         }),
+      addTemplate: (template) =>
+        set((state) => ({
+          templatesById: { ...state.templatesById, [template.id]: template },
+        })),
       removeSpace: (id) =>
         set((state) => ({ spaces: state.spaces.filter((s) => s.id !== id) })),
       setActiveSpace: (activeSpaceId) => set({ activeSpaceId }),
@@ -108,6 +112,7 @@ export const useStore = create<StoreState>()(
         pan: state.pan,
         spaces: state.spaces,
         activeSpaceId: state.activeSpaceId,
+        templatesById: state.templatesById,
         constraintsBySpace: state.constraintsBySpace,
         spatialInputs: state.spatialInputs,
         printerBedSize: state.printerBedSize,

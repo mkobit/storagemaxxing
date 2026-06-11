@@ -7,7 +7,10 @@ import {
   SpaceInstance,
   SpaceInstanceId,
 } from "@storagemaxxing/assembly/SpaceInstance";
-import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate";
+import {
+  SpaceTemplate,
+  SpaceTemplateId,
+} from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { Millimeters, mm } from "@storagemaxxing/geometry/Millimeters";
@@ -25,6 +28,7 @@ export type AppState = {
 
   readonly spaces: readonly SpaceInstance[];
   readonly activeSpaceId: SpaceInstanceId | null;
+  readonly templatesById: Readonly<Record<SpaceTemplateId, SpaceTemplate>>;
   readonly constraintsBySpace: Readonly<
     Record<SpaceTemplateId, readonly SpaceConstraint[]>
   >;
@@ -53,6 +57,7 @@ export type AppActions = {
   readonly setPan: (pan: { readonly x: number; readonly y: number }) => void;
 
   readonly addSpace: (space: SpaceInstance) => void;
+  readonly addTemplate: (template: SpaceTemplate) => void;
   readonly removeSpace: (id: SpaceInstanceId) => void;
   readonly setActiveSpace: (id: SpaceInstanceId | null) => void;
   readonly setConstraintForSpace: (
@@ -92,6 +97,7 @@ export const initialState: AppState = {
   pan: { x: 0, y: 0 },
   spaces: [],
   activeSpaceId: null,
+  templatesById: {},
   constraintsBySpace: {},
   packingResultsBySpace: {},
   solverFeasibility: true,

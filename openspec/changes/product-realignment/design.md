@@ -76,6 +76,9 @@ If implementation discovers a needed intermediate type, it must be added to `ass
 **Flowback (sm-cmbc)**: enforcing the DAG exposed a pre-existing cycle — `packer/types.ts` imported `PlacedBin` from `assembly` while `assembly/bom.ts` imported `PackingResult` from `packer`.
 The packing result types (`PackingResult`, `PackingMetrics`, `ValidityState`, `ConstraintFailure`, `PackingPhase`) moved to `packages/assembly/src/PackingResult.ts`; they stay as plain types (derived data, not boundary input, so no Zod schema).
 
+**Flowback (sm-azsx)**: `SpaceInstance.templateId` had no registry to resolve against, so the store gained a `templatesById` state field (plus `addTemplate` action) holding existing Zod-validated `SpaceTemplate` values.
+The selector is `selectPackedLayout` in `packages/store/src/layoutSelectors.ts`; the catalog-to-packer `BinSpec` conversion is exported as `toPackerBinSpec` for reuse by `apps/web`.
+
 ### 5. Process specs collapse into `AGENTS.md`
 
 The eight removed specs restate `AGENTS.md` operational rails.
