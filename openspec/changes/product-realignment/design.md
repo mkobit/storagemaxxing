@@ -70,8 +70,11 @@ An agent closing a bead must show the named test passing; review checks the mapp
 ### 4. Golden-path wiring lives in `store`, packing stays pure
 
 A pure selector in `packages/store` derives `PackingResult` from the active sketch by calling `packSpace()`; `apps/web` renders from that selector.
-No new domain objects are introduced: the flow reuses the existing Zod-validated `assembly` schemas (`Sketch2D`, `Feature`, `SpaceConstraint`) and `packer` types (`PackingResult`, `ValidityState`).
+No new domain objects are introduced: the flow reuses the existing Zod-validated `assembly` schemas (`Sketch2D`, `Feature`, `SpaceConstraint`) and the packing result types (`PackingResult`, `ValidityState`).
 If implementation discovers a needed intermediate type, it must be added to `assembly` with a Zod schema and flowed back into this design first.
+
+**Flowback (sm-cmbc)**: enforcing the DAG exposed a pre-existing cycle — `packer/types.ts` imported `PlacedBin` from `assembly` while `assembly/bom.ts` imported `PackingResult` from `packer`.
+The packing result types (`PackingResult`, `PackingMetrics`, `ValidityState`, `ConstraintFailure`, `PackingPhase`) moved to `packages/assembly/src/PackingResult.ts`; they stay as plain types (derived data, not boundary input, so no Zod schema).
 
 ### 5. Process specs collapse into `AGENTS.md`
 

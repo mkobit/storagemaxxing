@@ -5,7 +5,7 @@ import {
   ConstraintFailure,
   createConstraintFailure,
   ValidityState,
-} from "./types.js";
+} from "@storagemaxxing/assembly/PackingResult";
 import { getEffectiveFootprint } from "./geometryUtils.js";
 
 export type PackRect = {

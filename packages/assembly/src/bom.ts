@@ -1,5 +1,5 @@
 import { BOM, BOMItem, BinSpecIdSchema } from "./BaseTypes.js";
-import type { PackingResult } from "@storagemaxxing/packer/types";
+import type { PackingResult } from "./PackingResult.js";
 import type { BinSpec } from "@storagemaxxing/catalog/bin";
 import type { SpaceInstance } from "./SpaceInstance.js";
 

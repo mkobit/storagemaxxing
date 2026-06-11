@@ -9,7 +9,7 @@ import {
 } from "@storagemaxxing/assembly/SpaceInstance";
 import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
-import { PackingResult } from "@storagemaxxing/packer/types";
+import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { Millimeters, mm } from "@storagemaxxing/geometry/Millimeters";
 import { Size, createSize } from "@storagemaxxing/geometry/Dimensions2D";
 import { GridCalculationMode } from "@storagemaxxing/geometry/OpenGrid";
