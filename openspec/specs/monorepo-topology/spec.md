@@ -1,28 +1,40 @@
 ## Purpose
 
 Enforce a directed acyclic dependency graph and clear package boundaries within the monorepo to ensure architectural integrity.
-
 ## Requirements
-
 ### Requirement: Directed Acyclic Dependency Graph
 
-The monorepo dependency graph SHALL remain acyclic and follow a clear hierarchy: Geometry -> Catalog -> Packer/Solver -> Web App.
+The monorepo dependency graph SHALL remain acyclic and follow the hierarchy `geometry → catalog → assembly → packer → store → web`, enforced by lint rules rather than convention.
+Each package MAY import only from `@storagemaxxing/*` packages strictly below it in the hierarchy.
 
-#### Scenario: Circular dependency check
+#### Scenario: Upward import fails lint
 
-- **WHEN** `packages/geometry` attempts to import from `packages/packer`
-- **THEN** the ESLint `import/no-cycle` rule or a custom build script MUST fail the build.
+- **WHEN** `packages/geometry` source imports from `@storagemaxxing/packer`
+- **THEN** `bun run lint` MUST fail with a restricted-import violation.
+
+#### Scenario: Lateral import fails lint
+
+- **WHEN** `packages/catalog` source imports from `@storagemaxxing/store`
+- **THEN** `bun run lint` MUST fail with a restricted-import violation.
 
 ### Requirement: Package Responsibility Boundaries
 
-Each package SHALL have a single, well-defined responsibility.
+Each package SHALL have a single, well-defined responsibility, and the workspace SHALL contain only packages on the golden path.
 
-- **Geometry**: Primitives only.
-- **Catalog**: Domain models and vendor data.
-- **Packer**: Synchronous layout logic.
-- **Solver**: Asynchronous constraint validation.
+- **geometry**: spatial primitives only.
+- **catalog**: storage systems, vendor data, and bin specifications.
+- **assembly**: domain model (sketches, features, constraints, BOM) with Zod schemas.
+- **packer**: synchronous 2D layout logic (pure functions).
+- **store**: application state and pure layout derivation.
+- **web**: rendering and interaction.
 
 #### Scenario: Logic leak
 
 - **WHEN** React state management logic is added to `packages/packer`
 - **THEN** it SHALL be flagged during code review as a violation of the `monorepo-topology` spec.
+
+#### Scenario: Placeholder package
+
+- **WHEN** a package exists in `packages/` with no source files or no consumers
+- **THEN** it SHALL be deleted or given a spec-backed purpose before new work targets it.
+
