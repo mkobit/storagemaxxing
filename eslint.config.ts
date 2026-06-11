@@ -10,6 +10,40 @@ import * as jsoncParser from "jsonc-eslint-parser";
 import globals from "globals";
 import { fixupPluginRules } from "@eslint/compat";
 
+const DAG_ORDER = [
+  "geometry",
+  "catalog",
+  "assembly",
+  "packer",
+  "store",
+  "web",
+] as const;
+
+const INDEX_IMPORT_PATTERN = {
+  group: ["**/index", "**/index.ts", "**/index.tsx"],
+} as const;
+
+// Lint-enforced package DAG per openspec/specs/monorepo-topology:
+// each package may import only @storagemaxxing/* packages strictly below it.
+const dagBoundaries = DAG_ORDER.slice(0, -1).map((pkg, i) => ({
+  files: [`packages/${pkg}/src/**/*.{ts,tsx}`],
+  ignores: ["**/*.test.ts", "**/*.test.tsx"],
+  rules: {
+    "no-restricted-imports": [
+      "error",
+      {
+        patterns: [
+          INDEX_IMPORT_PATTERN,
+          ...DAG_ORDER.slice(i + 1).map((upper) => ({
+            group: [`@storagemaxxing/${upper}`, `@storagemaxxing/${upper}/*`],
+            message: `packages/${pkg} may not import @storagemaxxing/${upper}: violates the monorepo DAG ${DAG_ORDER.join(" -> ")} (see openspec/specs/monorepo-topology).`,
+          })),
+        ],
+      },
+    ],
+  } as any,
+}));
+
 export default tseslint.config(
   {
     ignores: [
@@ -79,6 +113,7 @@ export default tseslint.config(
       "react/react-in-jsx-scope": "off",
     },
   },
+  ...dagBoundaries,
   {
     files: ["apps/web/src/**/*.{ts,tsx}", "apps/web/serve.ts"],
     rules: {
@@ -98,7 +133,6 @@ export default tseslint.config(
       "packages/geometry/src/**/*.ts",
       "packages/packer/src/**/*.ts",
       "packages/catalog/src/**/*.ts",
-      "packages/solver/src/**/*.ts",
       "packages/assembly/src/**/*.ts",
     ],
     ignores: ["**/*.test.ts", "**/*.test.tsx"],
