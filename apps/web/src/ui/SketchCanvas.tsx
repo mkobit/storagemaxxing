@@ -15,8 +15,14 @@ export const SketchCanvas: React.FC = () => {
   const mode = useStore((state) => state.mode);
   const pan = useStore((state) => state.pan);
 
-  const { activeSketch, activeSpace, constraints, packingResult, lookupBin } =
-    useSketchCanvasData();
+  const {
+    activeSketch,
+    activeSpace,
+    activeTemplate,
+    constraints,
+    packingResult,
+    lookupBin,
+  } = useSketchCanvasData();
 
   const sketchEvents = useSketchEvents(canvasRef);
 
@@ -31,6 +37,7 @@ export const SketchCanvas: React.FC = () => {
       ctx,
       activeSketch,
       activeSpace,
+      activeTemplate,
       constraints,
       packingResult,
       lookupBin,
@@ -43,6 +50,7 @@ export const SketchCanvas: React.FC = () => {
   }, [
     activeSketch,
     activeSpace,
+    activeTemplate,
     constraints,
     packingResult,
     sketchEvents,

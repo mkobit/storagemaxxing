@@ -16,7 +16,14 @@ export const toPackerBinSpec = (bin: CatalogBinSpec): BinSpec =>
     toleranceH: bin.tolerance.h,
   });
 
-export const selectPackedLayout = (state: AppState): PackingResult | null => {
+export type LayoutInputs = Pick<
+  AppState,
+  "spaces" | "activeSpaceId" | "templatesById"
+>;
+
+export const selectPackedLayout = (
+  state: LayoutInputs,
+): PackingResult | null => {
   const space =
     state.activeSpaceId !== null
       ? state.spaces.find((s) => s.id === state.activeSpaceId)

@@ -1,5 +1,6 @@
 import React from "react";
 import { useStore } from "@storagemaxxing/store/useStore";
+import { GoldenPathSetup } from "./GoldenPathSetup";
 
 export const Toolbar: React.FC = () => {
   const mode = useStore((state) => state.mode);
@@ -55,6 +56,8 @@ export const Toolbar: React.FC = () => {
       >
         Center Rectangle
       </button>
+      <div className="w-px bg-gray-300 my-1 mx-2" />
+      <GoldenPathSetup />
     </div>
   );
 };
