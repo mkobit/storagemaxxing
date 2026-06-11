@@ -18,7 +18,6 @@
     "@storagemaxxing/catalog": "workspace:*",
     "@storagemaxxing/geometry": "workspace:*",
     "@storagemaxxing/packer": "workspace:*",
-    "@storagemaxxing/solver": "workspace:*",
     "@storagemaxxing/store": "workspace:*",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"

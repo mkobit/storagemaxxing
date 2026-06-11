@@ -22,8 +22,6 @@
       "@storagemaxxing/geometry/*": ["packages/geometry/src/*.ts"],
       "@storagemaxxing/packer": ["packages/packer/src/index.ts"],
       "@storagemaxxing/packer/*": ["packages/packer/src/*.ts"],
-      "@storagemaxxing/solver": ["packages/solver/src/index.ts"],
-      "@storagemaxxing/solver/*": ["packages/solver/src/*.ts"],
       "@storagemaxxing/store": ["packages/store/src/index.ts"],
       "@storagemaxxing/store/*": ["packages/store/src/*.ts"]
     },

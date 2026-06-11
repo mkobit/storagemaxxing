@@ -18,7 +18,6 @@ export default defineConfig({
       "@storagemaxxing/geometry": path.resolve(__dirname, "../../packages/geometry/src"),
       "@storagemaxxing/catalog": path.resolve(__dirname, "../../packages/catalog/src"),
       "@storagemaxxing/packer": path.resolve(__dirname, "../../packages/packer/src"),
-      "@storagemaxxing/solver": path.resolve(__dirname, "../../packages/solver/src"),
       "@storagemaxxing/store": path.resolve(__dirname, "../../packages/store/src"),
       "@storagemaxxing/assembly": path.resolve(__dirname, "../../packages/assembly/src"),
     },
