@@ -84,13 +84,6 @@ export const useStore = create<StoreState>()(
             ),
           };
         }),
-      setPackingResultsForSpace: (spaceId, result) =>
-        set((state) => ({
-          packingResultsBySpace: {
-            ...state.packingResultsBySpace,
-            [spaceId]: result,
-          },
-        })),
       setSolverFeasibility: (solverFeasibility) => set({ solverFeasibility }),
       setSolverConflicts: (solverConflicts) => set({ solverConflicts }),
       setSolverSuggestedCounts: (solverSuggestedCounts) =>

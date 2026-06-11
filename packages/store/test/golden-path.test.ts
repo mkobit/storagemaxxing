@@ -1,5 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { selectPackedLayout, toPackerBinSpec } from "../src/layoutSelectors";
+import {
+  selectPackedLayout,
+  selectPackingResultsBySpace,
+  toPackerBinSpec,
+} from "../src/layoutSelectors";
+import { computeAggregateBom } from "@storagemaxxing/assembly/bom";
 import { AppState, initialState } from "../src/StoreTypes";
 import { packSpace } from "@storagemaxxing/packer/packer";
 import { createSpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
@@ -53,5 +58,21 @@ describe("storage-layout: Store Layout Derivation", () => {
 
   test("returns null when no space is active", () => {
     expect(selectPackedLayout(initialState)).toBeNull();
+  });
+
+  test("derives the aggregate BOM from selector output", () => {
+    const resultsBySpace = selectPackingResultsBySpace(state);
+    expect(Object.keys(resultsBySpace)).toEqual([space.id]);
+
+    const bom = computeAggregateBom(state.spaces, resultsBySpace, (id) =>
+      findBinById(ALL_BINS, binId(id)),
+    );
+
+    expect(bom.items.length).toBe(GOLDEN_PATH_STARTER_BIN_IDS.length);
+    bom.items.forEach((item) => expect(item.quantity).toBe(1));
+  });
+
+  test("returns an empty record when no spaces exist", () => {
+    expect(selectPackingResultsBySpace(initialState)).toEqual({});
   });
 });

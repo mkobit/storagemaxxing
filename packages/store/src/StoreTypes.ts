@@ -12,7 +12,6 @@ import {
   SpaceTemplateId,
 } from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
-import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { Millimeters, mm } from "@storagemaxxing/geometry/Millimeters";
 import { Size, createSize } from "@storagemaxxing/geometry/Dimensions2D";
 import { GridCalculationMode } from "@storagemaxxing/geometry/OpenGrid";
@@ -31,9 +30,6 @@ export type AppState = {
   readonly templatesById: Readonly<Record<SpaceTemplateId, SpaceTemplate>>;
   readonly constraintsBySpace: Readonly<
     Record<SpaceTemplateId, readonly SpaceConstraint[]>
-  >;
-  readonly packingResultsBySpace: Readonly<
-    Record<SpaceInstanceId, PackingResult>
   >;
 
   readonly solverFeasibility: boolean;
@@ -69,10 +65,6 @@ export type AppActions = {
     constraint: SpaceConstraint,
   ) => void;
   readonly clearConstraintsForSpace: (templateId: SpaceTemplateId) => void;
-  readonly setPackingResultsForSpace: (
-    spaceId: SpaceInstanceId,
-    result: PackingResult,
-  ) => void;
 
   readonly setSolverFeasibility: (feasibility: boolean) => void;
   readonly setSolverConflicts: (conflicts: readonly string[]) => void;
@@ -99,7 +91,6 @@ export const initialState: AppState = {
   activeSpaceId: null,
   templatesById: {},
   constraintsBySpace: {},
-  packingResultsBySpace: {},
   solverFeasibility: true,
   solverConflicts: [],
   solverSuggestedCounts: {},
