@@ -1,8 +1,8 @@
 [install]
 ignoreScripts = true
 
-[run]
-bun = true
+# Do not set [run] bun = true: it shims `node` to Bun inside `bun run` scripts,
+# and vitest workers crash under the Bun runtime (zod ESM named exports resolve undefined).
 
 [env]
 OPENSPEC_TELEMETRY = "0"
