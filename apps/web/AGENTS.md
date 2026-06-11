@@ -33,7 +33,7 @@ Read this file to verify visual state — it shows exactly what the UI looks lik
 
 - `bun run dev` — start Vite dev server on port 5173
 - `bun run build` — production build to `dist/`
-- `bun run test` — Vitest unit tests
+- `bun run test` — bun test unit tests (happy-dom)
 - `bun run test:e2e` — Playwright end-to-end tests (requires dev server)
 - `bun run screenshot [route]` — capture UI screenshot to `.screenshots/latest.png`
 - `bun run typecheck` — TypeScript type check

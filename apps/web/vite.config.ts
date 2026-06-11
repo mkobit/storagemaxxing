@@ -6,12 +6,6 @@ import path from "path";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  test: {
-    environment: "jsdom",
-    globals: true,
-    setupFiles: ["./src/test-setup.ts"],
-    exclude: ["**/node_modules/**", "**/dist/**", "**/e2e/**"],
-  },
   resolve: {
     dedupe: ["react", "react-dom"],
     alias: {
