@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { computeBom, computeAggregateBom } from "./bom.js";
 import type { BinSpec } from "@storagemaxxing/catalog/bin";
-import type { PackingResult } from "@storagemaxxing/packer/types";
+import type { PackingResult } from "./PackingResult.js";
 import { binId } from "@storagemaxxing/catalog/bin";
 import { BinSpecIdSchema } from "./BaseTypes.js";
 import type { Dimensions3D } from "@storagemaxxing/geometry/Dimensions3D";

@@ -8,7 +8,7 @@ import {
   PackingResult,
   createPackingMetrics,
   createPackingResult,
-} from "./types.js";
+} from "@storagemaxxing/assembly/PackingResult";
 import {
   getEffectiveFootprint,
   getEffectiveSpaceDimensions,

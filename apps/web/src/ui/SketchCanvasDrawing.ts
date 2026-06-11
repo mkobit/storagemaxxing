@@ -5,7 +5,7 @@ import { ToolMode } from "@storagemaxxing/store/ToolMode";
 import { Sketch2D } from "@storagemaxxing/assembly/Sketch2D";
 import { SpaceInstance } from "@storagemaxxing/assembly/SpaceInstance";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
-import { PackingResult } from "@storagemaxxing/packer/types";
+import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { BinSpec } from "@storagemaxxing/catalog/bin";
 import { Point } from "./SketchCanvasHooks";
 
