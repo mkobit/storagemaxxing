@@ -3,9 +3,9 @@ schema: beads-driven
 # Project context
 context: |
   Tech stack: TypeScript (Strict), React 19, Bun, Zustand, Tailwind CSS.
-  Architecture: Two-Layer Packing Engine.
-    - Layer 1: Synchronous Geometric Placement (MaxRects) in `packages/packer`.
-    - Layer 2: Asynchronous Constraint Satisfaction (MIP) in `packages/solver`.
+  Architecture: Layer 1 Packing Engine — Synchronous Geometric Placement (MaxRects) in `packages/packer`.
+    Layer 2 (Asynchronous Constraint Satisfaction) is deferred; no solver package exists.
+  Package DAG (lint-enforced): geometry -> catalog -> assembly -> packer -> store -> web.
   Domain: Spatial planning for modular storage systems (Gridfinity, Schaller, etc.).
   Standards:
     - Functional programming (immutability, pure functions) in all `packages/`.
@@ -17,7 +17,7 @@ context: |
 rules:
   proposal:
     - Always include a "Success Criteria" section.
-    - Explicitly state which layer (Packer/Solver) is affected.
+    - Explicitly state which packages in the DAG are affected.
   design:
     - Must include an ASCII diagram of the data flow.
     - Must specify Zod schemas for new domain objects.
