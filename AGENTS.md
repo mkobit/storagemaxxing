@@ -8,10 +8,8 @@ This file serves as the "Prime Directive" for all AI agents (Gemini, Claude, Jul
 - **Immutability:** Use `const` and `readonly`. No `let`, no object mutation. Enforced by ESLint `functional/*` rules.
 - **Strict Typing:** `strict: true` in all packages. No `any`. Use `unknown` + narrowing/validation.
 - **tsconfig Scope:** When adding TypeScript files outside a package's `src/` directory (e.g., `scripts/`, `e2e/`), verify the directory is listed in that package's `tsconfig.json` `include` array or ESLint will fail to parse it.
-- **Monorepo Topology:** Directed acyclic graph: Geometry → Catalog → Packer/Solver → Web UI.
-- **Two-Layer Engine:**
-  - **Layer 1:** Synchronous 2D Geometric Fitting (Pure functions).
-  - **Layer 2:** Asynchronous Constraint Validation (Layered on top, often in Workers).
+- **Monorepo Topology:** Lint-enforced directed acyclic graph: `geometry → catalog → assembly → packer → store → web`. Upward or lateral imports fail `bun run lint`.
+- **Engine:** Layer 1 only — synchronous 2D geometric fitting (pure functions) in `packages/packer`. Layer 2 (asynchronous constraint validation) is deferred and has no package.
 
 ## 🟢 Operational Loop (Spec-Driven & Bidirectional)
 
@@ -27,6 +25,7 @@ All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (E
 2. **PLAN:** Before coding, ensure an OpenSpec `design.md` and `tasks.md` exist and are synced to Beads via `bd mol pour openspec-sync`.
    - **Checkpoint:** All designs MUST be reviewed and approved by a human (using `status:needs-review`) before an agent starts the implementation phase.
 3. **CLAIM:** Always claim a Bead with `bd update <id> --claim` before starting execution.
+   Never modify a file unless you own the claim on the corresponding Bead.
 4. **EXECUTE & FLOWBACK:** Implement changes. If the design needs to change, update OpenSpec **BEFORE** proceeding with implementation or closing Beads.
 5. **VALIDATE & CLOSE:**
    - Run `bunx openspec validate` to ensure spec integrity.
@@ -41,6 +40,17 @@ All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (E
    - **Action:** Use `bd remember "<insight>"` for transient operational tips.
 
 Refer to **[.beads/PRIME.md](.beads/PRIME.md)** for detailed CLI instructions and **[openspec/config.yaml](openspec/config.yaml)** for schema-specific rules.
+
+## Bead task contract
+
+Every implementation Bead MUST satisfy this contract before an agent claims it:
+
+- Names exactly one package (or `apps/web`) in a `scope:` label.
+- References the OpenSpec spec requirement it implements.
+- Carries an acceptance criterion runnable as a command (test, lint, or typecheck invocation).
+
+If a Bead cannot meet the contract, re-scope it or flag it with `bd human <id>` instead of claiming it.
+If you cannot finish a claimed Bead, leave it `open` with a comment linking the relevant OpenSpec change so another agent can resume.
 
 ## 🧠 Shared Memory & Audit
 
@@ -58,7 +68,8 @@ We prioritize **Horizontal Breadth** (many storage systems) over **Vertical Dept
 ## 🛠 Multi-Agent Sandbox & Sync
 
 - **Identity:** Always attribute your actions to your agent name (e.g., `actor:gemini`).
-- **Jules:** Jules is an autonomous agent optimized for high-integrity, focused execution. **Limit Jules to 1-2 tasks per execution cycle** to maintain quality.
+- **Jules:** Jules is a remote agent with a large execution quota but limited reasoning. Delegate many small, narrowly scoped tasks to it — **1-2 Beads per execution cycle**, each satisfying the Bead task contract. Never hand Jules open-ended design work or multi-package changes.
+- **Patrols:** Recurring duties live in `.jules/prompts/` with a Goal, Frequency, and Protocol. Jules MUST check for assigned `meta:patrol` beads before picking up other tasks.
 - **Sync:** Always refresh state (`git pull` or `bd sync`) at the start of a session.
 - **Jail:** Respect the workspace root. Do NOT access files or execute commands outside `/home/mkobit/workspace/mkobit/storagemaxxing`.
 - **MCP:** Use only the approved MCP servers defined in the project configuration.
