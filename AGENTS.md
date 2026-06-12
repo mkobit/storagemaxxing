@@ -108,7 +108,7 @@ We prioritize **Horizontal Breadth** (many storage systems) over **Vertical Dept
 **Check for ready work:**
 
 ```bash
-bd ready --json
+bd ready
 ```
 
 **Create new issues:**
@@ -116,21 +116,21 @@ bd ready --json
 Always include `--validate` and `--acceptance` for task/feature/bug types:
 
 ```bash
-bd create "Issue title" --description="Detailed context" -t task -p 2 --validate --acceptance "Given ..., when ..., then ..." --json
-bd create "Issue title" --description="What this issue is about" -t bug -p 1 --validate --acceptance "Bug no longer reproduces" --deps discovered-from:bd-123 --json
+bd create "Issue title" --description="Detailed context" -t task -p 2 --validate --acceptance "Given ..., when ..., then ..."
+bd create "Issue title" --description="What this issue is about" -t bug -p 1 --validate --acceptance "Bug no longer reproduces" --deps discovered-from:bd-123
 ```
 
 **Claim and update:**
 
 ```bash
-bd update <id> --claim --json
-bd update bd-42 --priority 1 --json
+bd update <id> --claim
+bd update bd-42 --priority 1
 ```
 
 **Complete work:**
 
 ```bash
-bd close bd-42 --reason "Completed" --json
+bd close bd-42 --reason "Completed"
 ```
 
 ### Issue Types
@@ -181,7 +181,8 @@ bd automatically syncs via Dolt:
 ### Important Rules
 
 - ✅ Use bd for ALL task tracking
-- ✅ Always use `--json` flag for programmatic use
+- ✅ Read plain bd output directly in interactive sessions; never pipe bd output into shell or script interpreters to extract fields
+- ✅ Reserve `--json` for unattended automation (CI, hooks) that parses output programmatically
 - ✅ Link discovered work with `discovered-from` dependencies
 - ✅ Check `bd ready` before asking "what should I work on?"
 - ❌ Do NOT create markdown TODO lists
