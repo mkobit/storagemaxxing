@@ -1,5 +1,5 @@
-import { binId, BinId } from "./bin.js";
-import { StorageSystem } from "./StorageSystem.js";
+import { binId, BinId } from "./bin";
+import { StorageSystem } from "./StorageSystem";
 
 export const GOLDEN_PATH_SYSTEM: StorageSystem = "gridfinity";
 

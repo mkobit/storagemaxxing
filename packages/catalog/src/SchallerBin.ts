@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { createBasePartSchema } from "./BasePart.js";
-import { MillimetersSchema } from "./Units.js";
+import { createBasePartSchema } from "./BasePart";
+import { MillimetersSchema } from "./Units";
 
 export const FreeSpaceBinSchema = createBasePartSchema(
   MillimetersSchema,

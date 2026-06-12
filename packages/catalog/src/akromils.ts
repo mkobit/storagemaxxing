@@ -1,4 +1,4 @@
-import { BinSpec, binId } from "./bin.js";
+import { BinSpec, binId } from "./bin";
 import { inches } from "@storagemaxxing/geometry/Inches";
 
 export const AKROMILS_CATALOG: ReadonlyArray<BinSpec> = [

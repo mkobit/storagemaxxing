@@ -100,6 +100,7 @@ export default tseslint.config(
       "functional/no-let": "error",
       "functional/no-loop-statements": "error",
       "functional/prefer-readonly-type": "error",
+      "import/extensions": ["error", "never", { css: "always" }],
       "import/no-cycle": "error",
       "import/no-default-export": "error",
       "import/no-unresolved": "off",

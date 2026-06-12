@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SpaceInstanceSchema } from "./SpaceInstance.js";
+import { SpaceInstanceSchema } from "./SpaceInstance";
 
 export const UnitIdSchema = z.string().brand<"UnitId">();
 export type UnitId = z.infer<typeof UnitIdSchema>;

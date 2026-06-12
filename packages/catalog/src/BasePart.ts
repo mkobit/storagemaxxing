@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { StorageSystemSchema } from "./StorageSystem.js";
-import { createPartDimensionsSchema } from "./PartDimensions.js";
+import { StorageSystemSchema } from "./StorageSystem";
+import { createPartDimensionsSchema } from "./PartDimensions";
 
 export const PartIdSchema = z.string().brand<"PartId">();
 export type PartId = z.infer<typeof PartIdSchema>;

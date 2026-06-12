@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { StorageSystemSchema } from "./StorageSystem.js";
-import { MillimetersSchema } from "./Units.js";
+import { StorageSystemSchema } from "./StorageSystem";
+import { MillimetersSchema } from "./Units";
 
 export const GridSystemSchema = z.object({
   system: StorageSystemSchema,

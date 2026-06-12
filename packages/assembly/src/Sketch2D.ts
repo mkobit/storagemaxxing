@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { SketchElement, SketchElementSchema } from "./SketchElement.js";
-import { SketchId, SketchIdSchema } from "./SketchId.js";
+import { SketchElement, SketchElementSchema } from "./SketchElement";
+import { SketchId, SketchIdSchema } from "./SketchId";
 
 export const Sketch2DSchema = z
   .object({

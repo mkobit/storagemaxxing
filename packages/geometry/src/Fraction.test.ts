@@ -1,5 +1,5 @@
 import { expect, test, describe } from "bun:test";
-import { parseFraction, formatFraction } from "./Fraction.js";
+import { parseFraction, formatFraction } from "./Fraction";
 
 describe("parseFraction", () => {
   test("integers", () => {

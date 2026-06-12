@@ -1,12 +1,12 @@
 import { describe, expect, test } from "bun:test";
-import { computeBom, computeAggregateBom } from "./bom.js";
+import { computeBom, computeAggregateBom } from "./bom";
 import type { BinSpec } from "@storagemaxxing/catalog/bin";
-import type { PackingResult } from "./PackingResult.js";
+import type { PackingResult } from "./PackingResult";
 import { binId } from "@storagemaxxing/catalog/bin";
-import { BinSpecIdSchema } from "./BaseTypes.js";
+import { BinSpecIdSchema } from "./BaseTypes";
 import type { Dimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
-import type { SpaceInstance } from "./SpaceInstance.js";
-import type { PlacedBin } from "./PlacedBin.js";
+import type { SpaceInstance } from "./SpaceInstance";
+import type { PlacedBin } from "./PlacedBin";
 
 const parseId = (id: string) => BinSpecIdSchema.parse(id);
 

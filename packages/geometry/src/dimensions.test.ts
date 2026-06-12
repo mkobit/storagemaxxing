@@ -1,6 +1,6 @@
 import { expect, test, describe } from "bun:test";
-import { parseDim, formatDim } from "./Inches.js";
-import { inches } from "./testing.js";
+import { parseDim, formatDim } from "./Inches";
+import { inches } from "./testing";
 
 describe("parseDim", () => {
   test("integers", () => {

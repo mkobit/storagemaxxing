@@ -1,4 +1,4 @@
-import { AppState } from "./StoreTypes.js";
+import { AppState } from "./StoreTypes";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate";
 

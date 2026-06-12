@@ -1,5 +1,5 @@
 import { expect, test, describe } from "bun:test";
-import { mm, mmToIn, inToMm, inches } from "./testing.js";
+import { mm, mmToIn, inToMm, inches } from "./testing";
 
 describe("metric conversion", () => {
   describe("mm()", () => {

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { parseFraction, formatFraction } from "./Fraction.js";
+import { parseFraction, formatFraction } from "./Fraction";
 
 export const InchesSchema = z.number().brand("inches");
 export type Inches = z.infer<typeof InchesSchema>;

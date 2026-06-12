@@ -6,7 +6,7 @@ import {
   InstallationConstraintSchema,
   DividerSchema,
   ObstacleSchema,
-} from "./BaseTypes.js";
+} from "./BaseTypes";
 
 export const SpaceTemplateIdSchema = z.string().brand<"SpaceTemplateId">();
 export type SpaceTemplateId = z.infer<typeof SpaceTemplateIdSchema>;

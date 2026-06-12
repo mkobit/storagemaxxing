@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { UnitSchema } from "./Unit.js";
-import { SpaceInstanceSchema } from "./SpaceInstance.js";
+import { UnitSchema } from "./Unit";
+import { SpaceInstanceSchema } from "./SpaceInstance";
 import {
   AggregateConstraintSchema,
   StorageCategorySchema,
   BinSpecIdSchema,
-} from "./BaseTypes.js";
+} from "./BaseTypes";
 
 export const AssemblyIdSchema = z.string().brand<"AssemblyId">();
 export type AssemblyId = z.infer<typeof AssemblyIdSchema>;

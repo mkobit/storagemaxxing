@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AssemblySchema } from "./Assembly.js";
+import { AssemblySchema } from "./Assembly";
 
 export const ProjectIdSchema = z.string().brand<"ProjectId">();
 export type ProjectId = z.infer<typeof ProjectIdSchema>;

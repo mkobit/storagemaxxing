@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { GRIDFINITY_CATALOG } from "./gridfinity.js";
+import { GRIDFINITY_CATALOG } from "./gridfinity";
 
 test("GRIDFINITY_CATALOG generates correct number of bins", () => {
   expect(GRIDFINITY_CATALOG.length).toBe(36);

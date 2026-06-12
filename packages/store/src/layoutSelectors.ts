@@ -3,7 +3,7 @@ import { createBinSpec, BinSpec } from "@storagemaxxing/assembly/BinSpec";
 import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { BinSpec as CatalogBinSpec, binId } from "@storagemaxxing/catalog/bin";
 import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
-import { AppState } from "./StoreTypes.js";
+import { AppState } from "./StoreTypes";
 
 export const toPackerBinSpec = (bin: CatalogBinSpec): BinSpec =>
   createBinSpec({
