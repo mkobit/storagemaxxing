@@ -21,16 +21,13 @@ export type LayoutInputs = Pick<
   "spaces" | "activeSpaceId" | "templatesById"
 >;
 
-export const selectPackedLayout = (
-  state: LayoutInputs,
-): PackingResult | null => {
-  const space =
-    state.activeSpaceId !== null
-      ? state.spaces.find((s) => s.id === state.activeSpaceId)
-      : undefined;
-  if (space === undefined) return null;
+export type SpaceInputs = Pick<AppState, "spaces" | "templatesById">;
 
-  const template = state.templatesById[space.templateId];
+const packSpaceInstance = (
+  space: LayoutInputs["spaces"][number],
+  templatesById: LayoutInputs["templatesById"],
+): PackingResult | null => {
+  const template = templatesById[space.templateId];
   if (template === undefined) return null;
 
   const constraints = Object.values(space.constraints);
@@ -41,3 +38,23 @@ export const selectPackedLayout = (
 
   return packSpace(template, bins, constraints);
 };
+
+export const selectPackedLayout = (
+  state: LayoutInputs,
+): PackingResult | null => {
+  const space =
+    state.activeSpaceId !== null
+      ? state.spaces.find((s) => s.id === state.activeSpaceId)
+      : undefined;
+  if (space === undefined) return null;
+
+  return packSpaceInstance(space, state.templatesById);
+};
+
+export const selectPackingResultsBySpace = (
+  state: SpaceInputs,
+): Readonly<Record<string, PackingResult>> =>
+  state.spaces.reduce<Readonly<Record<string, PackingResult>>>((acc, space) => {
+    const result = packSpaceInstance(space, state.templatesById);
+    return result === null ? acc : { ...acc, [space.id]: result };
+  }, {});
