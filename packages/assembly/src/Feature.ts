@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SketchIdSchema } from "./SketchId.js";
+import { SketchIdSchema } from "./SketchId";
 
 export const FeatureIdSchema = z.string().brand<"FeatureId">();
 export type FeatureId = z.infer<typeof FeatureIdSchema>;

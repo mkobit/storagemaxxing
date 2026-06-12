@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { BinSpecIdSchema, BinSpecId } from "./BaseTypes.js";
+import { BinSpecIdSchema, BinSpecId } from "./BaseTypes";
 
 export const SpaceConstraintOffSchema = z
   .object({

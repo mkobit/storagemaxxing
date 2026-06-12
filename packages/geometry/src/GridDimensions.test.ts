@@ -1,5 +1,5 @@
 import { expect, test, describe } from "bun:test";
-import { createGridDimensions } from "./GridDimensions.js";
+import { createGridDimensions } from "./GridDimensions";
 
 describe("createGridDimensions", () => {
   test("creates dimensions with only cols and rows", () => {

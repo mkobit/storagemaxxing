@@ -1,4 +1,4 @@
-import { SchallerBinSchema, type SchallerBin } from "./SchallerBin.js";
+import { SchallerBinSchema, type SchallerBin } from "./SchallerBin";
 import { createMillimeters } from "@storagemaxxing/geometry/Millimeters";
 
 // Using actual standard Schaller bin dimensions (Width x Depth x Height in mm)

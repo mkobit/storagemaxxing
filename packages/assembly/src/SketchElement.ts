@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Rect2D } from "@storagemaxxing/geometry/Rect2D";
 import { Line2D } from "@storagemaxxing/geometry/Line2D";
-import { SketchElementId, SketchElementIdSchema } from "./SketchElementId.js";
+import { SketchElementId, SketchElementIdSchema } from "./SketchElementId";
 
 // Note: Assuming geometry Zod schemas exist or we do custom validation.
 // For now, we will use z.any() for geometry to avoid overcomplicating unless needed,

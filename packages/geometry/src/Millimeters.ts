@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Inches, inches } from "./Inches.js";
+import { Inches, inches } from "./Inches";
 
 export const MillimetersSchema = z.number().brand("mm");
 export type Millimeters = z.infer<typeof MillimetersSchema>;

@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { SpaceTemplateIdSchema } from "./SpaceTemplate.js";
-import { SpaceConstraintSchema } from "./SpaceConstraint.js";
-import { PlacedBinSchema } from "./PlacedBin.js";
-import { PackingStrategyIdSchema, BinSpecIdSchema } from "./BaseTypes.js";
+import { SpaceTemplateIdSchema } from "./SpaceTemplate";
+import { SpaceConstraintSchema } from "./SpaceConstraint";
+import { PlacedBinSchema } from "./PlacedBin";
+import { PackingStrategyIdSchema, BinSpecIdSchema } from "./BaseTypes";
 
 export const SpaceInstanceIdSchema = z.string().brand<"SpaceInstanceId">();
 export type SpaceInstanceId = z.infer<typeof SpaceInstanceIdSchema>;

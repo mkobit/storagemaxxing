@@ -1,4 +1,4 @@
-import { BinSpec, BinId } from "./bin.js";
+import { BinSpec, BinId } from "./bin";
 import { Inches } from "@storagemaxxing/geometry/Inches";
 import { SCHALLER_CATALOG } from "./schaller";
 import { GRIDFINITY_CATALOG } from "./gridfinity";

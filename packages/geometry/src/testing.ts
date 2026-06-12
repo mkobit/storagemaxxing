@@ -1,11 +1,11 @@
 import { expect } from "bun:test";
-import { mm, type Millimeters } from "./Millimeters.js";
-import { inches, type Inches } from "./Inches.js";
-import { createSize, type Size } from "./Dimensions2D.js";
+import { mm, type Millimeters } from "./Millimeters";
+import { inches, type Inches } from "./Inches";
+import { createSize, type Size } from "./Dimensions2D";
 
-export { mm, mmToIn, inToMm, createMillimeters } from "./Millimeters.js";
-export { inches, parseDim, formatDim, createInches } from "./Inches.js";
-export { createSize, createDimensions2D } from "./Dimensions2D.js";
+export { mm, mmToIn, inToMm, createMillimeters } from "./Millimeters";
+export { inches, parseDim, formatDim, createInches } from "./Inches";
+export { createSize, createDimensions2D } from "./Dimensions2D";
 
 export type { Millimeters, Inches, Size };
 

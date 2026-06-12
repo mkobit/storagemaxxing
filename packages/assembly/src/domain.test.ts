@@ -1,7 +1,7 @@
 import { describe, it, expect } from "bun:test";
-import { SpaceConstraintSchema } from "./SpaceConstraint.js";
-import { SpaceTemplateSchema } from "./SpaceTemplate.js";
-import { BinSpecId } from "./BaseTypes.js";
+import { SpaceConstraintSchema } from "./SpaceConstraint";
+import { SpaceTemplateSchema } from "./SpaceTemplate";
+import { BinSpecId } from "./BaseTypes";
 
 describe("Planning Domain Models Constraint", () => {
   it("should parse a valid auto constraint", () => {

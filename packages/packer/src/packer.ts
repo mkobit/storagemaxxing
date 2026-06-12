@@ -13,7 +13,7 @@ import {
   getEffectiveFootprint,
   getEffectiveSpaceDimensions,
   getMaxBinDepth,
-} from "./geometryUtils.js";
+} from "./geometryUtils";
 import {
   RectsAccumulator,
   generatePhaseRects,
@@ -24,7 +24,7 @@ import {
   checkSoftMinPhase,
   getMax,
   generateAutoFillRects,
-} from "./packerUtils.js";
+} from "./packerUtils";
 
 const executePhases = (
   constraints: readonly SpaceConstraint[],

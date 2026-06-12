@@ -4,7 +4,7 @@ import {
   getPlacedCounts,
   checkPhaseFailures,
   getHardMin,
-} from "./packerUtils.js";
+} from "./packerUtils";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 
 describe("packerUtils", () => {
