@@ -1,6 +1,9 @@
 schema: beads-driven
 
 # Project context
+# This block is injected into `openspec instructions` for every artifact.
+# Stale entries mislead agents: when a tooling or architecture decision changes,
+# update this context in the same PR as the change.
 context: |
   Tech stack: TypeScript (Strict), React 19, Bun, Zustand, Tailwind CSS.
   Architecture: Layer 1 Packing Engine — Synchronous Geometric Placement (MaxRects) in `packages/packer`.
