@@ -1,7 +1,11 @@
 # storage-layout Specification
 
 ## Purpose
-TBD - created by archiving change product-realignment. Update Purpose after archive.
+
+The storage-layout capability is the golden-path product slice: a user selects a storage system and a set of bins, and the web application renders a 2D layout showing those bins packed into a bounded space.
+This spec governs the catalog lookups, the synchronous geometric packer, the store selector that derives layout from sketch state, and the web rendering that closes the loop end-to-end.
+Any requirement here is verified by a named test cited in its body.
+
 ## Requirements
 ### Requirement: Catalog Golden-Path Systems
 
