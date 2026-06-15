@@ -29,6 +29,39 @@ They are additive — keep existing `scope:`, `meta:openspec:*`, and `slice:*` l
 5. **No cross-package import changes.** Delegate-ready beads cannot edit `package.json`, workspace topology, lint configs, or tsconfig project references.
 6. **No new tests, no new specs.** If new test infrastructure or a spec change is needed, the bead is not delegate-ready.
 
+## Sandbox baseline (mandatory for every dispatch)
+
+Runner sandboxes (especially Jules) are snapshot-based.
+The startup hook (e.g. `.jules/env_setup.sh`) installs tools, runs `bd bootstrap`, and may write or modify files outside the bead's scope as a side effect (managed AGENTS.md sections, git hooks, .gitignore, codex/skills metadata).
+Those edits MUST NOT reach the dispatched commit.
+
+Every delegated prompt MUST begin with:
+
+1. `git checkout HEAD -- . && git clean -fd` — restore the working tree to the dispatched commit *before* the runner looks at "what changed". This wipes any env-bootstrap drift.
+2. **Path allowlist for staging.** The runner is only permitted to `git add` paths matching `packages/<scope>/**` (for package-scoped beads) or an explicit allowlist named in the bead description. For `kind:research-readonly` beads the allowlist is empty — no staging permitted.
+3. **Pre-commit / pre-comment diff check.** Before commit (impl beads) or before posting the output comment (research beads), the runner MUST run `git status --porcelain`. Any path outside the allowlist is grounds for abort: the runner posts a `<!-- delegate-blocked -->` comment naming the offending paths and stops, instead of guessing.
+
+Why this lives in the prompt and not in `env_setup.sh`: snapshots can ship a stale `env_setup.sh` or a bd version that disagrees with `mise.toml`, so prompt-level discipline is the only defense the dispatcher actually controls.
+
+## Default dispatch mode
+
+The standard dispatch is **autonomous**.
+Operators do not approve plans by default; the prompt + sandbox baseline + scope filter together are the safety net.
+
+Standard `jules` invocations:
+
+```bash
+# impl beads (kind:impl-mechanical, kind:impl-narrow)
+jules session create --prompt "$PROMPT" --source mkobit/storagemaxxing \
+  --branch main --auto-approve --auto-pr
+
+# research beads (kind:research-readonly) — output is a bead comment, no PR
+jules session create --prompt "$PROMPT" --source mkobit/storagemaxxing \
+  --branch main --auto-approve --no-auto-pr
+```
+
+`--no-auto-approve` is reserved for one-off cases: a brand-new prompt template being validated, or a `mode:hotl` bead that the operator explicitly wants to checkpoint at plan time.
+
 ## Concurrency rule
 
 Two `delegate:*` beads MAY be claimed and executed in parallel iff their `scope:` labels differ.
