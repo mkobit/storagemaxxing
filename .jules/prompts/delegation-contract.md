@@ -34,6 +34,24 @@ They are additive — keep existing `scope:`, `meta:openspec:*`, and `slice:*` l
 Two `delegate:*` beads MAY be claimed and executed in parallel iff their `scope:` labels differ.
 The orchestrator (or a human dispatcher) is responsible for not handing two same-scope beads to different runners simultaneously.
 
+## Queryable measure: concurrency width
+
+The canonical measure for "how many runners can dispatch right now" is the *concurrency width*: the count of distinct `scope:` labels among delegate-ready beads where no bead in that scope is already `in_progress`.
+
+Run [`./.jules/delegate-slate.sh`](../delegate-slate.sh) for a human-readable view or `./.jules/delegate-slate.sh --json` for orchestrator-friendly JSON.
+The script emits the concurrency width, the dispatch slate (one bead per dispatchable scope, highest priority first), and any blocked scopes.
+
+```bash
+./.jules/delegate-slate.sh                 # default label=delegate:any-low
+DELEGATE_LABEL=delegate:jules ./.jules/delegate-slate.sh --json
+```
+
+A dispatcher should:
+
+1. Run the script to obtain the slate.
+2. Hand each bead in the slate to a distinct runner.
+3. Re-run after any claim/close to recompute width before the next dispatch wave.
+
 ## Runner workflow
 
 The runner is expected to:
