@@ -29,6 +29,34 @@ They are additive — keep existing `scope:`, `meta:openspec:*`, and `slice:*` l
 5. **No cross-package import changes.** Delegate-ready beads cannot edit `package.json`, workspace topology, lint configs, or tsconfig project references.
 6. **No new tests, no new specs.** If new test infrastructure or a spec change is needed, the bead is not delegate-ready.
 
+## Scope discipline (mandatory for every dispatch)
+
+The dispatched sandbox is expected to enter with a clean working tree (`.jules/env_setup.sh` plus the committed `sync.remote` in `.beads/config.yaml` make this so). Even with a clean baseline, the runner can introduce spurious changes during work — running formatters, regenerating fixtures, or mis-interpreting the prompt.
+
+Every delegated prompt MUST enforce:
+
+1. **Path allowlist for staging.** The runner is only permitted to `git add` paths matching `packages/<scope>/**` (for package-scoped beads) or an explicit allowlist named in the bead description. For `kind:research-readonly` beads the allowlist is empty — no staging permitted.
+2. **Pre-commit / pre-comment diff check.** Before commit (impl beads) or before posting the output comment (research beads), the runner MUST run `git status --porcelain`. Any path outside the allowlist is grounds for abort: the runner posts a `<!-- delegate-blocked -->` comment naming the offending paths and stops, instead of guessing.
+
+## Default dispatch mode
+
+The standard dispatch is **autonomous**.
+Operators do not approve plans by default; the scope-allowlist + pre-commit diff check are the safety net.
+
+Standard `jules` invocations:
+
+```bash
+# impl beads (kind:impl-mechanical, kind:impl-narrow)
+jules session create --prompt "$PROMPT" --source mkobit/storagemaxxing \
+  --branch main --auto-approve --auto-pr
+
+# research beads (kind:research-readonly) — output is a bead comment, no PR
+jules session create --prompt "$PROMPT" --source mkobit/storagemaxxing \
+  --branch main --auto-approve --no-auto-pr
+```
+
+`--no-auto-approve` is reserved for one-off cases: a brand-new prompt template being validated, or a `mode:hotl` bead that the operator explicitly wants to checkpoint at plan time.
+
 ## Concurrency rule
 
 Two `delegate:*` beads MAY be claimed and executed in parallel iff their `scope:` labels differ.
