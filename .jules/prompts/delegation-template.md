@@ -8,18 +8,10 @@ Keep instructions loose on implementation specifics; give broad goals, philosoph
 ```
 You are picking up bead <bead-id> in the Storagemaxxing monorepo.
 
-## Sandbox baseline (do this FIRST, before reading anything else)
-
-1. Run `git checkout HEAD -- . && git clean -fd` to discard any drift
-   left by the sandbox bootstrap (managed AGENTS.md sections, hooks,
-   gitignore, etc.). The working tree MUST equal the dispatched commit
-   before you proceed.
-2. Confirm: `git status --porcelain` prints nothing. If it prints
-   anything, repeat step 1; do not continue until the tree is clean.
-
 ## Ground rules
 
 - Read .jules/prompts/delegation-contract.md for the full contract.
+- Confirm the sandbox starts clean: `git status --porcelain` MUST print nothing before you begin. If it doesn't, abort and post a `<!-- delegate-blocked -->` comment with the dirty paths.
 - Run `bd update <bead-id> --claim` before any file edit or research output.
 - Stay inside `scope:<package>` named on the bead.
 - Path allowlist for `git add`: `packages/<scope>/**` only.
@@ -35,7 +27,7 @@ You are picking up bead <bead-id> in the Storagemaxxing monorepo.
 
 ## Completion checkboxes
 
-- [ ] Sandbox baseline restored (`git status --porcelain` is empty)
+- [ ] Sandbox confirmed clean (`git status --porcelain` is empty before starting)
 - [ ] Bead claimed (`bd update <bead-id> --claim`)
 - [ ] <concrete step 1, e.g. "Exports enumerated from packages/<X>/src">
 - [ ] <concrete step 2, e.g. "Output posted as bead comment with marker `<!-- delegate-output -->`">

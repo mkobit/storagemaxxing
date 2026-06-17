@@ -29,24 +29,19 @@ They are additive — keep existing `scope:`, `meta:openspec:*`, and `slice:*` l
 5. **No cross-package import changes.** Delegate-ready beads cannot edit `package.json`, workspace topology, lint configs, or tsconfig project references.
 6. **No new tests, no new specs.** If new test infrastructure or a spec change is needed, the bead is not delegate-ready.
 
-## Sandbox baseline (mandatory for every dispatch)
+## Scope discipline (mandatory for every dispatch)
 
-Runner sandboxes (especially Jules) are snapshot-based.
-The startup hook (e.g. `.jules/env_setup.sh`) installs tools, runs `bd bootstrap`, and may write or modify files outside the bead's scope as a side effect (managed AGENTS.md sections, git hooks, .gitignore, codex/skills metadata).
-Those edits MUST NOT reach the dispatched commit.
+The dispatched sandbox is expected to enter with a clean working tree (`.jules/env_setup.sh` plus the committed `sync.remote` in `.beads/config.yaml` make this so). Even with a clean baseline, the runner can introduce spurious changes during work — running formatters, regenerating fixtures, or mis-interpreting the prompt.
 
-Every delegated prompt MUST begin with:
+Every delegated prompt MUST enforce:
 
-1. `git checkout HEAD -- . && git clean -fd` — restore the working tree to the dispatched commit *before* the runner looks at "what changed". This wipes any env-bootstrap drift.
-2. **Path allowlist for staging.** The runner is only permitted to `git add` paths matching `packages/<scope>/**` (for package-scoped beads) or an explicit allowlist named in the bead description. For `kind:research-readonly` beads the allowlist is empty — no staging permitted.
-3. **Pre-commit / pre-comment diff check.** Before commit (impl beads) or before posting the output comment (research beads), the runner MUST run `git status --porcelain`. Any path outside the allowlist is grounds for abort: the runner posts a `<!-- delegate-blocked -->` comment naming the offending paths and stops, instead of guessing.
-
-Why this lives in the prompt and not in `env_setup.sh`: snapshots can ship a stale `env_setup.sh` or a bd version that disagrees with `mise.toml`, so prompt-level discipline is the only defense the dispatcher actually controls.
+1. **Path allowlist for staging.** The runner is only permitted to `git add` paths matching `packages/<scope>/**` (for package-scoped beads) or an explicit allowlist named in the bead description. For `kind:research-readonly` beads the allowlist is empty — no staging permitted.
+2. **Pre-commit / pre-comment diff check.** Before commit (impl beads) or before posting the output comment (research beads), the runner MUST run `git status --porcelain`. Any path outside the allowlist is grounds for abort: the runner posts a `<!-- delegate-blocked -->` comment naming the offending paths and stops, instead of guessing.
 
 ## Default dispatch mode
 
 The standard dispatch is **autonomous**.
-Operators do not approve plans by default; the prompt + sandbox baseline + scope filter together are the safety net.
+Operators do not approve plans by default; the scope-allowlist + pre-commit diff check are the safety net.
 
 Standard `jules` invocations:
 
