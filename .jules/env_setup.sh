@@ -53,3 +53,4 @@ echo "Environment ready"
 echo "Initializing Beads..."
 bd bootstrap --yes
 bd dolt pull
+chmod 700 .beads
