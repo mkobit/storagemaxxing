@@ -76,9 +76,10 @@ DELEGATE_LABEL=delegate:jules ./.jules/delegate-slate.sh --json
 
 A dispatcher should:
 
-1. Run the script to obtain the slate.
-2. Hand each bead in the slate to a distinct runner.
-3. Re-run after any claim/close to recompute width before the next dispatch wave.
+1. **Run `bd dolt push` first.** Jules's `env_setup.sh` runs `bd dolt pull` once at sandbox bring-up. If the bead exists only in your local Dolt DB at dispatch time, Jules will see stale state and refuse to find it. Always push *before* `jules session create`.
+2. Run the slate script to obtain the dispatch slate.
+3. Hand each bead in the slate to a distinct runner.
+4. Re-run after any claim/close to recompute width before the next dispatch wave.
 
 ## Runner workflow
 
@@ -89,6 +90,7 @@ The runner is expected to:
 3. Execute the acceptance command locally and observe it passing.
 4. For `kind:research-readonly`: post the output as a bead comment with marker `<!-- delegate-output -->` and close the bead.
    For implementation kinds: push a branch matching the declared pattern, open a PR, and leave the bead open with a comment linking the PR. A human (or the orchestrator) closes the bead after merge.
+5. **`bd dolt push` MUST be the runner's last command before reporting done.** Every bd write (claim, comment, close) only updates the sandbox-local Dolt DB. Without an explicit push, the deliverable dies with the session — invisible to impl beads (the PR carries them) but fatal for research-readonly. No exceptions.
 
 ## Anti-patterns
 

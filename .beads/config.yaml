@@ -60,3 +60,5 @@ issue-id-length: 8
 export.auto: true
 
 sync.remote: "git+https://github.com/mkobit/storagemaxxing"
+
+export.git-add: false

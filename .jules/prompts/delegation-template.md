@@ -34,6 +34,7 @@ You are picking up bead <bead-id> in the Storagemaxxing monorepo.
 - [ ] Pre-commit/pre-comment diff check passed (allowlist holds)
 - [ ] Acceptance command observed passing locally
 - [ ] Bead closed (`bd close <bead-id> --reason "..."`)  *or* PR opened and linked in comment, per delegation-contract output channel
+- [ ] **`bd dolt push` run as the LAST command** — without this every bd write stays in the sandbox and dies with the session
 
 ## What NOT to do
 
