@@ -1,20 +1,9 @@
 import { packSpace } from "@storagemaxxing/packer/packer";
-import { createBinSpec, BinSpec } from "@storagemaxxing/assembly/BinSpec";
+import { toPackInput } from "@storagemaxxing/packer/PackInput";
 import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { BinSpec as CatalogBinSpec, binId } from "@storagemaxxing/catalog/bin";
 import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
 import { AppState } from "./StoreTypes";
-
-export const toPackerBinSpec = (bin: CatalogBinSpec): BinSpec =>
-  createBinSpec({
-    id: bin.id,
-    w: bin.actual.w,
-    l: bin.actual.l,
-    h: bin.actual.h,
-    toleranceW: bin.tolerance.w,
-    toleranceL: bin.tolerance.l,
-    toleranceH: bin.tolerance.h,
-  });
 
 export type LayoutInputs = Pick<
   AppState,
@@ -34,7 +23,7 @@ const packSpaceInstance = (
   const bins = constraints
     .map((c) => findBinById(ALL_BINS, binId(c.binId)))
     .filter((b): b is CatalogBinSpec => b !== undefined)
-    .map(toPackerBinSpec);
+    .map(toPackInput);
 
   return packSpace(template, bins, constraints);
 };

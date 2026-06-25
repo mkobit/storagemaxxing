@@ -1,5 +1,5 @@
 import { MaxRectsPacker } from "maxrects-packer";
-import { BinSpec } from "@storagemaxxing/assembly/BinSpec";
+import { PackInput } from "./PackInput";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import {
   ConstraintFailure,
@@ -16,7 +16,7 @@ export type PackRect = {
 export type RectsAccumulator = readonly PackRect[];
 
 export const generateRects = (
-  bin: BinSpec,
+  bin: PackInput,
   count: number,
 ): RectsAccumulator => {
   if (count <= 0) return [];
@@ -30,7 +30,7 @@ export const generateRects = (
 
 export const generatePhaseRects = (
   constraints: readonly SpaceConstraint[],
-  binMap: ReadonlyMap<string, BinSpec>,
+  binMap: ReadonlyMap<string, PackInput>,
   getCount: (c: SpaceConstraint) => number,
 ): RectsAccumulator =>
   constraints.reduce((acc: RectsAccumulator, c) => {
@@ -119,7 +119,7 @@ export const checkSoftMinPhase = (
 
 export const generateAutoFillRects = (
   constraints: readonly SpaceConstraint[],
-  binMap: ReadonlyMap<string, BinSpec>,
+  binMap: ReadonlyMap<string, PackInput>,
   spaceArea: number,
 ): RectsAccumulator => {
   const unconstrained = constraints

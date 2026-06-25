@@ -1,7 +1,6 @@
 // Re-export domain types
 export * from "./Assembly";
 export * from "./BaseTypes";
-export * from "./BinSpec";
 export * from "./PlacedBin";
 export * from "./Project";
 export * from "./Sketch2D";

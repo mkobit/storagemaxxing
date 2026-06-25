@@ -1,9 +1,9 @@
-import { BinSpec } from "@storagemaxxing/assembly/BinSpec";
+import { PackInput } from "./PackInput";
 import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { Dimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
 
 export const getEffectiveFootprint = (
-  bin: BinSpec,
+  bin: PackInput,
 ): { readonly w: number; readonly l: number; readonly h: number } => ({
   w: bin.w + (bin.toleranceW ?? 0),
   l: bin.l + (bin.toleranceL ?? 0),
@@ -30,7 +30,7 @@ export const getEffectiveSpaceDimensions = (
       };
 };
 
-export const getMaxBinDepth = (bins: readonly BinSpec[]): number =>
+export const getMaxBinDepth = (bins: readonly PackInput[]): number =>
   bins.reduce((max, bin) => {
     const footprint = getEffectiveFootprint(bin);
     return footprint.l > max ? footprint.l : max;

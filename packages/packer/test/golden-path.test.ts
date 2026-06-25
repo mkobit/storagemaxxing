@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { packSpace } from "../src/packer";
 import { getEffectiveFootprint } from "../src/geometryUtils";
-import { createBinSpec, BinSpec } from "@storagemaxxing/assembly/BinSpec";
+import { createPackInput, type PackInput } from "../src/PackInput";
 import { createSpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
@@ -10,10 +10,10 @@ import { GOLDEN_PATH_STARTER_BIN_IDS } from "@storagemaxxing/catalog/goldenPath"
 
 const EPSILON = 1e-3;
 
-const starterBins: readonly BinSpec[] = GOLDEN_PATH_STARTER_BIN_IDS.map(
+const starterBins: readonly PackInput[] =GOLDEN_PATH_STARTER_BIN_IDS.map(
   (id) => {
     const bin = findBinById(ALL_BINS, id)!;
-    return createBinSpec({
+    return createPackInput({
       id: bin.id,
       w: bin.actual.w,
       l: bin.actual.l,
