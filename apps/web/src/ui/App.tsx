@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import { Toolbar } from "./Toolbar";
-import { SketchCanvas } from "./SketchCanvas";
-import { FeatureTree } from "./FeatureTree";
+import { LayoutCanvas } from "./LayoutCanvas";
 import { useStore } from "@storagemaxxing/store/useStore";
 import { BOMPanel } from "./BOMPanel";
-import { SpatialModelingPanel } from "./SpatialModelingPanel";
 
 export const App: React.FC = () => {
   const hasHydrated = useStore((state) => state._hasHydrated);
-  const [activeTab, setActiveTab] = useState<"canvas" | "bom" | "spatial">("canvas");
+  const [activeTab, setActiveTab] = useState<"layout" | "bom">("layout");
 
   if (!hasHydrated) {
     return <div>Loading...</div>;
@@ -26,10 +24,10 @@ export const App: React.FC = () => {
         }}
       >
         <button
-          style={{ fontWeight: activeTab === "canvas" ? "bold" : "normal" }}
-          onClick={() => setActiveTab("canvas")}
+          style={{ fontWeight: activeTab === "layout" ? "bold" : "normal" }}
+          onClick={() => setActiveTab("layout")}
         >
-          Canvas
+          Layout
         </button>
         <button
           style={{ fontWeight: activeTab === "bom" ? "bold" : "normal" }}
@@ -37,25 +35,16 @@ export const App: React.FC = () => {
         >
           BOM
         </button>
-        <button
-          style={{ fontWeight: activeTab === "spatial" ? "bold" : "normal" }}
-          onClick={() => setActiveTab("spatial")}
-        >
-          Spatial
-        </button>
       </div>
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         <div
           style={{
-            display: activeTab === "canvas" ? "flex" : "none",
+            display: activeTab === "layout" ? "flex" : "none",
             flex: 1,
             overflow: "hidden",
           }}
         >
-          <FeatureTree />
-          <div style={{ flex: 1, overflow: "hidden", position: "relative" }}>
-            <SketchCanvas />
-          </div>
+          <LayoutCanvas />
         </div>
         <div
           style={{
@@ -65,15 +54,6 @@ export const App: React.FC = () => {
           }}
         >
           <BOMPanel />
-        </div>
-        <div
-          style={{
-            display: activeTab === "spatial" ? "block" : "none",
-            flex: 1,
-            overflow: "hidden",
-          }}
-        >
-          <SpatialModelingPanel />
         </div>
       </div>
     </div>
