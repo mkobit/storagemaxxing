@@ -6,10 +6,22 @@ This package manages the global application state using Zustand. It acts as the 
 
 ## Type Ownership
 
-Owns: `AppState`, `AppActions`, `ToolMode`.
+```ts-exports
+AppActions
+AppState
+LayoutInputs
+SpaceInputs
+StoreState
+ToolMode
+initialState
+selectPackedLayout
+selectPackingResultsBySpace
+updateConstraintInState
+useStore
+```
 
 ## Import Rules
 
-- **May import from**: `assembly/`, `catalog/`, `geometry/`, `packer/`.
-- **Must not import from**: `ui/`, `workers/`.
+- **May import from**: `geometry/`, `catalog/`, `assembly/`, `packer/`
+- **Must not import from**: `web/`
 - **Other rules**: Do not expose `set` or mutate functions directly to the UI. Define explicit actions (commands) for all state changes. Keep selectors fast.
