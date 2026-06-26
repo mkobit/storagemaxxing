@@ -2,8 +2,8 @@ import { describe, expect, test } from "bun:test";
 import {
   selectPackedLayout,
   selectPackingResultsBySpace,
-  toPackerBinSpec,
 } from "../src/layoutSelectors";
+import { toPackInput } from "@storagemaxxing/packer/PackInput";
 import { computeAggregateBom } from "@storagemaxxing/assembly/bom";
 import { AppState, initialState } from "../src/StoreTypes";
 import { packSpace } from "@storagemaxxing/packer/packer";
@@ -48,7 +48,7 @@ describe("storage-layout: Store Layout Derivation", () => {
     const sketchConstraints = Object.values(space.constraints);
     const bins = sketchConstraints
       .map((c) => findBinById(ALL_BINS, binId(c.binId))!)
-      .map(toPackerBinSpec);
+      .map(toPackInput);
     const direct = packSpace(template, bins, sketchConstraints);
 
     expect(derived).toEqual(direct);

@@ -1,5 +1,5 @@
 import { MaxRectsPacker } from "maxrects-packer";
-import { BinSpec } from "@storagemaxxing/assembly/BinSpec";
+import { PackInput } from "./PackInput";
 import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { createPlacedBin } from "@storagemaxxing/assembly/PlacedBin";
@@ -28,7 +28,7 @@ import {
 
 const executePhases = (
   constraints: readonly SpaceConstraint[],
-  binMap: ReadonlyMap<string, BinSpec>,
+  binMap: ReadonlyMap<string, PackInput>,
   packer: MaxRectsPacker,
   spaceArea: number,
 ) => {
@@ -75,7 +75,7 @@ const executePhases = (
 
 export const packSpace = (
   space: SpaceTemplate,
-  availableBins: readonly BinSpec[],
+  availableBins: readonly PackInput[],
   constraints: readonly SpaceConstraint[],
 ): PackingResult => {
   const dims = getEffectiveSpaceDimensions(

@@ -1,9 +1,6 @@
 import { describe, it, expect } from "bun:test";
 import { packSpace } from "./packer";
-import {
-  createBinSpec,
-  createBinSpecBasic,
-} from "@storagemaxxing/assembly/BinSpec";
+import { createPackInput, createPackInputBasic } from "./PackInput";
 import { createSpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
@@ -15,7 +12,7 @@ describe("Packer Engine", () => {
       createDimensions3D(24, 24, 6),
       "top",
     );
-    const bin1 = createBinSpecBasic("bin1", 6, 6, 4);
+    const bin1 = createPackInputBasic("bin1", 6, 6, 4);
     const constraint = createSpaceConstraint("bin1", 0, 0);
 
     const result = packSpace(space, [bin1], [constraint]);
@@ -32,7 +29,7 @@ describe("Packer Engine", () => {
       createDimensions3D(10, 10, 6),
       "top",
     );
-    const bin1 = createBinSpecBasic("bin1", 6, 6, 4);
+    const bin1 = createPackInputBasic("bin1", 6, 6, 4);
     const constraint = createSpaceConstraint("bin1", 4, 4);
 
     const result = packSpace(space, [bin1], [constraint]);
@@ -49,7 +46,7 @@ describe("Packer Engine", () => {
       createDimensions3D(10, 10, 6),
       "top",
     );
-    const bin1 = createBinSpecBasic("bin1", 6, 6, 4);
+    const bin1 = createPackInputBasic("bin1", 6, 6, 4);
     const constraint = createSpaceConstraint("bin1", 1, 4);
 
     const result = packSpace(space, [bin1], [constraint]);
@@ -66,7 +63,7 @@ describe("Packer Engine", () => {
       createDimensions3D(24, 24, 6),
       "front",
     );
-    const bin1 = createBinSpecBasic("bin1", 6, 6, 4);
+    const bin1 = createPackInputBasic("bin1", 6, 6, 4);
     const constraint = createSpaceConstraint("bin1", 0, 0);
 
     const result = packSpace(space, [bin1], [constraint]);
@@ -82,7 +79,7 @@ describe("Packer Engine", () => {
       createDimensions3D(24, 24, 6),
       "top",
     );
-    const bin1 = createBinSpec({
+    const bin1 = createPackInput({
       id: "bin1",
       w: 6,
       l: 6,
