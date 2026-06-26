@@ -23,27 +23,6 @@ export const useStore = create<StoreState>()(
       ...initialState,
       setHasHydrated: (state) => set({ _hasHydrated: state }),
       setMode: (mode) => set({ mode }),
-      setActiveSketchId: (activeSketchId) => set({ activeSketchId }),
-      setActiveFeatureId: (activeFeatureId) => set({ activeFeatureId }),
-      addSketch: (sketch) =>
-        set((state) => ({ sketches: [...state.sketches, sketch] })),
-      addFeature: (feature) =>
-        set((state) => ({
-          timeline: [...state.timeline, feature],
-          activeFeatureId: feature.id,
-        })),
-      addElementToActiveSketch: (element) =>
-        set((state) => {
-          if (!state.activeSketchId) return state;
-          return {
-            sketches: state.sketches.map((s) =>
-              s.id === state.activeSketchId
-                ? { ...s, elements: [...s.elements, element] }
-                : s,
-            ),
-          };
-        }),
-      setPan: (pan) => set({ pan }),
       addSpace: (space) =>
         set((state) => {
           const globalConstraints =
@@ -84,13 +63,6 @@ export const useStore = create<StoreState>()(
             ),
           };
         }),
-      setSolverFeasibility: (solverFeasibility) => set({ solverFeasibility }),
-      setSolverConflicts: (solverConflicts) => set({ solverConflicts }),
-      setSolverSuggestedCounts: (solverSuggestedCounts) =>
-        set({ solverSuggestedCounts }),
-      setSpatialInputs: (spatialInputs) => set({ spatialInputs }),
-      setPrinterBedSize: (printerBedSize) => set({ printerBedSize }),
-      setCalculationMode: (calculationMode) => set({ calculationMode }),
     }),
     {
       name: "storagemaxxing-db",
@@ -98,18 +70,10 @@ export const useStore = create<StoreState>()(
       partialize: (state) => ({
         _hasHydrated: state._hasHydrated,
         mode: state.mode,
-        sketches: state.sketches,
-        timeline: state.timeline,
-        activeSketchId: state.activeSketchId,
-        activeFeatureId: state.activeFeatureId,
-        pan: state.pan,
         spaces: state.spaces,
         activeSpaceId: state.activeSpaceId,
         templatesById: state.templatesById,
         constraintsBySpace: state.constraintsBySpace,
-        spatialInputs: state.spatialInputs,
-        printerBedSize: state.printerBedSize,
-        calculationMode: state.calculationMode,
       }),
       onRehydrateStorage: () => (state) => {
         // eslint-disable-next-line functional/no-expression-statements
