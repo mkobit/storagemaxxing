@@ -7,8 +7,6 @@ This package contains Euclidean spatial primitives and pure mathematics. It hand
 ## Type Ownership
 
 ```ts-exports
-AccessFace
-AccessFaces
 Box3D
 Dimensions2D
 Dimensions2DSchema
@@ -33,7 +31,6 @@ Rect
 Rect2D
 Rect2DSchema
 Size
-SpaceType
 Unit
 calculateOpenGrid
 createBox3D
@@ -48,7 +45,6 @@ createPoint3D
 createRect
 createRect2D
 createSize
-defaultAccessFace
 formatDim
 formatFraction
 inSize

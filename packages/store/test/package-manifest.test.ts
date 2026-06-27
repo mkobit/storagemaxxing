@@ -90,24 +90,9 @@ describe("D7 — Cross-Layer Name Collision Guard", () => {
       { seen: new Map<string, string>(), collisions: [] },
     );
 
-    // Known violations: assembly redefines these geometry types locally.
-    // Fix: remove the local definitions from assembly and import from geometry.
-    const KNOWN_VIOLATIONS = new Set(["AccessFace", "SpaceType"]);
-
-    const unexpectedCollisions = collisions.filter(
-      (c) => !KNOWN_VIOLATIONS.has(c.name),
-    );
-    const resolvedKnownViolations = [...KNOWN_VIOLATIONS].filter(
-      (v) => !collisions.some((c) => c.name === v),
-    );
-
     expect(
-      unexpectedCollisions,
-      "new cross-layer name collisions introduced",
-    ).toEqual([]);
-    expect(
-      resolvedKnownViolations,
-      "remove resolved items from KNOWN_VIOLATIONS",
+      collisions,
+      "cross-layer name collisions: each colliding type should be defined in exactly one package",
     ).toEqual([]);
   });
 });
