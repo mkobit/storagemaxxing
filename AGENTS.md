@@ -27,6 +27,7 @@ All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (E
 3. **CLAIM:** Always claim a Bead with `bd update <id> --claim` before starting execution.
    Never modify a file unless you own the claim on the corresponding Bead.
 4. **EXECUTE & FLOWBACK:** Implement changes. If the design needs to change, update OpenSpec **BEFORE** proceeding with implementation or closing Beads.
+   - **Never edit canonical `openspec/specs/**/spec.md` files directly during implementation.** Canonical specs are derived from the change's delta by `bunx openspec archive`. CI enforces this: a PR that modifies both `openspec/specs/` and an active `openspec/changes/<name>/specs/` will fail.
 5. **VALIDATE & CLOSE:**
    - Run `bunx openspec validate` to ensure spec integrity.
    - Mark `tasks.md` checkboxes and run `bd close <id>`.

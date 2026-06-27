@@ -33,3 +33,29 @@ jobs:
 
       - name: Validate OpenSpec
         run: bunx openspec validate --all --no-interactive
+
+      - name: Guard canonical spec edits
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.base_ref }}" --depth=1
+          base="origin/${{ github.base_ref }}"
+          canonical_changed=$(git diff --name-only "$base"...HEAD | grep -E '^openspec/specs/.*spec\.md$' || true)
+          if [ -z "$canonical_changed" ]; then
+            echo "No canonical openspec/specs edits — nothing to guard."
+            exit 0
+          fi
+          new_archive_dirs=$(git diff --name-only --diff-filter=A "$base"...HEAD | grep -E '^openspec/changes/archive/[^/]+/' | sed -E 's|^(openspec/changes/archive/[^/]+)/.*$|\1|' | sort -u || true)
+          active_changes_with_deltas=$(find openspec/changes -mindepth 2 -maxdepth 2 -type d -name specs -not -path 'openspec/changes/archive/*' 2>/dev/null | sed -E 's|/specs$||' | sort -u || true)
+          if [ -z "$new_archive_dirs" ] && [ -n "$active_changes_with_deltas" ]; then
+            echo "::error::PR modifies canonical openspec/specs/ while active change deltas exist and no new archive directory was created."
+            echo "::error::Canonical specs may only change via 'bunx openspec archive <change-name>'. Do not edit them directly during implementation."
+            echo ""
+            echo "Canonical files modified:"
+            echo "$canonical_changed"
+            echo ""
+            echo "Active change deltas (must be archived first):"
+            echo "$active_changes_with_deltas"
+            exit 1
+          fi
+          echo "Canonical spec edits permitted (archive operation detected or no active deltas)."
