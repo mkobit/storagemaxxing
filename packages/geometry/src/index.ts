@@ -1,4 +1,3 @@
-export * from "./AccessFace";
 export * from "./Box3D";
 export * from "./Dimensions2D";
 export * from "./Dimensions3D";
