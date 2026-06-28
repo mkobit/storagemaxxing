@@ -3,6 +3,7 @@ import { useStore } from "@storagemaxxing/store/useStore";
 import { selectPackingResultsBySpace } from "@storagemaxxing/store/layoutSelectors";
 import { BOMTable } from "./bom/BOMTable";
 import { computeAggregateBom } from "@storagemaxxing/assembly/bom";
+import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
 import { binId } from "@storagemaxxing/catalog/bin";
 
@@ -13,10 +14,19 @@ export const BOMPanel: React.FC = () => {
   const templatesById = useStore((state) => state.templatesById);
 
   const aggregateBom = useMemo(() => {
-    const packingResultsBySpace = selectPackingResultsBySpace({
+    const resolutionsBySpace = selectPackingResultsBySpace({
       spaces,
       templatesById,
     });
+    const packingResultsBySpace = Object.entries(resolutionsBySpace).reduce<
+      Readonly<Record<string, PackingResult>>
+    >(
+      (acc, [spaceId, resolution]) =>
+        resolution.kind === "resolved"
+          ? { ...acc, [spaceId]: resolution.result }
+          : acc,
+      {},
+    );
     return computeAggregateBom(spaces, packingResultsBySpace, lookupBin);
   }, [spaces, templatesById]);
 

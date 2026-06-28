@@ -43,7 +43,8 @@ const state: AppState = {
 describe("storage-layout: Store Layout Derivation", () => {
   test("derives packed layout from the active sketch", () => {
     const derived = selectPackedLayout(state);
-    expect(derived).not.toBeNull();
+    expect(derived.kind).toBe("resolved");
+    if (derived.kind !== "resolved") return;
 
     const sketchConstraints = Object.values(space.constraints);
     const bins = sketchConstraints
@@ -51,20 +52,74 @@ describe("storage-layout: Store Layout Derivation", () => {
       .map(toPackInput);
     const direct = packSpace(template, bins, sketchConstraints);
 
-    expect(derived).toEqual(direct);
+    expect(derived.result).toEqual(direct);
+    expect(derived.unresolvedBinIds).toEqual([]);
     expect(direct.validity).toBe("valid");
     expect(direct.placedBins.length).toBe(GOLDEN_PATH_STARTER_BIN_IDS.length);
   });
 
-  test("returns null when no space is active", () => {
-    expect(selectPackedLayout(initialState)).toBeNull();
+  test("returns kind none when no space is active", () => {
+    expect(selectPackedLayout(initialState).kind).toBe("none");
+  });
+
+  test("unresolved bin IDs are surfaced in LayoutResolution.unresolvedBinIds", () => {
+    const unknownBinId = "definitely-not-a-real-bin-id";
+    const spaceWithUnknownBin = SpaceInstanceSchema.parse({
+      id: "space-with-unknown-bin",
+      templateId: template.id,
+      name: "Mixed space",
+      count: 1,
+      constraints: {
+        ...Object.fromEntries(constraints.map((c) => [c.binId, c])),
+        [unknownBinId]: createSpaceConstraint(unknownBinId, 1, 0, 1),
+      },
+    });
+
+    const derived = selectPackedLayout({
+      ...state,
+      spaces: [spaceWithUnknownBin],
+      activeSpaceId: spaceWithUnknownBin.id,
+    });
+
+    expect(derived.kind).toBe("resolved");
+    if (derived.kind !== "resolved") return;
+    expect(derived.unresolvedBinIds).toEqual([unknownBinId]);
+    expect(derived.result.placedBins.length).toBe(
+      GOLDEN_PATH_STARTER_BIN_IDS.length,
+    );
+  });
+
+  test("missing template id produces LayoutResolution kind missing-template", () => {
+    const spaceWithMissingTemplate = SpaceInstanceSchema.parse({
+      id: "space-missing-template",
+      templateId: "template-that-does-not-exist",
+      name: "Broken space",
+      count: 1,
+      constraints: Object.fromEntries(constraints.map((c) => [c.binId, c])),
+    });
+
+    const derived = selectPackedLayout({
+      spaces: [spaceWithMissingTemplate],
+      activeSpaceId: spaceWithMissingTemplate.id,
+      templatesById: {},
+    });
+
+    expect(derived.kind).toBe("missing-template");
+    if (derived.kind !== "missing-template") return;
+    expect(derived.templateId).toBe("template-that-does-not-exist");
   });
 
   test("derives the aggregate BOM from selector output", () => {
-    const resultsBySpace = selectPackingResultsBySpace(state);
-    expect(Object.keys(resultsBySpace)).toEqual([space.id]);
+    const resolutionsBySpace = selectPackingResultsBySpace(state);
+    expect(Object.keys(resolutionsBySpace)).toEqual([space.id]);
 
-    const bom = computeAggregateBom(state.spaces, resultsBySpace, (id) =>
+    const resultsForBom = Object.fromEntries(
+      Object.entries(resolutionsBySpace).flatMap(([id, r]) =>
+        r.kind === "resolved" ? [[id, r.result]] : [],
+      ),
+    );
+
+    const bom = computeAggregateBom(state.spaces, resultsForBom, (id) =>
       findBinById(ALL_BINS, binId(id)),
     );
 
@@ -74,5 +129,27 @@ describe("storage-layout: Store Layout Derivation", () => {
 
   test("returns an empty record when no spaces exist", () => {
     expect(selectPackingResultsBySpace(initialState)).toEqual({});
+  });
+
+  test("multi-space selector preserves per-space resolution", () => {
+    const resolvedSpace = space;
+    const brokenSpace = SpaceInstanceSchema.parse({
+      id: "space-2-broken",
+      templateId: "template-that-does-not-exist",
+      name: "Broken space",
+      count: 1,
+      constraints: {},
+    });
+
+    const resolutions = selectPackingResultsBySpace({
+      spaces: [resolvedSpace, brokenSpace],
+      templatesById: state.templatesById,
+    });
+
+    expect(Object.keys(resolutions).sort()).toEqual(
+      [resolvedSpace.id, brokenSpace.id].sort(),
+    );
+    expect(resolutions[resolvedSpace.id].kind).toBe("resolved");
+    expect(resolutions[brokenSpace.id].kind).toBe("missing-template");
   });
 });

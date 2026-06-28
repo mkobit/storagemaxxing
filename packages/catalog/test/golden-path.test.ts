@@ -5,6 +5,7 @@ import {
   GOLDEN_PATH_STARTER_BIN_IDS,
 } from "../src/goldenPath";
 import { StorageSystemSchema } from "../src/StorageSystem";
+import { binId } from "../src/bin";
 
 describe("storage-layout: Catalog Golden-Path Systems", () => {
   test("resolves a storage system and its starter bins by id", () => {
@@ -23,5 +24,11 @@ describe("storage-layout: Catalog Golden-Path Systems", () => {
       expect(bin?.actual.w).toBeGreaterThan(0);
       expect(bin?.actual.l).toBeGreaterThan(0);
     });
+  });
+
+  test("findBinById returns undefined for an unknown id", () => {
+    const unknown = binId("definitely-not-a-real-bin-id");
+    expect(() => findBinById(ALL_BINS, unknown)).not.toThrow();
+    expect(findBinById(ALL_BINS, unknown)).toBeUndefined();
   });
 });

@@ -10,10 +10,14 @@ This package manages the global application state using Zustand. It acts as the 
 AppActions
 AppState
 LayoutInputs
+LayoutResolution
 SpaceInputs
 StoreState
 ToolMode
 initialState
+layoutResolutionMissingTemplate
+layoutResolutionNone
+layoutResolutionResolved
 selectPackedLayout
 selectPackingResultsBySpace
 updateConstraintInState

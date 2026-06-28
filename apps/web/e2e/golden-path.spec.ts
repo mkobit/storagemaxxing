@@ -12,6 +12,7 @@ test("user selects a system and bins and sees a packed layout", async ({
   await page.getByTestId("system-select").selectOption("gridfinity");
   await page.getByTestId("add-starter-bins").click();
   await expect(page.locator("canvas")).toBeVisible();
+  await expect(page.getByTestId("layout-validity-badge")).toHaveText("valid");
 
   await expect
     .poll(
@@ -50,4 +51,15 @@ test("user selects a system and bins and sees a packed layout", async ({
       { timeout: 10_000 },
     )
     .toEqual([...STARTER_COLORS].sort());
+});
+
+test("non-valid pack surfaces a non-valid validity badge", async ({ page }) => {
+  await page.goto("/");
+  await page.getByTestId("system-select").selectOption("gridfinity");
+  await page.getByTestId("add-tiny-starter-bins").click();
+  await expect(page.locator("canvas")).toBeVisible();
+
+  const badge = page.getByTestId("layout-validity-badge");
+  await expect(badge).toBeVisible();
+  await expect(badge).not.toHaveText("valid");
 });

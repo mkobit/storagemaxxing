@@ -25,10 +25,15 @@ export const GoldenPathSetup: React.FC = () => {
   const addSpace = useStore((state) => state.addSpace);
   const setActiveSpace = useStore((state) => state.setActiveSpace);
 
-  const loadStarterLayout = () => {
+  const loadLayout = (
+    templateId: string,
+    spaceSize: number,
+    spaceId: string,
+    spaceName: string,
+  ) => {
     const template = createSpaceTemplate(
-      "golden-path-space",
-      createDimensions3D(12, 12, 2),
+      templateId,
+      createDimensions3D(spaceSize, spaceSize, 2),
       "top",
     );
     const constraints = GOLDEN_PATH_STARTER_BIN_IDS.map((id, i) => ({
@@ -36,9 +41,9 @@ export const GoldenPathSetup: React.FC = () => {
       color: STARTER_COLORS[i % STARTER_COLORS.length],
     }));
     const space = SpaceInstanceSchema.parse({
-      id: "golden-path-instance",
+      id: spaceId,
       templateId: template.id,
-      name: "Starter drawer",
+      name: spaceName,
       count: 1,
       constraints: Object.fromEntries(constraints.map((c) => [c.binId, c])),
     });
@@ -46,6 +51,22 @@ export const GoldenPathSetup: React.FC = () => {
     addSpace(space);
     setActiveSpace(space.id);
   };
+
+  const loadStarterLayout = () =>
+    loadLayout(
+      "golden-path-space",
+      12,
+      "golden-path-instance",
+      "Starter drawer",
+    );
+
+  const loadTinyStarterLayout = () =>
+    loadLayout(
+      "golden-path-tiny-space",
+      2,
+      "golden-path-tiny-instance",
+      "Tiny drawer",
+    );
 
   return (
     <div className="flex items-center gap-2">
@@ -69,6 +90,13 @@ export const GoldenPathSetup: React.FC = () => {
         data-testid="add-starter-bins"
       >
         Add starter bins
+      </button>
+      <button
+        className="px-3 py-1 rounded bg-white border border-gray-300 hover:bg-gray-50"
+        onClick={loadTinyStarterLayout}
+        data-testid="add-tiny-starter-bins"
+      >
+        Add starter bins (tiny space)
       </button>
     </div>
   );

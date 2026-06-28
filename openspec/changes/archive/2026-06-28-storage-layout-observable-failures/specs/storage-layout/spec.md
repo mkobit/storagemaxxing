@@ -1,11 +1,5 @@
-# storage-layout Specification
+## MODIFIED Requirements
 
-## Purpose
-
-The storage-layout capability is the golden-path product slice: a user selects a storage system and a set of bins, and the web application renders a 2D layout showing those bins packed into a bounded space.
-This spec governs the catalog lookups, the synchronous geometric packer, the store selector that derives layout from sketch state, and the web rendering that closes the loop end-to-end.
-Any requirement here is verified by a named test cited in its body.
-## Requirements
 ### Requirement: Catalog Golden-Path Systems
 
 The catalog SHALL resolve a complete golden-path selection: at least one storage system with a set of compatible bin specifications retrievable by ID.
@@ -109,4 +103,3 @@ Verified by: `apps/web/e2e/golden-path.spec.ts` > "user selects a system and bin
 
 - **WHEN** the selector returns `kind: "resolved"` with `unresolvedBinIds.length > 0`
 - **THEN** an indicator with `data-testid="layout-unresolved-count"` is visible and reports the count.
-
