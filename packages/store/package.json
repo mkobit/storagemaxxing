@@ -11,8 +11,8 @@
     "@storagemaxxing/catalog": "workspace:*",
     "@storagemaxxing/geometry": "workspace:*",
     "@storagemaxxing/packer": "workspace:*",
-    "idb-keyval": "^6.2.2",
+    "idb-keyval": "^6.2.5",
     "zod": "^4.4.3",
-    "zustand": "^5.0.12"
+    "zustand": "^5.0.14"
   }
 }
