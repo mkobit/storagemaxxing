@@ -82,17 +82,17 @@ Verified by: `packages/store/test/golden-path.test.ts` > "derives packed layout 
 The web application SHALL render the packed placements from the store layout selector so that a user selecting a system and bins sees the resulting 2D layout.
 The web application SHALL visibly distinguish the three `LayoutResolution` kinds (`none`, `missing-template`, `resolved`) and, within `resolved`, SHALL visibly distinguish the three `PackingResult.validity` states (`valid`, `partial`, `invalid`) so that a user cannot mistake a partial or invalid layout for a complete one.
 
-Verified by: `apps/web/e2e/golden-path.spec.ts` > "user selects a system and bins and sees a packed layout" AND `apps/web/e2e/golden-path.spec.ts` > "partial-pack scenario surfaces the partial validity badge".
+Verified by: `apps/web/e2e/golden-path.spec.ts` > "user selects a system and bins and sees a packed layout" AND `apps/web/e2e/golden-path.spec.ts` > "non-valid pack surfaces a non-valid validity badge".
 
 #### Scenario: Golden path end to end
 
 - **WHEN** a user selects the golden-path storage system and adds the starter bins
 - **THEN** the canvas displays one rendered placement per bin positioned according to the `PackingResult` and a validity indicator with `data-testid="layout-validity-badge"` reads `valid`.
 
-#### Scenario: Partial pack is visibly partial
+#### Scenario: Non-valid pack is visibly distinguished
 
-- **WHEN** the active space cannot fit every constrained bin and the packer returns `validity: "partial"`
-- **THEN** the canvas renders the placements that fit AND an indicator with `data-testid="layout-validity-badge"` reads `partial`.
+- **WHEN** the active space cannot fit every constrained bin and the packer returns a non-valid `validity` (`partial` or `invalid`)
+- **THEN** the canvas renders the placements that fit AND an indicator with `data-testid="layout-validity-badge"` reads the exact `validity` value, not `valid`.
 
 #### Scenario: Missing template renders an error state
 

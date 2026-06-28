@@ -83,6 +83,20 @@ describe("storage-layout: Golden-Path Packing", () => {
     });
   });
 
+  test("empty constraints array returns a valid empty result", () => {
+    const space = createSpaceTemplate(
+      "golden-path-space",
+      createDimensions3D(12, 12, 2),
+      "top",
+    );
+
+    const result = packSpace(space, [], []);
+
+    expect(result.validity).toBe("valid");
+    expect(result.placedBins.length).toBe(0);
+    expect(result.metrics.failures.length).toBe(0);
+  });
+
   test("overflow is reported, not silently dropped", () => {
     const space = createSpaceTemplate(
       "golden-path-tiny-space",

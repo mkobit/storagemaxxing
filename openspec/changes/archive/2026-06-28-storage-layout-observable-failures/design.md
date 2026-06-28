@@ -69,19 +69,21 @@ The selector returns a discriminated union over `kind`:
 - `"missing-template"`: the active space points to a `templateId` not in `state.templatesById`. Carries the offending `templateId` for diagnostics. Equivalent to today's silent `null`.
 - `"resolved"`: the space and template resolved. Carries the `PackingResult` (which can itself be `valid`, `partial`, or `invalid`) and `unresolvedBinIds: readonly string[]` — every constraint whose `binId` did not resolve in the catalog.
 
-Zod schemas live with their types in `packages/store/src/layoutSelectors.ts`:
+`LayoutResolution` is TypeScript-only with factory constructors; it is a derived selector output that does not cross a runtime trust boundary (no I/O, no persistence, no user input). This matches the existing `PackingResult` in `packages/assembly/src/PackingResult.ts`, which is also TS-only with factory functions (`createPackingResult`, `createPackingMetrics`) instead of Zod. The discriminant `kind` is a literal string union so TypeScript's exhaustiveness checks catch missed branches at every callsite.
 
 ```ts
-export const LayoutResolutionSchema = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("none") }).readonly(),
-  z.object({ kind: z.literal("missing-template"), templateId: z.string() }).readonly(),
-  z.object({
-    kind: z.literal("resolved"),
-    result: PackingResultSchema,
-    unresolvedBinIds: z.array(z.string()).readonly(),
-  }).readonly(),
-]);
-export type LayoutResolution = z.infer<typeof LayoutResolutionSchema>;
+export type LayoutResolution =
+  | { readonly kind: "none" }
+  | { readonly kind: "missing-template"; readonly templateId: string }
+  | {
+      readonly kind: "resolved";
+      readonly result: PackingResult;
+      readonly unresolvedBinIds: readonly string[];
+    };
+
+export const layoutResolutionNone = (): LayoutResolution => ({ kind: "none" });
+export const layoutResolutionMissingTemplate = (templateId: string): LayoutResolution => ({ kind: "missing-template", templateId });
+export const layoutResolutionResolved = (result: PackingResult, unresolvedBinIds: readonly string[]): LayoutResolution => ({ kind: "resolved", result, unresolvedBinIds });
 ```
 
 The existing `selectPackingResultsBySpace` (multi-space variant) returns `Readonly<Record<string, LayoutResolution>>` with one entry per space (rather than skipping spaces that don't resolve, as today).
@@ -116,11 +118,13 @@ Spec adds a Scenario under `Golden-Path Packing`:
 
 Verified by adding a single assertion to `packages/packer/test/golden-path.test.ts`.
 
-### D5 — E2E gates partial-pack case
+### D5 — E2E gates non-valid pack case
 
-`apps/web/e2e/golden-path.spec.ts` gains a new test: load a space template too small to fit all starter bins, assert the validity badge reads `partial` (via the `data-testid` from D2), and assert the canvas still renders the bins that fit.
+`apps/web/e2e/golden-path.spec.ts` gains a new test: load a space template too small to fit all starter bins (a 2-inch square), assert the validity badge reads a non-`valid` value (`invalid` is what the starter set yields, because all constraints are hard-min with no soft-min split — a true `partial` would require a soft-constraint setup which is out of scope here).
 
-Trade-off: the new test needs a deterministic small-space fixture. Add it as a new `goldenPathPartialSetup` fixture alongside the existing golden-path setup so the existing test stays untouched.
+Trade-off: the test only covers `invalid` deterministically. A future change that introduces a soft-constraint preset can add a `partial` test against the same `data-testid` without further refactor.
+
+Implementation: add a new `data-testid="add-tiny-starter-bins"` button to `GoldenPathSetup.tsx` that loads the same starter bins into a 2x2x2 template. The button doubles as a manual demo for "what does an over-constrained space look like".
 
 ## Risks / Trade-offs
 
