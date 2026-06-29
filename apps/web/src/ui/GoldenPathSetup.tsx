@@ -68,6 +68,60 @@ export const GoldenPathSetup: React.FC = () => {
       "Tiny drawer",
     );
 
+  const loadPartialStarterLayout = () => {
+    const template = createSpaceTemplate(
+      "golden-path-partial-space",
+      createDimensions3D(2, 2, 2),
+      "top",
+    );
+    const constraints = GOLDEN_PATH_STARTER_BIN_IDS.map((id, i) => {
+      if (i === 0) {
+        return {
+          ...createSpaceConstraint(id, 1, 6),
+          color: STARTER_COLORS[i % STARTER_COLORS.length],
+        };
+      }
+      return {
+        ...createSpaceConstraint(id, 0, 0),
+        color: STARTER_COLORS[i % STARTER_COLORS.length],
+      };
+    });
+    const space = SpaceInstanceSchema.parse({
+      id: "golden-path-partial-instance",
+      templateId: template.id,
+      name: "Partial drawer",
+      count: 1,
+      constraints: Object.fromEntries(constraints.map((c) => [c.binId, c])),
+    });
+    addTemplate(template);
+    addSpace(space);
+    setActiveSpace(space.id);
+  };
+
+  const loadUnresolvedStarterLayout = () => {
+    const template = createSpaceTemplate(
+      "golden-path-unresolved-space",
+      createDimensions3D(6, 6, 2),
+      "top",
+    );
+    const constraints = [
+      {
+        ...createSpaceConstraint("gridfinity-unknown-bin-id", 1, 0, 1),
+        color: STARTER_COLORS[0],
+      },
+    ];
+    const space = SpaceInstanceSchema.parse({
+      id: "golden-path-unresolved-instance",
+      templateId: template.id,
+      name: "Unresolved drawer",
+      count: 1,
+      constraints: Object.fromEntries(constraints.map((c) => [c.binId, c])),
+    });
+    addTemplate(template);
+    addSpace(space);
+    setActiveSpace(space.id);
+  };
+
   return (
     <div className="flex items-center gap-2">
       <label htmlFor="system-select" className="text-sm">
@@ -97,6 +151,20 @@ export const GoldenPathSetup: React.FC = () => {
         data-testid="add-tiny-starter-bins"
       >
         Add starter bins (tiny space)
+      </button>
+      <button
+        className="px-3 py-1 rounded bg-white border border-gray-300 hover:bg-gray-50"
+        onClick={loadPartialStarterLayout}
+        data-testid="add-partial-starter-bins"
+      >
+        Add starter bins (partial space)
+      </button>
+      <button
+        className="px-3 py-1 rounded bg-white border border-gray-300 hover:bg-gray-50"
+        onClick={loadUnresolvedStarterLayout}
+        data-testid="add-unresolved-starter-bins"
+      >
+        Add starter bins (unresolved bin)
       </button>
     </div>
   );
