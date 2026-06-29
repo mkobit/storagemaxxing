@@ -63,3 +63,24 @@ test("non-valid pack surfaces a non-valid validity badge", async ({ page }) => {
   await expect(badge).toBeVisible();
   await expect(badge).not.toHaveText("valid");
 });
+
+test("partial pack surfaces a partial validity badge", async ({ page }) => {
+  await page.goto("/");
+  await page.getByTestId("system-select").selectOption("gridfinity");
+  await page.getByTestId("add-partial-starter-bins").click();
+  await expect(page.locator("canvas")).toBeVisible();
+
+  const badge = page.getByTestId("layout-validity-badge");
+  await expect(badge).toBeVisible();
+  await expect(badge).toHaveText("partial");
+});
+
+test("unresolved bin ID surfaces unresolved count badge", async ({ page }) => {
+  await page.goto("/");
+  await page.getByTestId("system-select").selectOption("gridfinity");
+  await page.getByTestId("add-unresolved-starter-bins").click();
+
+  const countBadge = page.getByTestId("layout-unresolved-count");
+  await expect(countBadge).toBeVisible();
+  await expect(countBadge).toHaveText("1 unresolved");
+});
