@@ -6,3 +6,7 @@ dist
 .screenshots/
 playwright-report/
 test-results/
+
+# Beads auto-export backup — Dolt is the source of truth (bd dolt push/pull).
+# Never commit this file; it is rewritten on every bd command and pollutes diffs.
+.beads/issues.jsonl

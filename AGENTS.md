@@ -178,6 +178,7 @@ bd automatically syncs via Dolt:
 - Each write auto-commits to Dolt history
 - Use `bd dolt push`/`bd dolt pull` for remote sync
 - No manual export/import needed!
+- **Never commit `.beads/issues.jsonl`.** It is bd's auto-export backup and is gitignored. Dolt is the only sync channel — committing the jsonl pollutes unrelated PR diffs with bead-state churn and creates two competing sources of truth.
 
 ### Important Rules
 
