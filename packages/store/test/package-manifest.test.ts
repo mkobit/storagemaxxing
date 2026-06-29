@@ -41,6 +41,67 @@ const parseAgentsMdExports = (pkgName: string): readonly string[] => {
     .sort();
 };
 
+const parseDagOrder = (): readonly string[] => {
+  const configPath = resolve(ROOT, "eslint.config.ts");
+  const content = readFileSync(configPath, "utf-8");
+  const match = content.match(/const\s+DAG_ORDER\s*=\s*\[([\s\S]*?)\]\s*as\s+const/);
+  if (!match) {
+    throw new Error("Could not find DAG_ORDER in eslint.config.ts");
+  }
+  return match[1]
+    .split(",")
+    .map((s) => s.replace(/["']/g, "").trim())
+    .filter(Boolean);
+};
+
+const parseImportRules = (
+  pkgName: string,
+): {
+  readonly mayImport: readonly string[];
+  readonly mustNotImport: readonly string[];
+} => {
+  const agentsPath = resolve(ROOT, `packages/${pkgName}/src/AGENTS.md`);
+  const content = readFileSync(agentsPath, "utf-8");
+  const lines = content.split("\n");
+  const sectionIdx = lines.findIndex((l) => l.trim() === "## Import Rules");
+  if (sectionIdx === -1) {
+    throw new Error(`No "## Import Rules" section found in ${agentsPath}`);
+  }
+
+  const sectionLines = lines.slice(sectionIdx + 1);
+  const nextSectionOffset = sectionLines.findIndex((l) => l.trim().startsWith("##"));
+  const relevantLines = nextSectionOffset === -1 ? sectionLines : sectionLines.slice(0, nextSectionOffset);
+
+  const mayLine = relevantLines.find((l) => l.trim().startsWith("- **May import from**:"));
+  const mustNotLine = relevantLines.find((l) => l.trim().startsWith("- **Must not import from**:"));
+
+  const mayImport = mayLine
+    ? (() => {
+        const parts = mayLine.replace("- **May import from**:", "").trim();
+        return parts.toLowerCase().includes("nowhere")
+          ? []
+          : parts
+              .split(",")
+              .map((p) => p.replace(/[`/]/g, "").trim().split(/\s+/)[0])
+              .filter(Boolean);
+      })()
+    : [];
+
+  const mustNotImport = mustNotLine
+    ? (() => {
+        const parts = mustNotLine.replace("- **Must not import from**:", "").trim();
+        return parts.toLowerCase().includes("any")
+          ? ["any"]
+          : parts
+              .split(",")
+              .map((p) => p.replace(/[`/]/g, "").trim().split(/\s+/)[0])
+              .filter(Boolean);
+      })()
+    : [];
+
+  return { mayImport, mustNotImport };
+};
+
 const PACKAGES = ["geometry", "catalog", "assembly", "packer", "store"] as const;
 
 describe("D6 — Package Type Ownership Manifest", () => {
@@ -49,6 +110,29 @@ describe("D6 — Package Type Ownership Manifest", () => {
       const agentsList = parseAgentsMdExports(pkg);
       const sourceExports = extractSourceExports(pkg);
       expect(agentsList).toEqual([...sourceExports]);
+    });
+  });
+});
+
+describe("D6 — Package Import Rules Validation", () => {
+  const dagOrder = parseDagOrder();
+
+  PACKAGES.forEach((pkg) => {
+    test(`${pkg}: AGENTS.md import rules match eslint.config.ts`, () => {
+      const pkgIndex = dagOrder.indexOf(pkg);
+      expect(pkgIndex).toBeGreaterThanOrEqual(0);
+
+      const { mayImport, mustNotImport } = parseImportRules(pkg);
+
+      const expectedMay = dagOrder.slice(0, pkgIndex);
+      expect([...mayImport].sort()).toEqual([...expectedMay].sort());
+
+      const expectedMustNot = dagOrder.slice(pkgIndex + 1);
+      if (mustNotImport.length === 1 && mustNotImport[0] === "any") {
+        expect(expectedMustNot.length).toBeGreaterThan(0);
+      } else {
+        expect([...mustNotImport].sort()).toEqual([...expectedMustNot].sort());
+      }
     });
   });
 });
