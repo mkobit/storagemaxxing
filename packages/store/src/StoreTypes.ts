@@ -8,6 +8,7 @@ import {
   SpaceTemplateId,
 } from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
+import { BinSpecId } from "@storagemaxxing/assembly/BaseTypes";
 
 export type AppState = {
   readonly _hasHydrated: boolean;
@@ -36,6 +37,10 @@ export type AppActions = {
   readonly updateConstraintForSpace: (
     templateId: SpaceTemplateId,
     constraint: SpaceConstraint,
+  ) => void;
+  readonly removeConstraintForSpace: (
+    templateId: SpaceTemplateId,
+    binId: BinSpecId,
   ) => void;
   readonly clearConstraintsForSpace: (templateId: SpaceTemplateId) => void;
 };

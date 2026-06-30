@@ -21,6 +21,7 @@ layoutResolutionResolved
 selectPackedLayout
 selectPackingResultsBySpace
 updateConstraintInState
+removeConstraintFromState
 useStore
 ```
 
