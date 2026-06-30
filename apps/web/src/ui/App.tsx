@@ -3,6 +3,7 @@ import { Toolbar } from "./Toolbar";
 import { LayoutCanvas } from "./LayoutCanvas";
 import { useStore } from "@storagemaxxing/store/useStore";
 import { BOMPanel } from "./BOMPanel";
+import { ConstraintEditorPanel } from "./ConstraintEditorPanel";
 
 export const App: React.FC = () => {
   const hasHydrated = useStore((state) => state._hasHydrated);
@@ -37,6 +38,7 @@ export const App: React.FC = () => {
         </button>
       </div>
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+        <ConstraintEditorPanel />
         <div
           style={{
             display: activeTab === "layout" ? "flex" : "none",

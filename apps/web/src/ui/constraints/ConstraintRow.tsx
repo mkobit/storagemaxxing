@@ -6,6 +6,7 @@ export type ConstraintRowProps = {
   readonly constraint: SpaceConstraint;
   readonly binName: string;
   readonly onChange: (constraint: SpaceConstraint) => void;
+  readonly onDelete?: () => void;
 };
 
 const handleOffMode = (constraint: SpaceConstraint): SpaceConstraint => ({
@@ -60,6 +61,7 @@ export const ConstraintRow: React.FC<ConstraintRowProps> = ({
   constraint,
   binName,
   onChange,
+  onDelete,
 }) => {
   const handleModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newMode = e.target.value;
@@ -134,6 +136,23 @@ export const ConstraintRow: React.FC<ConstraintRowProps> = ({
         onMinChange={handleMinChange}
         onMaxChange={handleMaxChange}
       />
+      {onDelete && (
+        <button
+          onClick={onDelete}
+          style={{
+            background: "none",
+            border: "none",
+            color: "#ff4d4f",
+            cursor: "pointer",
+            fontSize: "1.2rem",
+            padding: "0 0.5rem",
+            lineHeight: 1,
+          }}
+          title="Remove constraint"
+        >
+          &times;
+        </button>
+      )}
     </div>
   );
 };
