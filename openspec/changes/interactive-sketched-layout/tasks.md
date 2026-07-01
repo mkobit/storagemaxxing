@@ -1,10 +1,10 @@
 # Tasks: Interactive Sketched Layout
 
-- [ ] `sm-1oge` Zustand store actions for constraint management
+- [x] `sm-1oge` Zustand store actions for constraint management
   - **Acceptance**: `removeConstraintForSpace` deletes a constraint from the space instance in the state and all unit tests pass.
-- [ ] `sm-k6ky` Constraint Editor UI list rendering
+- [x] `sm-k6ky` Constraint Editor UI list rendering
   - **Acceptance**: The sidebar panel component renders active drawer constraints with names, quantities, and selectors.
-- [ ] `sm-kz97` Catalog bin picker UI
+- [x] `sm-kz97` Catalog bin picker UI
   - **Acceptance**: Clicking a compatible bin in the catalog list adds it as a constraint to the active space.
 - [ ] `sm-wevy` Constraint mode editing and validation
   - **Acceptance**: Modifying a constraint's mode updates state and triggers layout validity recalculation.
