@@ -65,6 +65,13 @@ export const useStore = create<StoreState>()(
             ),
           };
         }),
+      loadSketch: (sketch) =>
+        set({
+          spaces: sketch.spaces,
+          activeSpaceId: sketch.activeSpaceId,
+          templatesById: sketch.templatesById,
+          constraintsBySpace: sketch.constraintsBySpace,
+        }),
     }),
     {
       name: "storagemaxxing-db",

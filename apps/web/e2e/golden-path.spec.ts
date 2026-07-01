@@ -137,3 +137,38 @@ test("sketch state persists across a page reload", async ({ page }) => {
   await expect(page.getByTestId("layout-validity-badge")).toHaveText("valid");
   await expect(page.locator("canvas")).toBeVisible();
 });
+
+test("exports and re-imports a sketch to restore the layout", async ({
+  page,
+  browser,
+}) => {
+  await page.goto("/");
+  await page.getByTestId("system-select").selectOption("gridfinity");
+  await page.getByTestId("add-starter-bins").click();
+  await expect(page.getByTestId("layout-validity-badge")).toHaveText("valid");
+
+  const [download] = await Promise.all([
+    page.waitForEvent("download"),
+    page.getByTestId("export-sketch").click(),
+  ]);
+  expect(download.suggestedFilename()).toBe("storagemaxxing-sketch.json");
+  const exportedPath = await download.path();
+  expect(exportedPath).toBeTruthy();
+
+  // Fresh browser context so there's no persisted IndexedDB state to
+  // interfere — the layout below must come from the imported file.
+  const freshContext = await browser.newContext();
+  const freshPage = await freshContext.newPage();
+  await freshPage.goto("/");
+
+  await freshPage
+    .getByTestId("import-sketch-input")
+    .setInputFiles(exportedPath!);
+
+  await expect(freshPage.getByTestId("layout-validity-badge")).toHaveText(
+    "valid",
+  );
+  await expect(freshPage.locator("canvas")).toBeVisible();
+
+  await freshContext.close();
+});

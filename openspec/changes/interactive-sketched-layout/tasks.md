@@ -10,5 +10,5 @@
   - **Acceptance**: Modifying a constraint's mode updates state and triggers layout validity recalculation.
 - [x] `sm-1x02` LocalStorage sketch persistence
   - **Acceptance**: Zustand sketch state is automatically saved to and hydrated from `localStorage` on page reload.
-- [ ] `sm-o3vo` JSON sketch import and export UI
+- [x] `sm-o3vo` JSON sketch import and export UI
   - **Acceptance**: Toolbar buttons export state to a downloaded JSON file and import a JSON file.
