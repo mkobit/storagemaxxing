@@ -84,3 +84,22 @@ test("unresolved bin ID surfaces unresolved count badge", async ({ page }) => {
   await expect(countBadge).toBeVisible();
   await expect(countBadge).toHaveText("1 unresolved");
 });
+
+test("changing a constraint's mode refreshes the validity badge", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByTestId("system-select").selectOption("gridfinity");
+  await page.getByTestId("add-partial-starter-bins").click();
+
+  const badge = page.getByTestId("layout-validity-badge");
+  await expect(badge).toHaveText("partial");
+
+  // The partial space's shortfall comes entirely from the first starter
+  // bin's soft-min requirement; turning it off drops that requirement.
+  await page
+    .getByTestId("constraint-mode-gridfinity-1x1x2")
+    .selectOption("off");
+
+  await expect(badge).toHaveText("valid");
+});
