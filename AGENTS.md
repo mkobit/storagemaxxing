@@ -75,6 +75,13 @@ We prioritize **Horizontal Breadth** (many storage systems) over **Vertical Dept
 - **Jail:** Respect the workspace root. Do NOT access files or execute commands outside `/home/mkobit/workspace/mkobit/storagemaxxing`.
 - **MCP:** Use only the approved MCP servers defined in the project configuration.
 
+## 🔧 Agent Tooling Packages
+
+Skill-support CLIs that agents invoke via `bunx` (e.g. `openspec`, `modern-web-guidance`) are pinned as root `devDependencies`, not left as ephemeral/unpinned `bunx` fetches.
+Pinning gives every agent the same resolved version and lets `bunx <tool>` resolve from `node_modules/.bin` instead of re-fetching from the registry each call.
+These packages support agent workflow only — they are not application dependencies of `apps/web` or any `packages/*`, so they stay out of the monorepo's import graph and lint topology.
+Add new agent-only tooling the same way: `bun add -d <package>` at the repo root.
+
 ## ⚡️ High-Velocity Bun Patterns
 
 - **Runtime caveat:** Do NOT set `[run] bun = true` in `bunfig.toml`.
