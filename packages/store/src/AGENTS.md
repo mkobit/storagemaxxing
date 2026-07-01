@@ -11,6 +11,8 @@ AppActions
 AppState
 LayoutInputs
 LayoutResolution
+Sketch
+SketchSchema
 SpaceInputs
 StoreState
 ToolMode
@@ -18,8 +20,11 @@ initialState
 layoutResolutionMissingTemplate
 layoutResolutionNone
 layoutResolutionResolved
+parseSketch
 selectPackedLayout
 selectPackingResultsBySpace
+serializeSketch
+toSketch
 updateConstraintInState
 removeConstraintFromState
 useStore

@@ -43,6 +43,12 @@ export type AppActions = {
     binId: BinSpecId,
   ) => void;
   readonly clearConstraintsForSpace: (templateId: SpaceTemplateId) => void;
+  readonly loadSketch: (
+    sketch: Pick<
+      AppState,
+      "spaces" | "activeSpaceId" | "templatesById" | "constraintsBySpace"
+    >,
+  ) => void;
 };
 
 export type StoreState = AppState & AppActions;
