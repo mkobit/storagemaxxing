@@ -8,7 +8,7 @@
   - **Acceptance**: Clicking a compatible bin in the catalog list adds it as a constraint to the active space.
 - [x] `sm-wevy` Constraint mode editing and validation
   - **Acceptance**: Modifying a constraint's mode updates state and triggers layout validity recalculation.
-- [ ] `sm-1x02` LocalStorage sketch persistence
+- [x] `sm-1x02` LocalStorage sketch persistence
   - **Acceptance**: Zustand sketch state is automatically saved to and hydrated from `localStorage` on page reload.
 - [ ] `sm-o3vo` JSON sketch import and export UI
   - **Acceptance**: Toolbar buttons export state to a downloaded JSON file and import a JSON file.

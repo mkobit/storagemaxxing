@@ -103,3 +103,37 @@ test("changing a constraint's mode refreshes the validity badge", async ({
 
   await expect(badge).toHaveText("valid");
 });
+
+test("sketch state persists across a page reload", async ({ page }) => {
+  await page.goto("/");
+  await page.getByTestId("system-select").selectOption("gridfinity");
+  await page.getByTestId("add-starter-bins").click();
+  await expect(page.getByTestId("layout-validity-badge")).toHaveText("valid");
+
+  // Zustand's persist middleware writes to IndexedDB asynchronously; wait
+  // for the write to land before reloading so hydration has something to read.
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          new Promise<string | null>((resolve) => {
+            const req = indexedDB.open("keyval-store");
+            req.onsuccess = () => {
+              const getReq = req.result
+                .transaction("keyval", "readonly")
+                .objectStore("keyval")
+                .get("storagemaxxing-db");
+              getReq.onsuccess = () => resolve(getReq.result ?? null);
+              getReq.onerror = () => resolve(null);
+            };
+            req.onerror = () => resolve(null);
+          }),
+      ),
+    )
+    .not.toBeNull();
+
+  await page.reload();
+
+  await expect(page.getByTestId("layout-validity-badge")).toHaveText("valid");
+  await expect(page.locator("canvas")).toBeVisible();
+});
