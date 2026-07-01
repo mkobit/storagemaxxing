@@ -6,7 +6,7 @@
   - **Acceptance**: The sidebar panel component renders active drawer constraints with names, quantities, and selectors.
 - [x] `sm-kz97` Catalog bin picker UI
   - **Acceptance**: Clicking a compatible bin in the catalog list adds it as a constraint to the active space.
-- [ ] `sm-wevy` Constraint mode editing and validation
+- [x] `sm-wevy` Constraint mode editing and validation
   - **Acceptance**: Modifying a constraint's mode updates state and triggers layout validity recalculation.
 - [ ] `sm-1x02` LocalStorage sketch persistence
   - **Acceptance**: Zustand sketch state is automatically saved to and hydrated from `localStorage` on page reload.

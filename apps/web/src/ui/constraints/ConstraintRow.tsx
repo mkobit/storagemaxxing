@@ -124,7 +124,11 @@ export const ConstraintRow: React.FC<ConstraintRowProps> = ({
       >
         {binName}
       </span>
-      <select value={constraint.mode} onChange={handleModeChange}>
+      <select
+        value={constraint.mode}
+        onChange={handleModeChange}
+        data-testid={`constraint-mode-${constraint.binId}`}
+      >
         <option value="off">Off</option>
         <option value="auto">Auto</option>
         <option value="soft">Soft</option>
