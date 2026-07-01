@@ -48,7 +48,7 @@ describe("ConstraintEditorPanel", () => {
   it("renders active constraints with correct details", () => {
     render(<ConstraintEditorPanel />);
     expect(screen.getByText("Constraints")).toBeTruthy();
-    expect(screen.getByText("Gridfinity 1x1x2")).toBeTruthy();
+    expect(screen.getAllByText("Gridfinity 1x1x2").length).toBeGreaterThan(0);
   });
 
   it("triggers constraint deletion when delete button is clicked", () => {
@@ -59,5 +59,25 @@ describe("ConstraintEditorPanel", () => {
 
     const updatedSpace = useStore.getState().spaces.find((s) => s.id === spaceId);
     expect(updatedSpace?.constraints[binSpecId]).toBeUndefined();
+  });
+
+  it("renders compatible catalog bins", () => {
+    render(<ConstraintEditorPanel />);
+    expect(screen.getByText("Gridfinity 1x1x3")).toBeTruthy();
+  });
+
+  it("adds a new constraint when clicking + Add button", () => {
+    render(<ConstraintEditorPanel />);
+    const binRow = screen.getByText("Gridfinity 1x1x3").parentElement;
+    expect(binRow).toBeTruthy();
+    if (!binRow) return;
+    const addButton = binRow.querySelector("button");
+    expect(addButton).toBeTruthy();
+    if (!addButton) return;
+    fireEvent.click(addButton);
+
+    const updatedSpace = useStore.getState().spaces.find((s) => s.id === spaceId);
+    const expectedId = BinSpecIdSchema.parse("gridfinity-1x1x3");
+    expect(updatedSpace?.constraints[expectedId]).toBeTruthy();
   });
 });
