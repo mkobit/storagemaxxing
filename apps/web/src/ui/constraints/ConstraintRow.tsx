@@ -106,24 +106,8 @@ export const ConstraintRow: React.FC<ConstraintRowProps> = ({
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        gap: "1rem",
-        alignItems: "center",
-        marginBottom: "0.5rem",
-      }}
-    >
-      <span
-        style={{
-          width: "200px",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {binName}
-      </span>
+    <div className="mb-2 flex items-center gap-4">
+      <span className="w-[200px] truncate text-text-primary">{binName}</span>
       <select
         value={constraint.mode}
         onChange={handleModeChange}
@@ -143,15 +127,7 @@ export const ConstraintRow: React.FC<ConstraintRowProps> = ({
       {onDelete && (
         <button
           onClick={onDelete}
-          style={{
-            background: "none",
-            border: "none",
-            color: "#ff4d4f",
-            cursor: "pointer",
-            fontSize: "1.2rem",
-            padding: "0 0.5rem",
-            lineHeight: 1,
-          }}
+          className="cursor-pointer border-none bg-transparent px-2 py-0 text-[1.2rem] leading-none text-red-500"
           title="Remove constraint"
         >
           &times;
