@@ -15,7 +15,7 @@ Generated from Beads (`bd query 'label=meta:openspec:premium-ui-design-system'`)
 
 ## 2. Features (parallel-safe once Foundation lands)
 
-- [ ] `sm-n7qt` Load Outfit/Inter fonts and define typography tokens
+- [x] `sm-n7qt` Load Outfit/Inter fonts and define typography tokens
   - **Acceptance**: Playwright reads computed `font-family` on a heading (Outfit) and body text (Inter).
   - **Depends on**: `sm-ynun`
 - [x] `sm-cmk3` Dark/light theme toggle with persisted override

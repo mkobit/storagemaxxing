@@ -1,4 +1,9 @@
 @import "tailwindcss";
+/* Self-hosted variable fonts: bundled by Vite from node_modules, so no
+   cross-origin request and no preconnect hint is needed (unlike a Google
+   Fonts CDN). Both ship font-display: swap on every @font-face already. */
+@import "@fontsource-variable/outfit/wght.css";
+@import "@fontsource-variable/inter/wght.css";
 
 @theme {
   --color-brand-primary: #3b82f6;
@@ -43,6 +48,13 @@
   --motion-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --motion-ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
   --motion-ease-accelerate: cubic-bezier(0.4, 0, 1, 1);
+
+  --font-heading: "Outfit Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  /* Tailwind preflight's `html` rule reads this special theme key, so body
+     text gets --font-body everywhere via inheritance with no per-component
+     migration needed. */
+  --default-font-family: var(--font-body);
 }
 
 /* Class-based dark mode: an explicit .dark on <html> overrides prefers-color-scheme so a user's
@@ -63,4 +75,15 @@
   --color-border-default: #334155;
   --color-border-subtle: #1e293b;
   --color-border-strong: #94a3b8;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
 }
