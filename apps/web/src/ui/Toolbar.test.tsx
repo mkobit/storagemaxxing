@@ -7,12 +7,15 @@ mock.module("idb-keyval", () => ({
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { Toolbar } from "./Toolbar";
+import { ThemeProvider } from "./theme/ThemeProvider";
 import { useStore } from "@storagemaxxing/store/useStore";
 import { serializeSketch } from "@storagemaxxing/store/SketchSerialization";
 import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { SpaceInstanceSchema } from "@storagemaxxing/assembly/SpaceInstance";
 import { createSpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
+
+const renderToolbar = () => render(<Toolbar />, { wrapper: ThemeProvider });
 
 const uploadFile = (input: HTMLElement, contents: string) => {
   const file = new File([contents], "sketch.json", {
@@ -23,12 +26,12 @@ const uploadFile = (input: HTMLElement, contents: string) => {
 
 describe("Toolbar", () => {
   it("renders the toolbar", () => {
-    render(<Toolbar />);
+    renderToolbar();
     expect(document.body.contains(screen.getByTestId("toolbar"))).toBe(true);
   });
 
   it("shows select mode as active by default", () => {
-    render(<Toolbar />);
+    renderToolbar();
     const selectBtn = screen.getByTestId("mode-select");
     expect(selectBtn.classList.contains("bg-brand-primary")).toBe(true);
   });
@@ -54,7 +57,7 @@ describe("Toolbar", () => {
       constraintsBySpace: { [template.id]: [constraint] },
     });
 
-    render(<Toolbar />);
+    renderToolbar();
     uploadFile(screen.getByTestId("import-sketch-input"), sketchJson);
 
     await waitFor(() =>
@@ -64,7 +67,7 @@ describe("Toolbar", () => {
   });
 
   it("shows an error when importing an invalid sketch file", async () => {
-    render(<Toolbar />);
+    renderToolbar();
     uploadFile(
       screen.getByTestId("import-sketch-input"),
       JSON.stringify({ nonsense: true }),
@@ -73,5 +76,14 @@ describe("Toolbar", () => {
     await waitFor(() =>
       expect(screen.getByText("Invalid sketch file")).toBeTruthy(),
     );
+  });
+
+  it("toggles the theme when the theme toggle is clicked", () => {
+    renderToolbar();
+    expect(document.documentElement.classList.contains("dark")).toBe(false);
+
+    fireEvent.click(screen.getByTestId("theme-toggle"));
+
+    expect(document.documentElement.classList.contains("dark")).toBe(true);
   });
 });
