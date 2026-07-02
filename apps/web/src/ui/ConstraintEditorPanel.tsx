@@ -22,7 +22,10 @@ export const ConstraintEditorPanel: React.FC = () => {
 
   if (!activeSpace) {
     return (
-      <div style={{ padding: "1rem", color: "#666" }}>
+      <div
+        data-testid="constraint-editor-panel"
+        className="glass-panel w-80 p-4 text-text-secondary"
+      >
         No active space selected
       </div>
     );
@@ -65,38 +68,24 @@ export const ConstraintEditorPanel: React.FC = () => {
 
   return (
     <div
-      style={{
-        width: "320px",
-        borderRight: "1px solid #ccc",
-        padding: "1rem",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1.5rem",
-        overflowY: "auto",
-        background: "#fafafa",
-      }}
+      data-testid="constraint-editor-panel"
+      className="glass-panel flex w-80 flex-col gap-6 overflow-y-auto p-4"
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-        <h3>Constraints</h3>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-text-primary">Constraints</h3>
         {constraints.length === 0 ? (
-          <div style={{ color: "#888", fontSize: "0.9rem" }}>
+          <div className="text-sm text-text-muted">
             No constraints added. Add bins from the catalog below.
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+          <div className="flex flex-col gap-3">
             {constraints.map((c) => {
               const binDef = findBinById(ALL_BINS, binId(c.binId));
               const binName = binDef ? binDef.name : c.binId;
               return (
                 <div
                   key={c.binId}
-                  style={{
-                    border: "1px solid #eee",
-                    borderRadius: "4px",
-                    padding: "0.5rem",
-                    background: "#fff",
-                    position: "relative",
-                  }}
+                  className="relative rounded-sm border border-border-subtle bg-surface-raised p-2"
                 >
                   <ConstraintRow
                     constraint={c}
@@ -111,37 +100,20 @@ export const ConstraintEditorPanel: React.FC = () => {
         )}
       </div>
 
-      <hr style={{ border: "none", borderTop: "1px solid #ddd", margin: 0 }} />
+      <hr className="m-0 border-border-default" />
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-        <h3>Add Bins</h3>
+      <div className="flex flex-col gap-3">
+        <h3 className="text-text-primary">Add Bins</h3>
         <input
           type="text"
           placeholder="Search catalog..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          style={{
-            padding: "0.4rem",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            fontSize: "0.9rem",
-          }}
+          className="rounded-sm border border-border-default p-2 text-sm"
         />
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.5rem",
-            maxHeight: "300px",
-            overflowY: "auto",
-            border: "1px solid #eee",
-            borderRadius: "4px",
-            padding: "0.5rem",
-            background: "#fff",
-          }}
-        >
+        <div className="flex max-h-[300px] flex-col gap-2 overflow-y-auto rounded-sm border border-border-subtle bg-surface-raised p-2">
           {filteredBins.length === 0 ? (
-            <div style={{ color: "#888", fontSize: "0.85rem", textAlign: "center", padding: "1rem 0" }}>
+            <div className="py-4 text-center text-sm text-text-muted">
               No matching bins found
             </div>
           ) : (
@@ -151,30 +123,15 @@ export const ConstraintEditorPanel: React.FC = () => {
               return (
                 <div
                   key={bin.id}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "0.25rem 0",
-                    borderBottom: "1px solid #f9f9f9",
-                    fontSize: "0.85rem",
-                  }}
+                  className="flex items-center justify-between border-b border-border-subtle py-1 text-sm"
                 >
-                  <span title={bin.name} style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "160px" }}>
+                  <span title={bin.name} className="max-w-[160px] truncate">
                     {bin.name}
                   </span>
                   <button
                     onClick={() => handleAddBinConstraint(bin.id)}
                     disabled={isAdded}
-                    style={{
-                      padding: "0.2rem 0.5rem",
-                      fontSize: "0.8rem",
-                      cursor: isAdded ? "default" : "pointer",
-                      borderRadius: "4px",
-                      border: "1px solid #ccc",
-                      background: isAdded ? "#e6f7ff" : "#fff",
-                      color: isAdded ? "#1890ff" : "#333",
-                    }}
+                    className="cursor-pointer rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-xs text-text-primary disabled:cursor-default disabled:bg-brand-primary/10 disabled:text-brand-primary"
                   >
                     {isAdded ? "Added" : "+ Add"}
                   </button>

@@ -87,3 +87,16 @@
     font-family: var(--font-heading);
   }
 }
+
+/* Shared glassmorphism treatment for panel-level surfaces (sidebar, BOM panel,
+   constraint editor) per design.md 'Glassmorphism treatment'. -webkit- prefix
+   kept for Safari versions before backdrop-filter unprefixed support. */
+@layer components {
+  .glass-panel {
+    background: var(--color-surface-glass);
+    border: 1px solid var(--color-border-subtle);
+    box-shadow: var(--shadow-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+}
