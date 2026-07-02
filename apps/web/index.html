@@ -4,6 +4,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StorageMaxxing</title>
+    <script>
+      // FOUC prevention: apply the .dark class before first paint, mirroring
+      // ThemePreferenceSchema's light/dark/system validation (see
+      // apps/web/src/ui/theme/ThemePreference.ts). Runs inline because the
+      // React bundle hasn't loaded yet — the one sanctioned exception to
+      // "no manual DOM scripting" (openspec/changes/premium-ui-design-system/design.md).
+      (function () {
+        var STORAGE_KEY = "storagemaxxing-theme";
+        try {
+          var stored = window.localStorage.getItem(STORAGE_KEY);
+          var preference =
+            stored === "light" || stored === "dark" || stored === "system"
+              ? stored
+              : "system";
+          var isDark =
+            preference === "dark" ||
+            (preference === "system" &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          if (isDark) {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (e) {
+          // localStorage/matchMedia can throw in locked-down contexts; fall
+          // back to the light theme rather than blocking render.
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
