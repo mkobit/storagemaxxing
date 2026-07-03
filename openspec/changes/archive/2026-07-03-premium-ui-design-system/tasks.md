@@ -4,12 +4,12 @@ Generated from Beads (`bd query 'label=meta:openspec:premium-ui-design-system'`)
 
 ## 0. Review Gate
 
-- [ ] `sm-odxr` premium-ui-design-system: design review
+- [x] `sm-odxr` premium-ui-design-system: design review
   - **Acceptance**: A human reviews `design.md` and `specs/web-design-system/spec.md` and closes this bead to unblock implementation.
 
 ## 1. Foundation
 
-- [ ] `sm-ynun` Expand design tokens in index.css (color, spacing, radius, shadow, motion)
+- [x] `sm-ynun` Expand design tokens in index.css (color, spacing, radius, shadow, motion)
   - **Acceptance**: `bun run --cwd apps/web build` succeeds and the generated CSS contains `--shadow-glass`.
   - **Depends on**: `sm-odxr`
 
