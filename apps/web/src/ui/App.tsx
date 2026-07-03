@@ -14,46 +14,39 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+    <div className="flex h-screen flex-col">
       <Toolbar />
-      <div
-        style={{
-          display: "flex",
-          background: "#ddd",
-          padding: "0.5rem",
-          gap: "1rem",
-        }}
-      >
+      <div className="flex gap-4 bg-surface-sunken p-2 text-text-primary">
         <button
-          style={{ fontWeight: activeTab === "layout" ? "bold" : "normal" }}
+          className={activeTab === "layout" ? "font-bold" : "font-normal"}
           onClick={() => setActiveTab("layout")}
         >
           Layout
         </button>
         <button
-          style={{ fontWeight: activeTab === "bom" ? "bold" : "normal" }}
+          className={activeTab === "bom" ? "font-bold" : "font-normal"}
           onClick={() => setActiveTab("bom")}
         >
           BOM
         </button>
       </div>
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+      <div className="flex flex-1 overflow-hidden">
         <ConstraintEditorPanel />
         <div
-          style={{
-            display: activeTab === "layout" ? "flex" : "none",
-            flex: 1,
-            overflow: "hidden",
-          }}
+          className={
+            activeTab === "layout"
+              ? "flex flex-1 overflow-hidden"
+              : "hidden flex-1 overflow-hidden"
+          }
         >
           <LayoutCanvas />
         </div>
         <div
-          style={{
-            display: activeTab === "bom" ? "block" : "none",
-            flex: 1,
-            overflow: "hidden",
-          }}
+          className={
+            activeTab === "bom"
+              ? "block flex-1 overflow-hidden"
+              : "hidden flex-1 overflow-hidden"
+          }
         >
           <BOMPanel />
         </div>
