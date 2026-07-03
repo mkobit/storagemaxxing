@@ -10,50 +10,22 @@ export interface BOMTableProps {
 
 export const BOMTable: React.FC<BOMTableProps> = ({ bom }) => {
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <div className="flex h-full flex-col text-text-primary">
       <BOMHeader bom={bom} />
 
-      <div style={{ overflowY: "auto", flex: 1 }}>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            textAlign: "left",
-          }}
-        >
-          <thead style={{ position: "sticky", top: 0, background: "#eee" }}>
+      <div className="flex-1 overflow-y-auto">
+        <table className="w-full border-collapse text-left">
+          <thead className="sticky top-0 bg-surface-sunken">
             <tr>
-              <th style={{ padding: "0.5rem", borderBottom: "1px solid #ccc" }}>
-                SKU
-              </th>
-              <th style={{ padding: "0.5rem", borderBottom: "1px solid #ccc" }}>
-                Name
-              </th>
-              <th
-                style={{
-                  padding: "0.5rem",
-                  borderBottom: "1px solid #ccc",
-                  textAlign: "right",
-                }}
-              >
+              <th className="border-b border-border-default p-2">SKU</th>
+              <th className="border-b border-border-default p-2">Name</th>
+              <th className="border-b border-border-default p-2 text-right">
                 Quantity
               </th>
-              <th
-                style={{
-                  padding: "0.5rem",
-                  borderBottom: "1px solid #ccc",
-                  textAlign: "right",
-                }}
-              >
+              <th className="border-b border-border-default p-2 text-right">
                 Unit Price
               </th>
-              <th
-                style={{
-                  padding: "0.5rem",
-                  borderBottom: "1px solid #ccc",
-                  textAlign: "right",
-                }}
-              >
+              <th className="border-b border-border-default p-2 text-right">
                 Total
               </th>
             </tr>
@@ -64,14 +36,7 @@ export const BOMTable: React.FC<BOMTableProps> = ({ bom }) => {
             ))}
             {bom.items.length === 0 && (
               <tr>
-                <td
-                  colSpan={5}
-                  style={{
-                    padding: "1rem",
-                    textAlign: "center",
-                    color: "#888",
-                  }}
-                >
+                <td colSpan={5} className="p-4 text-center text-text-muted">
                   No items in BOM. Add and pack spaces to see materials.
                 </td>
               </tr>

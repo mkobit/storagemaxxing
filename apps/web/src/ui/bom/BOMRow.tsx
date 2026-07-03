@@ -15,16 +15,12 @@ export const BOMRow: React.FC<BOMRowProps> = ({ item }) => {
   const total = price * item.quantity;
 
   return (
-    <tr key={item.binId} style={{ borderBottom: "1px solid #eee" }}>
-      <td style={{ padding: "0.5rem" }}>{sku}</td>
-      <td style={{ padding: "0.5rem" }}>{name}</td>
-      <td style={{ padding: "0.5rem", textAlign: "right" }}>{item.quantity}</td>
-      <td style={{ padding: "0.5rem", textAlign: "right" }}>
-        ${price.toFixed(2)}
-      </td>
-      <td style={{ padding: "0.5rem", textAlign: "right" }}>
-        ${total.toFixed(2)}
-      </td>
+    <tr key={item.binId} className="border-b border-border-subtle">
+      <td className="p-2">{sku}</td>
+      <td className="p-2">{name}</td>
+      <td className="p-2 text-right">{item.quantity}</td>
+      <td className="p-2 text-right">${price.toFixed(2)}</td>
+      <td className="p-2 text-right">${total.toFixed(2)}</td>
     </tr>
   );
 };
