@@ -32,12 +32,8 @@ export const BOMPanel: React.FC = () => {
 
   return (
     <div
-      style={{
-        padding: "1rem",
-        height: "100%",
-        boxSizing: "border-box",
-        overflow: "hidden",
-      }}
+      data-testid="bom-panel"
+      className="glass-panel h-full overflow-hidden p-4"
     >
       <BOMTable bom={aggregateBom} />
     </div>

@@ -23,22 +23,12 @@ export const BOMHeader: React.FC<BOMHeaderProps> = ({ bom }) => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "1rem",
-      }}
-    >
-      <h3>Bill of Materials</h3>
+    <div className="mb-4 flex items-center justify-between">
+      <h3 className="text-text-primary">Bill of Materials</h3>
       <button
         onClick={handleDownload}
         disabled={bom.items.length === 0}
-        style={{
-          padding: "0.5rem 1rem",
-          cursor: bom.items.length === 0 ? "not-allowed" : "pointer",
-        }}
+        className="cursor-pointer px-4 py-2 disabled:cursor-not-allowed"
       >
         Download CSV
       </button>
