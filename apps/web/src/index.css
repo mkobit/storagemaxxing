@@ -82,6 +82,13 @@
   --color-border-default: #334155;
   --color-border-subtle: #1e293b;
   --color-border-strong: #94a3b8;
+
+  /* Canvas background (bg-surface-sunken) flips to near-black in dark mode --
+     these need their own overrides since getComputedStyle reads whatever is
+     resolved at draw time, and the light-mode values have no contrast here. */
+  --color-canvas-grid: #64748b;
+  --color-canvas-outline: #cbd5e1;
+  --color-canvas-fallback-fill: #475569;
 }
 
 @layer base {
