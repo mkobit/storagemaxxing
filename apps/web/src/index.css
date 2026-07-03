@@ -32,6 +32,13 @@
   --color-border-subtle: #e2e8f0;
   --color-border-strong: #64748b;
 
+  /* LayoutCanvas draws directly to a <canvas> 2D context, which does not resolve
+     CSS custom properties on its own -- these are read at draw time via
+     getComputedStyle instead of a Tailwind utility class. */
+  --color-canvas-grid: #666666;
+  --color-canvas-outline: #000000;
+  --color-canvas-fallback-fill: #cccccc;
+
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 1rem;

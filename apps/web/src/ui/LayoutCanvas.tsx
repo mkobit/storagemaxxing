@@ -17,12 +17,15 @@ const PIXELS_PER_INCH = 24;
 const lookupBin = (id: string): BinSpec | undefined =>
   findBinById(ALL_BINS, binId(id));
 
+const resolveCanvasToken = (name: string): string =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
 const drawSpaceBounds = (
   ctx: CanvasRenderingContext2D,
   template: SpaceTemplate,
 ) => {
   if (template.w === undefined || template.l === undefined) return;
-  ctx.strokeStyle = "#666666";
+  ctx.strokeStyle = resolveCanvasToken("--color-canvas-grid");
   ctx.lineWidth = 1;
   ctx.setLineDash([4, 2]);
   ctx.strokeRect(
@@ -39,12 +42,14 @@ const drawPackedLayout = (
   packingResult: PackingResult,
   constraints: readonly SpaceConstraint[],
 ) => {
+  const fallbackFill = resolveCanvasToken("--color-canvas-fallback-fill");
+  const outline = resolveCanvasToken("--color-canvas-outline");
   packingResult.placedBins.forEach((placed) => {
     const spec = lookupBin(placed.binId);
     if (!spec) return;
     const constraint = constraints.find((c) => c.binId === placed.binId);
-    ctx.fillStyle = constraint?.color ?? "#cccccc";
-    ctx.strokeStyle = "#000000";
+    ctx.fillStyle = constraint?.color ?? fallbackFill;
+    ctx.strokeStyle = outline;
     ctx.lineWidth = 1;
     ctx.fillRect(
       placed.origin[0] * PIXELS_PER_INCH,
@@ -61,12 +66,13 @@ const drawPackedLayout = (
   });
 };
 
-const validityBadgeColor: Readonly<Record<PackingResult["validity"], string>> =
-  {
-    valid: "#16a34a",
-    partial: "#d97706",
-    invalid: "#dc2626",
-  };
+const validityBadgeClassName: Readonly<
+  Record<PackingResult["validity"], string>
+> = {
+  valid: "bg-green-600",
+  partial: "bg-amber-600",
+  invalid: "bg-red-600",
+};
 
 const badgeBase: React.CSSProperties = {
   position: "absolute",
@@ -75,7 +81,6 @@ const badgeBase: React.CSSProperties = {
   borderRadius: 4,
   fontSize: 12,
   fontWeight: 600,
-  color: "white",
 };
 
 const ResolvedCanvas: React.FC<{
@@ -102,26 +107,20 @@ const ResolvedCanvas: React.FC<{
         ref={canvasRef}
         width={800}
         height={600}
-        style={{ border: "1px solid black", backgroundColor: "#f5f5f5" }}
+        className="border border-border-strong bg-surface-sunken"
       />
       <span
         data-testid="layout-validity-badge"
-        style={{
-          ...badgeBase,
-          left: 8,
-          backgroundColor: validityBadgeColor[result.validity],
-        }}
+        className={`text-white ${validityBadgeClassName[result.validity]}`}
+        style={{ ...badgeBase, left: 8 }}
       >
         {result.validity}
       </span>
       {unresolvedBinIds.length > 0 && (
         <span
           data-testid="layout-unresolved-count"
-          style={{
-            ...badgeBase,
-            right: 8,
-            backgroundColor: "#dc2626",
-          }}
+          className="bg-red-600 text-white"
+          style={{ ...badgeBase, right: 8 }}
         >
           {unresolvedBinIds.length} unresolved
         </span>
@@ -138,7 +137,7 @@ const renderResolution = (
 ): React.ReactElement => {
   if (resolution.kind === "none") {
     return (
-      <div style={{ padding: "2rem", color: "#666" }}>
+      <div className="p-8 text-text-secondary">
         Select or add a space to view the layout.
       </div>
     );
@@ -147,7 +146,7 @@ const renderResolution = (
     return (
       <div
         data-testid="layout-error-missing-template"
-        style={{ padding: "2rem", color: "#dc2626" }}
+        className="p-8 text-red-600"
       >
         Selected space references missing template: {resolution.templateId}
       </div>
