@@ -30,6 +30,6 @@ Generated from Beads (`bd query 'label=meta:openspec:premium-ui-design-system'`)
 - [x] `sm-4gqq` Migrate BOMPanel to token-driven glass panel styling
   - **Acceptance**: Playwright confirms non-`none` `backdrop-filter` in both themes; no inline hex literals remain.
   - **Depends on**: `sm-ynun`, `sm-cmk3`
-- [ ] `sm-xwtr` Migrate Toolbar, GoldenPathSetup, ValidityBadge, and App shell to design tokens
+- [x] `sm-xwtr` Migrate Toolbar, GoldenPathSetup, ValidityBadge, and App shell to design tokens
   - **Acceptance**: No inline hex literals remain in `App`/`Toolbar`/`GoldenPathSetup`/`ValidityBadge`; `LayoutCanvas`/`GridVisualizer` have no `backdrop-filter`.
   - **Depends on**: `sm-ynun`, `sm-cmk3`

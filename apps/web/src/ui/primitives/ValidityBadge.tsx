@@ -8,8 +8,7 @@ export type ValidityBadgeProps = {
 
 type BadgeStyle = {
   readonly label: string;
-  readonly color: string;
-  readonly bg: string;
+  readonly className: string;
 };
 
 const getBadgeStyle = (
@@ -17,12 +16,21 @@ const getBadgeStyle = (
   packingValidity?: ValidityState,
 ): BadgeStyle => {
   return isFeasible === false || packingValidity === "invalid"
-    ? { label: "Invalid", color: "#c62828", bg: "#ffebee" }
+    ? { label: "Invalid", className: "border-red-700 bg-red-50 text-red-700" }
     : packingValidity === "partial"
-      ? { label: "Partial", color: "#f57f17", bg: "#fffde7" }
+      ? {
+          label: "Partial",
+          className: "border-amber-700 bg-amber-50 text-amber-700",
+        }
       : packingValidity === "valid" || isFeasible === true
-        ? { label: "Valid", color: "#2e7d32", bg: "#e8f5e9" }
-        : { label: "Unknown", color: "#616161", bg: "#f5f5f5" };
+        ? {
+            label: "Valid",
+            className: "border-green-700 bg-green-50 text-green-700",
+          }
+        : {
+            label: "Unknown",
+            className: "border-border-strong bg-surface-hover text-text-secondary",
+          };
 };
 
 export const ValidityBadge: React.FC<ValidityBadgeProps> = ({
@@ -33,16 +41,7 @@ export const ValidityBadge: React.FC<ValidityBadgeProps> = ({
 
   return (
     <span
-      style={{
-        display: "inline-block",
-        padding: "0.25rem 0.5rem",
-        borderRadius: "4px",
-        fontSize: "0.875rem",
-        fontWeight: "bold",
-        color: style.color,
-        backgroundColor: style.bg,
-        border: `1px solid ${style.color}`,
-      }}
+      className={`inline-block rounded-sm border px-2 py-1 text-sm font-bold ${style.className}`}
     >
       {style.label}
     </span>

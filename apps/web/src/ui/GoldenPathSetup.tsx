@@ -122,6 +122,10 @@ export const GoldenPathSetup: React.FC = () => {
     setActiveSpace(space.id);
   };
 
+  const transition =
+    "transition-colors duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)]";
+  const button = `rounded-sm border border-border-default bg-surface-raised px-3 py-1 hover:bg-surface-hover ${transition}`;
+
   return (
     <div className="flex items-center gap-2">
       <label htmlFor="system-select" className="text-sm">
@@ -130,7 +134,7 @@ export const GoldenPathSetup: React.FC = () => {
       <select
         id="system-select"
         data-testid="system-select"
-        className="px-2 py-1 rounded border border-gray-300 bg-white"
+        className="rounded-sm border border-border-default bg-surface-raised px-2 py-1"
         value={system}
         onChange={(e) =>
           setSystem(e.target.value === "gridfinity" ? "gridfinity" : system)
@@ -139,28 +143,28 @@ export const GoldenPathSetup: React.FC = () => {
         <option value="gridfinity">Gridfinity</option>
       </select>
       <button
-        className="px-3 py-1 rounded bg-white border border-gray-300 hover:bg-gray-50"
+        className={button}
         onClick={loadStarterLayout}
         data-testid="add-starter-bins"
       >
         Add starter bins
       </button>
       <button
-        className="px-3 py-1 rounded bg-white border border-gray-300 hover:bg-gray-50"
+        className={button}
         onClick={loadTinyStarterLayout}
         data-testid="add-tiny-starter-bins"
       >
         Add starter bins (tiny space)
       </button>
       <button
-        className="px-3 py-1 rounded bg-white border border-gray-300 hover:bg-gray-50"
+        className={button}
         onClick={loadPartialStarterLayout}
         data-testid="add-partial-starter-bins"
       >
         Add starter bins (partial space)
       </button>
       <button
-        className="px-3 py-1 rounded bg-white border border-gray-300 hover:bg-gray-50"
+        className={button}
         onClick={loadUnresolvedStarterLayout}
         data-testid="add-unresolved-starter-bins"
       >

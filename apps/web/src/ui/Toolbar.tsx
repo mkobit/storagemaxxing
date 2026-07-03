@@ -42,43 +42,47 @@ export const Toolbar: React.FC = () => {
     }
   };
 
+  const transition =
+    "transition-colors duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)]";
+  const inactiveButton = `rounded-sm border border-border-default bg-surface-raised px-3 py-1 hover:bg-surface-hover ${transition}`;
+
   return (
     <div
-      className="flex gap-4 p-4 bg-gray-100 border-b border-gray-300"
+      className="flex gap-4 border-b border-border-default bg-surface-sunken p-4 text-text-primary"
       data-testid="toolbar"
     >
       <button
-        className={`px-3 py-1 rounded transition-colors ${
+        className={
           mode === "select"
-            ? "bg-brand-primary text-white font-bold"
-            : "bg-white border border-gray-300 hover:bg-gray-50"
-        }`}
+            ? `rounded-sm bg-brand-primary px-3 py-1 font-bold text-text-inverse ${transition}`
+            : inactiveButton
+        }
         onClick={() => setMode("select")}
         data-testid="mode-select"
       >
         Select
       </button>
       <button
-        className={`px-3 py-1 rounded transition-colors ${
+        className={
           mode === "pan"
-            ? "bg-brand-primary text-white font-bold"
-            : "bg-white border border-gray-300 hover:bg-gray-50"
-        }`}
+            ? `rounded-sm bg-brand-primary px-3 py-1 font-bold text-text-inverse ${transition}`
+            : inactiveButton
+        }
         onClick={() => setMode("pan")}
         data-testid="mode-pan"
       >
         Pan
       </button>
-      <div className="w-px bg-gray-300 my-1 mx-2" />
+      <div className="mx-2 my-1 w-px bg-border-default" />
       <button
-        className="px-3 py-1 rounded bg-white border border-gray-300 hover:bg-gray-50"
+        className={inactiveButton}
         onClick={handleExport}
         data-testid="export-sketch"
       >
         Export
       </button>
       <button
-        className="px-3 py-1 rounded bg-white border border-gray-300 hover:bg-gray-50"
+        className={inactiveButton}
         onClick={() => fileInputRef.current?.click()}
         data-testid="import-sketch"
       >
@@ -94,11 +98,11 @@ export const Toolbar: React.FC = () => {
         className="hidden"
       />
       {importError && (
-        <span className="text-red-600 text-sm self-center">{importError}</span>
+        <span className="self-center text-sm text-red-600">{importError}</span>
       )}
-      <div className="w-px bg-gray-300 my-1 mx-2" />
+      <div className="mx-2 my-1 w-px bg-border-default" />
       <GoldenPathSetup />
-      <div className="w-px bg-gray-300 my-1 mx-2" />
+      <div className="mx-2 my-1 w-px bg-border-default" />
       <ThemeToggle />
     </div>
   );
