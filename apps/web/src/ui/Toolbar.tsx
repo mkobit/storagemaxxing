@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { useStore } from "@storagemaxxing/store/useStore";
 import { serializeSketch, parseSketch } from "@storagemaxxing/store/SketchSerialization";
 import { GoldenPathSetup } from "./GoldenPathSetup";
+import { SpaceManager } from "./spaceManager/SpaceManager";
 import { ThemeToggle } from "./theme/ThemeToggle";
 
 const SKETCH_FILE_NAME = "storagemaxxing-sketch.json";
@@ -102,6 +103,8 @@ export const Toolbar: React.FC = () => {
       )}
       <div className="mx-2 my-1 w-px bg-border-default" />
       <GoldenPathSetup />
+      <div className="mx-2 my-1 w-px bg-border-default" />
+      <SpaceManager />
       <div className="mx-2 my-1 w-px bg-border-default" />
       <ThemeToggle />
     </div>
