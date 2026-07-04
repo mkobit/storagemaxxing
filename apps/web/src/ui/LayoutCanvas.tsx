@@ -11,6 +11,7 @@ import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { SpaceInstance } from "@storagemaxxing/assembly/SpaceInstance";
+import { useTheme } from "./theme/useTheme";
 
 const PIXELS_PER_INCH = 24;
 
@@ -90,6 +91,7 @@ const ResolvedCanvas: React.FC<{
   readonly constraints: readonly SpaceConstraint[];
 }> = ({ result, unresolvedBinIds, template, constraints }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -99,7 +101,7 @@ const ResolvedCanvas: React.FC<{
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (template) drawSpaceBounds(ctx, template);
     drawPackedLayout(ctx, result, constraints);
-  }, [result, template, constraints]);
+  }, [result, template, constraints, resolvedTheme]);
 
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
