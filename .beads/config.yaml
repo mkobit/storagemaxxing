@@ -14,6 +14,12 @@ short-prefix: "sm"
 # When true, bd will use .beads/issues.jsonl as the source of truth
 no-db: false
 
+# Disable git hook integration (pre-commit/post-merge/pre-push/post-checkout/
+# prepare-commit-msg). With Dolt as source of truth, the post-checkout hook's
+# jsonl-snapshot reimport can silently revert close/claim state made on other
+# branches (sm-rif3). Sync stays manual via `bd dolt pull`/`bd dolt push`.
+no-git-ops: true
+
 # Enable JSON output by default
 # json: false
 
