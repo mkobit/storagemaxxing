@@ -94,9 +94,11 @@ The space contributes its box edges (floor rectangle, verticals, top rectangle) 
 Colors are carried as token *names* (plus literal constraint colors), so the painter resolves them per paint and the existing theme-repaint effect keeps working.
 
 **D3 — Deterministic painter ordering.**
-Polygons are sorted back-to-front by bin `origin[2]` descending, then `origin[0]` descending, then `binId` ascending as a total-order tie-break.
+Polygons are sorted back-to-front by bin `origin[2]` descending, then `origin[0]` ascending, then `binId` ascending as a total-order tie-break.
 With the receding axis pointing up-right, larger `z` is farther away, so nearer bins paint last and correctly overlap.
-The tie-break makes scene output stable for unit tests and across renders.
+The x tie-break must be ascending because the viewer is effectively on the +x side: for two same-depth x-adjacent bins, the right bin's front face physically occludes the left bin's right face, so the right (larger-x) bin paints later.
+This lexicographic origin sort is exact for depth-separated bins and same-depth neighbors; rare arrangements of long thin bins with partially overlapping z-ranges can still overdraw imperfectly, which is a cosmetic v1 limitation recorded in Risks rather than solved with a separating-axis topological sort.
+The total order makes scene output stable for unit tests and across renders.
 
 **D4 — Toggle is local UI state in `LayoutCanvas.tsx`.**
 A button (`data-testid="wireframe-toggle"`, `aria-pressed`) rendered with the canvas flips a `useState<boolean>`.
@@ -104,7 +106,7 @@ The paint effect branches on it: off → the existing `drawSpaceBounds` + `drawP
 It is not added to the Zustand store or sketch serialization: it is a view preference of one component, and putting it in the store would drag it into persistence scope for no benefit.
 
 **D5 — Fit-to-canvas via bounding-box translation, not scaling.**
-The scene builder also returns (or the painter computes) the projected bounding box; the painter translates so the scene fits the existing 800×600 canvas with a margin, keeping `PIXELS_PER_INCH` constant.
+The scene builder returns the projected bounding box alongside the polygons; the painter only translates so the scene fits the existing 800×600 canvas with a margin, keeping `PIXELS_PER_INCH` constant.
 If a scene genuinely exceeds the canvas, it clips — acceptable for v1 and consistent with the 2D view, which has the same limitation.
 
 **D6 — No new Zod schemas.**
@@ -116,7 +118,7 @@ Zod validation is reserved for domain objects entering the system (per existing 
 - **`template.h` undefined (w/l-only or footprint templates):** the space outline degrades to the floor rectangle with no verticals; bins still render with height. Scene-builder unit test pins this.
 - **Unresolved bin IDs:** `lookupBin` returns `undefined`; the bin is skipped, exactly as `drawPackedLayout` does today, and the existing `layout-unresolved-count` badge still reports it.
 - **Zero-height bins or `h: 0` data errors:** top and floor faces coincide; renders as a flat parallelogram rather than crashing. No special casing.
-- **Painter-order ties:** two bins at identical `z` and `x` cannot overlap in a valid pack (MaxRects doesn't overlap footprints), so tie order is cosmetic; D3's total order still makes it deterministic.
+- **Painter-order edge cases:** same-depth x-adjacent bins are handled by D3's ascending-x tie-break (right neighbor paints over the left neighbor's hidden right face); the residual mis-ordering risk is long thin bins with partially overlapping z-ranges, which is cosmetic overdraw only and accepted in Risks. Identical `z` and `x` cannot co-occur in a valid pack (MaxRects doesn't overlap footprints), so the `binId` tie-break is purely for determinism.
 - **Theme toggle while wireframe active:** the paint effect already depends on `resolvedTheme`; token resolution at paint time (D2) means the wireframe repaints correctly — same mechanism the 2D path uses since the dark-mode canvas-token change (#189).
 - **Concurrent edits to `LayoutCanvas.tsx`:** this change is additive (new branch in the effect, new button); it does not move or rename the existing draw functions, minimizing merge conflict surface with other web beads.
 - **E2E flakiness:** the e2e asserts toggle presence, `aria-pressed` flip, and canvas visibility only; all geometry assertions live in `bun test` unit tests with exact coordinates, so no pixel-diffing enters CI.
@@ -124,6 +126,13 @@ Zod validation is reserved for domain objects entering the system (per existing 
 
 ## Risks / Trade-offs
 
-- **Oblique ≠ what users may picture as "3D".** No rotation, fixed angle. Accepted: the bead's actual information need (see heights) is met at a fraction of the cost, and a real 3D scene remains possible later as a further layered feature without discarding this work (the scene builder isolates rendering from data).
-- **Overdraw without hidden-line removal can look busy for dense packs.** Accepted for v1; face fills (not just lines) mitigate most visual confusion, and painter ordering keeps it coherent.
-- **Fixed canvas size clips very large scenes.** Shared with the existing 2D view; a shared fit-to-viewport pass for both views is a natural follow-up bead, not part of this change.
+- **Oblique ≠ what users may picture as "3D".**
+  No rotation, fixed angle.
+  Accepted: the bead's actual information need (see heights) is met at a fraction of the cost, and a real 3D scene remains possible later as a further layered feature without discarding this work (the scene builder isolates rendering from data).
+- **Overdraw without hidden-line removal can look busy for dense packs.**
+  Accepted for v1; face fills (not just lines) mitigate most visual confusion, and painter ordering keeps it coherent.
+- **Lexicographic painter ordering is not exact for every arrangement.**
+  Long thin bins whose z-ranges partially overlap can overdraw a neighbor's face that should be hidden.
+  Accepted for v1 as cosmetic-only; the fix (separating-axis pairwise comparator with topological sort) is a contained follow-up if real layouts ever exhibit it.
+- **Fixed canvas size clips very large scenes.**
+  Shared with the existing 2D view; a shared fit-to-viewport pass for both views is a natural follow-up bead, not part of this change.

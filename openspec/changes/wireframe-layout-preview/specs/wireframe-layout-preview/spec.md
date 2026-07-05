@@ -26,7 +26,7 @@ The function MUST NOT mutate its inputs and MUST NOT depend on canvas, DOM, or t
 
 The web application SHALL provide a pure scene builder that converts a `PackingResult`, an optional `SpaceTemplate`, the space's constraints, and a catalog lookup into an ordered, readonly list of projected 2D polygons: for each resolvable placed bin, the top, front, and right faces of the box at `origin` with the bin's `nominal` dimensions; for the space, its box edges when `w`, `l`, and `h` are defined.
 Bin polygons SHALL carry the constraint color for the top face, matching the bin's color identity in the 2D view.
-The list SHALL be ordered back-to-front (descending `origin[2]`, then descending `origin[0]`, then ascending `binId`) so painting in list order yields correct overlap.
+The list SHALL be ordered back-to-front (descending `origin[2]`, then ascending `origin[0]`, then ascending `binId`) so painting in list order yields correct overlap for depth-separated bins and for same-depth x-adjacent bins, where the larger-x bin's front face must paint over its left neighbor's right face.
 
 #### Scenario: Placed bin yields three faces at projected coordinates
 
@@ -41,7 +41,7 @@ The list SHALL be ordered back-to-front (descending `origin[2]`, then descending
 #### Scenario: Bin taller than the space extends above the space outline
 
 - **WHEN** a placed bin's `nominal.h` exceeds the template's `h`
-- **THEN** the maximum projected y of that bin's top face exceeds the maximum projected y of the space's top edge in the scene output.
+- **THEN** the projected y of the bin's front top edge (`nominal.h + depthScale·sin(angle)·origin[2]`) exceeds the projected y of the space's top plane evaluated at the same depth (`template.h + depthScale·sin(angle)·origin[2]`) — i.e. the comparison is made at the bin's own depth, not against the space's far edge.
 
 #### Scenario: Unresolved bins are skipped, not fabricated
 
