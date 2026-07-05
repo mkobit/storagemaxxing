@@ -51,6 +51,8 @@ echo "Environment ready"
 
 # Initialize/Sync Beads operational context
 echo "Initializing Beads..."
+rm -rf .beads/dolt .beads/embeddeddolt
 bd bootstrap --yes
 bd dolt pull
 chmod 700 .beads
+git restore mise.lock
