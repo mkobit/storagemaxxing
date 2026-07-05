@@ -10,7 +10,7 @@
 
 ## 2. Scene construction
 
-- [ ] 2.1 sm-5vz0 — Wireframe scene builder: bin face polygons with constraint colors (depends on sm-afiu)
+- [x] 2.1 sm-5vz0 — Wireframe scene builder: bin face polygons with constraint colors (depends on sm-afiu)
 - [ ] 2.2 sm-eo05 — Wireframe scene builder: space outline, painter ordering, degradation cases (depends on sm-5vz0)
 
 ## 3. Integration
