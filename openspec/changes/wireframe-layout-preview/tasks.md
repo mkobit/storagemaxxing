@@ -19,7 +19,7 @@
 
 ## 4. Verification
 
-- [ ] 4.1 sm-v5cd — E2E coverage: wireframe preview toggle flow (depends on sm-a7op)
+- [x] 4.1 sm-v5cd — E2E coverage: wireframe preview toggle flow (depends on sm-a7op)
 
 <!--
   Discovered during scoping, tracked outside this change:
