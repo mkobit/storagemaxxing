@@ -78,6 +78,16 @@ describe("Toolbar", () => {
     );
   });
 
+  it("renders the space-manager panel alongside GoldenPathSetup", () => {
+    renderToolbar();
+    expect(document.body.contains(screen.getByTestId("space-manager"))).toBe(
+      true,
+    );
+    expect(document.body.contains(screen.getByTestId("add-starter-bins"))).toBe(
+      true,
+    );
+  });
+
   it("toggles the theme when the theme toggle is clicked", () => {
     renderToolbar();
     expect(document.documentElement.classList.contains("dark")).toBe(false);
