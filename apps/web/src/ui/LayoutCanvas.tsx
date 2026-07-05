@@ -1,5 +1,5 @@
 /* eslint-disable functional/immutable-data */
-import React, { useRef, useEffect, useMemo } from "react";
+import React, { useRef, useEffect, useMemo, useState } from "react";
 import { useStore } from "@storagemaxxing/store/useStore";
 import {
   selectPackedLayout,
@@ -12,6 +12,7 @@ import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { SpaceInstance } from "@storagemaxxing/assembly/SpaceInstance";
 import { useTheme } from "./theme/useTheme";
+import { buildWireframeScene, WireframeScene } from "./wireframeScene";
 
 const PIXELS_PER_INCH = 24;
 
@@ -67,6 +68,45 @@ const drawPackedLayout = (
   });
 };
 
+const WIREFRAME_MARGIN_PX = 20;
+
+// Translates the projected (inches, y-up) scene to fit the canvas with a
+// margin, per design.md D5: no scaling, so a scene taller or wider than the
+// canvas simply clips at the edges, same limitation as the 2D view.
+const paintWireframe = (
+  ctx: CanvasRenderingContext2D,
+  scene: WireframeScene,
+  canvasHeight: number,
+) => {
+  const offsetX =
+    WIREFRAME_MARGIN_PX - scene.boundingBox.origin[0] * PIXELS_PER_INCH;
+  const yBase =
+    canvasHeight -
+    WIREFRAME_MARGIN_PX +
+    scene.boundingBox.origin[1] * PIXELS_PER_INCH;
+
+  scene.polygons.forEach((polygon) => {
+    ctx.beginPath();
+    polygon.points.forEach((p, i) => {
+      const canvasX = p[0] * PIXELS_PER_INCH + offsetX;
+      const canvasY = yBase - p[1] * PIXELS_PER_INCH;
+      if (i === 0) ctx.moveTo(canvasX, canvasY);
+      else ctx.lineTo(canvasX, canvasY);
+    });
+    ctx.closePath();
+    if (polygon.fillColor) {
+      ctx.fillStyle = polygon.fillColor;
+      ctx.fill();
+    } else if (polygon.fillToken) {
+      ctx.fillStyle = resolveCanvasToken(polygon.fillToken);
+      ctx.fill();
+    }
+    ctx.strokeStyle = resolveCanvasToken(polygon.strokeToken);
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+};
+
 const validityBadgeClassName: Readonly<
   Record<PackingResult["validity"], string>
 > = {
@@ -92,6 +132,7 @@ const ResolvedCanvas: React.FC<{
 }> = ({ result, unresolvedBinIds, template, constraints }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { resolvedTheme } = useTheme();
+  const [wireframeEnabled, setWireframeEnabled] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -99,34 +140,50 @@ const ResolvedCanvas: React.FC<{
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (template) drawSpaceBounds(ctx, template);
-    drawPackedLayout(ctx, result, constraints);
-  }, [result, template, constraints, resolvedTheme]);
+    if (wireframeEnabled) {
+      const scene = buildWireframeScene(result, template, constraints, lookupBin);
+      paintWireframe(ctx, scene, canvas.height);
+    } else {
+      if (template) drawSpaceBounds(ctx, template);
+      drawPackedLayout(ctx, result, constraints);
+    }
+  }, [result, template, constraints, resolvedTheme, wireframeEnabled]);
 
   return (
-    <div style={{ position: "relative", display: "inline-block" }}>
-      <canvas
-        ref={canvasRef}
-        width={800}
-        height={600}
-        className="border border-border-strong bg-surface-sunken"
-      />
-      <span
-        data-testid="layout-validity-badge"
-        className={`text-white ${validityBadgeClassName[result.validity]}`}
-        style={{ ...badgeBase, left: 8 }}
+    <div>
+      <button
+        type="button"
+        data-testid="wireframe-toggle"
+        aria-pressed={wireframeEnabled}
+        onClick={() => setWireframeEnabled((enabled) => !enabled)}
+        className="mb-2 rounded-sm border border-border-default bg-surface-raised px-3 py-1 text-text-primary transition-colors duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)] hover:bg-surface-hover"
       >
-        {result.validity}
-      </span>
-      {unresolvedBinIds.length > 0 && (
+        Wireframe preview
+      </button>
+      <div style={{ position: "relative", display: "inline-block" }}>
+        <canvas
+          ref={canvasRef}
+          width={800}
+          height={600}
+          className="border border-border-strong bg-surface-sunken"
+        />
         <span
-          data-testid="layout-unresolved-count"
-          className="bg-red-600 text-white"
-          style={{ ...badgeBase, right: 8 }}
+          data-testid="layout-validity-badge"
+          className={`text-white ${validityBadgeClassName[result.validity]}`}
+          style={{ ...badgeBase, left: 8 }}
         >
-          {unresolvedBinIds.length} unresolved
+          {result.validity}
         </span>
-      )}
+        {unresolvedBinIds.length > 0 && (
+          <span
+            data-testid="layout-unresolved-count"
+            className="bg-red-600 text-white"
+            style={{ ...badgeBase, right: 8 }}
+          >
+            {unresolvedBinIds.length} unresolved
+          </span>
+        )}
+      </div>
     </div>
   );
 };

@@ -15,7 +15,7 @@
 
 ## 3. Integration
 
-- [ ] 3.1 sm-a7op — Wireframe toggle and canvas painter in LayoutCanvas (depends on sm-eo05)
+- [x] 3.1 sm-a7op — Wireframe toggle and canvas painter in LayoutCanvas (depends on sm-eo05)
 
 ## 4. Verification
 
