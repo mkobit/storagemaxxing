@@ -38,6 +38,7 @@
   --color-canvas-grid: #666666;
   --color-canvas-outline: #000000;
   --color-canvas-fallback-fill: #cccccc;
+  --color-canvas-wireframe-surface: #e2e8f0;
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
@@ -89,6 +90,7 @@
   --color-canvas-grid: #64748b;
   --color-canvas-outline: #cbd5e1;
   --color-canvas-fallback-fill: #475569;
+  --color-canvas-wireframe-surface: #334155;
 }
 
 @layer base {
