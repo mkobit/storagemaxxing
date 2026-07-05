@@ -6,7 +6,7 @@
 
 ## 1. Geometry
 
-- [ ] 1.1 sm-afiu — Add ObliqueProjection cabinet projection primitive to packages/geometry
+- [x] 1.1 sm-afiu — Add ObliqueProjection cabinet projection primitive to packages/geometry
 
 ## 2. Scene construction
 

@@ -8,6 +8,7 @@ This package contains Euclidean spatial primitives and pure mathematics. It hand
 
 ```ts-exports
 Box3D
+CABINET_PROJECTION
 Dimensions2D
 Dimensions2DSchema
 Dimensions3D
@@ -22,6 +23,7 @@ Line2D
 MeasurementUnit
 Millimeters
 MillimetersSchema
+ObliqueProjection
 OPENGRID_PITCH_MM
 Point
 Point2D
@@ -57,6 +59,7 @@ mmToIn
 mms
 parseDim
 parseFraction
+projectPoint
 ```
 
 ## Import Rules
