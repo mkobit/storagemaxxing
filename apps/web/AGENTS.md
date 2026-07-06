@@ -29,6 +29,7 @@ Read this file to verify visual state — it shows exactly what the UI looks lik
 - `.screenshots/` is gitignored — these are ephemeral dev-time files.
 - Timestamped copies are also saved for session history.
 - Use `bun run screenshot` / `bun run test:e2e` (this project's own `@playwright/test` + bun setup) for in-browser verification. Reach for a generic testing skill's own scripting pattern only if this project's tooling can't do the job — a generic skill's Python-based Playwright path isn't installed here and won't run.
+- `LayoutCanvas`'s `<canvas>` scales with the active space template (`template.w`/`l` × `PIXELS_PER_INCH = 24`) and can be taller than a default browser viewport (~1280×720, with the toolbar/header above it), so a plain `page.screenshot()` without `fullPage: true` — or any default-viewport screenshot from a generic tool — can silently crop the bottom of the canvas out of the image, making correctly-rendered content look missing. `bun run screenshot` already passes `fullPage: true` and isn't affected; for anything else, either match that or inspect pixel data directly instead of trusting a cropped screenshot.
 
 ## Scripts
 
