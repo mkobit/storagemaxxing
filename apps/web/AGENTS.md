@@ -28,6 +28,7 @@ Read this file to verify visual state — it shows exactly what the UI looks lik
 - Always take a screenshot before starting UI work (baseline) and after (verify).
 - `.screenshots/` is gitignored — these are ephemeral dev-time files.
 - Timestamped copies are also saved for session history.
+- Use `bun run screenshot` / `bun run test:e2e` (this project's own `@playwright/test` + bun setup) for in-browser verification. Reach for a generic testing skill's own scripting pattern only if this project's tooling can't do the job — a generic skill's Python-based Playwright path isn't installed here and won't run.
 
 ## Scripts
 
