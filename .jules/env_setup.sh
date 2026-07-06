@@ -55,4 +55,3 @@ rm -rf .beads/dolt .beads/embeddeddolt
 bd bootstrap --yes
 bd dolt pull
 chmod 700 .beads
-git restore mise.lock
