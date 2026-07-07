@@ -13,6 +13,7 @@ import {
   getEffectiveFootprint,
   getEffectiveSpaceDimensions,
   getMaxBinDepth,
+  isHeightEligible,
 } from "./geometryUtils";
 import {
   RectsAccumulator,
@@ -78,12 +79,15 @@ export const packSpace = (
   availableBins: readonly PackInput[],
   constraints: readonly SpaceConstraint[],
 ): PackingResult => {
+  const eligibleBins = availableBins.filter((b) =>
+    isHeightEligible(b, space.h),
+  );
   const dims = getEffectiveSpaceDimensions(
     space,
-    getMaxBinDepth(availableBins),
+    getMaxBinDepth(eligibleBins),
   );
   const spaceArea = dims.w * dims.l;
-  const binMap = new Map(availableBins.map((b) => [b.id, b]));
+  const binMap = new Map(eligibleBins.map((b) => [b.id, b]));
 
   const packer = new MaxRectsPacker(dims.w, dims.l, 0, {
     smart: true,

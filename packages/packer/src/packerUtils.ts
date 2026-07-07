@@ -124,7 +124,8 @@ export const generateAutoFillRects = (
 ): RectsAccumulator => {
   const unconstrained = constraints
     .filter((c) => getMax(c) === undefined)
-    .map((c) => binMap.get(c.binId)!);
+    .map((c) => binMap.get(c.binId))
+    .filter((bin): bin is PackInput => bin !== undefined);
   if (unconstrained.length === 0) return [];
   const sorted = [...unconstrained].sort(
     (a, b) =>

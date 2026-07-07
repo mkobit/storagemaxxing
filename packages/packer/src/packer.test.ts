@@ -96,4 +96,41 @@ describe("Packer Engine", () => {
     expect(result.metrics.placedCounts["bin1"]).toBe(9);
     expect(result.placedBins.length).toBe(9);
   });
+
+  it("a bin taller than the space is excluded from placement entirely", () => {
+    const space = createSpaceTemplate(
+      "drawer",
+      createDimensions3D(10, 10, 2),
+      "top",
+    );
+    const tooTall = createPackInputBasic("tooTall", 4, 4, 3);
+    // auto mode (no positive minimum): exclusion alone must not fail the pack.
+    const constraint = createSpaceConstraint("tooTall", 0, 0);
+
+    const result = packSpace(space, [tooTall], [constraint]);
+
+    expect(result.placedBins.length).toBe(0);
+    expect(result.metrics.placedCounts["tooTall"]).toBeUndefined();
+    expect(result.validity).toBe("valid");
+  });
+
+  it("a too-tall bin does not widen the front-access depth cap for eligible bins", () => {
+    const space = createSpaceTemplate(
+      "shelf",
+      createDimensions3D(24, 24, 6),
+      "front",
+    );
+    const tooTall = createPackInputBasic("tooTall", 6, 20, 8);
+    const eligible = createPackInputBasic("eligible", 6, 6, 4);
+    const constraints = [
+      createSpaceConstraint("tooTall", 0, 0),
+      createSpaceConstraint("eligible", 0, 0),
+    ];
+
+    const result = packSpace(space, [tooTall, eligible], constraints);
+
+    // If the too-tall bin's l=20 leaked into getMaxBinDepth, the front-access
+    // depth cap would widen from 6 (eligible's l) to 20, changing the count.
+    expect(result.metrics.placedCounts["eligible"]).toBe(4);
+  });
 });
