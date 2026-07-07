@@ -1,7 +1,11 @@
 import { describe, it, expect } from "bun:test";
 import { packSpace } from "./packer";
 import { createPackInput, createPackInputBasic } from "./PackInput";
-import { createSpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
+import {
+  createSpaceTemplate,
+  SpaceTemplate,
+  SpaceTemplateId,
+} from "@storagemaxxing/assembly/SpaceTemplate";
 import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
 
@@ -132,5 +136,73 @@ describe("Packer Engine", () => {
     // If the too-tall bin's l=20 leaked into getMaxBinDepth, the front-access
     // depth cap would widen from 6 (eligible's l) to 20, changing the count.
     expect(result.metrics.placedCounts["eligible"]).toBe(4);
+  });
+
+  it("sm-csu4 repro: a hard-constrained too-tall bin invalidates the pack with a heightOverflow failure", () => {
+    const space = createSpaceTemplate(
+      "drawer",
+      createDimensions3D(12, 12, 2),
+      "top",
+    );
+    const tooTall = createPackInputBasic("tooTall", 4, 4, 3);
+    const constraint = createSpaceConstraint("tooTall", 1, 0);
+
+    const result = packSpace(space, [tooTall], [constraint]);
+
+    expect(result.validity).toBe("invalid");
+    expect(result.placedBins.length).toBe(0);
+    expect(result.metrics.failures).toEqual([
+      {
+        binId: "tooTall",
+        reason: "heightOverflow",
+        binHeight: 3,
+        spaceHeight: 2,
+      },
+    ]);
+  });
+
+  it("a soft-constrained too-tall bin yields a partial result with a heightOverflow failure", () => {
+    const space = createSpaceTemplate(
+      "drawer",
+      createDimensions3D(12, 12, 2),
+      "top",
+    );
+    const tooTall = createPackInputBasic("tooTall", 4, 4, 3);
+    const constraint = createSpaceConstraint("tooTall", 0, 1);
+
+    const result = packSpace(space, [tooTall], [constraint]);
+
+    expect(result.validity).toBe("partial");
+    expect(result.placedBins.length).toBe(0);
+    expect(result.metrics.failures).toEqual([
+      {
+        binId: "tooTall",
+        reason: "heightOverflow",
+        binHeight: 3,
+        spaceHeight: 2,
+      },
+    ]);
+  });
+
+  it("a space with undefined height is height-unconstrained", () => {
+    const space: SpaceTemplate = {
+      id: "undefined-height" as SpaceTemplateId,
+      name: "undefined-height",
+      type: "drawer",
+      accessFace: "top",
+      w: 12,
+      l: 12,
+      packingModel: "2d",
+      installationConstraints: [],
+      gridResolution: 0.5,
+    };
+    const tall = createPackInputBasic("tall", 4, 4, 1000);
+    const constraint = createSpaceConstraint("tall", 1, 0, 1);
+
+    const result = packSpace(space, [tall], [constraint]);
+
+    expect(result.validity).toBe("valid");
+    expect(result.placedBins.length).toBe(1);
+    expect(result.metrics.failures.length).toBe(0);
   });
 });

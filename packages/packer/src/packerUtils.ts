@@ -2,8 +2,9 @@ import { MaxRectsPacker } from "maxrects-packer";
 import { PackInput } from "./PackInput";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import {
-  CountConstraintFailure,
+  ConstraintFailure,
   createConstraintFailure,
+  createHeightOverflowFailure,
   ValidityState,
 } from "@storagemaxxing/assembly/PackingResult";
 import { getEffectiveFootprint } from "./geometryUtils";
@@ -14,6 +15,16 @@ export type PackRect = {
   readonly data: { readonly binId: string };
 };
 export type RectsAccumulator = readonly PackRect[];
+
+export type HeightEligibility = {
+  readonly ineligibleHeights: ReadonlyMap<string, number>;
+  readonly spaceHeight: number;
+};
+
+type PhaseRequirement = {
+  readonly getRequired: (c: SpaceConstraint) => number;
+  readonly reason: "hardMin" | "softMin";
+};
 
 export const generateRects = (
   bin: PackInput,
@@ -54,18 +65,25 @@ export const getPlacedCounts = (
 export const checkPhaseFailures = (
   constraints: readonly SpaceConstraint[],
   placedCounts: ReadonlyMap<string, number>,
-  getRequired: (c: SpaceConstraint) => number,
-  reason: "hardMin" | "softMin",
-): readonly CountConstraintFailure[] =>
+  phase: PhaseRequirement,
+  heightEligibility: HeightEligibility,
+): readonly ConstraintFailure[] =>
   constraints
     .map((c) => ({
       c,
-      req: getRequired(c),
+      req: phase.getRequired(c),
       placed: placedCounts.get(c.binId) || 0,
+      binHeight: heightEligibility.ineligibleHeights.get(c.binId),
     }))
     .filter(({ req, placed }) => placed < req)
-    .map(({ c, req, placed }) =>
-      createConstraintFailure(c.binId, reason, req, placed),
+    .map(({ c, req, placed, binHeight }) =>
+      binHeight !== undefined
+        ? createHeightOverflowFailure(
+            c.binId,
+            binHeight,
+            heightEligibility.spaceHeight,
+          )
+        : createConstraintFailure(c.binId, phase.reason, req, placed),
     );
 
 export const getHardMin = (c: SpaceConstraint): number => {
@@ -86,12 +104,13 @@ export const getMax = (c: SpaceConstraint): number | undefined =>
 export const checkHardMinPhase = (
   constraints: readonly SpaceConstraint[],
   packer: MaxRectsPacker,
+  heightEligibility: HeightEligibility,
 ) => {
   const failures = checkPhaseFailures(
     constraints,
     getPlacedCounts(packer),
-    getHardMin,
-    "hardMin",
+    { getRequired: getHardMin, reason: "hardMin" },
+    heightEligibility,
   );
   return {
     validity: failures.length > 0 ? ("invalid" as const) : ("valid" as const),
@@ -103,13 +122,14 @@ export const checkSoftMinPhase = (
   constraints: readonly SpaceConstraint[],
   packer: MaxRectsPacker,
   validity: ValidityState,
+  heightEligibility: HeightEligibility,
 ) => {
   if (validity !== "valid") return { validity, failures: [] };
   const failures = checkPhaseFailures(
     constraints,
     getPlacedCounts(packer),
-    getSoftMin,
-    "softMin",
+    { getRequired: getSoftMin, reason: "softMin" },
+    heightEligibility,
   );
   return {
     validity: failures.length > 0 ? ("partial" as const) : ("valid" as const),

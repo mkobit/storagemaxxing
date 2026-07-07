@@ -7,6 +7,7 @@ This package contains spatial layout algorithms and pure geometric calculations.
 ## Type Ownership
 
 ```ts-exports
+HeightEligibility
 PackInput
 PackInputSchema
 PackRect
@@ -26,6 +27,7 @@ getMax
 getMaxBinDepth
 getPlacedCounts
 getSoftMin
+isHeightEligible
 packSpace
 sortRects
 toPackInput
