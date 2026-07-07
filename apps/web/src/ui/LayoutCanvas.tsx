@@ -19,9 +19,11 @@ import {
   ViewportFit,
 } from "./viewportFit";
 import { Rect2D } from "@storagemaxxing/geometry/Rect2D";
-import { createDimensions2D } from "@storagemaxxing/geometry/Dimensions2D";
+import {
+  Dimensions2D,
+  createDimensions2D,
+} from "@storagemaxxing/geometry/Dimensions2D";
 
-const PIXELS_PER_INCH = 24;
 const VIEWPORT_MARGIN_PX = 20;
 
 type LayoutTransform = {
@@ -79,28 +81,21 @@ const drawPackedLayout = (
   });
 };
 
-const WIREFRAME_MARGIN_PX = 20;
-
-// Translates the projected (inches, y-up) scene to fit the canvas with a
-// margin, per design.md D5: no scaling, so a scene taller or wider than the
-// canvas simply clips at the edges, same limitation as the 2D view.
 const paintWireframe = (
   ctx: CanvasRenderingContext2D,
   scene: WireframeScene,
-  canvasHeight: number,
+  viewport: Dimensions2D,
 ) => {
-  const offsetX =
-    WIREFRAME_MARGIN_PX - scene.boundingBox.origin[0] * PIXELS_PER_INCH;
-  const yBase =
-    canvasHeight -
-    WIREFRAME_MARGIN_PX +
-    scene.boundingBox.origin[1] * PIXELS_PER_INCH;
+  const bounds = scene.boundingBox;
+  const fit = computeViewportFit(bounds, viewport, VIEWPORT_MARGIN_PX);
+  const bboxH = bounds.dimensions.l;
 
   scene.polygons.forEach((polygon) => {
     ctx.beginPath();
     polygon.points.forEach((p, i) => {
-      const canvasX = p[0] * PIXELS_PER_INCH + offsetX;
-      const canvasY = yBase - p[1] * PIXELS_PER_INCH;
+      const canvasX = (p[0] - bounds.origin[0]) * fit.scale + fit.offsetX;
+      const canvasY =
+        fit.offsetY + bboxH * fit.scale - (p[1] - bounds.origin[1]) * fit.scale;
       if (i === 0) ctx.moveTo(canvasX, canvasY);
       else ctx.lineTo(canvasX, canvasY);
     });
@@ -153,7 +148,11 @@ const ResolvedCanvas: React.FC<{
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (wireframeEnabled) {
       const scene = buildWireframeScene(result, template, constraints, lookupBin);
-      paintWireframe(ctx, scene, canvas.height);
+      paintWireframe(
+        ctx,
+        scene,
+        createDimensions2D(canvas.width, canvas.height),
+      );
     } else {
       const bounds = computeLayoutBounds(template, result.placedBins, lookupBin);
       const fit = computeViewportFit(
