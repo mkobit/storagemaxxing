@@ -13,8 +13,21 @@ import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { SpaceInstance } from "@storagemaxxing/assembly/SpaceInstance";
 import { useTheme } from "./theme/useTheme";
 import { buildWireframeScene, WireframeScene } from "./wireframeScene";
+import {
+  computeViewportFit,
+  computeLayoutBounds,
+  ViewportFit,
+} from "./viewportFit";
+import { Rect2D } from "@storagemaxxing/geometry/Rect2D";
+import { createDimensions2D } from "@storagemaxxing/geometry/Dimensions2D";
 
 const PIXELS_PER_INCH = 24;
+const VIEWPORT_MARGIN_PX = 20;
+
+type LayoutTransform = {
+  readonly fit: ViewportFit;
+  readonly bounds: Rect2D;
+};
 
 const lookupBin = (id: string): BinSpec | undefined =>
   findBinById(ALL_BINS, binId(id));
@@ -25,16 +38,18 @@ const resolveCanvasToken = (name: string): string =>
 const drawSpaceBounds = (
   ctx: CanvasRenderingContext2D,
   template: SpaceTemplate,
+  transform: LayoutTransform,
 ) => {
   if (template.w === undefined || template.l === undefined) return;
+  const { fit, bounds } = transform;
   ctx.strokeStyle = resolveCanvasToken("--color-canvas-grid");
   ctx.lineWidth = 1;
   ctx.setLineDash([4, 2]);
   ctx.strokeRect(
-    0,
-    0,
-    template.w * PIXELS_PER_INCH,
-    template.l * PIXELS_PER_INCH,
+    (0 - bounds.origin[0]) * fit.scale + fit.offsetX,
+    (0 - bounds.origin[1]) * fit.scale + fit.offsetY,
+    template.w * fit.scale,
+    template.l * fit.scale,
   );
   ctx.setLineDash([]);
 };
@@ -43,7 +58,9 @@ const drawPackedLayout = (
   ctx: CanvasRenderingContext2D,
   packingResult: PackingResult,
   constraints: readonly SpaceConstraint[],
+  transform: LayoutTransform,
 ) => {
+  const { fit, bounds } = transform;
   const fallbackFill = resolveCanvasToken("--color-canvas-fallback-fill");
   const outline = resolveCanvasToken("--color-canvas-outline");
   packingResult.placedBins.forEach((placed) => {
@@ -53,18 +70,12 @@ const drawPackedLayout = (
     ctx.fillStyle = constraint?.color ?? fallbackFill;
     ctx.strokeStyle = outline;
     ctx.lineWidth = 1;
-    ctx.fillRect(
-      placed.origin[0] * PIXELS_PER_INCH,
-      placed.origin[2] * PIXELS_PER_INCH,
-      spec.nominal.w * PIXELS_PER_INCH,
-      spec.nominal.l * PIXELS_PER_INCH,
-    );
-    ctx.strokeRect(
-      placed.origin[0] * PIXELS_PER_INCH,
-      placed.origin[2] * PIXELS_PER_INCH,
-      spec.nominal.w * PIXELS_PER_INCH,
-      spec.nominal.l * PIXELS_PER_INCH,
-    );
+    const x = (placed.origin[0] - bounds.origin[0]) * fit.scale + fit.offsetX;
+    const y = (placed.origin[2] - bounds.origin[1]) * fit.scale + fit.offsetY;
+    const w = spec.nominal.w * fit.scale;
+    const l = spec.nominal.l * fit.scale;
+    ctx.fillRect(x, y, w, l);
+    ctx.strokeRect(x, y, w, l);
   });
 };
 
@@ -144,8 +155,15 @@ const ResolvedCanvas: React.FC<{
       const scene = buildWireframeScene(result, template, constraints, lookupBin);
       paintWireframe(ctx, scene, canvas.height);
     } else {
-      if (template) drawSpaceBounds(ctx, template);
-      drawPackedLayout(ctx, result, constraints);
+      const bounds = computeLayoutBounds(template, result.placedBins, lookupBin);
+      const fit = computeViewportFit(
+        bounds,
+        createDimensions2D(canvas.width, canvas.height),
+        VIEWPORT_MARGIN_PX,
+      );
+      const transform: LayoutTransform = { fit, bounds };
+      if (template) drawSpaceBounds(ctx, template, transform);
+      drawPackedLayout(ctx, result, constraints, transform);
     }
   }, [result, template, constraints, resolvedTheme, wireframeEnabled]);
 
