@@ -2,7 +2,7 @@ import { MaxRectsPacker } from "maxrects-packer";
 import { PackInput } from "./PackInput";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import {
-  ConstraintFailure,
+  CountConstraintFailure,
   createConstraintFailure,
   ValidityState,
 } from "@storagemaxxing/assembly/PackingResult";
@@ -56,7 +56,7 @@ export const checkPhaseFailures = (
   placedCounts: ReadonlyMap<string, number>,
   getRequired: (c: SpaceConstraint) => number,
   reason: "hardMin" | "softMin",
-): readonly ConstraintFailure[] =>
+): readonly CountConstraintFailure[] =>
   constraints
     .map((c) => ({
       c,
