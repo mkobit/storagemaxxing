@@ -2,8 +2,10 @@ import { test, expect } from "@playwright/test";
 
 // Fill colors assigned to the starter constraints in GoldenPathSetup.tsx.
 const STARTER_COLORS = ["#4e79a7", "#f28e2b", "#59a14f", "#e15759"];
-// 12-inch golden-path space at PIXELS_PER_INCH (24), plus stroke slack.
-const SPACE_BOUNDS_PX = 12 * 24 + 2;
+// Matches LayoutCanvas.tsx's VIEWPORT_MARGIN_PX: the fit-to-viewport contract
+// (layout-fit-to-viewport) guarantees rendered content stays within the
+// canvas inset by this margin on every edge, regardless of scale.
+const VIEWPORT_MARGIN_PX = 20;
 
 test("user selects a system and bins and sees a packed layout", async ({
   page,
@@ -18,7 +20,7 @@ test("user selects a system and bins and sees a packed layout", async ({
     .poll(
       async () =>
         page.evaluate(
-          ({ colors, bounds }) => {
+          ({ colors, marginPx }) => {
             const canvas = document.querySelector("canvas");
             const ctx = canvas?.getContext("2d");
             if (!canvas || !ctx) return [];
@@ -42,11 +44,15 @@ test("user selects a system and bins and sees a packed layout", async ({
               });
             }
             return [...found.entries()]
-              .filter(([, m]) => m.maxX <= bounds && m.maxY <= bounds)
+              .filter(
+                ([, m]) =>
+                  m.maxX <= canvas.width - marginPx &&
+                  m.maxY <= canvas.height - marginPx,
+              )
               .map(([hex]) => hex)
               .sort();
           },
-          { colors: STARTER_COLORS, bounds: SPACE_BOUNDS_PX },
+          { colors: STARTER_COLORS, marginPx: VIEWPORT_MARGIN_PX },
         ),
       { timeout: 10_000 },
     )
