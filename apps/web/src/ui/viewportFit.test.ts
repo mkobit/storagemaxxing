@@ -183,4 +183,32 @@ describe("computeLayoutBounds", () => {
     expect(bounds.dimensions.w).toBe(0);
     expect(bounds.dimensions.l).toBe(0);
   });
+
+  test("a placement with a non-finite origin is dropped, not allowed to poison the union", () => {
+    const template = createSpaceTemplate(
+      "space",
+      createDimensions3D(10, 10, 6),
+      "top",
+    );
+    const goodBin = testBin("good-bin", 2, 2, 2);
+    const badBin = testBin("bad-bin", 4, 3, 2);
+    const placed = [
+      createPlacedBin("good-bin", createPoint3D(1, 0, 1)),
+      // Simulates an upstream packer defect: a bin "placed" with a NaN origin
+      // because its footprint could not actually fit anywhere.
+      createPlacedBin("bad-bin", createPoint3D(NaN, 0, NaN)),
+    ];
+    const lookupBin = (id: string) =>
+      id === "good-bin" ? goodBin : id === "bad-bin" ? badBin : undefined;
+
+    const bounds = computeLayoutBounds(template, placed, lookupBin);
+
+    expect(Number.isFinite(bounds.origin[0])).toBe(true);
+    expect(Number.isFinite(bounds.origin[1])).toBe(true);
+    expect(Number.isFinite(bounds.dimensions.w)).toBe(true);
+    expect(Number.isFinite(bounds.dimensions.l)).toBe(true);
+    // The template (10x10) still dominates the union; the bad bin contributes nothing.
+    expect(bounds.dimensions.w).toBe(10);
+    expect(bounds.dimensions.l).toBe(10);
+  });
 });

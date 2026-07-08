@@ -54,6 +54,12 @@ const unionRects = (rects: readonly Rect2D[]): Rect2D => {
   );
 };
 
+const isFiniteRect = (rect: Rect2D): boolean =>
+  Number.isFinite(rect.origin[0]) &&
+  Number.isFinite(rect.origin[1]) &&
+  Number.isFinite(rect.dimensions.w) &&
+  Number.isFinite(rect.dimensions.l);
+
 export const computeLayoutBounds = (
   template: SpaceTemplate | null,
   placedBins: readonly PlacedBin[],
@@ -67,17 +73,23 @@ export const computeLayoutBounds = (
         )
       : undefined;
 
-  const binRects: readonly Rect2D[] = placedBins.flatMap((placed) => {
-    const spec = lookupBin(placed.binId);
-    return spec
-      ? [
-          createRect2D(
-            createPoint2D(placed.origin[0], placed.origin[2]),
-            createDimensions2D(spec.nominal.w, spec.nominal.l),
-          ),
-        ]
-      : [];
-  });
+  // A placement with a non-finite origin (e.g. an upstream packer defect
+  // placing a bin that cannot actually fit) must not poison the union for
+  // every other bin and the template outline via Math.min/max propagating
+  // NaN -- it is dropped here, the same way an unresolved bin ID is.
+  const binRects: readonly Rect2D[] = placedBins
+    .flatMap((placed) => {
+      const spec = lookupBin(placed.binId);
+      return spec
+        ? [
+            createRect2D(
+              createPoint2D(placed.origin[0], placed.origin[2]),
+              createDimensions2D(spec.nominal.w, spec.nominal.l),
+            ),
+          ]
+        : [];
+    })
+    .filter(isFiniteRect);
 
   return unionRects(templateRect ? [templateRect, ...binRects] : binRects);
 };
