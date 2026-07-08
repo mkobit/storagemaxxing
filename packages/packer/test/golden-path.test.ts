@@ -117,7 +117,32 @@ describe("storage-layout: Golden-Path Packing", () => {
       }
     });
     result.metrics.failures.forEach((failure) => {
-      expect(failure.placed).toBeLessThan(failure.required);
+      if (failure.reason !== "heightOverflow") {
+        expect(failure.placed).toBeLessThan(failure.required);
+      }
     });
+  });
+
+  test("a bin taller than the space is excluded and reported as a heightOverflow failure", () => {
+    const space = createSpaceTemplate(
+      "golden-path-space",
+      createDimensions3D(12, 12, 2),
+      "top",
+    );
+    const tooTall = createPackInput({ id: "too-tall-bin", w: 2, l: 2, h: 3 });
+    const constraint = createSpaceConstraint(tooTall.id, 1, 0, 1);
+
+    const result = packSpace(space, [tooTall], [constraint]);
+
+    expect(result.validity).toBe("invalid");
+    expect(result.placedBins.length).toBe(0);
+    expect(result.metrics.failures).toEqual([
+      {
+        binId: "too-tall-bin",
+        reason: "heightOverflow",
+        binHeight: 3,
+        spaceHeight: 2,
+      },
+    ]);
   });
 });

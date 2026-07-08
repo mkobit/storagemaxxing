@@ -18,8 +18,10 @@ BOMSchema
 BinSpecId
 BinSpecIdSchema
 ConstraintFailure
+CountConstraintFailure
 Divider
 DividerSchema
+HeightOverflowFailure
 InchesZodSchema
 InstallationConstraint
 InstallationConstraintSchema
@@ -62,6 +64,7 @@ ValidityState
 computeAggregateBom
 computeBom
 createConstraintFailure
+createHeightOverflowFailure
 createPackingMetrics
 createPackingResult
 createPlacedBin

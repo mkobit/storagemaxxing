@@ -13,6 +13,7 @@ import {
   getEffectiveFootprint,
   getEffectiveSpaceDimensions,
   getMaxBinDepth,
+  isHeightEligible,
 } from "./geometryUtils";
 import {
   RectsAccumulator,
@@ -24,23 +25,33 @@ import {
   checkSoftMinPhase,
   getMax,
   generateAutoFillRects,
+  HeightEligibility,
 } from "./packerUtils";
+
+type PackingContext = {
+  readonly spaceArea: number;
+  readonly heightEligibility: HeightEligibility;
+};
 
 const executePhases = (
   constraints: readonly SpaceConstraint[],
   binMap: ReadonlyMap<string, PackInput>,
   packer: MaxRectsPacker,
-  spaceArea: number,
+  context: PackingContext,
 ) => {
   const add = (
     rects: RectsAccumulator, // @ts-expect-error MaxRectsPacker TS definitions are missing readonly annotations
   ) => packer.addArray(Array.from(rects));
 
-   
-  add(sortRects(generatePhaseRects(constraints, binMap, getHardMin)));
-  const hmCheck = checkHardMinPhase(constraints, packer);
 
-   
+  add(sortRects(generatePhaseRects(constraints, binMap, getHardMin)));
+  const hmCheck = checkHardMinPhase(
+    constraints,
+    packer,
+    context.heightEligibility,
+  );
+
+
   add(
     sortRects(
       generatePhaseRects(constraints, binMap, (c) =>
@@ -48,9 +59,14 @@ const executePhases = (
       ),
     ),
   );
-  const smCheck = checkSoftMinPhase(constraints, packer, hmCheck.validity);
+  const smCheck = checkSoftMinPhase(
+    constraints,
+    packer,
+    hmCheck.validity,
+    context.heightEligibility,
+  );
 
-   
+
   add(
     sortRects(
       generatePhaseRects(constraints, binMap, (c) => {
@@ -64,8 +80,8 @@ const executePhases = (
     ),
   );
 
-   
-  add(generateAutoFillRects(constraints, binMap, spaceArea));
+
+  add(generateAutoFillRects(constraints, binMap, context.spaceArea));
 
   return {
     validity: smCheck.validity,
@@ -78,12 +94,20 @@ export const packSpace = (
   availableBins: readonly PackInput[],
   constraints: readonly SpaceConstraint[],
 ): PackingResult => {
+  const eligibleBins = availableBins.filter((b) =>
+    isHeightEligible(b, space.h),
+  );
+  const ineligibleHeights = new Map(
+    availableBins
+      .filter((b) => !isHeightEligible(b, space.h))
+      .map((b) => [b.id, getEffectiveFootprint(b).h]),
+  );
   const dims = getEffectiveSpaceDimensions(
     space,
-    getMaxBinDepth(availableBins),
+    getMaxBinDepth(eligibleBins),
   );
   const spaceArea = dims.w * dims.l;
-  const binMap = new Map(availableBins.map((b) => [b.id, b]));
+  const binMap = new Map(eligibleBins.map((b) => [b.id, b]));
 
   const packer = new MaxRectsPacker(dims.w, dims.l, 0, {
     smart: true,
@@ -93,12 +117,10 @@ export const packSpace = (
     tag: false,
   });
 
-  const { validity, failures } = executePhases(
-    constraints,
-    binMap,
-    packer,
+  const { validity, failures } = executePhases(constraints, binMap, packer, {
     spaceArea,
-  );
+    heightEligibility: { ineligibleHeights, spaceHeight: space.h ?? 0 },
+  });
 
   const placedBins = (packer.bins[0]?.rects || []).map((r) =>
     createPlacedBin(r.data.binId, createPoint3D(r.x, 0, r.y)),

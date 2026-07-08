@@ -4,12 +4,21 @@ export type PackingPhase = "hardMin" | "softMin" | "cappedFill" | "autoFill";
 
 export type ValidityState = "valid" | "partial" | "invalid";
 
-export type ConstraintFailure = {
+export type CountConstraintFailure = {
   readonly binId: string;
   readonly reason: "hardMin" | "softMin";
   readonly required: number;
   readonly placed: number;
 };
+
+export type HeightOverflowFailure = {
+  readonly binId: string;
+  readonly reason: "heightOverflow";
+  readonly binHeight: number;
+  readonly spaceHeight: number;
+};
+
+export type ConstraintFailure = CountConstraintFailure | HeightOverflowFailure;
 
 export type PackingMetrics = {
   readonly placedCounts: Readonly<Record<string, number>>;
@@ -28,11 +37,22 @@ export const createConstraintFailure = (
   reason: "hardMin" | "softMin",
   required: number,
   placed: number,
-): ConstraintFailure => ({
+): CountConstraintFailure => ({
   binId,
   reason,
   required,
   placed,
+});
+
+export const createHeightOverflowFailure = (
+  binId: string,
+  binHeight: number,
+  spaceHeight: number,
+): HeightOverflowFailure => ({
+  binId,
+  reason: "heightOverflow",
+  binHeight,
+  spaceHeight,
 });
 
 export const createPackingMetrics = (
