@@ -257,4 +257,36 @@ describe("buildWireframeScene", () => {
 
     expect(frontTopEdgeY).toBeGreaterThan(spaceTopAtBinDepth);
   });
+
+  test("a bin with a non-finite origin does not poison the bounding box", () => {
+    const bin = testBin("bin-a", 2, 3, 4);
+    const badBin = testBin("bin-bad", 2, 3, 4);
+    const goodOnly = createPackingResult(
+      [createPlacedBin("bin-a", createPoint3D(1, 0, 1))],
+      createPackingMetrics({}, 1, []),
+      "valid",
+    );
+    const withBad = createPackingResult(
+      [
+        createPlacedBin("bin-a", createPoint3D(1, 0, 1)),
+        // Simulates an upstream packer defect (sm-65ad): a bin "placed" with
+        // a NaN origin because its footprint could not actually fit anywhere.
+        createPlacedBin("bin-bad", createPoint3D(NaN, 0, NaN)),
+      ],
+      createPackingMetrics({}, 1, []),
+      "valid",
+    );
+    const lookupBin = (id: string) =>
+      id === "bin-a" ? bin : id === "bin-bad" ? badBin : undefined;
+
+    const expected = buildWireframeScene(goodOnly, null, [], lookupBin);
+    const scene = buildWireframeScene(withBad, null, [], lookupBin);
+
+    expect(scene.polygons).toHaveLength(6);
+    expect(Number.isFinite(scene.boundingBox.origin[0])).toBe(true);
+    expect(Number.isFinite(scene.boundingBox.origin[1])).toBe(true);
+    expect(Number.isFinite(scene.boundingBox.dimensions.w)).toBe(true);
+    expect(Number.isFinite(scene.boundingBox.dimensions.l)).toBe(true);
+    expect(scene.boundingBox).toEqual(expected.boundingBox);
+  });
 });
