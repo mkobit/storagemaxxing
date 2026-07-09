@@ -127,10 +127,18 @@ const compareBackToFront = (a: PlacedBin, b: PlacedBin): number => {
   return a.binId.localeCompare(b.binId);
 };
 
+const isFinitePoint = (point: Point2D): boolean =>
+  Number.isFinite(point[0]) && Number.isFinite(point[1]);
+
 const computeBoundingBox = (
   polygons: readonly WireframePolygon[],
 ): Rect2D => {
-  const points = polygons.flatMap((p) => p.points);
+  // A projected point derived from a non-finite placement origin (e.g. an
+  // upstream packer defect placing a bin that cannot actually fit -- sm-65ad)
+  // must not poison the union for every other bin and the space outline via
+  // Math.min/max propagating NaN -- it is dropped here, mirroring
+  // viewportFit.ts's isFiniteRect handling of non-finite placements.
+  const points = polygons.flatMap((p) => p.points).filter(isFinitePoint);
   if (points.length === 0) {
     return createRect2D(createPoint2D(0, 0), createDimensions2D(0, 0));
   }
