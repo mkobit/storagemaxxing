@@ -27,6 +27,7 @@ getMax
 getMaxBinDepth
 getPlacedCounts
 getSoftMin
+isFootprintEligible
 isHeightEligible
 packSpace
 sortRects

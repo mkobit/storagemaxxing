@@ -1,5 +1,5 @@
 import { describe, it, expect } from "bun:test";
-import { isHeightEligible } from "./geometryUtils";
+import { isFootprintEligible, isHeightEligible } from "./geometryUtils";
 import { createPackInput, createPackInputBasic } from "./PackInput";
 
 describe("isHeightEligible", () => {
@@ -32,5 +32,38 @@ describe("isHeightEligible", () => {
       toleranceH: 0.2,
     });
     expect(isHeightEligible(bin, 2)).toBe(false);
+  });
+});
+
+describe("isFootprintEligible", () => {
+  it("is eligible when the effective footprint fits exactly within the space", () => {
+    const bin = createPackInputBasic("bin1", 2, 2, 1);
+    expect(isFootprintEligible(bin, { w: 2, l: 2 })).toBe(true);
+  });
+
+  it("is eligible when the effective footprint is smaller than the space", () => {
+    const bin = createPackInputBasic("bin1", 1, 1, 1);
+    expect(isFootprintEligible(bin, { w: 2, l: 2 })).toBe(true);
+  });
+
+  it("is not eligible when the effective width exceeds the space width", () => {
+    const bin = createPackInputBasic("bin1", 3, 1, 1);
+    expect(isFootprintEligible(bin, { w: 2, l: 2 })).toBe(false);
+  });
+
+  it("is not eligible when the effective length exceeds the space length", () => {
+    const bin = createPackInputBasic("bin1", 1, 3, 1);
+    expect(isFootprintEligible(bin, { w: 2, l: 2 })).toBe(false);
+  });
+
+  it("includes toleranceW/toleranceL in the effective footprint used for the comparison", () => {
+    const bin = createPackInput({
+      id: "bin1",
+      w: 1.9,
+      l: 1,
+      h: 1,
+      toleranceW: 0.2,
+    });
+    expect(isFootprintEligible(bin, { w: 2, l: 2 })).toBe(false);
   });
 });
