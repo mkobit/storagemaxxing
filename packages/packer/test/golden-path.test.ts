@@ -123,6 +123,30 @@ describe("storage-layout: Golden-Path Packing", () => {
     });
   });
 
+  test("a bin whose footprint cannot fit in the space at all is excluded, never placed with a non-finite origin", () => {
+    const space = createSpaceTemplate(
+      "golden-path-tiny-space",
+      createDimensions3D(2, 2, 2),
+      "top",
+    );
+
+    const result = packSpace(space, starterBins, exactlyOneEach);
+
+    result.placedBins.forEach((placed) => {
+      expect(Number.isFinite(placed.origin[0])).toBe(true);
+      expect(Number.isFinite(placed.origin[1])).toBe(true);
+      expect(Number.isFinite(placed.origin[2])).toBe(true);
+    });
+
+    const oversized = starterBins.find((bin) => {
+      const footprint = getEffectiveFootprint(bin);
+      return footprint.w > 2 || footprint.l > 2;
+    })!;
+    expect(result.placedBins.some((p) => p.binId === oversized.id)).toBe(
+      false,
+    );
+  });
+
   test("a bin taller than the space is excluded and reported as a heightOverflow failure", () => {
     const space = createSpaceTemplate(
       "golden-path-space",

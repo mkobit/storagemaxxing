@@ -13,6 +13,7 @@ import {
   getEffectiveFootprint,
   getEffectiveSpaceDimensions,
   getMaxBinDepth,
+  isFootprintEligible,
   isHeightEligible,
 } from "./geometryUtils";
 import {
@@ -107,7 +108,10 @@ export const packSpace = (
     getMaxBinDepth(eligibleBins),
   );
   const spaceArea = dims.w * dims.l;
-  const binMap = new Map(eligibleBins.map((b) => [b.id, b]));
+  const packableBins = eligibleBins.filter((b) =>
+    isFootprintEligible(b, dims),
+  );
+  const binMap = new Map(packableBins.map((b) => [b.id, b]));
 
   const packer = new MaxRectsPacker(dims.w, dims.l, 0, {
     smart: true,

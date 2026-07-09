@@ -36,6 +36,14 @@ export const isHeightEligible = (
 ): boolean =>
   spaceHeight === undefined || getEffectiveFootprint(bin).h <= spaceHeight;
 
+export const isFootprintEligible = (
+  bin: PackInput,
+  spaceDims: { readonly w: number; readonly l: number },
+): boolean => {
+  const footprint = getEffectiveFootprint(bin);
+  return footprint.w <= spaceDims.w && footprint.l <= spaceDims.l;
+};
+
 export const getMaxBinDepth = (bins: readonly PackInput[]): number =>
   bins.reduce((max, bin) => {
     const footprint = getEffectiveFootprint(bin);
