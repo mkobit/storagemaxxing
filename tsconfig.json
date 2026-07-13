@@ -36,6 +36,7 @@
   "include": [
     "apps/*/src",
     "packages/*/src",
+    "packages/*/test",
     "apps/*/serve.ts",
     "eslint.config.ts"
   ]
