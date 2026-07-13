@@ -85,6 +85,7 @@ export const ConstraintEditorPanel: React.FC = () => {
               return (
                 <div
                   key={c.binId}
+                  data-testid={`constraint-row-${c.binId}`}
                   className="relative rounded-sm border border-border-subtle bg-surface-raised p-2"
                 >
                   <ConstraintRow
@@ -131,6 +132,7 @@ export const ConstraintEditorPanel: React.FC = () => {
                   <button
                     onClick={() => handleAddBinConstraint(bin.id)}
                     disabled={isAdded}
+                    data-testid={`add-bin-${bin.id}`}
                     className="cursor-pointer rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-xs text-text-primary disabled:cursor-default disabled:bg-brand-primary/10 disabled:text-brand-primary"
                   >
                     {isAdded ? "Added" : "+ Add"}
