@@ -99,8 +99,8 @@ Trait: fast iterator.
 - **WHEN** the user changes a constraint's mode, count, or bin choice on a space that already has a layout
 - **THEN** the canvas and validity badge update to reflect the new constraint immediately
 
-**Grounded in:** `openspec/specs/interactive-constraint-editing/spec.md`, the existing mode-toggle test in `apps/web/e2e/golden-path.spec.ts` ("changing a constraint's mode refreshes the validity badge").
-**Currently:** Partially covered. Only a mode toggle is tested today; bin-choice and count changes on an existing layout are not.
+**Grounded in:** `openspec/specs/interactive-constraint-editing/spec.md`, the mode-toggle test in `apps/web/e2e/golden-path.spec.ts` ("changing a constraint's mode refreshes the validity badge"), and the count-change and bin-swap tests in `apps/web/e2e/constraint-edit-refresh.spec.ts`.
+**Currently:** Fully covered. All three edit types named in the scenario — mode, count, and bin choice — have an e2e test against an already-packed space.
 **Bead:** sm-4857.
 
 ### 5. Resume a plan later
