@@ -4,10 +4,15 @@ import { updateConstraintInState, removeConstraintFromState } from "../src/Store
 import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { SpaceInstanceSchema } from "@storagemaxxing/assembly/SpaceInstance";
 import { BinSpecId } from "@storagemaxxing/assembly/BaseTypes";
+import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate";
+
+const TEMPLATE_ID = "template-1" as SpaceTemplateId;
+const BIN_1 = "bin-1" as BinSpecId;
+const BIN_2 = "bin-2" as BinSpecId;
 
 const space = SpaceInstanceSchema.parse({
   id: "space-1",
-  templateId: "template-1",
+  templateId: TEMPLATE_ID,
   name: "Test space",
   count: 1,
   constraints: {},
@@ -21,30 +26,30 @@ const state: AppState = {
 
 describe("storage-layout: Store Actions and Helpers", () => {
   test("adds a constraint to a space and updates constraintsBySpace", () => {
-    const constraint = createSpaceConstraint("bin-1", 2, 0, 1);
-    const updated = updateConstraintInState(state, "template-1", constraint);
+    const constraint = createSpaceConstraint(BIN_1, 2, 0, 1);
+    const updated = updateConstraintInState(state, TEMPLATE_ID, constraint);
 
-    expect(updated.constraintsBySpace["template-1"]).toEqual([constraint]);
+    expect(updated.constraintsBySpace[TEMPLATE_ID]).toEqual([constraint]);
     const updatedSpace = updated.spaces.find((s) => s.id === "space-1");
-    expect(updatedSpace?.constraints["bin-1"]).toEqual(constraint);
+    expect(updatedSpace?.constraints[BIN_1]).toEqual(constraint);
   });
 
   test("removes a constraint from a space and updates constraintsBySpace", () => {
-    const constraint1 = createSpaceConstraint("bin-1", 2, 0, 1);
-    const constraint2 = createSpaceConstraint("bin-2", 3, 0, 1);
+    const constraint1 = createSpaceConstraint(BIN_1, 2, 0, 1);
+    const constraint2 = createSpaceConstraint(BIN_2, 3, 0, 1);
 
     // First add two constraints
     const stateWithConstraints = {
       ...state,
       constraintsBySpace: {
-        "template-1": [constraint1, constraint2],
+        [TEMPLATE_ID]: [constraint1, constraint2],
       },
       spaces: [
         {
           ...space,
           constraints: {
-            "bin-1": constraint1,
-            "bin-2": constraint2,
+            [BIN_1]: constraint1,
+            [BIN_2]: constraint2,
           },
         },
       ],
@@ -53,13 +58,13 @@ describe("storage-layout: Store Actions and Helpers", () => {
     // Remove one constraint
     const updated = removeConstraintFromState(
       stateWithConstraints,
-      "template-1",
-      "bin-1" as BinSpecId,
+      TEMPLATE_ID,
+      BIN_1,
     );
 
-    expect(updated.constraintsBySpace["template-1"]).toEqual([constraint2]);
+    expect(updated.constraintsBySpace[TEMPLATE_ID]).toEqual([constraint2]);
     const updatedSpace = updated.spaces.find((s) => s.id === "space-1");
-    expect(updatedSpace?.constraints["bin-1"]).toBeUndefined();
-    expect(updatedSpace?.constraints["bin-2"]).toEqual(constraint2);
+    expect(updatedSpace?.constraints[BIN_1]).toBeUndefined();
+    expect(updatedSpace?.constraints[BIN_2]).toEqual(constraint2);
   });
 });

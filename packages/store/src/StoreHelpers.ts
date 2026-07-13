@@ -7,7 +7,7 @@ export const updateConstraintInState = (
   state: AppState,
   templateId: SpaceTemplateId,
   constraint: SpaceConstraint,
-) => {
+): Pick<AppState, "constraintsBySpace" | "spaces"> => {
   const existing = state.constraintsBySpace[templateId] || [];
   const filtered = existing.filter((c) => c.binId !== constraint.binId);
   return {
@@ -32,7 +32,7 @@ export const removeConstraintFromState = (
   state: AppState,
   templateId: SpaceTemplateId,
   binId: BinSpecId,
-) => {
+): Pick<AppState, "constraintsBySpace" | "spaces"> => {
   const existing = state.constraintsBySpace[templateId] || [];
   const filtered = existing.filter((c) => c.binId !== binId);
   return {
