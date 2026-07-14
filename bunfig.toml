@@ -11,3 +11,6 @@ root = "packages"
 # Do not set [run] bun = true: it shims `node` to Bun inside `bun run` scripts,
 # and Playwright's runner spawns `node` workers that are not supported under the Bun runtime
 # (vitest broke the same way before its removal: zod ESM named exports resolved undefined).
+# Upstream tracking: https://github.com/microsoft/playwright/issues/27139 (open since 2023;
+# a 2024 PR added partial Bun support but was closed over worker-process instability, no
+# resolution as of 2026-07). Re-check this issue before revisiting [run] bun = true.
