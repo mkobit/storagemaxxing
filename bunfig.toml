@@ -1,5 +1,6 @@
 [install]
 ignoreScripts = true
+minimumReleaseAgeExcludes = ["@fission-ai/openspec"]
 
 # Scope bare `bun test` at the root to packages/: apps/web unit tests need the
 # happy-dom preload from apps/web/bunfig.toml (run via `bun run --filter
@@ -10,7 +11,3 @@ root = "packages"
 # Do not set [run] bun = true: it shims `node` to Bun inside `bun run` scripts,
 # and Playwright's runner spawns `node` workers that are not supported under the Bun runtime
 # (vitest broke the same way before its removal: zod ESM named exports resolved undefined).
-
-[env]
-OPENSPEC_TELEMETRY = "0"
-DO_NOT_TRACK = "1"
