@@ -114,8 +114,8 @@ Trait: backlog scale (continuity matters more the more you have invested).
 - **WHEN** the user reloads the page, or exports a sketch and imports it elsewhere
 - **THEN** all spaces, constraints, and the packed layout are restored exactly
 
-**Grounded in:** `openspec/specs/local-persistence/spec.md`, `openspec/specs/state-serialization/spec.md`, the existing reload and export-import tests in `apps/web/e2e/golden-path.spec.ts`.
-**Currently:** Implemented and tested against the single-space golden-path fixture. Not yet tested against a real multi-space plan.
+**Grounded in:** `openspec/specs/local-persistence/spec.md`, `openspec/specs/state-serialization/spec.md`, the single-space reload and export-import tests in `apps/web/e2e/golden-path.spec.ts`, `apps/web/e2e/multi-space-round-trip.spec.ts`.
+**Currently:** Fully covered. `apps/web/e2e/multi-space-round-trip.spec.ts` creates two spaces with distinct dimensions and bin constraints, then asserts both round-trip exactly via page reload and via export/import into a fresh browser context.
 **Bead:** sm-5pjs.
 
 ## Dropped from scope
