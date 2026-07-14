@@ -69,8 +69,8 @@ Trait: completionist.
 - **WHEN** the user creates two or more spaces with different bin selections and opens the BOM panel
 - **THEN** the BOM shows correct aggregated quantities per bin type across every space
 
-**Grounded in:** `apps/web/e2e/space-manager.spec.ts` (multi-space), `apps/web/src/ui/BOMPanel.tsx` and `computeAggregateBom` in `packages/assembly/src/bom.ts` (aggregate BOM), `apps/web/e2e/bom-panel.spec.ts`.
-**Currently:** Mostly built. Multi-space and BOM both exist and are tested separately; no e2e test exercises them together as one journey.
+**Grounded in:** `apps/web/e2e/space-manager.spec.ts` (multi-space), `apps/web/src/ui/BOMPanel.tsx` and `computeAggregateBom` in `packages/assembly/src/bom.ts` (aggregate BOM), `apps/web/e2e/multi-space-bom.spec.ts`.
+**Currently:** Fully covered. `apps/web/e2e/multi-space-bom.spec.ts` creates two spaces with distinct bin selections and asserts the BOM panel's aggregated quantities per SKU across both.
 **Bead:** sm-ez18.
 
 ### 3. Try a different bin system in a space
