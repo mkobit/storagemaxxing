@@ -81,6 +81,34 @@ describe("ConstraintEditorPanel", () => {
     expect(updatedSpace?.constraints[expectedId]).toBeTruthy();
   });
 
+  it("shows the explicitly selected system's catalog even with no constraints and a non-matching name", () => {
+    const schallerSpaceId = SpaceInstanceIdSchema.parse("space-2");
+    const schallerTemplateId = SpaceTemplateIdSchema.parse("template-2");
+    const schallerSpace = SpaceInstanceSchema.parse({
+      id: schallerSpaceId,
+      templateId: schallerTemplateId,
+      name: "Kitchen drawer",
+      count: 1,
+      constraints: {},
+      system: "schaller",
+    });
+    useStore.setState({
+      spaces: [schallerSpace],
+      activeSpaceId: schallerSpaceId,
+      templatesById: {
+        [schallerTemplateId]: createSpaceTemplate(
+          schallerTemplateId,
+          createDimensions3D(6, 6, 2),
+          "top",
+        ),
+      },
+    });
+
+    render(<ConstraintEditorPanel />);
+    expect(screen.getByText("Schaller 2x3 - 2 inch depth")).toBeTruthy();
+    expect(screen.queryByText("Gridfinity 1x1x2")).toBeNull();
+  });
+
   it("assigns distinct, non-black colors to bins added via the catalog", () => {
     const addBin = (binName: string) => {
       render(<ConstraintEditorPanel />);
