@@ -1,5 +1,7 @@
 @AGENTS.md
 
+> ⚠️ **Do not blindly run `bd setup claude` to clear a "stale" warning.** The Session Completion block below was hand-patched (sm-94br) to require a feature branch + PR instead of a direct `git push`, because `main` is branch-protected (GH013). Regenerating reverts that patch. If `bd setup claude --check` reports stale, diff the output first and re-apply the branch+PR requirement to `CRITICAL RULES` if the regen wipes it. Tracked in sm-sws7.
+
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:ca08a54f -->
 
 ## Beads Issue Tracker

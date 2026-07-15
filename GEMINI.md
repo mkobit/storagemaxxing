@@ -7,6 +7,8 @@ These programmatic guardrails are enforced by the build system. For detailed spe
 - [Engineering Standards Design](openspec/changes/engineering-standards/design.md)
 - [Automated Verification Spec](openspec/changes/engineering-standards/specs/automated-verification/spec.md)
 
+> ⚠️ **Do not blindly run `bd setup gemini` to clear a "stale" warning.** The Session Completion block below was hand-patched (sm-94br) to require a feature branch + PR instead of a direct `git push`, because `main` is branch-protected (GH013). Regenerating reverts that patch. If `bd setup gemini --check` reports stale, diff the output first and re-apply the branch+PR requirement to `CRITICAL RULES` if the regen wipes it. Tracked in sm-sws7.
+
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:7510c1e2 -->
 ## Beads Issue Tracker
 
