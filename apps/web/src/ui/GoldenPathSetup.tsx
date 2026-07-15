@@ -9,15 +9,7 @@ import { createSpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { SpaceInstanceSchema } from "@storagemaxxing/assembly/SpaceInstance";
 import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
-
-const STARTER_COLORS = [
-  "#4e79a7",
-  "#f28e2b",
-  "#59a14f",
-  "#e15759",
-  "#b07aa1",
-  "#76b7b2",
-] as const;
+import { binColorForIndex } from "./binColorPalette";
 
 export const GoldenPathSetup: React.FC = () => {
   const [system, setSystem] = useState<StorageSystem>(GOLDEN_PATH_SYSTEM);
@@ -38,7 +30,7 @@ export const GoldenPathSetup: React.FC = () => {
     );
     const constraints = GOLDEN_PATH_STARTER_BIN_IDS.map((id, i) => ({
       ...createSpaceConstraint(id, 1, 0, 1),
-      color: STARTER_COLORS[i % STARTER_COLORS.length],
+      color: binColorForIndex(i),
     }));
     const space = SpaceInstanceSchema.parse({
       id: spaceId,
@@ -78,12 +70,12 @@ export const GoldenPathSetup: React.FC = () => {
       if (i === 0) {
         return {
           ...createSpaceConstraint(id, 1, 6),
-          color: STARTER_COLORS[i % STARTER_COLORS.length],
+          color: binColorForIndex(i),
         };
       }
       return {
         ...createSpaceConstraint(id, 0, 0),
-        color: STARTER_COLORS[i % STARTER_COLORS.length],
+        color: binColorForIndex(i),
       };
     });
     const space = SpaceInstanceSchema.parse({
@@ -107,7 +99,7 @@ export const GoldenPathSetup: React.FC = () => {
     const constraints = [
       {
         ...createSpaceConstraint("gridfinity-unknown-bin-id", 1, 0, 1),
-        color: STARTER_COLORS[0],
+        color: binColorForIndex(0),
       },
     ];
     const space = SpaceInstanceSchema.parse({

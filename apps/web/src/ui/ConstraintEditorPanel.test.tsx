@@ -80,4 +80,32 @@ describe("ConstraintEditorPanel", () => {
     const expectedId = BinSpecIdSchema.parse("gridfinity-1x1x3");
     expect(updatedSpace?.constraints[expectedId]).toBeTruthy();
   });
+
+  it("assigns distinct, non-black colors to bins added via the catalog", () => {
+    const addBin = (binName: string) => {
+      render(<ConstraintEditorPanel />);
+      const binRow = screen.getAllByText(binName).at(-1)?.parentElement;
+      expect(binRow).toBeTruthy();
+      if (!binRow) return;
+      const addButton = binRow.querySelector("button");
+      expect(addButton).toBeTruthy();
+      if (!addButton) return;
+      fireEvent.click(addButton);
+    };
+
+    addBin("Gridfinity 1x1x3");
+    addBin("Gridfinity 1x1x4");
+
+    const updatedSpace = useStore.getState().spaces.find((s) => s.id === spaceId);
+    const firstColor =
+      updatedSpace?.constraints[BinSpecIdSchema.parse("gridfinity-1x1x3")]?.color;
+    const secondColor =
+      updatedSpace?.constraints[BinSpecIdSchema.parse("gridfinity-1x1x4")]?.color;
+
+    expect(firstColor).toBeTruthy();
+    expect(secondColor).toBeTruthy();
+    expect(firstColor).not.toBe("#000000");
+    expect(secondColor).not.toBe("#000000");
+    expect(firstColor).not.toBe(secondColor);
+  });
 });
