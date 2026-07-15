@@ -5,6 +5,7 @@ import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
 import { binId } from "@storagemaxxing/catalog/bin";
 import { BinSpecIdSchema } from "@storagemaxxing/assembly/BaseTypes";
 import { SpaceConstraint, createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
+import { binColorForIndex } from "./binColorPalette";
 
 export const ConstraintEditorPanel: React.FC = () => {
   const activeSpace = useStore((state) =>
@@ -62,7 +63,10 @@ export const ConstraintEditorPanel: React.FC = () => {
   };
 
   const handleAddBinConstraint = (id: string) => {
-    const constraint = createSpaceConstraint(id, 1, 0);
+    const constraint = {
+      ...createSpaceConstraint(id, 1, 0),
+      color: binColorForIndex(constraints.length),
+    };
     updateConstraintForSpace(activeSpace.templateId, constraint);
   };
 
