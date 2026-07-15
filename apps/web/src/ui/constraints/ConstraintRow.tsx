@@ -106,33 +106,40 @@ export const ConstraintRow: React.FC<ConstraintRowProps> = ({
   };
 
   return (
-    <div className="mb-2 flex items-center gap-4">
-      <span className="w-[200px] truncate text-text-primary">{binName}</span>
-      <select
-        value={constraint.mode}
-        onChange={handleModeChange}
-        data-testid={`constraint-mode-${constraint.binId}`}
+    <div className="mb-2 flex flex-col gap-1">
+      <span
+        title={binName}
+        className="shrink-0 truncate text-text-primary"
       >
-        <option value="off">Off</option>
-        <option value="auto">Auto</option>
-        <option value="soft">Soft</option>
-        <option value="hard">Hard</option>
-      </select>
-
-      <ConstraintInputs
-        constraint={constraint}
-        onMinChange={handleMinChange}
-        onMaxChange={handleMaxChange}
-      />
-      {onDelete && (
-        <button
-          onClick={onDelete}
-          className="cursor-pointer border-none bg-transparent px-2 py-0 text-[1.2rem] leading-none text-red-500"
-          title="Remove constraint"
+        {binName}
+      </span>
+      <div className="flex flex-wrap items-center gap-4">
+        <select
+          value={constraint.mode}
+          onChange={handleModeChange}
+          data-testid={`constraint-mode-${constraint.binId}`}
         >
-          &times;
-        </button>
-      )}
+          <option value="off">Off</option>
+          <option value="auto">Auto</option>
+          <option value="soft">Soft</option>
+          <option value="hard">Hard</option>
+        </select>
+
+        <ConstraintInputs
+          constraint={constraint}
+          onMinChange={handleMinChange}
+          onMaxChange={handleMaxChange}
+        />
+        {onDelete && (
+          <button
+            onClick={onDelete}
+            className="cursor-pointer border-none bg-transparent px-2 py-0 text-[1.2rem] leading-none text-red-500"
+            title="Remove constraint"
+          >
+            &times;
+          </button>
+        )}
+      </div>
     </div>
   );
 };
