@@ -41,16 +41,19 @@ bd close <id>         # Complete work
 4. **PUSH TO REMOTE** - This is MANDATORY:
    ```bash
    git pull --rebase
-   git push
-   git status  # MUST show "up to date with origin"
+   git checkout -b <topic-branch>   # skip if already on a feature branch
+   git push -u origin <topic-branch>
+   gh pr create --fill
    ```
 5. **Clean up** - Clear stashes, prune remote branches
 6. **Verify** - All changes committed AND pushed
 7. **Hand off** - Provide context for next session
 
 **CRITICAL RULES:**
-- Work is NOT complete until `git push` succeeds
-- NEVER stop before pushing - that leaves work stranded locally
-- NEVER say "ready to push when you are" - YOU must push
-- If push fails, resolve and retry until it succeeds
+- `main` is branch-protected (GH013: pull request required) - a direct `git push` to main is always rejected, even for tiny/doc-only changes
+- Work is NOT complete until a feature branch is pushed and a PR against main is opened
+- NEVER attempt a direct push to main as a shortcut - branch + PR is the required path, no exceptions
+- NEVER stop before pushing the branch and opening the PR - that leaves work stranded locally
+- NEVER say "ready to push when you are" - YOU must push the branch and open the PR
+- If push or PR creation fails, resolve and retry until it succeeds
 <!-- END BEADS INTEGRATION -->
