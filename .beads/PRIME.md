@@ -10,7 +10,7 @@ Before finishing, you MUST run this checklist:
 2. **Alignment:** Ensure all implemented logic is reflected in the canonical OpenSpec `design.md` or `specs/`.
 3. **Meta-Reflection:** Record at least one process learning or friction point as a `meta:beads-flow` bead or via `bd remember`.
 4. **Issue Sync:** `bd close <ids>` for completed work.
-5. **Git Sync:** `git add .` && `git commit -m "..."` && `git push`
+5. **Git Sync:** `git add .` && `git commit -m "..."` -- `main` is branch-protected (GH013), so push a feature branch (`git push -u origin <topic-branch>`) and `gh pr create --fill` instead of pushing to main directly
 
 ## 🟢 AGENT OPERATIONAL LOOP
 
@@ -34,7 +34,11 @@ Use these templates to bootstrap new feature probes and implementation syncs:
 
 - `bd mol pour feature-probe --var system_name=<name>` - Scoping and architectural discovery via OpenSpec.
 - `bd mol pour openspec-sync --var change_name=<name>` - Hydrate task graph from OpenSpec design.
-- `bd mol pour backlog-hygiene` - Periodic maintenance of the issue database.
+- `bd mol pour design-adversary --var change_name=<name>` - Adversarial review of an existing design.
+- `bd mol pour engineering-sync` - Sync Engineering Standards from OpenSpec to Beads.
+- `bd mol pour autonomous-patrol --var agent_id=<jules|opencode> --var duty_name=<name>` - Recurring duty for autonomous agents.
+
+Run `bd formula list` for the current, authoritative set -- this list drifts as formulas are added/removed.
 
 ## 🛠 ESSENTIAL COMMANDS
 
