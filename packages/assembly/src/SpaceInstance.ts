@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { StorageSystemSchema } from "@storagemaxxing/catalog/StorageSystem";
 import { SpaceTemplateIdSchema } from "./SpaceTemplate";
 import { SpaceConstraintSchema } from "./SpaceConstraint";
 import { PlacedBinSchema } from "./PlacedBin";
@@ -16,6 +17,7 @@ export const SpaceInstanceSchema = z
     constraints: z.record(BinSpecIdSchema, SpaceConstraintSchema).readonly(),
     activeStrategy: PackingStrategyIdSchema.optional(),
     placedBins: z.array(PlacedBinSchema).readonly().optional(),
+    system: StorageSystemSchema.optional(),
   })
   .readonly();
 

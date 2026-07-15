@@ -35,6 +35,7 @@ export const ConstraintEditorPanel: React.FC = () => {
   const constraints = Object.values(activeSpace.constraints);
 
   const detectedSystem = (() => {
+    if (activeSpace.system) return activeSpace.system;
     if (constraints.length > 0) {
       const binDef = findBinById(ALL_BINS, binId(constraints[0].binId));
       if (binDef) return binDef.system;

@@ -52,6 +52,7 @@ export const CreateSpaceFormPanel: React.FC = () => {
       name: parsed.data.name,
       count: 1,
       constraints: {},
+      system: parsed.data.system,
     });
     addTemplate(template);
     addSpace(space);
