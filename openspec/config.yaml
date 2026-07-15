@@ -24,6 +24,7 @@ rules:
   design:
     - Must include an ASCII diagram of the data flow.
     - Must specify Zod schemas for new domain objects.
+    - Any claim of the form "existing X already does/doesn't do Y" or "no Z should break" must be verified by grepping the actual code or running the actual test suite before being stated as fact -- not inferred from function/test names alone. Reasoning-only claims of this form have shipped false twice (untested `generateAutoFillRects` exclusion path, pixel-asserting e2e tests) and broke during implementation instead of design review.
   tasks:
     - Every task must include a "Validation" step (e.g., specific test or command).
     - Break tasks into chunks of max 30 minutes for AI execution.

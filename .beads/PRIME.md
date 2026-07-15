@@ -47,3 +47,7 @@ Run `bd formula list` for the current, authoritative set -- this list drifts as 
 - `bd update <id> --claim` - Start work on a bead.
 - `bd close <ids> --reason "..."` - Complete work.
 - `bd query "label=..."` - Filter by taxonomy.
+
+## ⚠️ KNOWN GOTCHAS
+
+- **`bd create --deps blocks:X` inverts the intuitive direction.** It makes the *new* issue block `X` (so `X` ends up depending on the new issue) -- not "new issue depends on X". When hydrating an ordered task chain from an OpenSpec `tasks.md` (earlier task should block later task), this reads backwards and silently inverts the whole chain. Prefer `bd dep add <A> <B>` per edge instead (unambiguous positional semantics: `A` depends on `B`). Either way, verify the chain with `bd ready` or `bd show <id>`'s DEPENDS ON/BLOCKS sections before marking anything `status:needs-review` or handing off -- `bd lint` does not catch inverted edges.
