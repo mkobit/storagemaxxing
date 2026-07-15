@@ -7,12 +7,14 @@ import { test, expect } from "@playwright/test";
 // constraint-row-<binId>/add-bin-<binId> testids sm-ul0p added, which are
 // keyed by bin id rather than being Gridfinity-specific.
 //
-// ConstraintEditorPanel detects which catalog to show via a heuristic (see
-// its `detectedSystem`), not from the create-space-system field selected
-// here -- that value is validated but otherwise discarded (see sm-s53j
-// follow-up bug). The heuristic matches the literal substring "akromils"
-// (no hyphen) in the space name, so the name below is deliberately spelled
-// without Akro-Mils's usual hyphen to exercise the one path that works today.
+// ConstraintEditorPanel used to detect which catalog to show via a
+// name/templateId substring heuristic, ignoring the create-space-system field
+// entirely (sm-s53j follow-up bug). sm-58a7 fixed this: SpaceInstance now
+// carries an explicit `system` field set from the validated form input, and
+// `detectedSystem` prefers it over the heuristic. The space name below is
+// deliberately unrelated to "akromils" to prove the dropdown alone drives the
+// filter now -- the heuristic remains only as a fallback for spaces without
+// the field (e.g. golden-path demo fixtures).
 //
 // Only one Akro-Mils SKU (30010) is usable here: packages/catalog/src/
 // akromils.ts sets `system: "akromils"` on 30010 alone, so every other
@@ -25,7 +27,7 @@ test("Akro-Mils bin selection: a space named for a non-Gridfinity system packs a
 }) => {
   await page.goto("/");
 
-  await page.getByTestId("create-space-name").fill("Akromils tool tray");
+  await page.getByTestId("create-space-name").fill("Tool tray");
   await page.getByTestId("create-space-system").selectOption("akromils");
   await page.getByTestId("create-space-columns").fill("8");
   await page.getByTestId("create-space-rows").fill("6");
@@ -59,4 +61,23 @@ test("Akro-Mils bin selection: a space named for a non-Gridfinity system packs a
 
   await minInput.fill("2");
   await expect(page.getByTestId("layout-validity-badge")).toHaveText("valid");
+});
+
+// sm-58a7's exact repro: a space name that shares no substring with any
+// system name must still filter the Add Bins catalog by the selected
+// dropdown value alone, not fall back to Gridfinity.
+test("create-space-system dropdown alone drives the Add Bins catalog filter, independent of the space name", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  await page.getByTestId("create-space-name").fill("Kitchen drawer");
+  await page.getByTestId("create-space-system").selectOption("schaller");
+  await page.getByTestId("create-space-columns").fill("10");
+  await page.getByTestId("create-space-rows").fill("10");
+  await page.getByTestId("create-space-depth").fill("3");
+  await page.getByTestId("create-space-submit").click();
+
+  await expect(page.getByTestId("add-bin-schaller-1x1x2")).toBeVisible();
+  await expect(page.getByTestId("add-bin-gridfinity-1x1x2")).toHaveCount(0);
 });
