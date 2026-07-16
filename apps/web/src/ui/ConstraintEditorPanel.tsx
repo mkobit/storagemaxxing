@@ -6,11 +6,13 @@ import { binId } from "@storagemaxxing/catalog/bin";
 import { BinSpecIdSchema } from "@storagemaxxing/assembly/BaseTypes";
 import { SpaceConstraint, createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { binColorForIndex } from "./binColorPalette";
+import { isBinInstallationAllowed } from "@storagemaxxing/store/layoutSelectors";
 
 export const ConstraintEditorPanel: React.FC = () => {
   const activeSpace = useStore((state) =>
     state.spaces.find((s) => s.id === state.activeSpaceId),
   );
+  const templatesById = useStore((state) => state.templatesById);
 
   const updateConstraintForSpace = useStore(
     (state) => state.updateConstraintForSpace,
@@ -18,6 +20,7 @@ export const ConstraintEditorPanel: React.FC = () => {
   const removeConstraintForSpace = useStore(
     (state) => state.removeConstraintForSpace,
   );
+  const setSpaceDrillable = useStore((state) => state.setSpaceDrillable);
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -33,6 +36,9 @@ export const ConstraintEditorPanel: React.FC = () => {
   }
 
   const constraints = Object.values(activeSpace.constraints);
+  const activeTemplate = templatesById[activeSpace.templateId];
+  const installationConstraints = activeTemplate?.installationConstraints ?? [];
+  const drillable = !installationConstraints.some((c) => c.type === "noDrill");
 
   const detectedSystem = (() => {
     if (activeSpace.system) return activeSpace.system;
@@ -71,11 +77,28 @@ export const ConstraintEditorPanel: React.FC = () => {
     updateConstraintForSpace(activeSpace.templateId, constraint);
   };
 
+  const handleDrillableChange = (nextDrillable: boolean) => {
+    setSpaceDrillable(activeSpace.templateId, nextDrillable);
+  };
+
   return (
     <div
       data-testid="constraint-editor-panel"
       className="glass-panel flex w-80 flex-col gap-6 overflow-y-auto p-4"
     >
+      <div className="flex flex-col gap-3">
+        <label className="flex items-center gap-2 text-sm text-text-primary">
+          <input
+            type="checkbox"
+            checked={drillable}
+            onChange={(e) => handleDrillableChange(e.target.checked)}
+          />
+          Can I drill into this space?
+        </label>
+      </div>
+
+      <hr className="m-0 border-border-default" />
+
       <div className="flex flex-col gap-3">
         <h3 className="text-text-primary">Constraints</h3>
         {constraints.length === 0 ? (
@@ -126,17 +149,28 @@ export const ConstraintEditorPanel: React.FC = () => {
             filteredBins.map((bin) => {
               const binSpecId = BinSpecIdSchema.parse(bin.id);
               const isAdded = activeSpace.constraints[binSpecId] !== undefined;
+              const installationAllowed = isBinInstallationAllowed(
+                bin,
+                installationConstraints,
+              );
+              const disabled = isAdded || !installationAllowed;
+              const title = !installationAllowed
+                ? "requires drilling — not allowed for this space"
+                : bin.name;
               return (
                 <div
                   key={bin.id}
-                  className="flex items-center justify-between border-b border-border-subtle py-1 text-sm"
+                  className={`flex items-center justify-between border-b border-border-subtle py-1 text-sm ${
+                    !installationAllowed ? "opacity-50" : ""
+                  }`}
                 >
-                  <span title={bin.name} className="max-w-[160px] truncate">
+                  <span title={title} className="max-w-[160px] truncate">
                     {bin.name}
                   </span>
                   <button
                     onClick={() => handleAddBinConstraint(bin.id)}
-                    disabled={isAdded}
+                    disabled={disabled}
+                    title={title}
                     data-testid={`add-bin-${bin.id}`}
                     className="cursor-pointer rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-xs text-text-primary disabled:cursor-default disabled:bg-brand-primary/10 disabled:text-brand-primary"
                   >
