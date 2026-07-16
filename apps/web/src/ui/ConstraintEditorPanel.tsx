@@ -90,6 +90,7 @@ export const ConstraintEditorPanel: React.FC = () => {
         <label className="flex items-center gap-2 text-sm text-text-primary">
           <input
             type="checkbox"
+            data-testid="drillable-toggle"
             checked={drillable}
             onChange={(e) => handleDrillableChange(e.target.checked)}
           />
