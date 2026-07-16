@@ -1,10 +1,18 @@
 import { describe, expect, test } from "bun:test";
 import { AppState, initialState } from "../src/StoreTypes";
-import { updateConstraintInState, removeConstraintFromState } from "../src/StoreHelpers";
+import {
+  updateConstraintInState,
+  removeConstraintFromState,
+  setTemplateDrillableInState,
+} from "../src/StoreHelpers";
 import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { SpaceInstanceSchema } from "@storagemaxxing/assembly/SpaceInstance";
 import { BinSpecId } from "@storagemaxxing/assembly/BaseTypes";
-import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate";
+import {
+  SpaceTemplateId,
+  createSpaceTemplate,
+} from "@storagemaxxing/assembly/SpaceTemplate";
+import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
 
 const TEMPLATE_ID = "template-1" as SpaceTemplateId;
 const BIN_1 = "bin-1" as BinSpecId;
@@ -66,5 +74,145 @@ describe("storage-layout: Store Actions and Helpers", () => {
     const updatedSpace = updated.spaces.find((s) => s.id === "space-1");
     expect(updatedSpace?.constraints[BIN_1]).toBeUndefined();
     expect(updatedSpace?.constraints[BIN_2]).toEqual(constraint2);
+  });
+});
+
+describe("installation-constraints: setTemplateDrillableInState", () => {
+  const template = createSpaceTemplate(
+    "template-drillable",
+    createDimensions3D(12, 12, 2),
+    "top",
+  );
+
+  const stateWithTemplate: AppState = {
+    ...initialState,
+    templatesById: { [template.id]: template },
+  };
+
+  test("drillable: false appends a single noDrill entry", () => {
+    const updated = setTemplateDrillableInState(
+      stateWithTemplate,
+      template.id,
+      false,
+    );
+
+    expect(updated.templatesById[template.id]?.installationConstraints).toEqual([
+      { type: "noDrill" },
+    ]);
+  });
+
+  test("drillable: false is idempotent -- calling it twice does not duplicate the entry", () => {
+    const once = setTemplateDrillableInState(
+      stateWithTemplate,
+      template.id,
+      false,
+    );
+    const twice = setTemplateDrillableInState(
+      { ...stateWithTemplate, templatesById: once.templatesById },
+      template.id,
+      false,
+    );
+
+    expect(twice.templatesById[template.id]?.installationConstraints).toEqual([
+      { type: "noDrill" },
+    ]);
+  });
+
+  test("drillable: true removes the noDrill entry", () => {
+    const disallowed = setTemplateDrillableInState(
+      stateWithTemplate,
+      template.id,
+      false,
+    );
+    const restored = setTemplateDrillableInState(
+      { ...stateWithTemplate, templatesById: disallowed.templatesById },
+      template.id,
+      true,
+    );
+
+    expect(
+      restored.templatesById[template.id]?.installationConstraints,
+    ).toEqual([]);
+  });
+
+  test("toggle false -> true -> false leaves exactly one noDrill entry with no duplicates", () => {
+    const step1 = setTemplateDrillableInState(
+      stateWithTemplate,
+      template.id,
+      false,
+    );
+    const step2 = setTemplateDrillableInState(
+      { ...stateWithTemplate, templatesById: step1.templatesById },
+      template.id,
+      true,
+    );
+    const step3 = setTemplateDrillableInState(
+      { ...stateWithTemplate, templatesById: step2.templatesById },
+      template.id,
+      false,
+    );
+
+    expect(step3.templatesById[template.id]?.installationConstraints).toEqual(
+      [{ type: "noDrill" }],
+    );
+  });
+
+  test("preserves other constraint types untouched when toggling noDrill", () => {
+    const templateWithOtherConstraints = {
+      ...template,
+      installationConstraints: [
+        { type: "noAdhesive" as const, notes: "sticky residue" },
+        { type: "custom" as const, notes: "ask an adult" },
+      ],
+    };
+    const stateWithOtherConstraints: AppState = {
+      ...initialState,
+      templatesById: {
+        [templateWithOtherConstraints.id]: templateWithOtherConstraints,
+      },
+    };
+
+    const withNoDrill = setTemplateDrillableInState(
+      stateWithOtherConstraints,
+      templateWithOtherConstraints.id,
+      false,
+    );
+
+    expect(
+      withNoDrill.templatesById[templateWithOtherConstraints.id]
+        ?.installationConstraints,
+    ).toEqual([
+      { type: "noAdhesive", notes: "sticky residue" },
+      { type: "custom", notes: "ask an adult" },
+      { type: "noDrill" },
+    ]);
+
+    const withoutNoDrill = setTemplateDrillableInState(
+      {
+        ...stateWithOtherConstraints,
+        templatesById: withNoDrill.templatesById,
+      },
+      templateWithOtherConstraints.id,
+      true,
+    );
+
+    expect(
+      withoutNoDrill.templatesById[templateWithOtherConstraints.id]
+        ?.installationConstraints,
+    ).toEqual([
+      { type: "noAdhesive", notes: "sticky residue" },
+      { type: "custom", notes: "ask an adult" },
+    ]);
+  });
+
+  test("unknown templateId leaves templatesById untouched", () => {
+    const unknownId = "template-does-not-exist" as SpaceTemplateId;
+    const updated = setTemplateDrillableInState(
+      stateWithTemplate,
+      unknownId,
+      false,
+    );
+
+    expect(updated.templatesById).toEqual(stateWithTemplate.templatesById);
   });
 });

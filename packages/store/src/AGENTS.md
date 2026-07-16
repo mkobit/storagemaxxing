@@ -17,6 +17,7 @@ SpaceInputs
 StoreState
 ToolMode
 initialState
+isBinInstallationAllowed
 layoutResolutionMissingTemplate
 layoutResolutionNone
 layoutResolutionResolved
@@ -24,6 +25,7 @@ parseSketch
 selectPackedLayout
 selectPackingResultsBySpace
 serializeSketch
+setTemplateDrillableInState
 toSketch
 updateConstraintInState
 removeConstraintFromState

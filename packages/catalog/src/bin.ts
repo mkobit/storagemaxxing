@@ -2,6 +2,7 @@ import { z } from "zod";
 import { Dimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
 import { CatalogSource } from "./catalogSource";
 import { StorageSystem } from "./StorageSystem";
+import { InstallationRequirement } from "./installationRequirement";
 
 export const BinIdSchema = z.string().brand("BinId");
 export type BinId = z.infer<typeof BinIdSchema>;
@@ -21,4 +22,6 @@ export interface BinSpec<T extends number = number> {
   readonly nominal: Dimensions3D<T>;
   readonly actual: Dimensions3D<T>;
   readonly tolerance: Dimensions3D<T>;
+
+  readonly installation?: InstallationRequirement;
 }

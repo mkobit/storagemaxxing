@@ -43,6 +43,10 @@ export type AppActions = {
     binId: BinSpecId,
   ) => void;
   readonly clearConstraintsForSpace: (templateId: SpaceTemplateId) => void;
+  readonly setSpaceDrillable: (
+    templateId: SpaceTemplateId,
+    drillable: boolean,
+  ) => void;
   readonly loadSketch: (
     sketch: Pick<
       AppState,
