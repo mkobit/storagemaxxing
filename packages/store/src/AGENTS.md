@@ -9,6 +9,7 @@ This package manages the global application state using Zustand. It acts as the 
 ```ts-exports
 AppActions
 AppState
+ComparableStorageSystem
 LayoutInputs
 LayoutResolution
 Sketch
@@ -22,6 +23,7 @@ layoutResolutionMissingTemplate
 layoutResolutionNone
 layoutResolutionResolved
 parseSketch
+selectOptionsModeStrategies
 selectPackedLayout
 selectPackingResultsBySpace
 serializeSketch

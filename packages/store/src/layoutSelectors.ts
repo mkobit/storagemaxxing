@@ -4,6 +4,7 @@ import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { BinSpec as CatalogBinSpec, binId } from "@storagemaxxing/catalog/bin";
 import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
 import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
+import { createSpaceConstraint, SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { AppState } from "./StoreTypes";
 
 export const isBinInstallationAllowed = (
@@ -99,6 +100,55 @@ export const selectPackedLayout = (
 
   return resolveSpace(space, state.templatesById, catalog);
 };
+
+const COMPARABLE_SYSTEMS = ["schaller", "gridfinity", "akromils"] as const;
+export type ComparableStorageSystem = (typeof COMPARABLE_SYSTEMS)[number];
+
+const buildAutoFillConstraints = (
+  template: SpaceTemplate,
+  system: ComparableStorageSystem,
+  catalog: readonly CatalogBinSpec[],
+): {
+  readonly bins: readonly CatalogBinSpec[];
+  readonly constraints: readonly SpaceConstraint[];
+} => {
+  const compatible = catalog.filter(
+    (bin) =>
+      bin.system === system &&
+      isBinInstallationAllowed(bin, template.installationConstraints),
+  );
+  return {
+    bins: compatible,
+    constraints: compatible.map((bin) => createSpaceConstraint(bin.id, 0, 0)),
+  };
+};
+
+const resolveStrategy = (
+  template: SpaceTemplate,
+  system: ComparableStorageSystem,
+  catalog: readonly CatalogBinSpec[],
+): LayoutResolution => {
+  const { bins, constraints } = buildAutoFillConstraints(
+    template,
+    system,
+    catalog,
+  );
+  const result = packSpace(template, bins.map(toPackInput), constraints);
+  return layoutResolutionResolved(result, []);
+};
+
+export const selectOptionsModeStrategies = (
+  template: SpaceTemplate,
+  catalog: readonly CatalogBinSpec[] = ALL_BINS,
+): Readonly<Record<ComparableStorageSystem, LayoutResolution>> =>
+  COMPARABLE_SYSTEMS.reduce(
+    (acc, system) => ({
+      ...acc,
+      [system]: resolveStrategy(template, system, catalog),
+    }),
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    {} as Readonly<Record<ComparableStorageSystem, LayoutResolution>>,
+  );
 
 export const selectPackingResultsBySpace = (
   state: SpaceInputs,
