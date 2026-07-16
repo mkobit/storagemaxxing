@@ -17,6 +17,8 @@ SketchSchema
 SpaceInputs
 StoreState
 ToolMode
+applyStrategyInState
+buildAutoFillConstraints
 initialState
 isBinInstallationAllowed
 layoutResolutionMissingTemplate

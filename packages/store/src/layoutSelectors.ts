@@ -104,7 +104,7 @@ export const selectPackedLayout = (
 const COMPARABLE_SYSTEMS = ["schaller", "gridfinity", "akromils"] as const;
 export type ComparableStorageSystem = (typeof COMPARABLE_SYSTEMS)[number];
 
-const buildAutoFillConstraints = (
+export const buildAutoFillConstraints = (
   template: SpaceTemplate,
   system: ComparableStorageSystem,
   catalog: readonly CatalogBinSpec[],

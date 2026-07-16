@@ -7,7 +7,7 @@
 ## 1. Store
 
 - [x] 1.1 sm-oukg — store: add selectOptionsModeStrategies preview selector
-- [ ] 1.2 sm-7387 — store: add applySpaceStrategy action to commit a strategy (depends on sm-oukg)
+- [x] 1.2 sm-7387 — store: add applySpaceStrategy action to commit a strategy (depends on sm-oukg)
 
 ## 2. Web
 
