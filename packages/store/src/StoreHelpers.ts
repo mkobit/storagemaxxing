@@ -51,3 +51,26 @@ export const removeConstraintFromState = (
     }),
   };
 };
+
+export const setTemplateDrillableInState = (
+  state: AppState,
+  templateId: SpaceTemplateId,
+  drillable: boolean,
+): Pick<AppState, "templatesById"> => {
+  const template = state.templatesById[templateId];
+  if (template === undefined) return { templatesById: state.templatesById };
+
+  const withoutNoDrill = template.installationConstraints.filter(
+    (c) => c.type !== "noDrill",
+  );
+  const installationConstraints = drillable
+    ? withoutNoDrill
+    : [...withoutNoDrill, { type: "noDrill" as const }];
+
+  return {
+    templatesById: {
+      ...state.templatesById,
+      [templateId]: { ...template, installationConstraints },
+    },
+  };
+};

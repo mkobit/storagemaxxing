@@ -2,7 +2,11 @@ import { create } from "zustand";
 import { persist, StateStorage, createJSONStorage } from "zustand/middleware";
 import { get, set, del } from "idb-keyval";
 import { StoreState, initialState } from "./StoreTypes";
-import { updateConstraintInState, removeConstraintFromState } from "./StoreHelpers";
+import {
+  updateConstraintInState,
+  removeConstraintFromState,
+  setTemplateDrillableInState,
+} from "./StoreHelpers";
 
 const idbStorage: StateStorage = {
   getItem: async (name: string): Promise<string | null> =>
@@ -53,6 +57,8 @@ export const useStore = create<StoreState>()(
         set((state) => updateConstraintInState(state, templateId, constraint)),
       removeConstraintForSpace: (templateId, binId) =>
         set((state) => removeConstraintFromState(state, templateId, binId)),
+      setSpaceDrillable: (templateId, drillable) =>
+        set((state) => setTemplateDrillableInState(state, templateId, drillable)),
       clearConstraintsForSpace: (templateId) =>
         set((state) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars

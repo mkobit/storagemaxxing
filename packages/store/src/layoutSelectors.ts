@@ -3,7 +3,17 @@ import { toPackInput } from "@storagemaxxing/packer/PackInput";
 import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { BinSpec as CatalogBinSpec, binId } from "@storagemaxxing/catalog/bin";
 import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
+import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { AppState } from "./StoreTypes";
+
+export const isBinInstallationAllowed = (
+  bin: CatalogBinSpec,
+  constraints: SpaceTemplate["installationConstraints"],
+): boolean =>
+  !(
+    bin.installation?.type === "drill" &&
+    constraints.some((c) => c.type === "noDrill")
+  );
 
 export type LayoutInputs = Pick<
   AppState,
@@ -35,6 +45,7 @@ export const layoutResolutionResolved = (
 const resolveSpace = (
   space: LayoutInputs["spaces"][number],
   templatesById: LayoutInputs["templatesById"],
+  catalog: readonly CatalogBinSpec[],
 ): LayoutResolution => {
   const template = templatesById[space.templateId];
   if (template === undefined)
@@ -42,7 +53,7 @@ const resolveSpace = (
 
   const constraints = Object.values(space.constraints);
   const resolved = constraints.map((c) => {
-    const bin = findBinById(ALL_BINS, binId(c.binId));
+    const bin = findBinById(catalog, binId(c.binId));
     return { constraint: c, bin };
   });
 
@@ -50,38 +61,53 @@ const resolveSpace = (
     .filter((r) => r.bin === undefined)
     .map((r) => r.constraint.binId);
 
-  const fittingConstraints = resolved
-    .filter((r): r is { readonly constraint: typeof r.constraint; readonly bin: CatalogBinSpec } =>
-      r.bin !== undefined,
-    )
-    .map((r) => r.constraint);
+  // Bins that resolved against the catalog but are not allowed to be
+  // installed in this space (e.g. drill-mount bins when noDrill is set)
+  // are dropped from BOTH the fitting constraints and the bins list below.
+  // Leaving a stale hard constraint in fittingConstraints while excluding
+  // the bin from the PackInput list would make checkPhaseFailures (which
+  // iterates all constraints, not just resolvable ones) report placed=0
+  // against the required count and spuriously flip validity to invalid.
+  const allowed = resolved.filter(
+    (
+      r,
+    ): r is {
+      readonly constraint: typeof r.constraint;
+      readonly bin: CatalogBinSpec;
+    } =>
+      r.bin !== undefined &&
+      isBinInstallationAllowed(r.bin, template.installationConstraints),
+  );
 
-  const bins = resolved
-    .map((r) => r.bin)
-    .filter((b): b is CatalogBinSpec => b !== undefined)
-    .map(toPackInput);
+  const fittingConstraints = allowed.map((r) => r.constraint);
+
+  const bins = allowed.map((r) => r.bin).map(toPackInput);
 
   const result = packSpace(template, bins, fittingConstraints);
   return layoutResolutionResolved(result, unresolvedBinIds);
 };
 
-export const selectPackedLayout = (state: LayoutInputs): LayoutResolution => {
+export const selectPackedLayout = (
+  state: LayoutInputs,
+  catalog: readonly CatalogBinSpec[] = ALL_BINS,
+): LayoutResolution => {
   const space =
     state.activeSpaceId !== null
       ? state.spaces.find((s) => s.id === state.activeSpaceId)
       : undefined;
   if (space === undefined) return layoutResolutionNone();
 
-  return resolveSpace(space, state.templatesById);
+  return resolveSpace(space, state.templatesById, catalog);
 };
 
 export const selectPackingResultsBySpace = (
   state: SpaceInputs,
+  catalog: readonly CatalogBinSpec[] = ALL_BINS,
 ): Readonly<Record<string, LayoutResolution>> =>
   state.spaces.reduce<Readonly<Record<string, LayoutResolution>>>(
     (acc, space) => ({
       ...acc,
-      [space.id]: resolveSpace(space, state.templatesById),
+      [space.id]: resolveSpace(space, state.templatesById, catalog),
     }),
     {},
   );
