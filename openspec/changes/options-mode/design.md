@@ -130,20 +130,34 @@ Also relevant: `SpaceInstanceSchema.activeStrategy?: PackingStrategyId` (`packag
         ...state.constraintsBySpace,
         [space.templateId]: constraints,
       },
-      spaces: state.spaces.map((s) =>
-        s.templateId === space.templateId
-          ? { ...s, constraints: constraintsRecord }
-          : s.id === spaceId
-            ? { ...s, system }
-            : s,
-      ),
+      spaces: state.spaces.map((s) => {
+        if (s.id === spaceId) return { ...s, system, constraints: constraintsRecord };
+        if (s.templateId === space.templateId)
+          return { ...s, constraints: constraintsRecord };
+        return s;
+      }),
     };
   };
   ```
 
-  Only the clicked instance gets `system` updated; every sibling on the same template gets the new constraint set mirrored (consistent with today's behavior for every other constraint edit) but keeps its own prior `system` value. This is a pre-existing model asymmetry (constraints are template-scoped, `system` is instance-scoped) that this change inherits rather than resolves — called out under Risks below.
+  Only the clicked instance gets `system` updated; every sibling on the same template gets the new constraint set mirrored (consistent with today's behavior for every other constraint edit) but keeps its own prior `system` value.
+  **Adversarial review (sm-mol-v9mn) caught a bug in an earlier draft of this snippet:** a ternary keyed off `s.templateId === space.templateId` first, falling through to `s.id === spaceId` only in the `else` branch, meant the clicked space (which always matches its own `templateId`) took the first branch and never reached the `system`-setting branch — `system` was silently never updated on the clicked space, contradicting this document's own "Strategy Selection Commits System" spec scenario. The `if (s.id === spaceId) ... ` ordering above checks identity first specifically to avoid this; a black-box test asserting `space.system === "gridfinity"` after commit is required to pin this (see spec.md's corresponding scenario).
+  This is a pre-existing model asymmetry (constraints are template-scoped, `system` is instance-scoped) that this change inherits rather than resolves — called out under Risks below.
 
 - **`activeTab` grows a third literal, no router introduced.** `apps/web/src/ui/App.tsx` already switches between `"layout"` and `"bom"` via local `useState`; Options Mode becomes a third value rendering a new `OptionsPanel` component. No new navigation abstraction for a change this size.
+
+- **`OptionsPanel` MUST wrap `selectOptionsModeStrategies` in `useMemo`, matching the app's existing selector convention — not optional, not a follow-up.** Adversarial review (sm-mol-v9mn) found every existing derived-selector call site already does this: `LayoutCanvas.tsx:246` wraps `selectPackedLayout` in `useMemo([spaces, activeSpaceId, templatesById])`, and `BOMPanel.tsx` does the same for `selectPackingResultsBySpace`. `selectOptionsModeStrategies` runs **three** `packSpace` calls per invocation (one per system) versus one for the existing selectors, so calling it unmemoized in the render body — which nothing in an earlier draft of this document ruled out — would triple the packing cost on every unrelated re-render of a shared ancestor. `OptionsPanel` must call it as:
+
+  ```ts
+  const strategies = useMemo(
+    () => selectOptionsModeStrategies(activeSpace.template),
+    [activeSpace?.template],
+  );
+  ```
+
+  This costs nothing beyond following the pattern that already exists everywhere else in `apps/web`; it is a hard requirement of this design, not a Risk to revisit later.
+
+- **`OptionsPanel` MUST guard `activeSpaceId === null` the same way `ConstraintEditorPanel` already does.** Adversarial review found the data-flow diagram below implicitly assumes `activeSpace` exists, but `App.tsx` keeps every tab mounted regardless of `activeTab` (confirmed: `LayoutCanvas`/`BOMPanel` are always rendered, hidden via CSS class), so `OptionsPanel` must handle "no active space" from first render — the actual state of a fresh app before any space exists. `ConstraintEditorPanel.tsx:27-36` already has this exact guard (`if (!activeSpace) return <empty-state div>`); `OptionsPanel` reuses that convention rather than inventing a new one. See spec.md's added "No active space" scenario.
 
 ### Data flow
 
@@ -189,8 +203,9 @@ Also relevant: `SpaceInstanceSchema.activeStrategy?: PackingStrategyId` (`packag
 
 - **Constraint replacement is template-scoped, `system` is instance-scoped — a pre-existing model asymmetry, not introduced here.** If two spaces share a template, applying a strategy to one replaces the constraint set for both, but only the clicked instance's `system` changes. Two siblings can end up with the same bins-with-`auto`-constraints but different `system` labels. This mirrors how every other constraint action already behaves (`setSpaceDrillable`, `setConstraintForSpace`) — not a new risk this change creates, but Options Mode is the first place a user is likely to notice it, since it's the first UI that explicitly frames "pick a system." Fixing the underlying template/instance scoping mismatch is a separate change, not in scope here.
 - **Wholesale constraint replacement discards any constraints the user had already set.** "Select & Customize" is a deliberate reset to the previewed auto-fill baseline — same accepted trade-off the proposal names (Options Mode always previews the *unconstrained* baseline, never the user's current constraints). A confirmation step before overwriting non-empty existing constraints is a UX nicety left to implementation, not a spec requirement.
-- **Three `packSpace` calls per render of the Options tab.** Each is a pure synchronous MaxRects pack over a bounded catalog (tens of SKUs per system); no memoization is specified here beyond React's default re-render behavior, since existing single-pack calls (`selectPackedLayout`) already run on every relevant state change with no perf issues reported. If this proves slow in practice, memoizing `selectOptionsModeStrategies` by `(template, system)` is a compatible follow-up, not required for this change.
+- **Three `packSpace` calls per render of the Options tab.** Each is a pure synchronous MaxRects pack over a bounded catalog (tens of SKUs per system). This is now a hard `useMemo` requirement in Decisions above (adversarial review found this undersold as an optional follow-up in an earlier draft) — with memoization in place, cost is identical to the existing single-pack selectors: one recompute per relevant state change, not per render.
 - **`ALL_BINS` grows over time.** `selectOptionsModeStrategies` takes `catalog` as a parameter (default `ALL_BINS`) purely for testability, mirroring `selectPackedLayout`'s existing signature — not a hook for a future "custom catalog" feature.
+- **`ComparableStorageSystem` (3 of `StorageSystemSchema`'s 5 values) has no runtime narrowing at any boundary.** Safe today because the only call sites are 3 hardcoded card buttons in `OptionsPanel`, never a value read back from persisted/user-controlled state. If a future change ever re-dispatches `applySpaceStrategy` from a value sourced from `activeSpace.system` (5-value, unvalidated on IndexedDB rehydration) rather than a hardcoded button, that future change must add a type-guard — this design doesn't need one because no such call site exists yet, and adding one speculatively would be validation for a scenario that can't currently happen.
 
 ## Adversarial Audit
 

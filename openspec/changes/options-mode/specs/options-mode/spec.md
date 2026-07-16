@@ -27,6 +27,11 @@ Bins excluded by the space's installation constraints (e.g. `noDrill`) SHALL be 
 - **WHEN** every bin in a given system is height-ineligible for the space's template (or no bins pass installation filtering)
 - **THEN** that system's card renders with zero utilization, zero bin count, and zero SKU count rather than an error
 
+#### Scenario: No active space
+
+- **WHEN** Options Mode is viewed with no active space selected (including the app's first-launch state, before any space has been created)
+- **THEN** the application shows an empty state instead of strategy cards, consistent with how the constraint-editing view already handles no active space
+
 ### Requirement: Strategy Selection Commits System and Constraints
 
 The application SHALL let a user commit a previewed strategy to the active space via a "Select & Customize" action on that strategy's card.
@@ -47,3 +52,8 @@ After committing, the application SHALL transition the user into the existing co
 
 - **WHEN** a user completes "Select & Customize"
 - **THEN** the application shows the constraint-editing view for the space, reflecting the newly-applied system and constraints
+
+#### Scenario: Committing a strategy replaces constraints for every space sharing the template
+
+- **WHEN** a user commits a strategy for a space whose template is shared by other space instances
+- **THEN** every space sharing that template has its constraints replaced with the new auto-fill set, matching how every other constraint edit in the app already propagates across sibling instances on a shared template — this is expected behavior, not a defect, and any in-progress unsaved edits on a sibling space are discarded
