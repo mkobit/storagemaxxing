@@ -11,7 +11,7 @@
 
 ## 2. Web
 
-- [ ] 2.1 sm-sstq — web: OptionsPanel card grid + App.tsx options tab (depends on sm-oukg, sm-7387)
+- [x] 2.1 sm-sstq — web: OptionsPanel card grid + App.tsx options tab (depends on sm-oukg, sm-7387)
 
 ## 3. Verification
 
