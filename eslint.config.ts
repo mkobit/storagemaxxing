@@ -122,6 +122,38 @@ export default tseslint.config(
     },
   },
   {
+    // Enforces openspec/specs/web-design-system "no new hardcoded color
+    // values": components must consume @theme tokens (apps/web/src/index.css)
+    // instead of hex/rgb/hsl literals or Tailwind arbitrary bracket literals.
+    files: ["apps/web/src/**/*.{ts,tsx}"],
+    ignores: ["**/*.test.ts", "**/*.test.tsx"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "Literal[value=/#([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\\b/]",
+          message:
+            "Hardcoded color literal -- reference a @theme token in apps/web/src/index.css instead.",
+        },
+        {
+          selector:
+            "JSXAttribute[name.name='className'] Literal[value=/-\\[(?!var\\()[^\\]]+\\]/]",
+          message:
+            "Tailwind arbitrary bracket literal -- use a token/scale utility, or a var(--theme-token) reference, or if the value is structural (not styling), disable this rule inline with a reason.",
+        },
+      ],
+    },
+  },
+  {
+    // Categorical data-viz palette (visually distinguishes bin instances by
+    // index), not UI-chrome styling -- exempt from the hex-literal ban above.
+    files: ["apps/web/src/ui/binColorPalette.ts"],
+    rules: {
+      "no-restricted-syntax": "off",
+    },
+  },
+  {
     files: ["**/*.test.ts", "**/*.test.tsx"],
     rules: {
       "@typescript-eslint/consistent-type-assertions": "off",
