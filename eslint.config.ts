@@ -55,6 +55,7 @@ export default tseslint.config(
       "apps/web/e2e/**",
       "apps/web/scripts/**",
       "apps/web/playwright.config.ts",
+      "scripts/**",
     ],
   },
   js.configs.recommended,
