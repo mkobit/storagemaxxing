@@ -15,4 +15,4 @@
 
 ## 3. Verification
 
-- [ ] 3.1 sm-8bf4 — web: e2e coverage for options-mode strategy selection flow (depends on sm-sstq)
+- [x] 3.1 sm-8bf4 — web: e2e coverage for options-mode strategy selection flow (depends on sm-sstq)
