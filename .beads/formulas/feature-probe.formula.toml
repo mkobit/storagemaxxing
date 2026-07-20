@@ -12,16 +12,32 @@ id = "create-openspec-proposal"
 title = "Create OpenSpec Proposal for {{feature_name}}"
 type = "task"
 labels = ["type:research", "status:needs-spec"]
+description = "Before pouring: confirm no prior change is fully closed-but-unarchived. Run `bunx openspec list --json`, and for any change not yet archived, verify its beads via `bd query` -- if all are closed but retrospective.md/reflection.md are missing, finish and `bunx openspec archive` that change first instead of starting this proposal on top of it."
 
 [[steps]]
 id = "design-architecture"
 title = "Design technical architecture for {{feature_name}}"
 type = "task"
 labels = ["type:feature", "status:needs-design"]
+description = "Package/schema specifics in this bead's own acceptance text (if any) were guessed before any code was read -- confirm them against the real package DAG and existing Zod schemas before treating them as ground truth; the design deviating from a guessed detail is not a defect."
+
+[[steps]]
+id = "hole-poking"
+title = "Poke holes in {{feature_name}} design"
+type = "task"
+labels = ["type:audit", "meta:adversary"]
+description = "MUST run as an independent subagent with its own fresh context (spawn via the Agent tool) -- never as inline reasoning in the session that authored the design. An author re-reading their own design.md is a proofread, not an adversarial review. Systematically analyze for: (1) missing failure scenarios, (2) performance/complexity gaps, (3) boundary condition errors (zero state, invalid inputs), and (4) multi-agent race conditions. Log gaps as new OpenSpec requirements."
+
+[[steps]]
+id = "remediation-plan"
+title = "Draft remediation specs for {{feature_name}}"
+type = "task"
+labels = ["type:sync", "meta:openspec"]
+description = "Update design.md and tasks.md in {{feature_name}} to address the holes identified above."
 
 [[steps]]
 id = "human-review"
 title = "Human Review & Adversarial Sign-off"
 type = "task"
 labels = ["status:needs-review"]
-description = "Stop here. Mark this task as `blocked` (using `bd update <id> --status blocked`) to signal it is waiting for human approval. Only proceed to hydration after a human approves the design."
+description = "Stop here. Mark this task as `blocked` (using `bd update <id> --status blocked`) to signal it is waiting for human approval. The design being reviewed should already reflect the hole-poking/remediation findings above -- the human is confirming a design that has already survived an adversarial pass, not acting as the sole adversary. Only proceed to hydration after a human approves."

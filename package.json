@@ -9,11 +9,12 @@
   ],
   "scripts": {
     "build": "bun run --filter @storagemaxxing/web build",
+    "check:tasks": "bun scripts/check-tasks-consistency.ts",
     "dev": "bun run --filter @storagemaxxing/web dev",
     "format": "prettier --write .",
     "lint": "eslint . --max-warnings 0",
-    "test": "bun test packages && bun run --filter @storagemaxxing/web test",
     "screenshot": "bun run --filter @storagemaxxing/web screenshot",
+    "test": "bun test packages && bun run --filter @storagemaxxing/web test",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

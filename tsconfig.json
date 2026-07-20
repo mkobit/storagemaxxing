@@ -38,6 +38,7 @@
     "packages/*/src",
     "packages/*/test",
     "apps/*/serve.ts",
-    "eslint.config.ts"
+    "eslint.config.ts",
+    "scripts"
   ]
 }
