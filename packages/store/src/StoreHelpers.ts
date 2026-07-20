@@ -2,6 +2,12 @@ import { AppState } from "./StoreTypes";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate";
 import { BinSpecId } from "@storagemaxxing/assembly/BaseTypes";
+import { SpaceInstanceId } from "@storagemaxxing/assembly/SpaceInstance";
+import { BinSpec as CatalogBinSpec } from "@storagemaxxing/catalog/bin";
+import {
+  buildAutoFillConstraints,
+  ComparableStorageSystem,
+} from "./layoutSelectors";
 
 export const updateConstraintInState = (
   state: AppState,
@@ -48,6 +54,39 @@ export const removeConstraintFromState = (
         ...s,
         constraints: newConstraints,
       };
+    }),
+  };
+};
+
+export const applyStrategyInState = (
+  state: AppState,
+  spaceId: SpaceInstanceId,
+  system: ComparableStorageSystem,
+  catalog: readonly CatalogBinSpec[],
+): Pick<AppState, "constraintsBySpace" | "spaces"> => {
+  const space = state.spaces.find((s) => s.id === spaceId);
+  const template = space && state.templatesById[space.templateId];
+  if (space === undefined || template === undefined) {
+    return {
+      constraintsBySpace: state.constraintsBySpace,
+      spaces: state.spaces,
+    };
+  }
+  const { constraints } = buildAutoFillConstraints(template, system, catalog);
+  const constraintsRecord = Object.fromEntries(
+    constraints.map((c) => [c.binId, c]),
+  );
+  return {
+    constraintsBySpace: {
+      ...state.constraintsBySpace,
+      [space.templateId]: constraints,
+    },
+    spaces: state.spaces.map((s) => {
+      if (s.id === spaceId)
+        return { ...s, system, constraints: constraintsRecord };
+      if (s.templateId === space.templateId)
+        return { ...s, constraints: constraintsRecord };
+      return s;
     }),
   };
 };

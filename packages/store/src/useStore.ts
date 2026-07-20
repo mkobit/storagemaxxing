@@ -6,7 +6,9 @@ import {
   updateConstraintInState,
   removeConstraintFromState,
   setTemplateDrillableInState,
+  applyStrategyInState,
 } from "./StoreHelpers";
+import { ALL_BINS } from "@storagemaxxing/catalog/lookup";
 
 const idbStorage: StateStorage = {
   getItem: async (name: string): Promise<string | null> =>
@@ -59,6 +61,8 @@ export const useStore = create<StoreState>()(
         set((state) => removeConstraintFromState(state, templateId, binId)),
       setSpaceDrillable: (templateId, drillable) =>
         set((state) => setTemplateDrillableInState(state, templateId, drillable)),
+      applySpaceStrategy: (spaceId, system) =>
+        set((state) => applyStrategyInState(state, spaceId, system, ALL_BINS)),
       clearConstraintsForSpace: (templateId) =>
         set((state) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars

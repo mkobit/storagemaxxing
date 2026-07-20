@@ -9,6 +9,7 @@ import {
 } from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { BinSpecId } from "@storagemaxxing/assembly/BaseTypes";
+import type { ComparableStorageSystem } from "./layoutSelectors";
 
 export type AppState = {
   readonly _hasHydrated: boolean;
@@ -46,6 +47,10 @@ export type AppActions = {
   readonly setSpaceDrillable: (
     templateId: SpaceTemplateId,
     drillable: boolean,
+  ) => void;
+  readonly applySpaceStrategy: (
+    spaceId: SpaceInstanceId,
+    system: ComparableStorageSystem,
   ) => void;
   readonly loadSketch: (
     sketch: Pick<

@@ -9,6 +9,7 @@ This package manages the global application state using Zustand. It acts as the 
 ```ts-exports
 AppActions
 AppState
+ComparableStorageSystem
 LayoutInputs
 LayoutResolution
 Sketch
@@ -16,12 +17,15 @@ SketchSchema
 SpaceInputs
 StoreState
 ToolMode
+applyStrategyInState
+buildAutoFillConstraints
 initialState
 isBinInstallationAllowed
 layoutResolutionMissingTemplate
 layoutResolutionNone
 layoutResolutionResolved
 parseSketch
+selectOptionsModeStrategies
 selectPackedLayout
 selectPackingResultsBySpace
 serializeSketch

@@ -4,10 +4,13 @@ import { LayoutCanvas } from "./LayoutCanvas";
 import { useStore } from "@storagemaxxing/store/useStore";
 import { BOMPanel } from "./BOMPanel";
 import { ConstraintEditorPanel } from "./ConstraintEditorPanel";
+import { OptionsPanel } from "./options/OptionsPanel";
 
 export const App: React.FC = () => {
   const hasHydrated = useStore((state) => state._hasHydrated);
-  const [activeTab, setActiveTab] = useState<"layout" | "bom">("layout");
+  const [activeTab, setActiveTab] = useState<"layout" | "bom" | "options">(
+    "layout",
+  );
 
   if (!hasHydrated) {
     return <div>Loading...</div>;
@@ -29,6 +32,12 @@ export const App: React.FC = () => {
         >
           BOM
         </button>
+        <button
+          className={activeTab === "options" ? "font-bold" : "font-normal"}
+          onClick={() => setActiveTab("options")}
+        >
+          Options
+        </button>
       </div>
       <div className="flex flex-1 overflow-hidden">
         <ConstraintEditorPanel />
@@ -49,6 +58,15 @@ export const App: React.FC = () => {
           }
         >
           <BOMPanel />
+        </div>
+        <div
+          className={
+            activeTab === "options"
+              ? "block flex-1 overflow-hidden"
+              : "hidden flex-1 overflow-hidden"
+          }
+        >
+          <OptionsPanel onStrategyApplied={() => setActiveTab("layout")} />
         </div>
       </div>
     </div>
