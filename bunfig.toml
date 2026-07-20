@@ -1,6 +1,5 @@
 [install]
 ignoreScripts = true
-minimumReleaseAgeExcludes = ["@fission-ai/openspec"]
 
 # Scope bare `bun test` at the root to packages/: apps/web unit tests need the
 # happy-dom preload from apps/web/bunfig.toml (run via `bun run --filter
