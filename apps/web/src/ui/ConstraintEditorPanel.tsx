@@ -141,7 +141,7 @@ export const ConstraintEditorPanel: React.FC = () => {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="rounded-sm border border-border-default p-2 text-sm"
         />
-        <div className="flex max-h-[300px] flex-col gap-2 overflow-y-auto rounded-sm border border-border-subtle bg-surface-raised p-2">
+        <div className="flex max-h-75 flex-col gap-2 overflow-y-auto rounded-sm border border-border-subtle bg-surface-raised p-2">
           {filteredBins.length === 0 ? (
             <div className="py-4 text-center text-sm text-text-muted">
               No matching bins found
@@ -165,7 +165,7 @@ export const ConstraintEditorPanel: React.FC = () => {
                     !installationAllowed ? "opacity-50" : ""
                   }`}
                 >
-                  <span title={title} className="max-w-[160px] truncate">
+                  <span title={title} className="max-w-40 truncate">
                     {bin.name}
                   </span>
                   <button

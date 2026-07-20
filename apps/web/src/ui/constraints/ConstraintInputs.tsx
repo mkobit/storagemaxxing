@@ -25,7 +25,7 @@ export const ConstraintInputs: React.FC<ConstraintInputsProps> = ({
           min={constraint.mode === "hard" ? 1 : 0}
           value={constraint.lo}
           onChange={onMinChange}
-          className="w-[60px]"
+          className="w-15"
         />
       </label>
       <label className="flex items-center gap-1">
@@ -36,7 +36,7 @@ export const ConstraintInputs: React.FC<ConstraintInputsProps> = ({
           value={constraint.hi ?? ""}
           onChange={onMaxChange}
           placeholder="none"
-          className="w-[60px]"
+          className="w-15"
         />
       </label>
     </div>
