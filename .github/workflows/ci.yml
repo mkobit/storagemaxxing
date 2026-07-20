@@ -11,9 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.0
-      - uses: oven-sh/setup-bun@v2
+      - name: Setup mise
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea
         with:
-          bun-version: latest
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          cache: true
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
@@ -31,9 +33,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.0
-      - uses: oven-sh/setup-bun@v2
+      - name: Setup mise
+        uses: jdx/mise-action@dad1bfd3df957f44999b559dd69dc1671cb4e9ea
         with:
-          bun-version: latest
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          cache: true
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
