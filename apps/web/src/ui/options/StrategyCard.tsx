@@ -18,6 +18,7 @@ const SYSTEM_LABELS: Readonly<Record<ComparableStorageSystem, string>> = {
   schaller: "Schaller",
   gridfinity: "Gridfinity",
   akromils: "Akro-Mils",
+  opengrid: "OpenGrid",
 };
 
 export const StrategyCard: React.FC<StrategyCardProps> = ({
