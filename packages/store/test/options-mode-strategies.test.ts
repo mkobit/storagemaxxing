@@ -78,6 +78,7 @@ describe("selectOptionsModeStrategies", () => {
     expect(Object.keys(strategies).sort()).toEqual([
       "akromils",
       "gridfinity",
+      "opengrid",
       "schaller",
     ]);
     Object.values(strategies).forEach((resolution) => {

@@ -29,6 +29,7 @@ test("viewing Options Mode renders one card per comparable system with per-metri
   await expect(page.getByTestId("strategy-card-schaller")).toBeVisible();
   await expect(page.getByTestId("strategy-card-gridfinity")).toBeVisible();
   await expect(page.getByTestId("strategy-card-akromils")).toBeVisible();
+  await expect(page.getByTestId("strategy-card-opengrid")).toBeVisible();
 
   await expect(page.getByTestId("options-panel")).not.toContainText(
     /best overall|recommended/i,

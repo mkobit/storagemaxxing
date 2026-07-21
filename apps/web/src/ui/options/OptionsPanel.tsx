@@ -12,6 +12,7 @@ const SYSTEMS: readonly ComparableStorageSystem[] = [
   "schaller",
   "gridfinity",
   "akromils",
+  "opengrid",
 ];
 
 const toCardMetricsOrZero = (
@@ -60,6 +61,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
     schaller: toCardMetricsOrZero(strategies.schaller),
     gridfinity: toCardMetricsOrZero(strategies.gridfinity),
     akromils: toCardMetricsOrZero(strategies.akromils),
+    opengrid: toCardMetricsOrZero(strategies.opengrid),
   };
   const allMetrics = SYSTEMS.map((system) => cardMetricsBySystem[system]);
   const bestUtilization = Math.max(...allMetrics.map((m) => m.utilizationPct));
@@ -69,7 +71,7 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
   return (
     <div
       data-testid="options-panel"
-      className="grid w-full grid-cols-1 gap-4 overflow-y-auto p-4 md:grid-cols-3"
+      className="grid w-full grid-cols-1 gap-4 overflow-y-auto p-4 md:grid-cols-4"
     >
       {SYSTEMS.map((system) => (
         <StrategyCard

@@ -65,6 +65,7 @@ describe("OptionsPanel", () => {
       expect(screen.getByTestId("strategy-card-schaller")).toBeTruthy();
       expect(screen.getByTestId("strategy-card-gridfinity")).toBeTruthy();
       expect(screen.getByTestId("strategy-card-akromils")).toBeTruthy();
+      expect(screen.getByTestId("strategy-card-opengrid")).toBeTruthy();
       expect(screen.queryByText(/best overall/i)).toBeNull();
       expect(screen.queryByText(/winner/i)).toBeNull();
     });
