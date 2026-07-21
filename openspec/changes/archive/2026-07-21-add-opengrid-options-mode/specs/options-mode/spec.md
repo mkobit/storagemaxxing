@@ -9,7 +9,7 @@ Bins excluded by the space's installation constraints (e.g. `noDrill`) SHALL be 
 
 Verified by: `apps/web/src/ui/options/OptionsPanel.test.tsx` > "renders exactly one card per comparable system, with no overall-ranking label" AND `packages/store/test/options-mode-strategies.test.ts` > "returns one resolved LayoutResolution per comparable system".
 
-#### Scenario: Four systems render as independent cards
+#### Scenario: Three systems render as independent cards
 
 - **WHEN** a user views Options Mode for a space
 - **THEN** up to four cards render — one each for Schaller, Gridfinity, Akro-Mils, and OpenGrid — and no card mixes bins from more than one system
