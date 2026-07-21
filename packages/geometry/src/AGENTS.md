@@ -12,8 +12,6 @@ CABINET_PROJECTION
 Dimensions2D
 Dimensions2DSchema
 Dimensions3D
-GridCalculationMode
-GridCalculationResult
 GridCoord
 GridDimensions
 GridUnit
@@ -24,7 +22,6 @@ MeasurementUnit
 Millimeters
 MillimetersSchema
 ObliqueProjection
-OPENGRID_PITCH_MM
 Point
 Point2D
 Point2DSchema
@@ -34,7 +31,6 @@ Rect2D
 Rect2DSchema
 Size
 Unit
-calculateOpenGrid
 createBox3D
 createDimensions2D
 createDimensions3D

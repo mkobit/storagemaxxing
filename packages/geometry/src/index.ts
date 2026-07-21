@@ -8,7 +8,6 @@ export * from "./Inches";
 export * from "./Line2D";
 export * from "./Millimeters";
 export * from "./ObliqueProjection";
-export * from "./OpenGrid";
 export * from "./Point2D";
 export * from "./Point3D";
 export * from "./Rect2D";
