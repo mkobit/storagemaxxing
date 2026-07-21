@@ -4,6 +4,7 @@ export * from "./installationRequirement";
 export * from "./bin";
 export * from "./akromils";
 export * from "./gridfinity";
+export * from "./opengrid";
 export * from "./schaller";
 export * from "./lookup";
 export * from "./BasePart";

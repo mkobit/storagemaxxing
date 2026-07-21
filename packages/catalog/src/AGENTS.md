@@ -27,6 +27,7 @@ GridSystemSchema
 InchesSchema
 InstallationRequirement
 MillimetersSchema
+OPENGRID_CATALOG
 PartId
 PartIdSchema
 SCHALLER_BINS
