@@ -85,7 +85,7 @@ Trait: system comparer.
 - **THEN** the layout packs using Akro-Mils actual and tolerance dimensions and the validity badge updates accordingly
 
 **Grounded in:** `packages/catalog/src/akromils.ts`, `packages/catalog/src/schaller.ts`, `apps/web/src/ui/ConstraintEditorPanel.tsx` (existing akromils and schaller branching), `apps/web/e2e/akromils-bin-selection.spec.ts`.
-**Currently:** Partially supported. The constraint editor and packer do work end to end for a correctly-tagged Akro-Mils SKU (30010) — proven by the e2e test above. But `bin.system` is optional and unset on 12 of 13 Akro-Mils entries and all 40 Schaller entries, so `ConstraintEditorPanel`'s Add Bins filter hides nearly every SKU for both systems; Schaller currently has zero addable bins through the UI. Filed as sm-q0qk.
+**Currently:** Fully covered. sm-q0qk tagged all 13 Akro-Mils and all 40 Schaller catalog entries with `bin.system`, so `ConstraintEditorPanel`'s Add Bins filter (`bin.system === detectedSystem`) now surfaces every SKU for both systems.
 **Bead:** sm-s53j.
 
 ### 4. Tweak a constraint and see it update immediately
