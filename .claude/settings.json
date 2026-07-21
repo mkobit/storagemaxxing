@@ -35,6 +35,10 @@
           },
           {
             "type": "command",
+            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/typecheck-on-edit.py"
+          },
+          {
+            "type": "command",
             "command": "python3 $CLAUDE_PROJECT_DIR/.claude/openspec-validate-on-edit.py"
           }
         ]
