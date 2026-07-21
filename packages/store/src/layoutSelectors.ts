@@ -101,7 +101,12 @@ export const selectPackedLayout = (
   return resolveSpace(space, state.templatesById, catalog);
 };
 
-const COMPARABLE_SYSTEMS = ["schaller", "gridfinity", "akromils"] as const;
+const COMPARABLE_SYSTEMS = [
+  "schaller",
+  "gridfinity",
+  "akromils",
+  "opengrid",
+] as const;
 export type ComparableStorageSystem = (typeof COMPARABLE_SYSTEMS)[number];
 
 export const buildAutoFillConstraints = (
