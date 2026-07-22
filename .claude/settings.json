@@ -54,7 +54,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/git-commit-main-guard.py"
+            "command": "bun $CLAUDE_PROJECT_DIR/.agents/hooks/git-commit-main-guard.ts"
           }
         ]
       }
