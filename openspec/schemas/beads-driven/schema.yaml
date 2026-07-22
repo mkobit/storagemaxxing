@@ -48,12 +48,21 @@ artifacts:
       3. **Hierarchy**: Use `--parent` if the task belongs to a specific feature molecule.
 
 
-      **OUTPUT**: Once all Beads are created, generate the `tasks.md` file as a snapshot report:
+      **OUTPUT**: Author `tasks.md` by hand: group tasks under `##` headers, embed each bead's ID
+      inline next to its checkbox as `[<id>](../../../.beads)`, and add a `Validation:` sub-bullet
+      per task naming the test/command that proves it. Start the file with this header comment:
 
-      `bd query "meta:openspec:<change-name>" > tasks.md`
+        ```
+        <!--
+          Checkbox state is synced from bd, not hand-edited -- update bead status via `bd close <id>`,
+          then run `bun run fix:tasks` to regenerate the checkboxes in this file.
+        -->
+        ```
 
 
-      Do NOT manually author checkboxes in this file. It is a generated view of the Beads database.
+      Do NOT hand-flip `[ ]`/`[x]` marks as bead status changes. Run `bun run fix:tasks` (or
+      `bun run check:tasks` to check without writing) to sync every checkbox to its linked bead's
+      closed/open status.
     requires:
       - design
   - id: retrospective
@@ -66,7 +75,7 @@ artifacts:
 
       **EVIDENCE**: Gather data from:
       1. Git history: `git log <base>..HEAD --stat`
-      2. Beads: `bd query "meta:openspec:<change-name> status=closed"`
+      2. Beads: `bd query "label=meta:openspec:<change-name> AND status=closed"`
       3. Tests: Review latest `bun run test` and `playwright` results.
 
 
@@ -109,7 +118,7 @@ apply:
 
     1. **SYNC**: Run `git pull` and `bd sync` to ensure cross-agent state consistency.
 
-    2. **CLAIM**: Find open work for this change: `bd query "status=open meta:openspec:<name>"`.
+    2. **CLAIM**: Find open work for this change: `bd query "status=open AND label=meta:openspec:<name>"`.
 
     3. **LOCK**: Claim a specific Bead with `bd update <id> --claim`.
 
