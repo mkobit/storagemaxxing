@@ -2,17 +2,12 @@
 // Sanity check: bun run typecheck (tsc --noEmit, .agents/hooks is in root tsconfig.json include)
 
 import { join } from "node:path";
-
-type HookInput = {
-  readonly tool_input?: {
-    readonly file_path?: string;
-  };
-};
+import { readHookInput } from "./claude-hook";
 
 const TYPECHECKED_FILE_PATTERN = /\.(tsx?|mts|cts)$/;
 const PACKAGE_SCOPE_PATTERN = /(?:^|\/)(packages|apps)\/([^/]+)\//;
 
-const input = (await Bun.stdin.json()) as HookInput;
+const input = await readHookInput();
 const path = input.tool_input?.file_path ?? "";
 const projectRoot = process.env.CLAUDE_PROJECT_DIR ?? ".";
 

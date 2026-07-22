@@ -4,16 +4,11 @@
 
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
-
-type HookInput = {
-  readonly tool_input?: {
-    readonly file_path?: string;
-  };
-};
+import { readHookInput } from "./claude-hook";
 
 const CANONICAL_SPEC_PATTERN = /(?:^|\/)openspec\/specs\/([^/]+)\/spec\.md$/;
 
-const input = (await Bun.stdin.json()) as HookInput;
+const input = await readHookInput();
 const path = input.tool_input?.file_path ?? "";
 const projectRoot = process.env.CLAUDE_PROJECT_DIR ?? ".";
 
