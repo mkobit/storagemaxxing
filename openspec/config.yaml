@@ -25,6 +25,7 @@ rules:
     - Must include an ASCII diagram of the data flow.
     - Must specify Zod schemas for new domain objects.
     - Any claim of the form "existing X already does/doesn't do Y" or "no Z should break" must be verified by grepping the actual code or running the actual test suite before being stated as fact -- not inferred from function/test names alone. Reasoning-only claims of this form have shipped false twice (untested `generateAutoFillRects` exclusion path, pixel-asserting e2e tests) and broke during implementation instead of design review.
+    - When a change widens/narrows a fixed set consumed by UI (e.g. a `SYSTEMS` array, a tab list), grep `apps/web/e2e/**/*.spec.ts` for the same literal values, not only `src/` -- a fixed-set change to `options-mode` shipped with the e2e spec's hardcoded assertion missed because the grep pass only covered selector/component code.
     - Embedded code snippets are illustrative pseudocode, not verified against the real lint config or schema -- they may need edits (eslint rules, actual field names) during implementation without that being a design defect. Do not present them as copy-paste-ready.
     - Before opening the PR, self-review the specs delta for scenario arithmetic, comparator/tie-break directions, and consistency with the linked bead's acceptance text; note this self-review (and any findings it caught) in the PR body.
   tasks:
