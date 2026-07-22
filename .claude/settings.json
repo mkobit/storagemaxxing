@@ -43,7 +43,7 @@
           },
           {
             "type": "command",
-            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/openspec-canonical-guard-on-edit.py"
+            "command": "bun $CLAUDE_PROJECT_DIR/.agents/hooks/openspec-canonical-guard-on-edit.ts"
           }
         ]
       }
