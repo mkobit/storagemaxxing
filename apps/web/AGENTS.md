@@ -15,12 +15,17 @@ bun run --filter @storagemaxxing/web playwright:install
 **Capture a screenshot:**
 
 ```bash
-bun run screenshot              # captures http://localhost:5173/
-bun run screenshot -- /canvas   # captures a specific route
+bun run screenshot                            # captures http://localhost:5173/
+bun run screenshot -- /canvas                 # captures a specific route
+bun run screenshot -- --recipe=options-mode   # drives app state to a named UI, then captures
 ```
 
 Output: `.screenshots/latest.png` at workspace root.
 Read this file to verify visual state — it shows exactly what the UI looks like.
+
+**Recipes:** a recipe drives the app to a specific UI state (e.g. a component reachable only after creating a space and adding a bin) before capturing, so a single-component visual check doesn't require hand-writing a one-off Playwright script.
+Recipes live in `scripts/screenshot-recipes.ts`; run with an unknown `--recipe=` name to print the current list.
+Add a new recipe there — not a fresh throwaway script — when a future check needs to reach a state not already covered.
 
 **Rules:**
 
@@ -37,7 +42,7 @@ Read this file to verify visual state — it shows exactly what the UI looks lik
 - `bun run build` — production build to `dist/`
 - `bun run test` — bun test unit tests (happy-dom)
 - `bun run test:e2e` — Playwright end-to-end tests (requires dev server)
-- `bun run screenshot [route]` — capture UI screenshot to `.screenshots/latest.png`
+- `bun run screenshot [route] [--recipe=<name>]` — capture UI screenshot to `.screenshots/latest.png`, optionally driving to a named app state first (see `scripts/screenshot-recipes.ts`)
 - `bun run typecheck` — TypeScript type check
 
 ## Architecture
