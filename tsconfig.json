@@ -39,6 +39,7 @@
     "packages/*/test",
     "apps/*/serve.ts",
     "eslint.config.ts",
-    "scripts"
+    "scripts",
+    ".claude"
   ]
 }

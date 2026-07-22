@@ -31,7 +31,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/lint-on-edit.py"
+            "command": "bun $CLAUDE_PROJECT_DIR/.claude/lint-on-edit.ts"
           },
           {
             "type": "command",
