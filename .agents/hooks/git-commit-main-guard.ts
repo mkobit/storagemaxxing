@@ -1,19 +1,14 @@
 #!/usr/bin/env bun
 // Sanity check: bun run typecheck (tsc --noEmit, .agents/hooks is in root tsconfig.json include)
 // and: bun run lint (eslint ignores .agents/hooks/**, matching the scripts/** precedent)
-export {};
+
+import { readHookInput } from "./claude-hook";
 
 const PROTECTED_BRANCH = "main";
 
-type HookInput = {
-  readonly tool_input?: {
-    readonly command?: string;
-  };
-};
-
 const GIT_COMMIT_PATTERN = /\bgit\s+commit\b/;
 
-const input = (await Bun.stdin.json()) as HookInput;
+const input = await readHookInput();
 const command = input.tool_input?.command ?? "";
 
 if (!GIT_COMMIT_PATTERN.test(command)) {

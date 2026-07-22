@@ -1,17 +1,12 @@
 #!/usr/bin/env bun
 // Sanity check: bun run typecheck (tsc --noEmit, .agents/hooks is in root tsconfig.json include)
 // and: bun run lint (eslint ignores .agents/hooks/**, matching the scripts/** precedent)
-export {};
 
-type HookInput = {
-  readonly tool_input?: {
-    readonly file_path?: string;
-  };
-};
+import { readHookInput } from "./claude-hook";
 
 const EDITABLE_FILE_PATTERN = /\.(tsx?|jsx?|mts|cts|jsonc?)$/;
 
-const input = (await Bun.stdin.json()) as HookInput;
+const input = await readHookInput();
 const path = input.tool_input?.file_path ?? "";
 const projectRoot = process.env.CLAUDE_PROJECT_DIR ?? ".";
 

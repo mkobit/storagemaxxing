@@ -1,15 +1,10 @@
 #!/usr/bin/env bun
-export {};
 
-type HookInput = {
-  readonly tool_input?: {
-    readonly file_path?: string;
-  };
-};
+import { readHookInput } from "./claude-hook";
 
 const CHANGE_PATH_PATTERN = /openspec\/changes\/([^/]+)\//;
 
-const input = (await Bun.stdin.json()) as HookInput;
+const input = await readHookInput();
 const path = input.tool_input?.file_path ?? "";
 
 const match = path.match(CHANGE_PATH_PATTERN);
