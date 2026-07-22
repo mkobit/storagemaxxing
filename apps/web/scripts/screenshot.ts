@@ -1,9 +1,20 @@
 import { chromium } from "@playwright/test";
 import { copyFileSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
+import { SCREENSHOT_RECIPES } from "./screenshot-recipes";
 
-const route = process.argv[2] ?? "/";
+const args = process.argv.slice(2);
+const recipeArg = args.find((arg) => arg.startsWith("--recipe="));
+const recipeName = recipeArg?.slice("--recipe=".length);
+const route = args.find((arg) => !arg.startsWith("--")) ?? "/";
 const outDir = resolve(import.meta.dirname, "../../..", ".screenshots");
+
+if (recipeName !== undefined && !(recipeName in SCREENSHOT_RECIPES)) {
+  console.error(
+    `Unknown recipe "${recipeName}". Available: ${Object.keys(SCREENSHOT_RECIPES).join(", ")}`,
+  );
+  process.exit(1);
+}
 
 mkdirSync(outDir, { recursive: true });
 
@@ -19,6 +30,10 @@ try {
 }
 
 await page.waitForSelector('[data-testid="toolbar"]', { timeout: 10_000 });
+
+if (recipeName !== undefined) {
+  await SCREENSHOT_RECIPES[recipeName](page);
+}
 
 const latestPath = resolve(outDir, "latest.png");
 await page.screenshot({ path: latestPath, fullPage: true });
