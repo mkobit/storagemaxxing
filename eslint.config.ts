@@ -56,6 +56,7 @@ export default tseslint.config(
       "apps/web/scripts/**",
       "apps/web/playwright.config.ts",
       "scripts/**",
+      ".agents/hooks/**",
     ],
   },
   js.configs.recommended,

@@ -40,6 +40,6 @@
     "apps/*/serve.ts",
     "eslint.config.ts",
     "scripts",
-    ".claude"
+    ".agents/hooks"
   ]
 }

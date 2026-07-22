@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
-// Sanity check: bun run typecheck (tsc --noEmit, .claude is in root tsconfig.json include)
-// and: bun run lint (eslint ignores .claude/**, matching the scripts/** precedent)
+// Sanity check: bun run typecheck (tsc --noEmit, .agents/hooks is in root tsconfig.json include)
+// and: bun run lint (eslint ignores .agents/hooks/**, matching the scripts/** precedent)
+export {};
 
 type HookInput = {
   readonly tool_input?: {

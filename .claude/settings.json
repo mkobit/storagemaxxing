@@ -31,15 +31,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bun $CLAUDE_PROJECT_DIR/.claude/lint-on-edit.ts"
+            "command": "bun $CLAUDE_PROJECT_DIR/.agents/hooks/lint-on-edit.ts"
           },
           {
             "type": "command",
-            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/typecheck-on-edit.py"
+            "command": "bun $CLAUDE_PROJECT_DIR/.agents/hooks/typecheck-on-edit.ts"
           },
           {
             "type": "command",
-            "command": "python3 $CLAUDE_PROJECT_DIR/.claude/openspec-validate-on-edit.py"
+            "command": "bun $CLAUDE_PROJECT_DIR/.agents/hooks/openspec-validate-on-edit.ts"
           },
           {
             "type": "command",
