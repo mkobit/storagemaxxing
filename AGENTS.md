@@ -49,6 +49,7 @@ Every implementation Bead MUST satisfy this contract before an agent claims it:
 - Names exactly one package (or `apps/web`) in a `scope:` label.
 - References the OpenSpec spec requirement it implements.
 - Carries an acceptance criterion runnable as a command (test, lint, or typecheck invocation).
+- If the acceptance criterion greps/scopes removal of hardcoded literals (e.g. hex colors) in named files: confirm each named file is actually imported/rendered before scoping the migration to it — a file with zero importers is dead code and belongs in a separate triage bead, not folded into the migration — and explicitly list any literal values intentionally excluded from the check (domain/categorical data, test fixtures) so they aren't ambiguously in-scope.
 
 If a Bead cannot meet the contract, re-scope it or flag it with `bd human <id>` instead of claiming it.
 If you cannot finish a claimed Bead, leave it `open` with a comment linking the relevant OpenSpec change so another agent can resume.
