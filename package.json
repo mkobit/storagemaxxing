@@ -11,6 +11,7 @@
     "build": "bun run --filter @storagemaxxing/web build",
     "check:tasks": "bun scripts/check-tasks-consistency.ts",
     "dev": "bun run --filter @storagemaxxing/web dev",
+    "fix:tasks": "bun scripts/check-tasks-consistency.ts --fix",
     "format": "prettier --write .",
     "lint": "eslint . --max-warnings 0",
     "screenshot": "bun run --filter @storagemaxxing/web screenshot",
