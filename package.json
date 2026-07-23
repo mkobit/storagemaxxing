@@ -15,7 +15,7 @@
     "format": "prettier --write .",
     "lint": "eslint . --max-warnings 0",
     "screenshot": "bun run --filter @storagemaxxing/web screenshot",
-    "test": "bun test packages && bun run --filter @storagemaxxing/web test",
+    "test": "bun test packages ./.agents/hooks && bun run --filter @storagemaxxing/web test",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
