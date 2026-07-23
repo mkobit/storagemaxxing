@@ -39,16 +39,23 @@ The store (`packages/store/src/useStore.ts`, `StoreTypes.ts`) already holds `spa
 
 ### Data flow
 
+Template id and space instance id are two independent `crypto.randomUUID()`
+calls, not the same value threaded through — `SpaceInstanceSchema`'s `id` is
+the space instance's own id; `templateId` is the separately-generated
+template id, read back off `template.id` after `createSpaceTemplate` returns.
+This matches `GoldenPathSetup`'s existing pattern of distinct ids.
+
 ```
  CreateSpaceForm (apps/web)
    [columns, rows, depth, system, name]
           |
           | CreateSpaceInputSchema.parse(...)
           v
-   createSpaceTemplate(id, Dimensions3D, accessFace)  -- packages/assembly (unchanged)
+   createSpaceTemplate(crypto.randomUUID(), Dimensions3D, accessFace)  -- packages/assembly (unchanged)
           |
+          | template.id
           v
-   SpaceInstanceSchema.parse({ id, templateId, name, count: 1, constraints: {} })
+   SpaceInstanceSchema.parse({ id: crypto.randomUUID(), templateId: template.id, name, count: 1, constraints: {} })
           |
           v
    useStore: addTemplate(template) -> addSpace(space) -> setActiveSpace(space.id)
