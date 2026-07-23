@@ -7,11 +7,13 @@ import { readHookInput } from "./claude-hook";
 const PROTECTED_BRANCH = "main";
 
 const GIT_COMMIT_PATTERN = /\bgit\s+commit\b/;
+const QUOTED_SPAN_PATTERN = /"(?:[^"\\]|\\.)*"|'[^']*'/g;
 
 const input = await readHookInput();
 const command = input.tool_input?.command ?? "";
+const unquotedCommand = command.replace(QUOTED_SPAN_PATTERN, "");
 
-if (!GIT_COMMIT_PATTERN.test(command)) {
+if (!GIT_COMMIT_PATTERN.test(unquotedCommand)) {
   process.exit(0);
 }
 
