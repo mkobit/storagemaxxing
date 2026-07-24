@@ -7,7 +7,7 @@ The seam must be visible at the `@storagemaxxing/catalog/lookup` module-resoluti
 
 `apps/web/vite.config.ts` already aliases `@storagemaxxing/catalog` straight to `packages/catalog/src` (no build step), and this same alias resolution applies uniformly across the whole bundled module graph — including `packages/store`'s imports — when Vite bundles `apps/web`.
 
-The Add Bins list (`ConstraintEditorPanel.tsx:171-179`) renders `data-testid={`add-bin-${bin.id}`}`, disabled when `!installationAllowed`.
+The Add Bins list (`ConstraintEditorPanel.tsx:171-179`) renders `data-testid={`add-bin-${bin.id}`}`, disabled when the bin is already added or `!installationAllowed` (`disabled = isAdded || !installationAllowed`, line 157).
 Added constraints render `data-testid={`constraint-row-${c.binId}`}` (`ConstraintEditorPanel.tsx:117`).
 The existing synthetic fixture (`apps/web/src/ui/ConstraintEditorPanel.test.tsx:23-34`) already defines the exact bin shape to reuse: id `test-drill-bin`, `system: "gridfinity"`, `catalogSource: "builtin"`, `installation: { type: "drill", description: "Requires drilling" }`.
 
@@ -31,16 +31,34 @@ The existing synthetic fixture (`apps/web/src/ui/ConstraintEditorPanel.test.tsx:
 **1. Alias-swap in `apps/web/vite.config.ts`, keyed off a Node-side `process.env` flag — not `import.meta.env`.**
 
 ```
-resolve.alias["@storagemaxxing/catalog/lookup"] =
-  process.env.E2E_DRILL_FIXTURE === "true"
-    ? path.resolve(__dirname, "e2e/fixtures/catalogWithDrillFixture.ts")
-    : path.resolve(__dirname, "../../packages/catalog/src/lookup.ts")
+resolve: {
+  alias: {
+    "@storagemaxxing/catalog/lookup":
+      process.env.E2E_DRILL_FIXTURE === "true"
+        ? path.resolve(__dirname, "e2e/fixtures/catalogWithDrillFixture.ts")
+        : path.resolve(__dirname, "../../packages/catalog/src/lookup.ts"),
+    "@storagemaxxing/geometry": path.resolve(__dirname, "../../packages/geometry/src"),
+    "@storagemaxxing/catalog": path.resolve(__dirname, "../../packages/catalog/src"),
+    "@storagemaxxing/packer": path.resolve(__dirname, "../../packages/packer/src"),
+    "@storagemaxxing/store": path.resolve(__dirname, "../../packages/store/src"),
+    "@storagemaxxing/assembly": path.resolve(__dirname, "../../packages/assembly/src"),
+  },
+},
 ```
 
 `vite.config.ts` runs in Node/Bun at config-eval time (dev-server startup / build start), so `process.env` is the correct read — this is a config-time module-graph decision, not a client-bundle conditional.
 Because the fixture module is only ever *referenced* when the alias points at it, production builds (`E2E_DRILL_FIXTURE` unset) never resolve or bundle it — this is stronger than dead-code elimination of an `import.meta.env` branch; the module is simply not part of the graph.
 
 This is the reason for putting the swap in `apps/web/vite.config.ts` rather than inside `packages/catalog/src/lookup.ts`: it keeps `packages/catalog` (Engineering Rails: functional purity, no side effects) completely untouched and avoids coupling it to a Vite-specific mechanism, while still covering `packages/store`'s direct `ALL_BINS` import — Vite's alias substitution applies to every import of that specifier in the bundled graph regardless of which package the importing file lives in.
+
+**Key insertion order is load-bearing.** Vite's bundled `@rollup/plugin-alias` resolver (`node_modules/vite/dist/node/chunks/node.js:4715-4761`) converts the `alias` object into an array via `Object.entries` (which preserves insertion order for string keys) and resolves each import specifier via `entries.find(entry => matches(entry.find, importee))` — first match in insertion order wins, not longest-prefix.
+Its `matches` function treats a string key as matching an importee that either equals it exactly or starts with `key + "/"`.
+The pre-existing `"@storagemaxxing/catalog"` key already satisfies that prefix test against the importee `@storagemaxxing/catalog/lookup` (it starts with `"@storagemaxxing/catalog/"`), so if it appears earlier in the object than the new key, it wins first and the fixture alias never activates, silently.
+The new `"@storagemaxxing/catalog/lookup"` key MUST therefore be inserted before `"@storagemaxxing/catalog"` in the object literal, as shown above — this ordering is verified directly against the installed resolver, not assumed.
+
+**Why not route through `packages/store`'s injectable `catalog` parameter instead?** `layoutSelectors.ts`'s `selectPackedLayout`/`selectOptionsModeStrategies`/`selectPackingResultsBySpace` already accept an optional `catalog` argument defaulting to `ALL_BINS`, which looks like a ready-made seam that would avoid touching Vite config at all.
+It only covers the packing/exclusion half of this bead's scope, though: `ConstraintEditorPanel.tsx:4` imports `ALL_BINS` directly at module scope to render the Add Bins list (`compatibleBins = ALL_BINS.filter(...)`, line 58) and never goes through a store selector, so injecting a fixture catalog into the store's default parameter would leave the Add Bins button's greyed/disabled state (the first acceptance scenario) untouched.
+The module-graph alias swap is the only mechanism that reaches both the UI's direct import and the store's default parameter with a single change, so it remains the chosen mechanism — with the ordering fix above, not a replacement.
 
 **2. New fixture module: `apps/web/e2e/fixtures/catalogWithDrillFixture.ts`.**
 
@@ -100,11 +118,13 @@ The second scenario's exact "packed layout no longer lists it" locator (canvas p
                                                             logic sees the fixture too.
 ```
 
-**Zod schemas:** no new domain objects. `drillBin` is a plain `BinSpec` literal (existing type from `packages/catalog/src/bin.ts`) with an `InstallationRequirement` (existing type) — both already validated by `packages/catalog`'s Zod schemas; nothing new to specify.
+**Zod schemas:** no new domain objects.
+`drillBin` is a plain `BinSpec` literal (existing type from `packages/catalog/src/bin.ts`) with an `InstallationRequirement` (existing type).
+Both are already validated by `packages/catalog`'s Zod schemas; nothing new to specify.
 
 ## Risks / Trade-offs
 
-- **Two dev-server instances during full e2e runs** (ports 5173 and 5174) increase local/CI resource use and startup time versus a single server. Scoped to CI's e2e job only; not a build or unit-test cost.
+- **Both dev-server instances start on every Playwright invocation of this config, not just full-suite runs.** Playwright's `webServer` field (`node_modules/playwright/types/test.d.ts:1043`) is declared on `TestConfig` — global to the whole config file, with no per-project override (`TestProject` has no `webServer` field). `bunx playwright test --project=chromium` — today's default-only CI invocation — will still start the fixture dev server on port 5174 even though the filtered run contains no `@drill-fixture`-tagged test. This is an unconditional startup-time and CI-resource cost paid by every existing e2e job, not one scoped to a hypothetical "full e2e run" or contingent on CI being resource-constrained.
 - **Divergence risk between the unit-test fixture and the e2e fixture module** if one is edited without the other — mitigated by literally copying the same field values, but there is no shared single source of truth (`ConstraintEditorPanel.test.tsx` uses `mock.module`, which cannot be reused by Vite's alias mechanism). A future cleanup could extract the shared literal into `packages/catalog` test-utilities if this pattern is needed for a second fixture, but that's speculative and out of scope here (functional purity rules already forbid it from `lookup.ts` itself).
 - **`process.env.PORT` now overrides the previously-hardcoded dev port** for anyone running `bun run dev` with a stray `PORT` env var set (e.g. from an unrelated tool). Low risk — no existing script or CI step sets `PORT` today (not grepped as a false claim here — to be verified during implementation before merging the `vite.config.ts` change).
 - **Alias-swap is a global, whole-graph substitution** — if any future code path needs the *real* catalog specifically while running under the fixture project (unlikely, but e.g. a "compare against real catalog" test), it has no way to opt out per-import. Not needed by this bead's scope.
@@ -114,5 +134,5 @@ The second scenario's exact "packed layout no longer lists it" locator (canvas p
 - **Does the fixture actually reach `packSpace`, or only the UI?** Traced: `ConstraintEditorPanel.tsx` → `handleAddBinConstraint` → store action → `useStore.ts` `applyStrategyInState(state, spaceId, system, ALL_BINS)` and `layoutSelectors.ts` `resolveSpace`/`selectPackedLayout` both default/receive `ALL_BINS` from the same `@storagemaxxing/catalog/lookup` specifier the alias swap intercepts. Confirmed reachable — this is the entire reason Decision 1 rejects an apps/web-only wrapper.
 - **Could Vite's `optimizeDeps` pre-bundling cache a stale (non-fixture) copy of `lookup.ts` between the default and fixture dev-server runs?** Each Playwright project's `webServer` starts its own `bun run dev` process with its own `E2E_DRILL_FIXTURE`/`PORT` env, so each gets a fresh Vite instance and its own `node_modules/.vite` cache keyed by config; no shared-process cache risk. Should still confirm empirically during implementation that a `.vite` cache dir isn't accidentally shared/committed.
 - **Does `grepInvert`/`grep` tag filtering actually exclude the fixture tests from the default project, or only de-prioritize them?** Playwright's `grep`/`grepInvert` at the project level fully excludes non-matching tests from that project's run (not just ordering) — this is documented Playwright behavior, not novel to this design, but must be verified against the installed `1.61.1` version during implementation (`bunx playwright test --list` per project) before relying on it in CI.
-- **Does adding a second `webServer` entry change existing CI timing/flakiness for the untouched default project?** `webServer` accepts an array; Playwright starts all declared servers before running any project, in parallel by default. If CI is resource-constrained, two dev servers starting concurrently could slow the existing golden-path job. Flag for measurement after implementation, not a blocker for this design.
+- **Does adding a second `webServer` entry change existing CI timing/flakiness for the untouched default project?** Confirmed unconditional, not conditional: `webServer` is a `TestConfig`-level field (global), not project-scoped, so Playwright starts all declared servers before running any project regardless of `--project` filtering — `bunx playwright test --project=chromium` alone still pays the second server's startup time. This is an accepted, measured cost of the design (see Risks above), not a contingent risk to flag for later.
 - **Is `test-drill-bin`'s `system: "gridfinity"` value going to collide with any real Gridfinity SKU id or filtering logic** (e.g. `buildAutoFillConstraints` filters by `bin.system === system`)? The id `test-drill-bin` is namespaced distinctly from every real catalog id (checked: real ids follow `<vendor>-<dims>` patterns, e.g. `schaller-1x1x2`; `binId()` only validates non-empty string, no format constraint) — no collision, but this SKU will appear in `buildAutoFillConstraints`'s Gridfinity auto-fill candidates when the fixture is active, which is expected (it's meant to look like a real Gridfinity-system bin) and should not itself be asserted against in the new scenarios (auto-fill behavior is out of scope; only manual Add Bins + packed-layout exclusion are).

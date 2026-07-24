@@ -3,7 +3,7 @@
 ### Requirement: Test-Only Fixture Injection Seam
 
 When an e2e scenario requires catalog data that has no defensible real-catalog equivalent, the system SHALL support injecting a synthetic fixture into the catalog at runtime, gated by a build-time flag that defaults to off and is only enabled by a dedicated Playwright project's `webServer` environment.
-The fixture-injection code path and any fixture data SHALL be excluded from production builds via dead-code elimination.
+The fixture-injection code path and any fixture data SHALL be excluded from production builds.
 
 #### Scenario: Fixture-gated e2e project exercises a synthetic bin
 
