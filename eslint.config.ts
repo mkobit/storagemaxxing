@@ -6,6 +6,7 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
 import functional from "eslint-plugin-functional";
 import importX from "eslint-plugin-import-x";
 import jsonc from "eslint-plugin-jsonc";
+import storybook from "eslint-plugin-storybook";
 import * as jsoncParser from "jsonc-eslint-parser";
 import globals from "globals";
 import { fixupPluginRules } from "@eslint/compat";
@@ -55,6 +56,8 @@ export default tseslint.config(
       "apps/web/e2e/**",
       "apps/web/scripts/**",
       "apps/web/playwright.config.ts",
+      "apps/web/.storybook/**",
+      "apps/web/storybook-static/**",
       "scripts/**",
       ".agents/hooks/**",
     ],
@@ -160,6 +163,16 @@ export default tseslint.config(
       "@typescript-eslint/consistent-type-assertions": "off",
       "functional/no-expression-statements": "off",
       "functional/no-return-void": "off",
+    },
+  },
+  {
+    // Wires the previously-unused eslint-plugin-storybook devDependency
+    // (openspec/changes/storybook-adoption) into story files only.
+    files: ["apps/web/src/**/*.stories.tsx"],
+    plugins: { storybook },
+    rules: {
+      ...(storybook.configs["flat/recommended"][1].rules as any),
+      "import/no-default-export": "off",
     },
   },
   {
