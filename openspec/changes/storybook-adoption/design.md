@@ -60,7 +60,7 @@ Each story supplies fixture props/args directly (no store, no router, no network
 ### 4. Lint and typecheck scope
 
 - `eslint.config.ts`: add a `files: ["apps/web/src/**/*.stories.tsx"]` block applying `eslint-plugin-storybook`'s recommended rules, additive to (not replacing) the existing `**/*.{ts,tsx}` rules already applied there — story files stay inside the strict/functional ruleset, they just gain Storybook-specific checks on top.
-- `apps/web/.storybook/**` is added to the root `eslint.config.ts` `ignores` array alongside the existing `apps/web/e2e/**`/`apps/web/scripts/**`/`apps/web/playwright.config.ts` entries — config files, not application source.
+- `apps/web/.storybook/**` is added to the root `eslint.config.ts` `ignores` array alongside the existing `apps/web/e2e/**`/`apps/web/scripts/**`/`apps/web/playwright.config.ts` entries — config files, not application source. `apps/web/storybook-static/**` (the `build-storybook` output directory, also gitignored) needs the same treatment: missing it caused `bun run lint` to fail against a generated, minified bundle the first time `build-storybook` had been run locally before `bun run lint` — `.gitignore` entries are not automatically respected by ESLint's flat config.
 - `apps/web/tsconfig.json` `include` gains `".storybook"` so `bun run typecheck` parses it (per `AGENTS.md`'s tsconfig-scope rule); `*.stories.tsx` files are already covered by the existing `"src"` include entry since they're colocated under `src/ui/`.
 
 ### 5. CI
