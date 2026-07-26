@@ -14,7 +14,8 @@
     "screenshot": "bun scripts/screenshot.ts",
     "playwright:install": "playwright install chromium --with-deps",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "check-stories": "bun scripts/check-stories.ts"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
