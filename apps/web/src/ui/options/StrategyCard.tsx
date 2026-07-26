@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {
+import type {
   LayoutResolution,
   ComparableStorageSystem,
 } from "@storagemaxxing/store/layoutSelectors";
