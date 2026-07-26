@@ -33,6 +33,15 @@ jobs:
       - name: Validate OpenSpec
         run: bunx openspec validate --all --no-interactive
 
+      - name: Bootstrap Beads
+        run: bd bootstrap --yes
+
+      - name: Sync Beads from remote
+        run: bd dolt pull
+
+      - name: Check OpenSpec tasks match Beads status
+        run: bun run check:tasks
+
       - name: Guard canonical spec edits
         if: github.event_name == 'pull_request'
         run: |
