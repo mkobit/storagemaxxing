@@ -29,6 +29,9 @@ jobs:
       - name: Test
         run: bun run test
 
+      - name: Storybook build
+        run: bun run --filter @storagemaxxing/web build-storybook
+
   e2e:
     runs-on: ubuntu-latest
     steps:
