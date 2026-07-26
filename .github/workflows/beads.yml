@@ -3,10 +3,12 @@ name: Beads lint
 on:
   schedule:
     - cron: "0 9 * * 1"
+  push:
   workflow_dispatch:
 
 jobs:
   lint:
+    if: github.event_name != 'push' || github.ref == 'refs/dolt/data'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
