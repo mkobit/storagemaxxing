@@ -50,3 +50,6 @@ jobs:
 
       - name: Golden-path e2e
         run: bun run --filter @storagemaxxing/web test:e2e
+
+      - name: Check stories
+        run: bun run --filter @storagemaxxing/web check-stories
