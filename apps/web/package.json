@@ -30,8 +30,10 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.12.1",
     "@happy-dom/global-registrator": "^20.10.6",
     "@playwright/test": "^1.61.1",
+    "@storybook/addon-a11y": "10.5.2",
     "@storybook/react-vite": "10.5.2",
     "@tailwindcss/vite": "^4.3.2",
     "@testing-library/dom": "^10.4.1",

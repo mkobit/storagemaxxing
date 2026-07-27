@@ -97,7 +97,7 @@ export const StrategyCard: React.FC<StrategyCardProps> = ({
           type="button"
           data-testid="select-and-customize"
           onClick={onSelectAndCustomize}
-          className="cursor-pointer rounded-sm border border-border-default bg-brand-primary px-2 py-1 text-xs text-white"
+          className="cursor-pointer rounded-sm border border-border-default bg-brand-primary px-2 py-1 text-xs text-text-inverse"
         >
           Select & Customize
         </button>

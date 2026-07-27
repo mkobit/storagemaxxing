@@ -6,7 +6,9 @@
 @import "@fontsource-variable/inter/wght.css";
 
 @theme {
-  --color-brand-primary: #3b82f6;
+  /* blue-600, not blue-500: white text on brand-primary buttons needs 4.5:1
+     contrast (WCAG AA); blue-500 (#3b82f6) only reaches 3.67:1. */
+  --color-brand-primary: #2563eb;
   --color-brand-secondary: #64748b;
   --color-brand-accent: #f59e0b;
 }
@@ -25,7 +27,9 @@
 
   --color-text-primary: #1e293b;
   --color-text-secondary: #475569;
-  --color-text-muted: #94a3b8;
+  /* slate-500, not slate-400: #94a3b8 on white was 2.56:1, below the 4.5:1
+     WCAG AA floor for normal text. */
+  --color-text-muted: #64748b;
   --color-text-inverse: #ffffff;
 
   --color-border-default: #cbd5e1;
@@ -77,12 +81,19 @@
 
   --color-text-primary: #f1f5f9;
   --color-text-secondary: #cbd5e1;
-  --color-text-muted: #64748b;
+  /* slate-400, not slate-500: #64748b on surface-sunken dark (#0f172a) was
+     3.75:1, below the 4.5:1 WCAG AA floor for normal text. */
+  --color-text-muted: #94a3b8;
   --color-text-inverse: #0f172a;
 
   --color-border-default: #334155;
   --color-border-subtle: #1e293b;
   --color-border-strong: #94a3b8;
+
+  /* blue-400, not the base blue-600: used as *text* (e.g. text-brand-primary
+     highlights) against dark surfaces, which needs a lighter blue than the
+     white-on-blue button case the base value is tuned for. */
+  --color-brand-primary: #60a5fa;
 
   /* Canvas background (bg-surface-sunken) flips to near-black in dark mode --
      these need their own overrides since getComputedStyle reads whatever is

@@ -118,6 +118,7 @@ export const ConstraintRow: React.FC<ConstraintRowProps> = ({
           value={constraint.mode}
           onChange={handleModeChange}
           data-testid={`constraint-mode-${constraint.binId}`}
+          aria-label={`Constraint mode for ${binName}`}
         >
           <option value="off">Off</option>
           <option value="auto">Auto</option>
