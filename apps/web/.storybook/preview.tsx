@@ -19,7 +19,13 @@ const withTheme: Decorator = (Story, context) => {
 
   return (
     <ThemeContext.Provider value={value}>
-      <Story />
+      {/* Mirrors App.tsx's root wrapper (bg-surface-sunken + text-text-primary)
+          so isolated stories inherit the same ambient surface/text colors as
+          the real app -- without it, dark-theme stories render on the raw
+          white iframe background and fail axe's color-contrast check. */}
+      <div className="bg-surface-sunken p-4 text-text-primary">
+        <Story />
+      </div>
     </ThemeContext.Provider>
   );
 };

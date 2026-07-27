@@ -1,8 +1,10 @@
+import AxeBuilder from "@axe-core/playwright";
 import { chromium, type ConsoleMessage, type Page } from "@playwright/test";
 
 const PORT = 6100;
 const BASE_URL = `http://localhost:${PORT}`;
 const THEMES = ["light", "dark"] as const;
+const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
 
 type StoryIndexEntry = {
   readonly id: string;
@@ -17,6 +19,15 @@ type ConsoleError = {
   readonly storyId: string;
   readonly theme: (typeof THEMES)[number];
   readonly message: string;
+};
+
+type A11yViolation = {
+  readonly storyId: string;
+  readonly theme: (typeof THEMES)[number];
+  readonly rule: string;
+  readonly impact: string;
+  readonly help: string;
+  readonly nodeCount: number;
 };
 
 async function waitForServer(url: string, timeoutMs: number): Promise<void> {
@@ -43,7 +54,10 @@ async function checkStory(
   page: Page,
   storyId: string,
   theme: (typeof THEMES)[number],
-): Promise<readonly ConsoleError[]> {
+): Promise<{
+  readonly consoleErrors: readonly ConsoleError[];
+  readonly a11yViolations: readonly A11yViolation[];
+}> {
   const errors: ConsoleError[] = [];
   const onConsole = (msg: ConsoleMessage): void => {
     if (msg.type() === "error") errors.push({ storyId, theme, message: msg.text() });
@@ -62,7 +76,18 @@ async function checkStory(
     page.off("console", onConsole);
     page.off("pageerror", onPageError);
   }
-  return errors;
+
+  const axeResults = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+  const a11yViolations = axeResults.violations.map((violation) => ({
+    storyId,
+    theme,
+    rule: violation.id,
+    impact: violation.impact ?? "unknown",
+    help: violation.help,
+    nodeCount: violation.nodes.length,
+  }));
+
+  return { consoleErrors: errors, a11yViolations };
 }
 
 const storybook = Bun.spawn(
@@ -76,11 +101,15 @@ try {
   if (storyIds.length === 0) throw new Error("No stories found in Storybook index.");
 
   const browser = await chromium.launch();
-  const page = await browser.newPage();
+  const context = await browser.newContext();
+  const page = await context.newPage();
   const allErrors: ConsoleError[] = [];
+  const allViolations: A11yViolation[] = [];
   for (const storyId of storyIds) {
     for (const theme of THEMES) {
-      allErrors.push(...(await checkStory(page, storyId, theme)));
+      const { consoleErrors, a11yViolations } = await checkStory(page, storyId, theme);
+      allErrors.push(...consoleErrors);
+      allViolations.push(...a11yViolations);
     }
   }
   await browser.close();
@@ -90,10 +119,22 @@ try {
     for (const { storyId, theme, message } of allErrors) {
       console.error(`  [${storyId}] (${theme}) ${message}`);
     }
+  }
+
+  if (allViolations.length > 0) {
+    console.error(`\nFound ${allViolations.length} accessibility violation(s) across stories:\n`);
+    for (const { storyId, theme, rule, impact, help, nodeCount } of allViolations) {
+      console.error(
+        `  [${storyId}] (${theme}) ${rule} (${impact}): ${help} -- ${nodeCount} node(s)`,
+      );
+    }
+  }
+
+  if (allErrors.length > 0 || allViolations.length > 0) {
     process.exitCode = 1;
   } else {
     console.log(
-      `Checked ${storyIds.length} stor${storyIds.length === 1 ? "y" : "ies"} x ${THEMES.length} themes -- no console errors.`,
+      `Checked ${storyIds.length} stor${storyIds.length === 1 ? "y" : "ies"} x ${THEMES.length} themes -- no console errors, no accessibility violations.`,
     );
   }
 } finally {
