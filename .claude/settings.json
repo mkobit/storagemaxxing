@@ -1,6 +1,13 @@
 {
   "permissions": {
-    "deny": ["Bash(rm -rf *)", "Bash(rm -fr *)"]
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)"
+    ],
+    "approve": [
+      "McpCallTool(brave-search_brave_web_search)",
+      "McpCallTool(brave-search_brave_local_search)"
+    ]
   },
   "hooks": {
     "PreCompact": [
@@ -59,5 +66,17 @@
         ]
       }
     ]
+  },
+  "mcpServers": {
+    "brave-search": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-brave-search"
+      ],
+      "env": {
+        "BRAVE_API_KEY": "YOUR_API_KEY_HERE"
+      }
+    }
   }
 }
