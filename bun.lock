@@ -113,7 +113,7 @@
         "@storagemaxxing/catalog": "workspace:*",
         "@storagemaxxing/geometry": "workspace:*",
         "@storagemaxxing/packer": "workspace:*",
-        "idb-keyval": "^6.2.6",
+        "idb-keyval": "^6.3.0",
         "zod": "^4.4.3",
         "zustand": "^5.0.14",
       },
@@ -914,7 +914,7 @@
 
     "iconv-lite": ["iconv-lite@0.7.2", "", { "dependencies": { "safer-buffer": ">= 2.1.2 < 3.0.0" } }, "sha512-im9DjEDQ55s9fL4EYzOAv0yMqmMBSZp6G0VvFyTMPKWxiSBHUj9NW/qqLmXUwXrrM7AvqSlTCfvqRb0cM8yYqw=="],
 
-    "idb-keyval": ["idb-keyval@6.2.6", "", {}, "sha512-FY64UEhw+5liMzMQ1R9Mw6AF0+wyBrg1CIA1z4CjI/EvT5ty/SvQcWZgd8s9sgaNhX10Y8UzScTh89tEAls5nA=="],
+    "idb-keyval": ["idb-keyval@6.3.0", "", {}, "sha512-um+2dgAWmYsu615EXpWVwSmapJhON0G43t3Ka/EVaohzPQXSMqKEqeDK/oIW3Ow+BXaF2PvSc+oBTFp793A5Ow=="],
 
     "ignore": ["ignore@7.0.5", "", {}, "sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg=="],
 
