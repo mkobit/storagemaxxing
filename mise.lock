@@ -69,7 +69,6 @@ checksum = "sha256:b0f3dd607c3fb989ee08d0a6854fba80d0402971eb108f9af6170bc14d491
 url = "https://github.com/gastownhall/beads/releases/download/v1.1.0/beads_1.1.0_linux_amd64.tar.gz"
 url_api = "https://api.github.com/repos/gastownhall/beads/releases/assets/466110983"
 provenance = "github-attestations"
-provenance_verified = true
 
 [tools."github:gastownhall/beads"."platforms.linux-x64-baseline"]
 checksum = "sha256:b0f3dd607c3fb989ee08d0a6854fba80d0402971eb108f9af6170bc14d491a34"
