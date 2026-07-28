@@ -5,12 +5,12 @@
 
 ## 1. Job parallelization
 
-- [ ] 1.1 [sm-nrbu](../../../.beads) Split `verify` job into parallel `lint`/`typecheck`/`test`/`build-storybook` jobs
+- [x] 1.1 [sm-nrbu](../../../.beads) Split `verify` job into parallel `lint`/`typecheck`/`test`/`build-storybook` jobs
   - Validation: `gh run view <run-id> --json jobs -q '.jobs[].name'` shows four separate job entries, all passing
 
 ## 2. Caching
 
-- [ ] 2.1 [sm-nj90](../../../.beads) Cache bun install/download cache across CI jobs
+- [x] 2.1 [sm-nj90](../../../.beads) Cache bun install/download cache across CI jobs
   - Validation: second CI run on an unchanged `bun.lock` shows a cache hit in the Actions log
 - [ ] 2.2 [sm-w3dt](../../../.beads) Cache Playwright browser download in the `e2e` job
   - Validation: second CI run's `playwright:install` step duration is measurably shorter than the first
@@ -22,7 +22,7 @@
 
 ## 4. Reproducibility
 
-- [ ] 4.1 [sm-7nlm](../../../.beads) Pin `actions/checkout` in `ci.yml` to the commit SHA already used in `beads.yml`/`openspec.yml`
+- [x] 4.1 [sm-7nlm](../../../.beads) Pin `actions/checkout` in `ci.yml` to the commit SHA already used in `beads.yml`/`openspec.yml`
   - Validation: `grep -n 'actions/checkout' .github/workflows/*.yml` shows identical SHA-pinned references across all three files
 
 ## 5. Skip-if-unchanged (decision, no implementation)
