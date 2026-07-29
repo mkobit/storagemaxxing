@@ -7,6 +7,7 @@ dist
 playwright-report/
 test-results/
 storybook-static/
+.eslintcache
 
 # Beads auto-export backup — Dolt is the source of truth (bd dolt push/pull).
 # Never commit this file; it is rewritten on every bd command and pollutes diffs.
