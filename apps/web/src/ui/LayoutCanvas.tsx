@@ -1,4 +1,3 @@
-/* eslint-disable functional/immutable-data */
 import React, { useRef, useEffect, useMemo, useState } from "react";
 import { useStore } from "@storagemaxxing/store/useStore";
 import {
@@ -44,8 +43,10 @@ const drawSpaceBounds = (
 ) => {
   if (template.w === undefined || template.l === undefined) return;
   const { fit, bounds } = transform;
+  /* eslint-disable functional/immutable-data -- Canvas 2D API requires imperative property assignment */
   ctx.strokeStyle = resolveCanvasToken("--color-canvas-grid");
   ctx.lineWidth = 1;
+  /* eslint-enable functional/immutable-data */
   ctx.setLineDash([4, 2]);
   ctx.strokeRect(
     (0 - bounds.origin[0]) * fit.scale + fit.offsetX,
@@ -69,9 +70,11 @@ const drawPackedLayout = (
     const spec = lookupBin(placed.binId);
     if (!spec) return;
     const constraint = constraints.find((c) => c.binId === placed.binId);
+    /* eslint-disable functional/immutable-data -- Canvas 2D API requires imperative property assignment */
     ctx.fillStyle = constraint?.color ?? fallbackFill;
     ctx.strokeStyle = outline;
     ctx.lineWidth = 1;
+    /* eslint-enable functional/immutable-data */
     const x = (placed.origin[0] - bounds.origin[0]) * fit.scale + fit.offsetX;
     const y = (placed.origin[2] - bounds.origin[1]) * fit.scale + fit.offsetY;
     const w = spec.nominal.w * fit.scale;
@@ -100,6 +103,7 @@ const paintWireframe = (
       else ctx.lineTo(canvasX, canvasY);
     });
     ctx.closePath();
+    /* eslint-disable functional/immutable-data -- Canvas 2D API requires imperative property assignment */
     if (polygon.fillColor) {
       ctx.fillStyle = polygon.fillColor;
       ctx.fill();
@@ -109,6 +113,7 @@ const paintWireframe = (
     }
     ctx.strokeStyle = resolveCanvasToken(polygon.strokeToken);
     ctx.lineWidth = 1;
+    /* eslint-enable functional/immutable-data */
     ctx.stroke();
   });
 };
