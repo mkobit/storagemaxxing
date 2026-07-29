@@ -20,9 +20,7 @@
       "@storagemaxxing/catalog/*": ["packages/catalog/src/*.ts"],
       "@storagemaxxing/geometry": ["packages/geometry/src/index.ts"],
       "@storagemaxxing/geometry/*": ["packages/geometry/src/*.ts"],
-      "@storagemaxxing/packer": ["packages/packer/src/index.ts"],
       "@storagemaxxing/packer/*": ["packages/packer/src/*.ts"],
-      "@storagemaxxing/store": ["packages/store/src/index.ts"],
       "@storagemaxxing/store/*": ["packages/store/src/*.ts"]
     },
     "resolveJsonModule": true,
