@@ -7,18 +7,14 @@ This package contains Euclidean spatial primitives and pure mathematics. It hand
 ## Type Ownership
 
 ```ts-exports
-Box3D
 CABINET_PROJECTION
 Dimensions2D
 Dimensions2DSchema
 Dimensions3D
 GridCoord
 GridDimensions
-GridUnit
 Inches
 InchesSchema
-Line2D
-MeasurementUnit
 Millimeters
 MillimetersSchema
 ObliqueProjection
@@ -30,13 +26,10 @@ Rect
 Rect2D
 Rect2DSchema
 Size
-Unit
-createBox3D
 createDimensions2D
 createDimensions3D
 createGridDimensions
 createInches
-createLine2D
 createMillimeters
 createPoint2D
 createPoint3D
