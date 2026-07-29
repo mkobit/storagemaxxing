@@ -65,7 +65,6 @@ export const useStore = create<StoreState>()(
         set((state) => applyStrategyInState(state, spaceId, system, ALL_BINS)),
       clearConstraintsForSpace: (templateId) =>
         set((state) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { [templateId]: _, ...newConstraints } =
             state.constraintsBySpace;
           return {
