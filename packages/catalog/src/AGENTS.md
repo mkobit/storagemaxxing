@@ -13,24 +13,13 @@ BinId
 BinIdSchema
 BinSpec
 CatalogSource
-FreeSpaceBin
-FreeSpaceBinSchema
 GOLDEN_PATH_STARTER_BIN_IDS
 GOLDEN_PATH_SYSTEM
 GRIDFINITY_CATALOG
-GridConstrainedBin
-GridConstrainedBinSchema
-GridFootprint
-GridFootprintSchema
-GridSystem
-GridSystemSchema
-InchesSchema
 InstallationRequirement
-MillimetersSchema
 OPENGRID_CATALOG
 PartId
 PartIdSchema
-SCHALLER_BINS
 SCHALLER_CATALOG
 SCHALLER_PART_0
 SCHALLER_PART_1
@@ -40,8 +29,6 @@ SCHALLER_PART_4
 SCHALLER_PART_5
 SCHALLER_PART_6
 SCHALLER_PART_7
-SchallerBin
-SchallerBinSchema
 StorageSystem
 StorageSystemSchema
 binId
@@ -49,7 +36,6 @@ binsForDepth
 createBasePartSchema
 createPartDimensionsSchema
 findBinById
-getSchallerBinById
 ```
 
 ## Import Rules
