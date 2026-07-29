@@ -12,7 +12,7 @@
 
 - [x] 2.1 [sm-nj90](../../../.beads) Cache bun install/download cache across CI jobs
   - Validation: second CI run on an unchanged `bun.lock` shows a cache hit in the Actions log
-- [ ] 2.2 [sm-w3dt](../../../.beads) Cache Playwright browser download in the `e2e` job
+- [x] 2.2 [sm-w3dt](../../../.beads) Cache Playwright browser download in the `e2e` job
   - Validation: second CI run's `playwright:install` step duration is measurably shorter than the first
 
 ## 3. Lint performance (highest measured cost, not in the original epic bullets)
