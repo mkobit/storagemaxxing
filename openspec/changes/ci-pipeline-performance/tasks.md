@@ -17,7 +17,7 @@
 
 ## 3. Lint performance (highest measured cost, not in the original epic bullets)
 
-- [ ] 3.1 [sm-cdiy](../../../.beads) Spike: ESLint `--cache` to reduce lint step duration
+- [x] 3.1 [sm-cdiy](../../../.beads) Spike: ESLint `--cache` to reduce lint step duration
   - Validation: warm-cache lint step is measurably faster than cold, AND a deliberately introduced violation on a previously-cached file is still caught
 
 ## 4. Reproducibility

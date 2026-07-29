@@ -28,6 +28,19 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Resolve ESLint cache key inputs
+        id: eslint-cache-key
+        run: |
+          eslint_version=$(grep -oP '^\s*"eslint": \["eslint@\K[0-9.]+' bun.lock | head -1)
+          tseslint_version=$(grep -oP '^\s*"typescript-eslint": \["typescript-eslint@\K[0-9.]+' bun.lock | head -1)
+          echo "versions=${eslint_version}-${tseslint_version}" >> "$GITHUB_OUTPUT"
+
+      - name: Cache ESLint cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: .eslintcache
+          key: ${{ runner.os }}-eslintcache-${{ steps.eslint-cache-key.outputs.versions }}-${{ hashFiles('eslint.config.ts') }}
+
       - name: Lint
         run: bun run lint
 
