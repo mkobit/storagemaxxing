@@ -1,7 +1,7 @@
 import React from "react";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 
-export type ConstraintInputsProps = {
+type ConstraintInputsProps = {
   readonly constraint: SpaceConstraint;
   readonly onMinChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   readonly onMaxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

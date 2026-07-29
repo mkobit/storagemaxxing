@@ -5,7 +5,7 @@ import type {
 } from "@storagemaxxing/store/layoutSelectors";
 import { toCardMetrics } from "./toCardMetrics";
 
-export type StrategyCardProps = {
+type StrategyCardProps = {
   readonly system: ComparableStorageSystem;
   readonly resolution: LayoutResolution;
   readonly isBestUtilization: boolean;

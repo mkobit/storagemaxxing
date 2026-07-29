@@ -15,7 +15,7 @@ const resolveSystemTheme = (): ResolvedTheme =>
 const readStoredPreference = (): ThemePreference =>
   ThemePreferenceSchema.parse(window.localStorage.getItem(THEME_STORAGE_KEY));
 
-export type ThemeProviderProps = {
+type ThemeProviderProps = {
   readonly children: React.ReactNode;
 };
 

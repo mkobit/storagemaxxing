@@ -3,7 +3,7 @@ import { BOM } from "@storagemaxxing/assembly/BaseTypes";
 import { ALL_BINS } from "@storagemaxxing/catalog/lookup";
 import { exportBOMToCSV } from "./exportCSV";
 
-export interface BOMHeaderProps {
+interface BOMHeaderProps {
   readonly bom: BOM;
 }
 
