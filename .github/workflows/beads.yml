@@ -6,6 +6,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     if: github.event_name != 'push' || github.ref == 'refs/dolt/data'
