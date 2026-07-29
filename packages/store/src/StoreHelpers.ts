@@ -48,7 +48,6 @@ export const removeConstraintFromState = (
     },
     spaces: state.spaces.map((s) => {
       if (s.templateId !== templateId) return s;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [binId]: _, ...newConstraints } = s.constraints;
       return {
         ...s,
