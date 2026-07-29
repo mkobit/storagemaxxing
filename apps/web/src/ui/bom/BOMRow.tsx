@@ -3,7 +3,7 @@ import { BOMItem } from "@storagemaxxing/assembly/BaseTypes";
 import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
 import { binId } from "@storagemaxxing/catalog/bin";
 
-export interface BOMRowProps {
+interface BOMRowProps {
   readonly item: BOMItem;
 }
 

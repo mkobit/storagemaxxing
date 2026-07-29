@@ -4,7 +4,7 @@ import { BOMHeader } from "./BOMHeader";
 import { BOMRow } from "./BOMRow";
 import { BOMSummary } from "./BOMSummary";
 
-export interface BOMTableProps {
+interface BOMTableProps {
   readonly bom: BOM;
 }
 

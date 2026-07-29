@@ -22,7 +22,7 @@ const toCardMetricsOrZero = (
     ? toCardMetrics(resolution.result)
     : { utilizationPct: 0, binCount: 0, skuCount: 0 };
 
-export type OptionsPanelProps = {
+type OptionsPanelProps = {
   readonly onStrategyApplied?: () => void;
 };
 

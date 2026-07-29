@@ -1,6 +1,6 @@
 import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 
-export type StrategyCardMetrics = {
+type StrategyCardMetrics = {
   readonly utilizationPct: number;
   readonly binCount: number;
   readonly skuCount: number;

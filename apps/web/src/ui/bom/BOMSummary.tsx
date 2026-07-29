@@ -1,6 +1,6 @@
 import React from "react";
 
-export interface BOMSummaryProps {
+interface BOMSummaryProps {
   readonly totalPrice: number;
   readonly isApproximatePrice: boolean;
   readonly itemCount: number;
