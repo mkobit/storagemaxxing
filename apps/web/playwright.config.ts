@@ -15,11 +15,25 @@ export default defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+      grepInvert: /@drill-fixture/,
+    },
+    {
+      name: "chromium-e2e-fixtures",
+      use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:5174" },
+      grep: /@drill-fixture/,
     },
   ],
-  webServer: {
-    command: "bun run dev",
-    url: "http://localhost:5173",
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: [
+    {
+      command: "bun run dev",
+      url: "http://localhost:5173",
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: "bun run dev",
+      url: "http://localhost:5174",
+      reuseExistingServer: !process.env.CI,
+      env: { E2E_DRILL_FIXTURE: "true", PORT: "5174" },
+    },
+  ],
 });
