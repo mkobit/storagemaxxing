@@ -62,7 +62,6 @@ Specialized tags for maintaining the issue database and agent operational rails.
 - `meta:hygiene`: General maintenance of the backlog, such as re-triaging, adding detail to existing specs, or cleaning up stale issues.
 - `meta:agent-rails`: Updates to `GEMINI.md`, `AGENTS.md`, or other agent-facing operational documentation.
 
-
 ---
 
 ## Example Usage Scenarios

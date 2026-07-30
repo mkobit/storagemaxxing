@@ -3,10 +3,12 @@ import { z } from "zod";
 /**
  * Zod schema for Dimensions2D.
  */
-export const Dimensions2DSchema = z.object({
-  w: z.number(),
-  l: z.number(),
-}).readonly();
+export const Dimensions2DSchema = z
+  .object({
+    w: z.number(),
+    l: z.number(),
+  })
+  .readonly();
 
 export type Dimensions2D<T extends number = number> = {
   readonly w: T;

@@ -103,8 +103,16 @@ describe("buildWireframeScene", () => {
   });
 
   test("space contributes floor, top, and vertical edges when w/l/h are defined", () => {
-    const template = createSpaceTemplate("space-1", createDimensions3D(10, 8, 6), "top");
-    const result = createPackingResult([], createPackingMetrics({}, 1, []), "valid");
+    const template = createSpaceTemplate(
+      "space-1",
+      createDimensions3D(10, 8, 6),
+      "top",
+    );
+    const result = createPackingResult(
+      [],
+      createPackingMetrics({}, 1, []),
+      "valid",
+    );
 
     const scene = buildWireframeScene(result, template, [], () => undefined);
 
@@ -130,9 +138,17 @@ describe("buildWireframeScene", () => {
   });
 
   test("space degrades to a floor-only outline when template.h is undefined", () => {
-    const base = createSpaceTemplate("space-1", createDimensions3D(10, 8, 6), "top");
+    const base = createSpaceTemplate(
+      "space-1",
+      createDimensions3D(10, 8, 6),
+      "top",
+    );
     const template: SpaceTemplate = { ...base, h: undefined };
-    const result = createPackingResult([], createPackingMetrics({}, 1, []), "valid");
+    const result = createPackingResult(
+      [],
+      createPackingMetrics({}, 1, []),
+      "valid",
+    );
 
     const scene = buildWireframeScene(result, template, [], () => undefined);
 
@@ -234,7 +250,11 @@ describe("buildWireframeScene", () => {
   });
 
   test("bin taller than the space extends above the space's top plane at its own depth", () => {
-    const template = createSpaceTemplate("space-1", createDimensions3D(10, 8, 4), "top");
+    const template = createSpaceTemplate(
+      "space-1",
+      createDimensions3D(10, 8, 4),
+      "top",
+    );
     const tallBin = testBin("tall-bin", 2, 2, 7);
     const origin = createPoint3D(1, 0, 3);
     const result = createPackingResult(

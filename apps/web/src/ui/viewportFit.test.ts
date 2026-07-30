@@ -31,7 +31,10 @@ describe("computeViewportFit", () => {
   test("oversized bounding box scales down to fit and centers on the free axis", () => {
     // bbox is 2000x1000 (2:1 aspect); available canvas is 760x560.
     // w-constrained: 760/2000 = 0.38; h-constrained: 560/1000 = 0.56 -> scale = 0.38 (min)
-    const bbox = createRect2D(createPoint2D(0, 0), createDimensions2D(2000, 1000));
+    const bbox = createRect2D(
+      createPoint2D(0, 0),
+      createDimensions2D(2000, 1000),
+    );
 
     const fit = computeViewportFit(bbox, VIEWPORT, MARGIN);
 
@@ -57,7 +60,10 @@ describe("computeViewportFit", () => {
   });
 
   test("exact-fit bounding box scales to exactly fill the available area", () => {
-    const bbox = createRect2D(createPoint2D(0, 0), createDimensions2D(760, 560));
+    const bbox = createRect2D(
+      createPoint2D(0, 0),
+      createDimensions2D(760, 560),
+    );
 
     const fit = computeViewportFit(bbox, VIEWPORT, MARGIN);
 
@@ -90,7 +96,10 @@ describe("computeViewportFit", () => {
 
   test("viewport smaller than 2*marginPx clamps available extent to a minimum of 1px per axis", () => {
     const tinyViewport = createDimensions2D(30, 30);
-    const bbox = createRect2D(createPoint2D(0, 0), createDimensions2D(100, 100));
+    const bbox = createRect2D(
+      createPoint2D(0, 0),
+      createDimensions2D(100, 100),
+    );
 
     const fit = computeViewportFit(bbox, tinyViewport, MARGIN);
 
@@ -119,7 +128,6 @@ describe("computeLayoutBounds", () => {
 
   test("bins-only: undefined template w/l falls back to the union of bin footprints", () => {
     const template: SpaceTemplate = {
-       
       id: "footprint-only" as SpaceTemplateId,
       name: "footprint-only",
       type: "drawer",

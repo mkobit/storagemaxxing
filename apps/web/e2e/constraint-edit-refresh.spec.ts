@@ -66,9 +66,9 @@ test("swapping the bin choice refreshes an already-packed layout without redoing
     .getByTestId("constraint-row-gridfinity-2x2x2")
     .getByTitle("Remove constraint")
     .click();
-  await expect(
-    page.getByTestId("constraint-row-gridfinity-2x2x2"),
-  ).toHaveCount(0);
+  await expect(page.getByTestId("constraint-row-gridfinity-2x2x2")).toHaveCount(
+    0,
+  );
 
   await page.getByTestId("add-bin-gridfinity-1x1x2").click();
 

@@ -39,7 +39,9 @@ async function waitForServer(url: string, timeoutMs: number): Promise<void> {
     if (reachable) return;
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
-  throw new Error(`Storybook did not become ready at ${url} within ${timeoutMs}ms`);
+  throw new Error(
+    `Storybook did not become ready at ${url} within ${timeoutMs}ms`,
+  );
 }
 
 async function fetchStoryIds(): Promise<readonly string[]> {
@@ -60,7 +62,8 @@ async function checkStory(
 }> {
   const errors: ConsoleError[] = [];
   const onConsole = (msg: ConsoleMessage): void => {
-    if (msg.type() === "error") errors.push({ storyId, theme, message: msg.text() });
+    if (msg.type() === "error")
+      errors.push({ storyId, theme, message: msg.text() });
   };
   const onPageError = (err: Error): void => {
     errors.push({ storyId, theme, message: err.message });
@@ -77,7 +80,9 @@ async function checkStory(
     page.off("pageerror", onPageError);
   }
 
-  const axeResults = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+  const axeResults = await new AxeBuilder({ page })
+    .withTags(WCAG_TAGS)
+    .analyze();
   const a11yViolations = axeResults.violations.map((violation) => ({
     storyId,
     theme,
@@ -91,14 +96,24 @@ async function checkStory(
 }
 
 const storybook = Bun.spawn(
-  ["bunx", "storybook", "dev", "-p", String(PORT), "--ci", "--quiet", "--exact-port"],
+  [
+    "bunx",
+    "storybook",
+    "dev",
+    "-p",
+    String(PORT),
+    "--ci",
+    "--quiet",
+    "--exact-port",
+  ],
   { stdout: "ignore", stderr: "pipe" },
 );
 
 try {
   await waitForServer(`${BASE_URL}/index.json`, 30_000);
   const storyIds = await fetchStoryIds();
-  if (storyIds.length === 0) throw new Error("No stories found in Storybook index.");
+  if (storyIds.length === 0)
+    throw new Error("No stories found in Storybook index.");
 
   const browser = await chromium.launch();
   const context = await browser.newContext();
@@ -107,7 +122,11 @@ try {
   const allViolations: A11yViolation[] = [];
   for (const storyId of storyIds) {
     for (const theme of THEMES) {
-      const { consoleErrors, a11yViolations } = await checkStory(page, storyId, theme);
+      const { consoleErrors, a11yViolations } = await checkStory(
+        page,
+        storyId,
+        theme,
+      );
       allErrors.push(...consoleErrors);
       allViolations.push(...a11yViolations);
     }
@@ -115,15 +134,26 @@ try {
   await browser.close();
 
   if (allErrors.length > 0) {
-    console.error(`Found ${allErrors.length} console error(s) across stories:\n`);
+    console.error(
+      `Found ${allErrors.length} console error(s) across stories:\n`,
+    );
     for (const { storyId, theme, message } of allErrors) {
       console.error(`  [${storyId}] (${theme}) ${message}`);
     }
   }
 
   if (allViolations.length > 0) {
-    console.error(`\nFound ${allViolations.length} accessibility violation(s) across stories:\n`);
-    for (const { storyId, theme, rule, impact, help, nodeCount } of allViolations) {
+    console.error(
+      `\nFound ${allViolations.length} accessibility violation(s) across stories:\n`,
+    );
+    for (const {
+      storyId,
+      theme,
+      rule,
+      impact,
+      help,
+      nodeCount,
+    } of allViolations) {
       console.error(
         `  [${storyId}] (${theme}) ${rule} (${impact}): ${help} -- ${nodeCount} node(s)`,
       );

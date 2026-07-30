@@ -44,7 +44,9 @@ const parseAgentsMdExports = (pkgName: string): readonly string[] => {
 const parseDagOrder = (): readonly string[] => {
   const configPath = resolve(ROOT, "eslint.config.ts");
   const content = readFileSync(configPath, "utf-8");
-  const match = content.match(/const\s+DAG_ORDER\s*=\s*\[([\s\S]*?)\]\s*as\s+const/);
+  const match = content.match(
+    /const\s+DAG_ORDER\s*=\s*\[([\s\S]*?)\]\s*as\s+const/,
+  );
   if (!match) {
     throw new Error("Could not find DAG_ORDER in eslint.config.ts");
   }
@@ -69,11 +71,20 @@ const parseImportRules = (
   }
 
   const sectionLines = lines.slice(sectionIdx + 1);
-  const nextSectionOffset = sectionLines.findIndex((l) => l.trim().startsWith("##"));
-  const relevantLines = nextSectionOffset === -1 ? sectionLines : sectionLines.slice(0, nextSectionOffset);
+  const nextSectionOffset = sectionLines.findIndex((l) =>
+    l.trim().startsWith("##"),
+  );
+  const relevantLines =
+    nextSectionOffset === -1
+      ? sectionLines
+      : sectionLines.slice(0, nextSectionOffset);
 
-  const mayLine = relevantLines.find((l) => l.trim().startsWith("- **May import from**:"));
-  const mustNotLine = relevantLines.find((l) => l.trim().startsWith("- **Must not import from**:"));
+  const mayLine = relevantLines.find((l) =>
+    l.trim().startsWith("- **May import from**:"),
+  );
+  const mustNotLine = relevantLines.find((l) =>
+    l.trim().startsWith("- **Must not import from**:"),
+  );
 
   const mayImport = mayLine
     ? (() => {
@@ -89,7 +100,9 @@ const parseImportRules = (
 
   const mustNotImport = mustNotLine
     ? (() => {
-        const parts = mustNotLine.replace("- **Must not import from**:", "").trim();
+        const parts = mustNotLine
+          .replace("- **Must not import from**:", "")
+          .trim();
         return parts.toLowerCase().includes("any")
           ? ["any"]
           : parts
@@ -102,7 +115,13 @@ const parseImportRules = (
   return { mayImport, mustNotImport };
 };
 
-const PACKAGES = ["geometry", "catalog", "assembly", "packer", "store"] as const;
+const PACKAGES = [
+  "geometry",
+  "catalog",
+  "assembly",
+  "packer",
+  "store",
+] as const;
 
 describe("D6 — Package Type Ownership Manifest", () => {
   PACKAGES.forEach((pkg) => {

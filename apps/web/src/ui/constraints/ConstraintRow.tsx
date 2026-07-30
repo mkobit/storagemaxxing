@@ -107,10 +107,7 @@ export const ConstraintRow: React.FC<ConstraintRowProps> = ({
 
   return (
     <div className="mb-2 flex flex-col gap-1">
-      <span
-        title={binName}
-        className="shrink-0 truncate text-text-primary"
-      >
+      <span title={binName} className="shrink-0 truncate text-text-primary">
         {binName}
       </span>
       <div className="flex flex-wrap items-center gap-4">

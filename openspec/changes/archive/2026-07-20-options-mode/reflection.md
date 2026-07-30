@@ -10,7 +10,7 @@
 
 ### 2. OpenSpec Workflow
 
-- **Design Clarity**: design.md's Decisions section was detailed enough (exact code sketches per Decision, plus a documented adversarial-review-caught bug and its fix) that zero implementation *judgment calls* were needed — every ambiguity had already been resolved by the prior adversarial-review pass (sm-mol-v9mn). This confirms the "adversarial review as an independent subagent" practice ([[feedback_adversarial_review_independent_subagent]]) pays off downstream: the bug it caught (ternary ordering) was correctly reflected in shipped code, pinned by a regression test.
+- **Design Clarity**: design.md's Decisions section was detailed enough (exact code sketches per Decision, plus a documented adversarial-review-caught bug and its fix) that zero implementation _judgment calls_ were needed — every ambiguity had already been resolved by the prior adversarial-review pass (sm-mol-v9mn). This confirms the "adversarial review as an independent subagent" practice ([[feedback_adversarial_review_independent_subagent]]) pays off downstream: the bug it caught (ternary ordering) was correctly reflected in shipped code, pinned by a regression test.
 - **Task Granularity**: 4 tasks matched the actual package/app boundaries (store selector, store action, web UI, e2e) with no re-splitting needed mid-flight.
 - **Artifact Friction**: Unlike installation-constraints, `tasks.md` checkboxes were hand-flipped immediately after each `bd close` this session, keeping the snapshot honest in real time. The underlying automation gap (sm-yh2k, no bd-close ↔ tasks.md auto-sync) is still open — this was manual discipline, not a fix — but it avoided repeating installation-constraints' 0/4-despite-fully-closed drift.
 

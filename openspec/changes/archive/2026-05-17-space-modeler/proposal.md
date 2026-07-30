@@ -14,11 +14,13 @@ Standardizing the space model now allows the Packing Engine to move beyond simpl
 ## Capabilities
 
 ### New Capabilities
+
 - `space-geometry-engine`: Core logic for managing polygon-based footprints and coordinate systems in `packages/geometry`.
 - `access-orientation-logic`: Rules and validation for space access types (top, front, etc.) that drive packing depth rules.
 - `obstacle-collision-primitives`: Data structures for representing fixed obstacles that must be subtracted from the available packing area.
 
 ### Modified Capabilities
+
 - `monorepo-topology`: Geometry package will now export complex polygon types used by the Packer.
 
 ## Impact

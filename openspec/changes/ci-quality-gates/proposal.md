@@ -29,7 +29,7 @@ sm-rs0c's own sequencing blockers (sm-nrbu: CI job split; sm-wghm: coverage visi
 
 ## Impact
 
-- Affected packages in the DAG: none directly — `geometry`, `catalog`, `assembly`, `packer`, `store`, `web` source is untouched by this change itself; the gates apply *across* all of them.
+- Affected packages in the DAG: none directly — `geometry`, `catalog`, `assembly`, `packer`, `store`, `web` source is untouched by this change itself; the gates apply _across_ all of them.
 - Affected files: `.github/workflows/ci.yml` (new step in the `lint` job), `package.json` (two new devDependencies, one new `knip` script), new `knip.json`, `bunfig.toml` and `apps/web/bunfig.toml` (coverage threshold config), `eslint.config.ts` (new plugin + two rules).
 - New dependencies: `knip`, `@eslint-community/eslint-plugin-eslint-comments` — both devDependencies only, no runtime/application impact.
 - Follow-up work discovered during scoping, not part of this change's implementation: sm-620t (dangling tsconfig.json aliases), and triaging the real `@storagemaxxing/packer` unused-dependency finding in `apps/web/package.json` / `packages/assembly/package.json` that knip and depcheck both independently confirmed (see `design.md` Decision 1).

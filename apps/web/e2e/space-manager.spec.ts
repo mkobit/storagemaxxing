@@ -67,12 +67,22 @@ test("creating a second space and switching to it updates the canvas to that spa
 }) => {
   await page.goto("/");
 
-  await createSpace(page, { name: "First drawer", columns: 3, rows: 3, depth: 2 });
+  await createSpace(page, {
+    name: "First drawer",
+    columns: 3,
+    rows: 3,
+    depth: 2,
+  });
   await expect
     .poll(() => canvasStrokeAspectRatio(page), { timeout: 10_000 })
     .toBeCloseTo(1, 1);
 
-  await createSpace(page, { name: "Second drawer", columns: 6, rows: 2, depth: 2 });
+  await createSpace(page, {
+    name: "Second drawer",
+    columns: 6,
+    rows: 2,
+    depth: 2,
+  });
   await expect
     .poll(() => canvasStrokeAspectRatio(page), { timeout: 10_000 })
     .toBeCloseTo(6 / 2, 1);

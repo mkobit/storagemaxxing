@@ -152,14 +152,23 @@ const ResolvedCanvas: React.FC<{
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     if (wireframeEnabled) {
-      const scene = buildWireframeScene(result, template, constraints, lookupBin);
+      const scene = buildWireframeScene(
+        result,
+        template,
+        constraints,
+        lookupBin,
+      );
       paintWireframe(
         ctx,
         scene,
         createDimensions2D(canvas.width, canvas.height),
       );
     } else {
-      const bounds = computeLayoutBounds(template, result.placedBins, lookupBin);
+      const bounds = computeLayoutBounds(
+        template,
+        result.placedBins,
+        lookupBin,
+      );
       const fit = computeViewportFit(
         bounds,
         createDimensions2D(canvas.width, canvas.height),

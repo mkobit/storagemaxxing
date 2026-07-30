@@ -3,7 +3,10 @@ import { applyStrategyInState } from "../src/StoreHelpers";
 import { AppState, initialState } from "../src/StoreTypes";
 import { createSpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
-import { binId, type BinSpec as CatalogBinSpec } from "@storagemaxxing/catalog/bin";
+import {
+  binId,
+  type BinSpec as CatalogBinSpec,
+} from "@storagemaxxing/catalog/bin";
 import { inches } from "@storagemaxxing/geometry/Inches";
 import {
   SpaceInstanceSchema,
@@ -85,14 +88,10 @@ describe("applyStrategyInState", () => {
 
     const sibling = next.spaces.find((s) => s.id === "sibling-space");
     expect(sibling?.system).toBe("akromils");
-    expect(Object.keys(sibling?.constraints ?? {})).toEqual([
-      gridfinityBin.id,
-    ]);
+    expect(Object.keys(sibling?.constraints ?? {})).toEqual([gridfinityBin.id]);
 
     const clicked = next.spaces.find((s) => s.id === "clicked-space");
-    expect(Object.keys(clicked?.constraints ?? {})).toEqual([
-      gridfinityBin.id,
-    ]);
+    expect(Object.keys(clicked?.constraints ?? {})).toEqual([gridfinityBin.id]);
     expect(next.constraintsBySpace[template.id]).toHaveLength(1);
   });
 

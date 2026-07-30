@@ -15,10 +15,10 @@ What was evaluated and rejected:
 - **CSS 3D transforms**: requires re-expressing every placement as positioned DOM nodes, creating a second render path that diverges from the existing canvas pipeline (theme tokens, testids, redraw-on-theme-toggle) and scales poorly with bin count.
 - **Deferring entirely**: defensible, but leaves the height-invisibility problem unsolved, and the scoped alternative below is small enough (one pure projection module plus one canvas draw routine) that deferral saves little.
 
-What clears the bar: a **2.5D oblique wireframe** (cabinet projection) drawn on the *existing* 2D canvas.
+What clears the bar: a **2.5D oblique wireframe** (cabinet projection) drawn on the _existing_ 2D canvas.
 Zero new dependencies, one new pure-function module in `packages/geometry`, one new draw routine and a toggle in `apps/web`.
 It is not "3D" in the camera/orbit sense — it is a fixed-angle parallel projection, which is exactly what a drawer viewed from the front-top needs and nothing more.
-A side effect of drawing heights honestly: a bin taller than the space visibly pokes above the space outline, surfacing the height-overflow problem for free (packer-level height *validation* is out of scope here and filed as a discovered bead).
+A side effect of drawing heights honestly: a bin taller than the space visibly pokes above the space outline, surfacing the height-overflow problem for free (packer-level height _validation_ is out of scope here and filed as a discovered bead).
 
 ## What Changes
 

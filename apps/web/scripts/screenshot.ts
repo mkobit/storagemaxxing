@@ -25,7 +25,9 @@ try {
   await page.goto(`http://localhost:5173${route}`, { timeout: 5_000 });
 } catch {
   await browser.close();
-  console.error(`dev server not reachable at http://localhost:5173 — run 'bun run dev' first`);
+  console.error(
+    `dev server not reachable at http://localhost:5173 — run 'bun run dev' first`,
+  );
   process.exit(1);
 }
 

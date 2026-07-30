@@ -62,7 +62,7 @@ No upscale cap (e.g. clamping at the old 24 px/inch): a cap would reintroduce ar
 Uniform magnification cannot mislead: proportions stay honest at any scale; only absolute px-per-inch changes, which nothing depends on.
 
 **D2 — The fit module lives in `apps/web/src/ui/viewportFit.ts`, not `packages/geometry`.**
-The math is generic rect-fitting and *could* live in `geometry`, but nothing below `web` in the DAG needs it, this bead is scoped `apps/web`, and the wireframe change set the precedent that view-layer composition stays in `apps/web` while `geometry` gains only primitives with multiple prospective consumers.
+The math is generic rect-fitting and _could_ live in `geometry`, but nothing below `web` in the DAG needs it, this bead is scoped `apps/web`, and the wireframe change set the precedent that view-layer composition stays in `apps/web` while `geometry` gains only primitives with multiple prospective consumers.
 `apps/web` importing `Rect2D` from `geometry` is a legal downward edge.
 If a second consumer ever appears (e.g. an export-to-image feature), promotion to `geometry` is a mechanical move because the module is already pure and DOM-free.
 
@@ -111,10 +111,11 @@ Both call sites pass a single shared `VIEWPORT_MARGIN_PX = 20` in `LayoutCanvas.
 No per-mode margin difference is introduced; if one is ever wanted it is a one-line call-site change, not a function change.
 
 **D6 — Degenerate inputs have defined, non-throwing behavior.**
+
 - Bounding box with zero extent on one axis (a single line, e.g. a wireframe of a flat scene): scale is computed from the positive axis only.
 - Bounding box with zero extent on both axes (empty scene: no template dimensions, no resolvable bins — `computeBoundingBox` already returns a 0×0 rect at the origin): `scale = 1` and the content point centers in the viewport; nothing paints anyway, so any finite scale is acceptable, and 1 is the least surprising.
 - Viewport smaller than `2·marginPx` (cannot happen with 800×600 and margin 20, but the function must not divide into a negative): available extent clamps to a minimum of 1 px per axis.
-These are exact-value unit test cases, not runtime guards sprinkled at call sites.
+  These are exact-value unit test cases, not runtime guards sprinkled at call sites.
 
 **D7 — No new Zod schemas.**
 `ViewportFit` is a derived, in-process computation result produced and consumed within a single synchronous paint pass — it is never parsed from external input, persisted, or serialized, so it does not cross a trust boundary.
@@ -132,7 +133,7 @@ The bounding boxes flowing in are existing `Rect2D` values, which already have `
   Accepted for v1: the paint effect already fully repaints on those changes; animated scale transitions are a polish follow-up, not a correctness concern.
 - **E2E screenshots change.**
   Existing e2e asserts testids, visibility, and badge text — not pixels — so no assertions should break; the visual baseline captured via `bun run screenshot` will differ and reviewers should expect that.
-  **Correction found during implementation (sm-xlho.3):** two e2e tests *did* assert pixels directly, tied to the legacy fixed 24px/inch density: `golden-path.spec.ts` checked that constraint-colored pixels stayed within a hardcoded `12 * 24` box, and `space-manager.spec.ts` checked the drawn space rect's exact width/height in pixels. Both broke immediately once the 2D path used a dynamic scale. Fixed by asserting properties the fit contract actually guarantees instead of a legacy absolute size: `golden-path.spec.ts` now checks pixels stay within the canvas inset by `VIEWPORT_MARGIN_PX`; `space-manager.spec.ts` now checks the rendered rect's aspect ratio matches the space's w:l ratio (guaranteed exactly by D3's uniform scale) rather than an absolute pixel size, which is no longer a fixed contract by design.
+  **Correction found during implementation (sm-xlho.3):** two e2e tests _did_ assert pixels directly, tied to the legacy fixed 24px/inch density: `golden-path.spec.ts` checked that constraint-colored pixels stayed within a hardcoded `12 * 24` box, and `space-manager.spec.ts` checked the drawn space rect's exact width/height in pixels. Both broke immediately once the 2D path used a dynamic scale. Fixed by asserting properties the fit contract actually guarantees instead of a legacy absolute size: `golden-path.spec.ts` now checks pixels stay within the canvas inset by `VIEWPORT_MARGIN_PX`; `space-manager.spec.ts` now checks the rendered rect's aspect ratio matches the space's w:l ratio (guaranteed exactly by D3's uniform scale) rather than an absolute pixel size, which is no longer a fixed contract by design.
 - **Two bounding-box derivations (2D footprint union vs. wireframe projected polygons) could drift.**
   Accepted: they measure genuinely different geometry (plan extents vs. projected extents) and share the single fit function, which is where the correctness lives.
 

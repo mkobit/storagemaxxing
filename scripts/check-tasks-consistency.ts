@@ -64,7 +64,13 @@ async function mismatchesInFile(file: string): Promise<readonly Mismatch[]> {
     if (status === undefined) continue;
     const checked = checkboxMatch[2].toLowerCase() === "x";
     if ((status === "closed") !== checked) {
-      found.push({ file, line: index + 1, beadId, checked, beadStatus: status });
+      found.push({
+        file,
+        line: index + 1,
+        beadId,
+        checked,
+        beadStatus: status,
+      });
     }
   }
   return found;
@@ -102,7 +108,9 @@ if (mismatches.length === 0) {
   console.log(`Found ${mismatches.length} mismatch(es):\n`);
   for (const m of mismatches) {
     const box = m.checked ? "[x]" : "[ ]";
-    console.log(`  ${m.file}:${m.line} — ${m.beadId} is ${m.beadStatus} but checkbox is ${box}`);
+    console.log(
+      `  ${m.file}:${m.line} — ${m.beadId} is ${m.beadStatus} but checkbox is ${box}`,
+    );
   }
   process.exit(1);
 }

@@ -24,5 +24,12 @@
     "target": "ESNext"
   },
   "extends": "../../tsconfig.json",
-  "include": ["src", "scripts", "vite.config.ts", "playwright.config.ts", "e2e", ".storybook"]
+  "include": [
+    "src",
+    "scripts",
+    "vite.config.ts",
+    "playwright.config.ts",
+    "e2e",
+    ".storybook"
+  ]
 }

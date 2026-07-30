@@ -115,7 +115,11 @@ export const CreateSpaceFormPanel: React.FC = () => {
         data-testid="create-space-depth"
         className={input}
       />
-      <button type="submit" data-testid="create-space-submit" className={button}>
+      <button
+        type="submit"
+        data-testid="create-space-submit"
+        className={button}
+      >
         Create space
       </button>
       {error && (

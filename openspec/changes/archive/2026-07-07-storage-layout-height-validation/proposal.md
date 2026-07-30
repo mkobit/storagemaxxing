@@ -5,7 +5,7 @@
 A bin with effective height 3 packs into a drawer with `h: 2` and the result comes back `validity: "valid"` with `metrics.failures` empty (bug bead sm-csu4, discovered during the `wireframe-layout-preview` scoping pass, sm-9bdk).
 
 The wireframe preview shipped in change `2026-07-05-wireframe-layout-preview` made this visible: a too-tall bin literally pokes above the space's top edge in the oblique view.
-That change deliberately deferred the fix — drawing heights honestly is a rendering concern; deciding what a height violation *means* for `PackingResult.validity` and `metrics.failures` is a packer-contract question that belongs in the `storage-layout` spec.
+That change deliberately deferred the fix — drawing heights honestly is a rendering concern; deciding what a height violation _means_ for `PackingResult.validity` and `metrics.failures` is a packer-contract question that belongs in the `storage-layout` spec.
 This proposal answers that question.
 
 The existing Golden-Path Packing requirement already promises "no placement outside the space bounds", and a placement whose height exceeds `space.h` is outside the bounds — the spec's intent is already violated, it just lacks a scenario and a test that would catch it.

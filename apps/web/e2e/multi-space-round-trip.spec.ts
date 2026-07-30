@@ -57,9 +57,7 @@ const buildBothSpaces = async (page: Page) => {
   for (const space of SPACES) {
     await createSpace(page, space);
     await addBinWithExactCount(page, space.binId, space.count);
-    await expect(page.getByTestId("layout-validity-badge")).toHaveText(
-      "valid",
-    );
+    await expect(page.getByTestId("layout-validity-badge")).toHaveText("valid");
   }
 };
 

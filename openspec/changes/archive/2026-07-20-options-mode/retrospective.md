@@ -17,13 +17,13 @@
 
 ## §2 Misses
 
-- design.md's own embedded code snippets didn't survive contact with the repo's real lint rules and schema: the `selectOptionsModeStrategies` snippet's `Object.fromEntries(...) as Readonly<Record<...>>` cast tripped `@typescript-eslint/consistent-type-assertions`, and the `OptionsPanel` snippet's `activeSpace.template` referenced a field that doesn't exist on `SpaceInstanceSchema` (only `templateId`). Both were correct *decisions*, just unverified pseudocode — filed as sm-rdpp.
+- design.md's own embedded code snippets didn't survive contact with the repo's real lint rules and schema: the `selectOptionsModeStrategies` snippet's `Object.fromEntries(...) as Readonly<Record<...>>` cast tripped `@typescript-eslint/consistent-type-assertions`, and the `OptionsPanel` snippet's `activeSpace.template` referenced a field that doesn't exist on `SpaceInstanceSchema` (only `templateId`). Both were correct _decisions_, just unverified pseudocode — filed as sm-rdpp.
 - The e2e spec's akromils card is never asserted to place any bins (only that the card renders); real-catalog akromils/12×12×2-template compatibility wasn't independently confirmed the way gridfinity's commit path was. Not a defect — the "zero eligible bins renders zero, not an error" path is already unit-tested against a synthetic catalog in sm-oukg's test suite — but it means the e2e suite doesn't independently corroborate real-catalog akromils placement.
 
 ## §3 Surprises
 
 - `apps/web/AGENTS.md`'s "Type ownership" section already named `StrategyCard` before any options-mode code existed — a prior planning pass had pre-declared the type/component name, and it turned out to be exactly the right name for the component built this session.
-- No PR/merge was needed to unblock retrospective writing this time — unlike installation-constraints (where the gap was only caught at the start of the *next* session), this session's continuation prompt front-loaded the exact remaining work, so no `bd ready`/`openspec status` archaeology was needed before resuming.
+- No PR/merge was needed to unblock retrospective writing this time — unlike installation-constraints (where the gap was only caught at the start of the _next_ session), this session's continuation prompt front-loaded the exact remaining work, so no `bd ready`/`openspec status` archaeology was needed before resuming.
 
 ## §4 Promote
 

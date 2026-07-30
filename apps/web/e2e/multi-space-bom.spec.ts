@@ -20,7 +20,11 @@ const createSpace = async (
 // Pins a hard constraint to an exact count (Min === Max) so the packer's
 // auto-fill phase — which only tops up constraints left without a max —
 // doesn't add extra bins beyond what the test asserts on.
-const addBinWithExactCount = async (page: Page, binId: string, count: number) => {
+const addBinWithExactCount = async (
+  page: Page,
+  binId: string,
+  count: number,
+) => {
   await page.getByTestId(`add-bin-${binId}`).click();
   const row = page.getByTestId(`constraint-row-${binId}`);
   await row.getByLabel("Min:").fill(String(count));
@@ -39,11 +43,21 @@ test("planning a whole tool chest aggregates bin quantities from every space int
 }) => {
   await page.goto("/");
 
-  await createSpace(page, { name: "Top drawer", columns: 10, rows: 6, depth: 2 });
+  await createSpace(page, {
+    name: "Top drawer",
+    columns: 10,
+    rows: 6,
+    depth: 2,
+  });
   await addBinWithExactCount(page, "gridfinity-1x1x2", 6);
   await expect(page.getByTestId("layout-validity-badge")).toHaveText("valid");
 
-  await createSpace(page, { name: "Bottom drawer", columns: 8, rows: 8, depth: 2 });
+  await createSpace(page, {
+    name: "Bottom drawer",
+    columns: 8,
+    rows: 8,
+    depth: 2,
+  });
   await addBinWithExactCount(page, "gridfinity-2x2x2", 4);
   await expect(page.getByTestId("layout-validity-badge")).toHaveText("valid");
 

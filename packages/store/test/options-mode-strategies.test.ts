@@ -2,7 +2,10 @@ import { describe, expect, test } from "bun:test";
 import { selectOptionsModeStrategies } from "../src/layoutSelectors";
 import { createSpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
-import { binId, type BinSpec as CatalogBinSpec } from "@storagemaxxing/catalog/bin";
+import {
+  binId,
+  type BinSpec as CatalogBinSpec,
+} from "@storagemaxxing/catalog/bin";
 import { inches } from "@storagemaxxing/geometry/Inches";
 
 const smallBinDims = createDimensions3D(inches(2), inches(2), inches(1));
@@ -104,15 +107,16 @@ describe("selectOptionsModeStrategies", () => {
       installationConstraints: [{ type: "noDrill" as const }],
     };
 
-    const strategies = selectOptionsModeStrategies(noDrillTemplate, testCatalog);
+    const strategies = selectOptionsModeStrategies(
+      noDrillTemplate,
+      testCatalog,
+    );
 
     const schaller = strategies.schaller;
     expect(schaller.kind).toBe("resolved");
     if (schaller.kind !== "resolved") return;
     expect(
-      schaller.result.placedBins.filter(
-        (p) => p.binId === schallerDrillBin.id,
-      ),
+      schaller.result.placedBins.filter((p) => p.binId === schallerDrillBin.id),
     ).toHaveLength(0);
   });
 

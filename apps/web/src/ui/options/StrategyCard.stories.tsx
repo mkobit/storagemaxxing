@@ -10,7 +10,11 @@ const resolvedFixture: LayoutResolution = {
   kind: "resolved",
   result: createPackingResult(
     [],
-    createPackingMetrics({ "gridfinity-2x2": 6, "gridfinity-1x2": 3 }, 0.82, []),
+    createPackingMetrics(
+      { "gridfinity-2x2": 6, "gridfinity-1x2": 3 },
+      0.82,
+      [],
+    ),
     "valid",
   ),
   unresolvedBinIds: [],

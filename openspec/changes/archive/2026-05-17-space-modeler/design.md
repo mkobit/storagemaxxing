@@ -5,12 +5,14 @@ The current StorageMaxxing prototype uses hardcoded rectangular dimensions for d
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Enable non-rectangular space modeling via 2D polygons.
 - Formalize the `SpaceTemplate` and `SpaceInstance` separation.
 - Implement access-aware visibility rules (Top vs. Front access).
 - Provide a Zod-validated persistence layer for space definitions.
 
 **Non-Goals:**
+
 - 3D Mesh modeling (restricted to 2D footprints with 1D height).
 - Complex curved surfaces (approximated by high-vertex polygons).
 
@@ -32,14 +34,19 @@ The current StorageMaxxing prototype uses hardcoded rectangular dimensions for d
 ### 2. Domain Objects (Zod Schemas)
 
 ```typescript
-import { z } from 'zod';
+import { z } from "zod";
 
 export const Point2DSchema = z.object({
   x: z.number(),
-  y: z.number()
+  y: z.number(),
 });
 
-export const AccessFaceSchema = z.enum(['top', 'front', 'top+front', 'all-sides']);
+export const AccessFaceSchema = z.enum([
+  "top",
+  "front",
+  "top+front",
+  "all-sides",
+]);
 
 export const ObstacleSchema = z.object({
   id: z.string().uuid(),
@@ -47,7 +54,7 @@ export const ObstacleSchema = z.object({
   y: z.number(),
   w: z.number(),
   l: z.number(),
-  label: z.string()
+  label: z.string(),
 });
 
 export const SpaceTemplateSchema = z.object({
@@ -58,11 +65,12 @@ export const SpaceTemplateSchema = z.object({
   l: z.number().optional(),
   h: z.number(),
   footprint: z.array(Point2DSchema).optional(), // Polygon vertices
-  obstacles: z.array(ObstacleSchema).default([])
+  obstacles: z.array(ObstacleSchema).default([]),
 });
 ```
 
 ### 3. Polygon Intersection Logic
+
 To handle packing in non-rectangular spaces, the `packages/packer` will use a **Point-in-Polygon** test to validate that all four corners of a placed bin fall within the `footprint` and outside all `obstacles`.
 
 ## Risks / Trade-offs

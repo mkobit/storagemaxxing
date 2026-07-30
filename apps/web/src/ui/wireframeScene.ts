@@ -95,22 +95,44 @@ const buildSpaceEdges = (
   const { w, l, h } = template;
 
   const floor: WireframePolygon = {
-    points: [project(0, 0, 0), project(w, 0, 0), project(w, 0, l), project(0, 0, l)],
+    points: [
+      project(0, 0, 0),
+      project(w, 0, 0),
+      project(w, 0, l),
+      project(0, 0, l),
+    ],
     strokeToken: WIREFRAME_SPACE_STROKE_TOKEN,
   };
 
   if (h === undefined) return [floor];
 
   const top: WireframePolygon = {
-    points: [project(0, h, 0), project(w, h, 0), project(w, h, l), project(0, h, l)],
+    points: [
+      project(0, h, 0),
+      project(w, h, 0),
+      project(w, h, l),
+      project(0, h, l),
+    ],
     strokeToken: WIREFRAME_SPACE_STROKE_TOKEN,
   };
 
   const verticals: readonly WireframePolygon[] = [
-    { points: [project(0, 0, 0), project(0, h, 0)], strokeToken: WIREFRAME_SPACE_STROKE_TOKEN },
-    { points: [project(w, 0, 0), project(w, h, 0)], strokeToken: WIREFRAME_SPACE_STROKE_TOKEN },
-    { points: [project(w, 0, l), project(w, h, l)], strokeToken: WIREFRAME_SPACE_STROKE_TOKEN },
-    { points: [project(0, 0, l), project(0, h, l)], strokeToken: WIREFRAME_SPACE_STROKE_TOKEN },
+    {
+      points: [project(0, 0, 0), project(0, h, 0)],
+      strokeToken: WIREFRAME_SPACE_STROKE_TOKEN,
+    },
+    {
+      points: [project(w, 0, 0), project(w, h, 0)],
+      strokeToken: WIREFRAME_SPACE_STROKE_TOKEN,
+    },
+    {
+      points: [project(w, 0, l), project(w, h, l)],
+      strokeToken: WIREFRAME_SPACE_STROKE_TOKEN,
+    },
+    {
+      points: [project(0, 0, l), project(0, h, l)],
+      strokeToken: WIREFRAME_SPACE_STROKE_TOKEN,
+    },
   ];
 
   return [floor, top, ...verticals];
@@ -130,9 +152,7 @@ const compareBackToFront = (a: PlacedBin, b: PlacedBin): number => {
 const isFinitePoint = (point: Point2D): boolean =>
   Number.isFinite(point[0]) && Number.isFinite(point[1]);
 
-const computeBoundingBox = (
-  polygons: readonly WireframePolygon[],
-): Rect2D => {
+const computeBoundingBox = (polygons: readonly WireframePolygon[]): Rect2D => {
   // A projected point derived from a non-finite placement origin (e.g. an
   // upstream packer defect placing a bin that cannot actually fit -- sm-65ad)
   // must not poison the union for every other bin and the space outline via

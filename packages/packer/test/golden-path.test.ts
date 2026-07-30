@@ -10,7 +10,7 @@ import { GOLDEN_PATH_STARTER_BIN_IDS } from "@storagemaxxing/catalog/goldenPath"
 
 const EPSILON = 1e-3;
 
-const starterBins: readonly PackInput[] =GOLDEN_PATH_STARTER_BIN_IDS.map(
+const starterBins: readonly PackInput[] = GOLDEN_PATH_STARTER_BIN_IDS.map(
   (id) => {
     const bin = findBinById(ALL_BINS, id)!;
     return createPackInput({
@@ -142,9 +142,7 @@ describe("storage-layout: Golden-Path Packing", () => {
       const footprint = getEffectiveFootprint(bin);
       return footprint.w > 2 || footprint.l > 2;
     })!;
-    expect(result.placedBins.some((p) => p.binId === oversized.id)).toBe(
-      false,
-    );
+    expect(result.placedBins.some((p) => p.binId === oversized.id)).toBe(false);
   });
 
   test("a bin taller than the space is excluded and reported as a heightOverflow failure", () => {

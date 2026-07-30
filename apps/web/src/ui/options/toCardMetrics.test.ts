@@ -1,6 +1,9 @@
 import { describe, expect, test } from "bun:test";
 import { toCardMetrics } from "./toCardMetrics";
-import { createPackingResult, createPackingMetrics } from "@storagemaxxing/assembly/PackingResult";
+import {
+  createPackingResult,
+  createPackingMetrics,
+} from "@storagemaxxing/assembly/PackingResult";
 
 describe("toCardMetrics", () => {
   test("derives utilization percent, bin count, and SKU count from placedCounts", () => {

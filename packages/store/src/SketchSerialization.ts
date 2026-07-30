@@ -14,7 +14,9 @@ export const SketchSchema = z
   .object({
     spaces: z.array(SpaceInstanceSchema).readonly(),
     activeSpaceId: SpaceInstanceIdSchema.nullable(),
-    templatesById: z.record(SpaceTemplateIdSchema, SpaceTemplateSchema).readonly(),
+    templatesById: z
+      .record(SpaceTemplateIdSchema, SpaceTemplateSchema)
+      .readonly(),
     constraintsBySpace: z
       .record(SpaceTemplateIdSchema, z.array(SpaceConstraintSchema).readonly())
       .readonly(),

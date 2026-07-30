@@ -71,7 +71,7 @@ describe("git-commit-main-guard", () => {
 
   test("git checkout -b followed by commit allows", async () => {
     const { exitCode } = await runGuard(
-      "git checkout -b topic && git add . && git commit -m \"test\"",
+      'git checkout -b topic && git add . && git commit -m "test"',
     );
     expect(exitCode).toBe(0);
   });

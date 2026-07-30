@@ -60,7 +60,9 @@ export const useStore = create<StoreState>()(
       removeConstraintForSpace: (templateId, binId) =>
         set((state) => removeConstraintFromState(state, templateId, binId)),
       setSpaceDrillable: (templateId, drillable) =>
-        set((state) => setTemplateDrillableInState(state, templateId, drillable)),
+        set((state) =>
+          setTemplateDrillableInState(state, templateId, drillable),
+        ),
       applySpaceStrategy: (spaceId, system) =>
         set((state) => applyStrategyInState(state, spaceId, system, ALL_BINS)),
       clearConstraintsForSpace: (templateId) =>

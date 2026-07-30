@@ -45,7 +45,9 @@ Instead: a small `ThemeProvider` in `apps/web/src/ui/theme/` reads/writes a dedi
 The persisted value is validated with a Zod schema on read so a corrupted/foreign localStorage value can't put the app in a broken state:
 
 ```ts
-const ThemePreferenceSchema = z.enum(["light", "dark", "system"]).catch("system");
+const ThemePreferenceSchema = z
+  .enum(["light", "dark", "system"])
+  .catch("system");
 ```
 
 `.catch("system")` makes invalid/missing values fall back to `"system"` rather than throwing, since a corrupted UI preference should never block the app from rendering.

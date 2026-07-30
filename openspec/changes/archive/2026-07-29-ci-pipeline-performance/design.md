@@ -40,7 +40,7 @@ Action pinning is inconsistent: `.github/workflows/ci.yml:13,38` pins `actions/c
 
 **Non-Goals:**
 
-- `permissions:` blocks, CodeQL, dependency-review-action, CODEOWNERS — real gaps, tracked as separate infra beads (see Risks/adjacent findings), out of scope for a change specifically about pipeline *performance* and the *reproducibility* bullet already named in sm-vd2g.
+- `permissions:` blocks, CodeQL, dependency-review-action, CODEOWNERS — real gaps, tracked as separate infra beads (see Risks/adjacent findings), out of scope for a change specifically about pipeline _performance_ and the _reproducibility_ bullet already named in sm-vd2g.
 - Changing what any check validates — same lint ruleset, same tests, same e2e scenarios, same accessibility checks.
 - Any change to `packages/*` or `apps/web` source. This change touches `.github/workflows/ci.yml` only.
 
@@ -59,7 +59,7 @@ push/PR
   └─ e2e              (checkout → mise → bun install → playwright:install → test:e2e → check-stories)
 ```
 
-Expected wall-time effect: `typecheck`/`test`/`build-storybook` (currently forced to wait behind `lint`) start immediately instead of after ~30-47s, so the *slowest of the four* becomes `lint` itself (~30-47s) plus its own ~4s setup, instead of the sum of all four (~50-60s). Estimated savings: roughly 10-15s per run — real, but modest, because setup (checkout+mise+install, ~4s) is now paid four times instead of once. GitHub Actions job-queue/runner-provisioning overhead (not visible in the timestamps above, since these ran without a queue wait) could partly offset this on a busier runner pool; note this as a risk, not a blocker.
+Expected wall-time effect: `typecheck`/`test`/`build-storybook` (currently forced to wait behind `lint`) start immediately instead of after ~30-47s, so the _slowest of the four_ becomes `lint` itself (~30-47s) plus its own ~4s setup, instead of the sum of all four (~50-60s). Estimated savings: roughly 10-15s per run — real, but modest, because setup (checkout+mise+install, ~4s) is now paid four times instead of once. GitHub Actions job-queue/runner-provisioning overhead (not visible in the timestamps above, since these ran without a queue wait) could partly offset this on a busier runner pool; note this as a risk, not a blocker.
 
 ### 2. Cache bun's install cache and the Playwright browser download
 
@@ -69,7 +69,7 @@ Given `bun install` already completes in ~1s uncached (small lockfile, likely al
 
 ### 3. Investigate ESLint caching as the highest-ROI, currently-untracked option
 
-Lint is ~80% of the (formerly single) `verify` job's cost and is untouched by parallelization or dependency caching. `bun run lint` runs `eslint . --max-warnings 0` with no `--cache` flag. ESLint supports `--cache --cache-location <path>`, which skips re-linting files unchanged since the last cached run. In CI, this requires caching the `.eslintcache` file itself (via `actions/cache`, keyed on a hash of `eslint.config.ts` plus a rolling key) across runs, since each run starts from a fresh checkout. This is a plausible high-value addition but is a *new* mechanism, not one hinted at in the original epic's bullets — filed as its own child task (see tasks.md) rather than assumed, since verifying that `--cache` invalidation is correct in this repo's flat ESLint config is real work, not a trivial flag flip.
+Lint is ~80% of the (formerly single) `verify` job's cost and is untouched by parallelization or dependency caching. `bun run lint` runs `eslint . --max-warnings 0` with no `--cache` flag. ESLint supports `--cache --cache-location <path>`, which skips re-linting files unchanged since the last cached run. In CI, this requires caching the `.eslintcache` file itself (via `actions/cache`, keyed on a hash of `eslint.config.ts` plus a rolling key) across runs, since each run starts from a fresh checkout. This is a plausible high-value addition but is a _new_ mechanism, not one hinted at in the original epic's bullets — filed as its own child task (see tasks.md) rather than assumed, since verifying that `--cache` invalidation is correct in this repo's flat ESLint config is real work, not a trivial flag flip.
 
 ### 4. Reproducibility: pin `actions/checkout` in `ci.yml` to the same SHA already used elsewhere
 

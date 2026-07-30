@@ -5,10 +5,12 @@ import { z } from "zod";
 /**
  * Zod schema for Rect2D.
  */
-export const Rect2DSchema = z.object({
-  origin: Point2DSchema,
-  dimensions: Dimensions2DSchema,
-}).readonly();
+export const Rect2DSchema = z
+  .object({
+    origin: Point2DSchema,
+    dimensions: Dimensions2DSchema,
+  })
+  .readonly();
 
 export type Rect2D<T extends number = number> = {
   readonly origin: Point2D;

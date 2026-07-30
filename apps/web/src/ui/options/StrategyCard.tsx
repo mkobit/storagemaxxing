@@ -37,7 +37,9 @@ export const StrategyCard: React.FC<StrategyCardProps> = ({
       : { utilizationPct: 0, binCount: 0, skuCount: 0 };
 
   const placedCounts =
-    resolution.kind === "resolved" ? resolution.result.metrics.placedCounts : {};
+    resolution.kind === "resolved"
+      ? resolution.result.metrics.placedCounts
+      : {};
 
   return (
     <div

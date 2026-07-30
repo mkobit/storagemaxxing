@@ -1,6 +1,9 @@
 import React, { useRef, useState } from "react";
 import { useStore } from "@storagemaxxing/store/useStore";
-import { serializeSketch, parseSketch } from "@storagemaxxing/store/SketchSerialization";
+import {
+  serializeSketch,
+  parseSketch,
+} from "@storagemaxxing/store/SketchSerialization";
 import { GoldenPathSetup } from "./GoldenPathSetup";
 import { SpaceManager } from "./spaceManager/SpaceManager";
 import { ThemeToggle } from "./theme/ThemeToggle";

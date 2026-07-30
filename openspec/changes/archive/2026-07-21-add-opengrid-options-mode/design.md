@@ -9,6 +9,7 @@ The card grid (`OptionsPanel.tsx:72`) is `className="grid w-full grid-cols-1 gap
 `packages/catalog/src/lookup.ts:8-13` already spreads `OPENGRID_CATALOG` into `ALL_BINS` — confirmed via `Read`, so `selectOptionsModeStrategies`'s default `catalog = ALL_BINS` parameter already carries opengrid `BinSpec`s; the selector will start producing non-empty results for `opengrid` the moment it is added to `COMPARABLE_SYSTEMS`, with zero catalog-layer changes.
 
 Two test files assert the fixed 3-way set by name and need a 4th expected value:
+
 - `apps/web/src/ui/options/OptionsPanel.test.tsx`: `"renders exactly one card per comparable system"` asserts `strategy-card-schaller`, `strategy-card-gridfinity`, `strategy-card-akromils` exist — confirmed via `Read`, needs `strategy-card-opengrid` added.
 - `packages/store/test/options-mode-strategies.test.ts`: `"returns one resolved LayoutResolution per comparable system"` asserts `Object.keys(strategies).sort()` equals `["akromils", "gridfinity", "schaller"]` — confirmed via `Read`, needs `"opengrid"` inserted in sorted order (`["akromils", "gridfinity", "opengrid", "schaller"]`).
 
@@ -54,7 +55,7 @@ No new Zod schema — `ComparableStorageSystem` remains a plain derived TS type 
 **Non-Goals:**
 
 - No new selector, store action, or Zod schema — every piece `opengrid` needs (catalog entries, `StorageSystemSchema` member, generic `reduce` in `selectOptionsModeStrategies`) already exists.
-- No change to `applySpaceStrategy` or the "Select & Customize" commit flow — committing an `opengrid` strategy already works today for any `StorageSystem`; only the *preview* comparison screen was missing the 4th card.
+- No change to `applySpaceStrategy` or the "Select & Customize" commit flow — committing an `opengrid` strategy already works today for any `StorageSystem`; only the _preview_ comparison screen was missing the 4th card.
 - No `custom` card — `custom` has no fixed catalog (per the original options-mode design's non-goals) and stays excluded.
 - No visual redesign of `StrategyCard` itself — same card component, same metrics block, just one more instance and a wider grid.
 

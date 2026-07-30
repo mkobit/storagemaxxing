@@ -1,0 +1,6 @@
+# Canonical OpenSpec specs may only change via `bunx openspec archive`
+# (enforced by .github/workflows/openspec.yml's canonical-guard job) while
+# any openspec/changes/*/specs/ delta is active. Reformatting these directly
+# would trip that guard. Remove this entry and reformat once no active
+# change has a pending specs/ delta (sm-hohu).
+openspec/specs/

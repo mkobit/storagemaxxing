@@ -35,6 +35,8 @@ const [stdout, stderr, exitCode] = await Promise.all([
   proc.exited,
 ]);
 if (exitCode !== 0) {
-  process.stderr.write(`tsc --noEmit -p ${tsconfig} failed:\n${stdout}${stderr}`);
+  process.stderr.write(
+    `tsc --noEmit -p ${tsconfig} failed:\n${stdout}${stderr}`,
+  );
   process.exit(2);
 }

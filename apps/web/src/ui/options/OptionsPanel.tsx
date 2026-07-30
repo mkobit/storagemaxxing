@@ -40,7 +40,8 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
     : undefined;
 
   const strategies = useMemo(
-    () => (activeTemplate ? selectOptionsModeStrategies(activeTemplate) : undefined),
+    () =>
+      activeTemplate ? selectOptionsModeStrategies(activeTemplate) : undefined,
     [activeTemplate],
   );
 
