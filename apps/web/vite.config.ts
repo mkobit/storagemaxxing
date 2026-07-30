@@ -9,6 +9,10 @@ export default defineConfig({
   resolve: {
     dedupe: ["react", "react-dom"],
     alias: {
+      "@storagemaxxing/catalog/lookup":
+        process.env.E2E_DRILL_FIXTURE === "true"
+          ? path.resolve(__dirname, "e2e/fixtures/catalogWithDrillFixture.ts")
+          : path.resolve(__dirname, "../../packages/catalog/src/lookup.ts"),
       "@storagemaxxing/geometry": path.resolve(__dirname, "../../packages/geometry/src"),
       "@storagemaxxing/catalog": path.resolve(__dirname, "../../packages/catalog/src"),
       "@storagemaxxing/packer": path.resolve(__dirname, "../../packages/packer/src"),
@@ -21,7 +25,7 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
-    port: 5173,
+    port: Number(process.env.PORT ?? 5173),
     host: "localhost",
     strictPort: true,
   },
