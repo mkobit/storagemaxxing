@@ -2,16 +2,21 @@
 
 ### Requirement: Autonomous Safe-Action Set
 
-The sandboxed session SHALL execute a defined set of safe, reversible actions without any human interaction: file edits/writes inside the workspace root, `bun test`/`bun run lint`/`bun run typecheck`/`bunx openspec *`, `bd` claim/comment/create/close operations, `git commit` to a non-`main` branch, `git push` to a non-`main`, non-force-pushed branch of `mkobit/storagemaxxing`, and `gh pr create`/`gh pr edit` against `mkobit/storagemaxxing`.
+The sandboxed session SHALL execute a defined set of safe, reversible actions without any human interaction: file edits/writes inside the workspace root and inside the path(s) implied by the claimed bead's `scope:` label, `bun test`/`bun run lint`/`bun run typecheck`/`bunx openspec *`, `bd` claim/comment/create/close operations, `git commit` to a non-`main` branch, `git push` to a non-`main`, non-force-pushed branch of `mkobit/storagemaxxing` (with the destination remote resolved via `git remote get-url`, not read from the command string), and `gh pr create`/`gh pr edit` against `mkobit/storagemaxxing`.
 
 #### Scenario: Session runs a safe action
 
 - **WHEN** the sandboxed session issues a tool call matching the safe-action set (e.g. `bun test packages/geometry`, or `git commit` on a feature branch)
 - **THEN** the action MUST proceed immediately with no approval prompt and no queuing.
 
+#### Scenario: Session writes outside its claimed bead's scope
+
+- **WHEN** the sandboxed session edits or writes a file outside the path(s) implied by the claimed bead's `scope:` label
+- **THEN** the write MUST NOT be silently allowed; it MUST be routed to the gated set as a `scope-drift` event for asynchronous human review instead of executing unconditionally.
+
 ### Requirement: Gated Destructive-Action Set
 
-The sandboxed session SHALL block and queue for asynchronous human review any action in a defined destructive/irreversible set, instead of executing it or silently dropping it: `git push --force`/`-f`/`--force-with-lease` on any branch, any git remote operation targeting a repository other than `mkobit/storagemaxxing`, reads of paths matching a secret/credential-pattern denylist, network calls to hosts outside the egress allowlist, `bd rename-prefix`/`bd migrate`/`bd flatten`/`bd compact`/`bd gc`, and any write to `.github/workflows/*`, repository ruleset configuration, or `.claude/settings.json` from within the sandboxed session itself.
+The sandboxed session SHALL block and queue for asynchronous human review any action in a defined destructive/irreversible set, instead of executing it or silently dropping it: `git push --force`/`-f`/`--force-with-lease` on any branch, any git remote operation targeting a repository other than `mkobit/storagemaxxing`, reads of paths matching a secret/credential-pattern denylist, network calls to hosts outside the egress allowlist, `bd rename-prefix`/`bd migrate`/`bd flatten`/`bd compact`/`bd gc`/`bd delete`, `gh pr merge`/`gh pr merge --auto` against any pull request, and any write to `.github/workflows/*`, repository ruleset configuration, `.claude/settings*.json`, or `.agents/hooks/**` from within the sandboxed session itself.
 
 #### Scenario: Session attempts a force-push
 
@@ -20,8 +25,18 @@ The sandboxed session SHALL block and queue for asynchronous human review any ac
 
 #### Scenario: Session attempts to widen its own gate
 
-- **WHEN** the sandboxed session attempts to edit `.claude/settings.json`, a file under `.github/workflows/`, or repository ruleset configuration
-- **THEN** the hook MUST block the edit regardless of whether the resulting content would itself be reasonable, because a sandboxed session must not be able to loosen the gate that constrains it.
+- **WHEN** the sandboxed session attempts to edit `.claude/settings.json`, a file under `.agents/hooks/`, a file under `.github/workflows/`, or repository ruleset configuration
+- **THEN** the hook MUST block the edit regardless of whether the resulting content would itself be reasonable, because a sandboxed session must not be able to loosen the gate that constrains it by editing either the gate's configuration pointer or the hook script it points to.
+
+#### Scenario: Session attempts to merge its own pull request
+
+- **WHEN** the sandboxed session issues a `gh pr merge` or `gh pr merge --auto` tool call against any pull request
+- **THEN** the hook MUST block the tool call and queue it for asynchronous human review, regardless of the PR's CI status or the session's own `mode:auto-ok`/`mode:hotl` labeling, because a session's own merge action must never be the mechanism that bypasses human review of a `mode:hotl` PR.
+
+#### Scenario: Tool call matches neither the safe nor the gated set
+
+- **WHEN** a tool call does not match any pattern in the safe-action set or the gated-action set
+- **THEN** the hook MUST treat it as gated (fail closed) — blocking and queuing it for review — rather than allowing it to execute by default.
 
 ### Requirement: Gate Implemented as an Extension of the Existing Hook Mechanism
 
