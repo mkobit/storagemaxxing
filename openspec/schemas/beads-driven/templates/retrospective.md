@@ -2,23 +2,23 @@
 
 ## §0 Evidence
 
-- **Commit Range**: 
-- **Tasks Completed**: 
-- **Beads Closed**: 
-- **Test Status**: 
+- **Commit Range**:
+- **Tasks Completed**:
+- **Beads Closed**:
+- **Test Status**:
 
 ## §1 Wins
 
-- 
+-
 
 ## §2 Misses
 
-- 
+-
 
 ## §3 Surprises
 
-- 
+-
 
 ## §4 Promote
 
-- [ ] 
+- [ ]

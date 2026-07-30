@@ -25,12 +25,12 @@ This design wires the two dead ends together per the approved proposal: bins dec
 
 ## Packages touched
 
-| Package | Change | Zod impact |
-| --- | --- | --- |
-| `packages/catalog` | `BinSpec` gains `readonly installation?: InstallationRequirement` | None — `BinSpec` is a plain TS interface, not a Zod schema; catalog entries are typed literals with no runtime parse |
-| `packages/store` | New `setSpaceDrillable` action; installation filter in `resolveSpace`; exported `isBinInstallationAllowed` predicate | None — reuses assembly's existing `InstallationConstraintSchema` unchanged; `SketchSchema` already validates non-empty arrays |
-| `apps/web` | Drillable toggle + Add Bins greying in `ConstraintEditorPanel` | None |
-| `packages/geometry`, `packages/assembly`, `packages/packer` | **Untouched** | None |
+| Package                                                     | Change                                                                                                               | Zod impact                                                                                                                    |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `packages/catalog`                                          | `BinSpec` gains `readonly installation?: InstallationRequirement`                                                    | None — `BinSpec` is a plain TS interface, not a Zod schema; catalog entries are typed literals with no runtime parse          |
+| `packages/store`                                            | New `setSpaceDrillable` action; installation filter in `resolveSpace`; exported `isBinInstallationAllowed` predicate | None — reuses assembly's existing `InstallationConstraintSchema` unchanged; `SketchSchema` already validates non-empty arrays |
+| `apps/web`                                                  | Drillable toggle + Add Bins greying in `ConstraintEditorPanel`                                                       | None                                                                                                                          |
+| `packages/geometry`, `packages/assembly`, `packages/packer` | **Untouched**                                                                                                        | None                                                                                                                          |
 
 ## Decisions
 

@@ -96,9 +96,9 @@ describe("installation-constraints: setTemplateDrillableInState", () => {
       false,
     );
 
-    expect(updated.templatesById[template.id]?.installationConstraints).toEqual([
-      { type: "noDrill" },
-    ]);
+    expect(updated.templatesById[template.id]?.installationConstraints).toEqual(
+      [{ type: "noDrill" }],
+    );
   });
 
   test("drillable: false is idempotent -- calling it twice does not duplicate the entry", () => {
@@ -152,9 +152,9 @@ describe("installation-constraints: setTemplateDrillableInState", () => {
       false,
     );
 
-    expect(step3.templatesById[template.id]?.installationConstraints).toEqual(
-      [{ type: "noDrill" }],
-    );
+    expect(step3.templatesById[template.id]?.installationConstraints).toEqual([
+      { type: "noDrill" },
+    ]);
   });
 
   test("preserves other constraint types untouched when toggling noDrill", () => {

@@ -4,7 +4,10 @@ import { ConstraintRow } from "./constraints/ConstraintRow";
 import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
 import { binId } from "@storagemaxxing/catalog/bin";
 import { BinSpecIdSchema } from "@storagemaxxing/assembly/BaseTypes";
-import { SpaceConstraint, createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
+import {
+  SpaceConstraint,
+  createSpaceConstraint,
+} from "@storagemaxxing/assembly/SpaceConstraint";
 import { binColorForIndex } from "./binColorPalette";
 import { isBinInstallationAllowed } from "@storagemaxxing/store/layoutSelectors";
 
@@ -46,16 +49,24 @@ export const ConstraintEditorPanel: React.FC = () => {
       const binDef = findBinById(ALL_BINS, binId(constraints[0].binId));
       if (binDef) return binDef.system;
     }
-    if (activeSpace.templateId.toLowerCase().includes("akromils") || activeSpace.name.toLowerCase().includes("akromils")) {
+    if (
+      activeSpace.templateId.toLowerCase().includes("akromils") ||
+      activeSpace.name.toLowerCase().includes("akromils")
+    ) {
       return "akromils";
     }
-    if (activeSpace.templateId.toLowerCase().includes("schaller") || activeSpace.name.toLowerCase().includes("schaller")) {
+    if (
+      activeSpace.templateId.toLowerCase().includes("schaller") ||
+      activeSpace.name.toLowerCase().includes("schaller")
+    ) {
       return "schaller";
     }
     return "gridfinity";
   })();
 
-  const compatibleBins = ALL_BINS.filter((bin) => bin.system === detectedSystem);
+  const compatibleBins = ALL_BINS.filter(
+    (bin) => bin.system === detectedSystem,
+  );
 
   const filteredBins = compatibleBins.filter((bin) =>
     bin.name.toLowerCase().includes(searchQuery.toLowerCase()),

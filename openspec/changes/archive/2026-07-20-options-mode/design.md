@@ -1,11 +1,11 @@
 ## Context
 
-`packages/store/src/layoutSelectors.ts`'s `resolveSpace` packs a `SpaceInstance`'s *actual* `constraints` (a `Record<BinSpecId, SpaceConstraint>`) against its template — it has no notion of previewing a different system.
+`packages/store/src/layoutSelectors.ts`'s `resolveSpace` packs a `SpaceInstance`'s _actual_ `constraints` (a `Record<BinSpecId, SpaceConstraint>`) against its template — it has no notion of previewing a different system.
 `packages/assembly/src/SpaceConstraint.ts`'s `createSpaceConstraint(binId, hardMin, softMin, max?)` already has an unconstrained-fill mode: called with `hardMin === 0 && softMin === 0` it returns `{ mode: "auto", binId, lo: 0, hi: null, hard: false, color }` — "place as many of this bin as fit, no minimum." This is exactly the PRD §8.2 "unconstrained baseline" strategy; it requires no new constraint concept, only a new selector that builds one `auto` constraint per compatible catalog bin.
 `packages/catalog/src/lookup.ts`'s `ALL_BINS` plus the established `ALL_BINS.filter((bin) => bin.system === X)` pattern (`apps/web/src/ui/ConstraintEditorPanel.tsx:58`) is how "every SKU for system X" is already computed elsewhere in the app.
 `PackingResult.metrics` (`packages/assembly/src/PackingResult.ts`) carries `areaUtilization: number` and `placedCounts: Readonly<Record<string, number>>`, from which bin count (sum of values) and SKU count (number of nonzero keys) are plain arithmetic — no new schema.
 
-**The gap the proposal didn't anticipate:** `SpaceInstanceSchema` (`packages/assembly/src/SpaceInstance.ts`) has `system: StorageSystemSchema.optional()`, but reading `packages/store/src/StoreTypes.ts`, `useStore.ts`, and `StoreHelpers.ts` shows `system` is written exactly once, at creation time, by `apps/web/src/ui/spaceManager/CreateSpaceFormPanel.tsx` (backed by `CreateSpaceForm.ts`, where `system` is a *required* field). No store action changes `system` or wholesale-replaces constraints on an existing space. Every existing constraint mutation (`setConstraintForSpace`, `removeConstraintForSpace`, `setSpaceDrillable`) is **template-scoped**: `StoreHelpers.ts`'s `updateConstraintInState`/`removeConstraintFromState` write `constraintsBySpace[templateId]` and mirror the change onto every `SpaceInstance` sharing that `templateId`. So "Select & Customize" — which the proposal describes as setting the space's system and handing off to Configure Mode — needs a genuinely new store action; this design specifies it.
+**The gap the proposal didn't anticipate:** `SpaceInstanceSchema` (`packages/assembly/src/SpaceInstance.ts`) has `system: StorageSystemSchema.optional()`, but reading `packages/store/src/StoreTypes.ts`, `useStore.ts`, and `StoreHelpers.ts` shows `system` is written exactly once, at creation time, by `apps/web/src/ui/spaceManager/CreateSpaceFormPanel.tsx` (backed by `CreateSpaceForm.ts`, where `system` is a _required_ field). No store action changes `system` or wholesale-replaces constraints on an existing space. Every existing constraint mutation (`setConstraintForSpace`, `removeConstraintForSpace`, `setSpaceDrillable`) is **template-scoped**: `StoreHelpers.ts`'s `updateConstraintInState`/`removeConstraintFromState` write `constraintsBySpace[templateId]` and mirror the change onto every `SpaceInstance` sharing that `templateId`. So "Select & Customize" — which the proposal describes as setting the space's system and handing off to Configure Mode — needs a genuinely new store action; this design specifies it.
 
 Also relevant: `SpaceInstanceSchema.activeStrategy?: PackingStrategyId` (`packages/assembly/src/BaseTypes.ts`) exists but has zero consumers anywhere in the codebase today — the same category of dead scaffolding `InstallationRequirement` was before `installation-constraints` wired it up.
 
@@ -22,18 +22,18 @@ Also relevant: `SpaceInstanceSchema.activeStrategy?: PackingStrategyId` (`packag
 
 - No solver, scoring engine, or Layer 2 constraint validation. Strategy generation stays synchronous Layer 1 (three `packSpace` calls, each pure).
 - No cost/price metric (Gridfinity SKUs are `price: 0` placeholders in `packages/catalog/src/gridfinity.ts`; Schaller/Akro-Mils have real prices — a cost column today would be accurate for two of three systems).
-- No use of `activeStrategy`. One strategy per system fully identifies "which card is active" via the existing `system` field; `activeStrategy` is left as unused scaffolding for a future variant-generation change (PRD §8.2 step 2, "fewer large" variants), where it would distinguish multiple strategies *within* one system. Introducing it now for a 1:1 system-to-strategy mapping would be speculative infrastructure with no current reader.
+- No use of `activeStrategy`. One strategy per system fully identifies "which card is active" via the existing `system` field; `activeStrategy` is left as unused scaffolding for a future variant-generation change (PRD §8.2 step 2, "fewer large" variants), where it would distinguish multiple strategies _within_ one system. Introducing it now for a 1:1 system-to-strategy mapping would be speculative infrastructure with no current reader.
 - No constrained strategy generation (respecting user-set hard minimums before Options Mode is shown) — every strategy card is the unconstrained baseline. A space that already has hard/soft constraints set still gets fresh unconstrained preview cards; existing constraints are only touched if the user commits via "Select & Customize".
 - No new Zod schema. Every schema touched (`SpaceInstanceSchema.system`, `SpaceConstraintSchema`, `SpaceTemplateSchema`) already exists; this change is pure composition over them.
 - `opengrid` and `custom` `StorageSystem` values get no card — `opengrid` has no catalog entries (tracked separately in sm-qrai) and `custom` is not a fixed, purchasable SKU set.
 
 ## Packages touched
 
-| Package | Change | Zod impact |
-| --- | --- | --- |
-| `packages/store` | New `selectOptionsModeStrategies` selector in `layoutSelectors.ts`; new `applySpaceStrategy` action + `StoreHelpers.ts` helper; `StoreTypes.ts` gains the action signature | None — reuses `SpaceConstraintSchema`, `SpaceInstanceSchema` unchanged; no new schema |
-| `apps/web` | New `ui/options/` view (card grid, metrics block, best-value highlight); `App.tsx` gains a third tab | None |
-| `packages/geometry`, `packages/catalog`, `packages/assembly`, `packages/packer` | **Untouched** | None |
+| Package                                                                         | Change                                                                                                                                                                     | Zod impact                                                                            |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `packages/store`                                                                | New `selectOptionsModeStrategies` selector in `layoutSelectors.ts`; new `applySpaceStrategy` action + `StoreHelpers.ts` helper; `StoreTypes.ts` gains the action signature | None — reuses `SpaceConstraintSchema`, `SpaceInstanceSchema` unchanged; no new schema |
+| `apps/web`                                                                      | New `ui/options/` view (card grid, metrics block, best-value highlight); `App.tsx` gains a third tab                                                                       | None                                                                                  |
+| `packages/geometry`, `packages/catalog`, `packages/assembly`, `packages/packer` | **Untouched**                                                                                                                                                              | None                                                                                  |
 
 ## Decisions
 
@@ -119,7 +119,10 @@ Also relevant: `SpaceInstanceSchema.activeStrategy?: PackingStrategyId` (`packag
     const space = state.spaces.find((s) => s.id === spaceId);
     const template = space && state.templatesById[space.templateId];
     if (space === undefined || template === undefined) {
-      return { constraintsBySpace: state.constraintsBySpace, spaces: state.spaces };
+      return {
+        constraintsBySpace: state.constraintsBySpace,
+        spaces: state.spaces,
+      };
     }
     const { constraints } = buildAutoFillConstraints(template, system, catalog);
     const constraintsRecord = Object.fromEntries(
@@ -131,7 +134,8 @@ Also relevant: `SpaceInstanceSchema.activeStrategy?: PackingStrategyId` (`packag
         [space.templateId]: constraints,
       },
       spaces: state.spaces.map((s) => {
-        if (s.id === spaceId) return { ...s, system, constraints: constraintsRecord };
+        if (s.id === spaceId)
+          return { ...s, system, constraints: constraintsRecord };
         if (s.templateId === space.templateId)
           return { ...s, constraints: constraintsRecord };
         return s;
@@ -202,7 +206,7 @@ Also relevant: `SpaceInstanceSchema.activeStrategy?: PackingStrategyId` (`packag
 ## Risks / Trade-offs
 
 - **Constraint replacement is template-scoped, `system` is instance-scoped — a pre-existing model asymmetry, not introduced here.** If two spaces share a template, applying a strategy to one replaces the constraint set for both, but only the clicked instance's `system` changes. Two siblings can end up with the same bins-with-`auto`-constraints but different `system` labels. This mirrors how every other constraint action already behaves (`setSpaceDrillable`, `setConstraintForSpace`) — not a new risk this change creates, but Options Mode is the first place a user is likely to notice it, since it's the first UI that explicitly frames "pick a system." Fixing the underlying template/instance scoping mismatch is a separate change, not in scope here.
-- **Wholesale constraint replacement discards any constraints the user had already set.** "Select & Customize" is a deliberate reset to the previewed auto-fill baseline — same accepted trade-off the proposal names (Options Mode always previews the *unconstrained* baseline, never the user's current constraints). A confirmation step before overwriting non-empty existing constraints is a UX nicety left to implementation, not a spec requirement.
+- **Wholesale constraint replacement discards any constraints the user had already set.** "Select & Customize" is a deliberate reset to the previewed auto-fill baseline — same accepted trade-off the proposal names (Options Mode always previews the _unconstrained_ baseline, never the user's current constraints). A confirmation step before overwriting non-empty existing constraints is a UX nicety left to implementation, not a spec requirement.
 - **Three `packSpace` calls per render of the Options tab.** Each is a pure synchronous MaxRects pack over a bounded catalog (tens of SKUs per system). This is now a hard `useMemo` requirement in Decisions above (adversarial review found this undersold as an optional follow-up in an earlier draft) — with memoization in place, cost is identical to the existing single-pack selectors: one recompute per relevant state change, not per render.
 - **`ALL_BINS` grows over time.** `selectOptionsModeStrategies` takes `catalog` as a parameter (default `ALL_BINS`) purely for testability, mirroring `selectPackedLayout`'s existing signature — not a hook for a future "custom catalog" feature.
 - **`ComparableStorageSystem` (3 of `StorageSystemSchema`'s 5 values) has no runtime narrowing at any boundary.** Safe today because the only call sites are 3 hardcoded card buttons in `OptionsPanel`, never a value read back from persisted/user-controlled state. If a future change ever re-dispatches `applySpaceStrategy` from a value sourced from `activeSpace.system` (5-value, unvalidated on IndexedDB rehydration) rather than a hardcoded button, that future change must add a type-guard — this design doesn't need one because no such call site exists yet, and adding one speculatively would be validation for a scenario that can't currently happen.

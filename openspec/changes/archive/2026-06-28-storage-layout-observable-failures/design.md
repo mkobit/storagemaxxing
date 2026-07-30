@@ -82,8 +82,13 @@ export type LayoutResolution =
     };
 
 export const layoutResolutionNone = (): LayoutResolution => ({ kind: "none" });
-export const layoutResolutionMissingTemplate = (templateId: string): LayoutResolution => ({ kind: "missing-template", templateId });
-export const layoutResolutionResolved = (result: PackingResult, unresolvedBinIds: readonly string[]): LayoutResolution => ({ kind: "resolved", result, unresolvedBinIds });
+export const layoutResolutionMissingTemplate = (
+  templateId: string,
+): LayoutResolution => ({ kind: "missing-template", templateId });
+export const layoutResolutionResolved = (
+  result: PackingResult,
+  unresolvedBinIds: readonly string[],
+): LayoutResolution => ({ kind: "resolved", result, unresolvedBinIds });
 ```
 
 The existing `selectPackingResultsBySpace` (multi-space variant) returns `Readonly<Record<string, LayoutResolution>>` with one entry per space (rather than skipping spaces that don't resolve, as today).

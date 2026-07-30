@@ -63,9 +63,9 @@ test("selecting a strategy commits its system and auto-fill constraints, then ha
   await expect(gridfinityRows.first()).toBeVisible();
   const firstRow = await gridfinityRows.first().getAttribute("data-testid");
   const firstBinId = firstRow?.replace("constraint-row-", "");
-  await expect(
-    page.getByTestId(`constraint-mode-${firstBinId}`),
-  ).toHaveValue("auto");
+  await expect(page.getByTestId(`constraint-mode-${firstBinId}`)).toHaveValue(
+    "auto",
+  );
 
   // ...and the previously-selected schaller system's bins are gone.
   await expect(

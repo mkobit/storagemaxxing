@@ -91,7 +91,7 @@ export const buildWireframeScene = (
 
 Each placed bin contributes its three visible faces for a front-top-right viewpoint — top, front, right — with the constraint color on the top face (matching the 2D view's color identity) and surface tokens on the other faces, plus stroked edges.
 The space contributes its box edges (floor rectangle, verticals, top rectangle) when `w`/`l`/`h` are defined.
-Colors are carried as token *names* (plus literal constraint colors), so the painter resolves them per paint and the existing theme-repaint effect keeps working.
+Colors are carried as token _names_ (plus literal constraint colors), so the painter resolves them per paint and the existing theme-repaint effect keeps working.
 
 **D3 — Deterministic painter ordering.**
 Polygons are sorted back-to-front by bin `origin[2]` descending, then `origin[0]` ascending, then `binId` ascending as a total-order tie-break.

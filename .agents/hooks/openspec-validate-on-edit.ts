@@ -13,10 +13,13 @@ if (!match || match[1] === "archive") {
 }
 
 const changeName = match[1];
-const proc = Bun.spawn(["bunx", "openspec", "validate", changeName, "--strict"], {
-  stdout: "pipe",
-  stderr: "pipe",
-});
+const proc = Bun.spawn(
+  ["bunx", "openspec", "validate", changeName, "--strict"],
+  {
+    stdout: "pipe",
+    stderr: "pipe",
+  },
+);
 const [stdout, stderr, exitCode] = await Promise.all([
   new Response(proc.stdout).text(),
   new Response(proc.stderr).text(),

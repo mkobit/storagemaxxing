@@ -1,12 +1,7 @@
 {
   "permissions": {
-    "deny": [
-      "Bash(rm -rf *)",
-      "Bash(rm -fr *)"
-    ],
-    "approve": [
-      "TavilyWebSearchTool"
-    ]
+    "deny": ["Bash(rm -rf *)", "Bash(rm -fr *)"],
+    "approve": ["TavilyWebSearchTool"]
   },
   "hooks": {
     "PreCompact": [

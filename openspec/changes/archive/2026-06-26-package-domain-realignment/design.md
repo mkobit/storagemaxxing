@@ -78,15 +78,17 @@ Store consumes `findBinById` and calls `toPackInput`; that import is allowed by 
 Zod schema for the new type:
 
 ```ts
-export const PackInputSchema = z.object({
-  id: z.string(),
-  w: z.number().positive(),
-  l: z.number().positive(),
-  h: z.number().positive(),
-  toleranceW: z.number().nonnegative().optional(),
-  toleranceL: z.number().nonnegative().optional(),
-  toleranceH: z.number().nonnegative().optional(),
-}).readonly();
+export const PackInputSchema = z
+  .object({
+    id: z.string(),
+    w: z.number().positive(),
+    l: z.number().positive(),
+    h: z.number().positive(),
+    toleranceW: z.number().nonnegative().optional(),
+    toleranceL: z.number().nonnegative().optional(),
+    toleranceH: z.number().nonnegative().optional(),
+  })
+  .readonly();
 
 export type PackInput = z.infer<typeof PackInputSchema>;
 ```

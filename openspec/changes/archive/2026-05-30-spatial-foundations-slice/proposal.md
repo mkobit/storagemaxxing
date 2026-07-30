@@ -15,12 +15,14 @@ Strong domain modeling using TypeScript's strict mode and functional purity will
 ## Capabilities
 
 ### New Capabilities
+
 - `spatial-primitives`: Foundational 2D domain objects (Point, Rectangle, Size) with strict typing and Zod validation.
 - `opengrid-2d-modeling`: Logic to calculate and model OpenGrid fill patterns based on target dimensions.
 - `print-bed-optimization`: Calculation logic to fit modeled grids within physical printer bed constraints with conventional defaults.
 - `static-web-foundation`: Production-ready Bun-based build pipeline optimized for Cloudflare Pages.
 
 ### Modified Capabilities
+
 - `geometry-core`: Enhancement of existing geometry primitives to support multi-unit calculations and functional immutability.
 
 ## Impact

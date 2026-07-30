@@ -9,7 +9,10 @@ import {
   ALL_BINS as REAL_ALL_BINS,
   findBinById,
 } from "@storagemaxxing/catalog/lookup";
-import { binId, type BinSpec as CatalogBinSpec } from "@storagemaxxing/catalog/bin";
+import {
+  binId,
+  type BinSpec as CatalogBinSpec,
+} from "@storagemaxxing/catalog/bin";
 import { createDimensions3D as createBinDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
 
 const binDims = createBinDimensions3D(2, 2, 1);
@@ -94,7 +97,9 @@ describe("ConstraintEditorPanel", () => {
     expect(deleteBtn).toBeTruthy();
     fireEvent.click(deleteBtn);
 
-    const updatedSpace = useStore.getState().spaces.find((s) => s.id === spaceId);
+    const updatedSpace = useStore
+      .getState()
+      .spaces.find((s) => s.id === spaceId);
     expect(updatedSpace?.constraints[binSpecId]).toBeUndefined();
   });
 
@@ -113,7 +118,9 @@ describe("ConstraintEditorPanel", () => {
     if (!addButton) return;
     fireEvent.click(addButton);
 
-    const updatedSpace = useStore.getState().spaces.find((s) => s.id === spaceId);
+    const updatedSpace = useStore
+      .getState()
+      .spaces.find((s) => s.id === spaceId);
     const expectedId = BinSpecIdSchema.parse("gridfinity-1x1x3");
     expect(updatedSpace?.constraints[expectedId]).toBeTruthy();
   });
@@ -161,11 +168,15 @@ describe("ConstraintEditorPanel", () => {
     addBin("Gridfinity 1x1x3");
     addBin("Gridfinity 1x1x4");
 
-    const updatedSpace = useStore.getState().spaces.find((s) => s.id === spaceId);
+    const updatedSpace = useStore
+      .getState()
+      .spaces.find((s) => s.id === spaceId);
     const firstColor =
-      updatedSpace?.constraints[BinSpecIdSchema.parse("gridfinity-1x1x3")]?.color;
+      updatedSpace?.constraints[BinSpecIdSchema.parse("gridfinity-1x1x3")]
+        ?.color;
     const secondColor =
-      updatedSpace?.constraints[BinSpecIdSchema.parse("gridfinity-1x1x4")]?.color;
+      updatedSpace?.constraints[BinSpecIdSchema.parse("gridfinity-1x1x4")]
+        ?.color;
 
     expect(firstColor).toBeTruthy();
     expect(secondColor).toBeTruthy();
@@ -273,16 +284,12 @@ describe("ConstraintEditorPanel", () => {
       });
 
       render(<ConstraintEditorPanel />);
-      expect(
-        screen.getByTestId(`constraint-row-${drillBin.id}`),
-      ).toBeTruthy();
+      expect(screen.getByTestId(`constraint-row-${drillBin.id}`)).toBeTruthy();
 
       const toggle = screen.getByLabelText("Can I drill into this space?");
       fireEvent.click(toggle);
 
-      expect(
-        screen.getByTestId(`constraint-row-${drillBin.id}`),
-      ).toBeTruthy();
+      expect(screen.getByTestId(`constraint-row-${drillBin.id}`)).toBeTruthy();
     });
   });
 });

@@ -17,7 +17,7 @@
 ### 3. Multi-Agent Coordination
 
 - **Sync Fidelity**: Single-agent session. The handoff context from the previous session ("`sm-lg32` still unblocked, two open follow-ups, Dependabot PRs untouched") was enough to triage and pick option 3 (product-side railings) without re-doing discovery.
-- **Guidewire Compliance**: The Engineering Rails (`no `let`, immutability, no `any`, lint-enforced DAG) all held; one functional-immutable concession in `LayoutCanvas.tsx` (the `/* eslint-disable functional/immutable-data */` comment) was carried over from the existing file, not added by this change.
+- **Guidewire Compliance**: The Engineering Rails (`no `let`, immutability, no `any`, lint-enforced DAG) all held; one functional-immutable concession in `LayoutCanvas.tsx`(the`/* eslint-disable functional/immutable-data */` comment) was carried over from the existing file, not added by this change.
 
 ## 🚀 Follow-up Actions
 

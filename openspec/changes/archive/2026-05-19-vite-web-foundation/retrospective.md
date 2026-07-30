@@ -5,7 +5,7 @@
 - **Commit Range**: `main..e0b54b7`
 - **Tasks Completed**: 8/8 granular tasks from Beads database.
 - **Beads Closed**: `sm-pu05`, `sm-vp9q`, `sm-dgto`, `sm-0i1g`, `sm-34op`, `sm-ytwn`, `sm-eomo`, `sm-5uqm`.
-- **Test Status**: 
+- **Test Status**:
   - Vitest: 2 tests passed (Toolbar component).
   - Playwright: 1 smoke test passed (Homepage & Toolbar visibility).
   - Manual: Verified static build with `vite build`.

@@ -1,7 +1,10 @@
 import React from "react";
 import type { Decorator, Preview } from "@storybook/react-vite";
 import "../src/index.css";
-import { ThemeContext, type ThemeContextValue } from "../src/ui/theme/ThemeContext";
+import {
+  ThemeContext,
+  type ThemeContextValue,
+} from "../src/ui/theme/ThemeContext";
 import type { ResolvedTheme } from "../src/ui/theme/ThemePreference";
 
 // Storybook's toolbar drives theme deterministically -- ThemeProvider's own

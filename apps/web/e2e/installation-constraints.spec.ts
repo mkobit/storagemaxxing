@@ -81,7 +81,9 @@ test(
   async ({ page }) => {
     await page.goto("/");
 
-    await page.getByTestId("create-space-name").fill("Drill exclusion packing check");
+    await page
+      .getByTestId("create-space-name")
+      .fill("Drill exclusion packing check");
     await page.getByTestId("create-space-system").selectOption("gridfinity");
     await page.getByTestId("create-space-columns").fill("8");
     await page.getByTestId("create-space-rows").fill("8");
@@ -91,16 +93,22 @@ test(
     await expect(page.getByTestId("drillable-toggle")).toBeChecked();
 
     await page.getByTestId("add-bin-test-drill-bin").click();
-    await expect(page.getByTestId("constraint-row-test-drill-bin")).toBeVisible();
+    await expect(
+      page.getByTestId("constraint-row-test-drill-bin"),
+    ).toBeVisible();
 
     await page.getByRole("button", { name: "BOM" }).click();
     const bomPanel = page.getByTestId("bom-panel");
-    await expect(bomPanel.locator("tr", { hasText: "TEST-DRILL-1" })).toBeVisible();
+    await expect(
+      bomPanel.locator("tr", { hasText: "TEST-DRILL-1" }),
+    ).toBeVisible();
 
     // ConstraintEditorPanel (and its drillable-toggle) renders outside the
     // Layout/BOM/Options tab switch, so it stays reachable with the BOM tab
     // still active -- no tab change needed.
     await page.getByTestId("drillable-toggle").click();
-    await expect(bomPanel.locator("tr", { hasText: "TEST-DRILL-1" })).toHaveCount(0);
+    await expect(
+      bomPanel.locator("tr", { hasText: "TEST-DRILL-1" }),
+    ).toHaveCount(0);
   },
 );

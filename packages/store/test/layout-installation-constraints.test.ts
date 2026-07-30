@@ -12,7 +12,10 @@ import {
 import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { SpaceInstanceSchema } from "@storagemaxxing/assembly/SpaceInstance";
 import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
-import { binId, type BinSpec as CatalogBinSpec } from "@storagemaxxing/catalog/bin";
+import {
+  binId,
+  type BinSpec as CatalogBinSpec,
+} from "@storagemaxxing/catalog/bin";
 import { inches } from "@storagemaxxing/geometry/Inches";
 
 const binDims = createDimensions3D(inches(2), inches(2), inches(1));
@@ -62,9 +65,7 @@ const noDrillConstraint = { type: "noDrill" as const };
 
 describe("installation-constraints: isBinInstallationAllowed", () => {
   test("returns false for a drill bin when noDrill is set", () => {
-    expect(isBinInstallationAllowed(drillBin, [noDrillConstraint])).toBe(
-      false,
-    );
+    expect(isBinInstallationAllowed(drillBin, [noDrillConstraint])).toBe(false);
   });
 
   test("returns true for a drill bin when noDrill is not set", () => {
@@ -79,9 +80,9 @@ describe("installation-constraints: isBinInstallationAllowed", () => {
   });
 
   test("returns true for a non-drill installation type even when noDrill is set", () => {
-    expect(
-      isBinInstallationAllowed(freestandingBin, [noDrillConstraint]),
-    ).toBe(true);
+    expect(isBinInstallationAllowed(freestandingBin, [noDrillConstraint])).toBe(
+      true,
+    );
   });
 });
 
@@ -172,9 +173,8 @@ describe("installation-constraints: resolveSpace filtering via selectPackedLayou
     if (derived.kind !== "resolved") return;
     expect(derived.result.validity).toBe("valid");
     expect(
-      derived.result.placedBins.filter(
-        (p) => p.binId === noInstallationBin.id,
-      ).length,
+      derived.result.placedBins.filter((p) => p.binId === noInstallationBin.id)
+        .length,
     ).toBeGreaterThan(0);
   });
 

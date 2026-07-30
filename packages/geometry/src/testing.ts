@@ -19,9 +19,8 @@ export const mms = (
 /**
  * Test factory for Inches.
  */
-export const ins = (
-  ...values: ReadonlyArray<number>
-): ReadonlyArray<Inches> => values.map(inches);
+export const ins = (...values: ReadonlyArray<number>): ReadonlyArray<Inches> =>
+  values.map(inches);
 
 /**
  * Test factory for Dimensions2D in Millimeters.

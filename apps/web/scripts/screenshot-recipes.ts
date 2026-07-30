@@ -9,7 +9,9 @@ const createGoldenPathSpace = async (page: Page): Promise<void> => {
   await page.getByTestId("create-space-submit").click();
 };
 
-export const SCREENSHOT_RECIPES: Readonly<Record<string, (page: Page) => Promise<void>>> = {
+export const SCREENSHOT_RECIPES: Readonly<
+  Record<string, (page: Page) => Promise<void>>
+> = {
   "constraint-row": async (page) => {
     await createGoldenPathSpace(page);
     await page.getByTestId("add-bin-schaller-1x1x2").click();

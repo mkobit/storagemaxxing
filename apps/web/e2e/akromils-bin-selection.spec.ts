@@ -41,9 +41,9 @@ test("Akro-Mils bin selection: a space named for a non-Gridfinity system packs a
 
   // Confirms the constraint row resolved a real Akro-Mils catalog entry
   // rather than falling back to the raw bin id.
-  await expect(
-    page.getByTestId("constraint-row-akromils-30010"),
-  ).toContainText("Akro-Mils 30010");
+  await expect(page.getByTestId("constraint-row-akromils-30010")).toContainText(
+    "Akro-Mils 30010",
+  );
 
   // Two bins at their actual ~3.9"x4.025" footprint fit an 8"x6" drawer
   // side by side.

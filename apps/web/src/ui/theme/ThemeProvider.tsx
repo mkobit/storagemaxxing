@@ -20,12 +20,10 @@ type ThemeProviderProps = {
 };
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [preference, setPreferenceState] = useState<ThemePreference>(
-    readStoredPreference,
-  );
-  const [systemTheme, setSystemTheme] = useState<ResolvedTheme>(
-    resolveSystemTheme,
-  );
+  const [preference, setPreferenceState] =
+    useState<ThemePreference>(readStoredPreference);
+  const [systemTheme, setSystemTheme] =
+    useState<ResolvedTheme>(resolveSystemTheme);
 
   useEffect(() => {
     const media = window.matchMedia(SYSTEM_DARK_QUERY);

@@ -73,7 +73,7 @@ Add new agent-only tooling the same way: `bun add -d <package>` at the repo root
 - **Package tests:** Run package tests with `bun test packages/<pkg>` from the repo root.
   Packages have no `test` script, so `bun --cwd packages/<pkg> test` fails with "Script not found".
 - **Root-Level Execution:** To run a script in a subproject from the root, use the `--cwd` flag.
-  When using `run` with `--cwd`, place `--cwd` *after* the `run` keyword to avoid CLI argument parsing errors (e.g. `bun run --cwd apps/web test:e2e`).
+  When using `run` with `--cwd`, place `--cwd` _after_ the `run` keyword to avoid CLI argument parsing errors (e.g. `bun run --cwd apps/web test:e2e`).
   Otherwise, run the script directly without `run` (e.g. `bun --cwd apps/web dev`).
 - **Filter-based:** Alternatively, use `--filter` for workspace-aware execution:
   ```bash

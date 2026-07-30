@@ -8,12 +8,22 @@ mock.module("idb-keyval", () => ({
 import { render, screen, fireEvent } from "@testing-library/react";
 import { SpaceSwitcher } from "./SpaceSwitcher";
 import { useStore } from "@storagemaxxing/store/useStore";
-import { SpaceInstanceSchema, SpaceInstanceIdSchema } from "@storagemaxxing/assembly/SpaceInstance";
-import { createSpaceTemplate, SpaceTemplateIdSchema } from "@storagemaxxing/assembly/SpaceTemplate";
+import {
+  SpaceInstanceSchema,
+  SpaceInstanceIdSchema,
+} from "@storagemaxxing/assembly/SpaceInstance";
+import {
+  createSpaceTemplate,
+  SpaceTemplateIdSchema,
+} from "@storagemaxxing/assembly/SpaceTemplate";
 import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
 
 const templateId = SpaceTemplateIdSchema.parse("template-1");
-const template = createSpaceTemplate(templateId, createDimensions3D(6, 6, 2), "top");
+const template = createSpaceTemplate(
+  templateId,
+  createDimensions3D(6, 6, 2),
+  "top",
+);
 
 const spaceOneId = SpaceInstanceIdSchema.parse("space-1");
 const spaceTwoId = SpaceInstanceIdSchema.parse("space-2");
@@ -52,7 +62,9 @@ describe("SpaceSwitcher", () => {
   it("marks exactly one entry active, matching state.activeSpaceId", () => {
     render(<SpaceSwitcher />);
     const activeItems = [spaceOneId, spaceTwoId].filter(
-      (id) => screen.getByTestId(`space-item-${id}`).getAttribute("aria-current") === "true",
+      (id) =>
+        screen.getByTestId(`space-item-${id}`).getAttribute("aria-current") ===
+        "true",
     );
     expect(activeItems).toEqual([spaceOneId]);
   });
@@ -62,7 +74,15 @@ describe("SpaceSwitcher", () => {
     fireEvent.click(screen.getByTestId(`space-item-${spaceTwoId}`));
 
     expect(useStore.getState().activeSpaceId).toEqual(spaceTwoId);
-    expect(screen.getByTestId(`space-item-${spaceTwoId}`).getAttribute("aria-current")).toBe("true");
-    expect(screen.getByTestId(`space-item-${spaceOneId}`).getAttribute("aria-current")).toBe("false");
+    expect(
+      screen
+        .getByTestId(`space-item-${spaceTwoId}`)
+        .getAttribute("aria-current"),
+    ).toBe("true");
+    expect(
+      screen
+        .getByTestId(`space-item-${spaceOneId}`)
+        .getAttribute("aria-current"),
+    ).toBe("false");
   });
 });

@@ -13,11 +13,26 @@ export default defineConfig({
         process.env.E2E_DRILL_FIXTURE === "true"
           ? path.resolve(__dirname, "e2e/fixtures/catalogWithDrillFixture.ts")
           : path.resolve(__dirname, "../../packages/catalog/src/lookup.ts"),
-      "@storagemaxxing/geometry": path.resolve(__dirname, "../../packages/geometry/src"),
-      "@storagemaxxing/catalog": path.resolve(__dirname, "../../packages/catalog/src"),
-      "@storagemaxxing/packer": path.resolve(__dirname, "../../packages/packer/src"),
-      "@storagemaxxing/store": path.resolve(__dirname, "../../packages/store/src"),
-      "@storagemaxxing/assembly": path.resolve(__dirname, "../../packages/assembly/src"),
+      "@storagemaxxing/geometry": path.resolve(
+        __dirname,
+        "../../packages/geometry/src",
+      ),
+      "@storagemaxxing/catalog": path.resolve(
+        __dirname,
+        "../../packages/catalog/src",
+      ),
+      "@storagemaxxing/packer": path.resolve(
+        __dirname,
+        "../../packages/packer/src",
+      ),
+      "@storagemaxxing/store": path.resolve(
+        __dirname,
+        "../../packages/store/src",
+      ),
+      "@storagemaxxing/assembly": path.resolve(
+        __dirname,
+        "../../packages/assembly/src",
+      ),
     },
   },
   build: {

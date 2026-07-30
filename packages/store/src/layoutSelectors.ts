@@ -4,7 +4,10 @@ import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import { BinSpec as CatalogBinSpec, binId } from "@storagemaxxing/catalog/bin";
 import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
 import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
-import { createSpaceConstraint, SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
+import {
+  createSpaceConstraint,
+  SpaceConstraint,
+} from "@storagemaxxing/assembly/SpaceConstraint";
 import { AppState } from "./StoreTypes";
 
 export const isBinInstallationAllowed = (

@@ -3,7 +3,7 @@
 `apps/web` now has a full v1 component set (space manager, constraint editor, BOM, options/auto-fill, layout canvas — see `src/ui/App.tsx`), which was sm-8ywp's own stated precondition for Storybook adoption ("only after a basic v1 product exists").
 A broader UI-polish push (tab bar, empty/loading states, responsive layout) is coming next, and iterating on individual components inside the full app (create a space, add bins, drive to the right state) is slower than viewing a component in isolation with fixture props.
 `eslint-plugin-storybook` is already an unused root devDependency (`package.json`), and `storybook@10.3.6` core is already resolved transitively in `bun.lock` as its peer — this change is adding the actual tool the plugin was pinned for, or removing the plugin if adoption is rejected.
-`apps/web/src/ui/AGENTS.md` states a preference for E2E testing over isolated component *testing* ("We prefer End-to-End (E2E) testing over isolated component testing because it validates the integration of the UI, Store, and Solver").
+`apps/web/src/ui/AGENTS.md` states a preference for E2E testing over isolated component _testing_ ("We prefer End-to-End (E2E) testing over isolated component testing because it validates the integration of the UI, Store, and Solver").
 Storybook here is scoped as a visual development/viewing tool, not a test-runner replacement: Playwright e2e remains the sole source of behavioral verification, and no existing test is migrated to or replaced by a story.
 
 ## What Changes

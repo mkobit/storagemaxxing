@@ -11,10 +11,7 @@ export const CABINET_PROJECTION: ObliqueProjection = {
   depthScale: 0.5,
 };
 
-export const projectPoint = (
-  proj: ObliqueProjection,
-  p: Point3D,
-): Point2D => {
+export const projectPoint = (proj: ObliqueProjection, p: Point3D): Point2D => {
   const screenX = p[0] + proj.depthScale * Math.cos(proj.angleRadians) * p[2];
   const screenY = p[1] + proj.depthScale * Math.sin(proj.angleRadians) * p[2];
   return createPoint2D(screenX, screenY);

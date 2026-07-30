@@ -11,7 +11,11 @@ describe("ConstraintRow", () => {
     const onChange = mock();
     const constraint = createSpaceConstraint(binSpecId, 2, 0, 5);
     render(
-      <ConstraintRow constraint={constraint} binName="Test bin" onChange={onChange} />,
+      <ConstraintRow
+        constraint={constraint}
+        binName="Test bin"
+        onChange={onChange}
+      />,
     );
 
     fireEvent.change(screen.getByTestId(`constraint-mode-${binSpecId}`), {
@@ -32,7 +36,11 @@ describe("ConstraintRow", () => {
     const onChange = mock();
     const constraint = createSpaceConstraint(binSpecId, 2, 0, 5);
     render(
-      <ConstraintRow constraint={constraint} binName="Test bin" onChange={onChange} />,
+      <ConstraintRow
+        constraint={constraint}
+        binName="Test bin"
+        onChange={onChange}
+      />,
     );
 
     fireEvent.change(screen.getByTestId(`constraint-mode-${binSpecId}`), {
@@ -53,7 +61,11 @@ describe("ConstraintRow", () => {
     const onChange = mock();
     const constraint = createSpaceConstraint(binSpecId, 2, 0, 5);
     render(
-      <ConstraintRow constraint={constraint} binName="Test bin" onChange={onChange} />,
+      <ConstraintRow
+        constraint={constraint}
+        binName="Test bin"
+        onChange={onChange}
+      />,
     );
 
     fireEvent.change(screen.getByLabelText("Min:"), {
@@ -67,7 +79,11 @@ describe("ConstraintRow", () => {
     const onChange = mock();
     const constraint = createSpaceConstraint(binSpecId, 0, 2, 5);
     render(
-      <ConstraintRow constraint={constraint} binName="Test bin" onChange={onChange} />,
+      <ConstraintRow
+        constraint={constraint}
+        binName="Test bin"
+        onChange={onChange}
+      />,
     );
 
     fireEvent.change(screen.getByLabelText("Min:"), {
@@ -81,7 +97,11 @@ describe("ConstraintRow", () => {
     const onChange = mock();
     const constraint = createSpaceConstraint(binSpecId, 0, 2, 5);
     render(
-      <ConstraintRow constraint={constraint} binName="Test bin" onChange={onChange} />,
+      <ConstraintRow
+        constraint={constraint}
+        binName="Test bin"
+        onChange={onChange}
+      />,
     );
 
     fireEvent.change(screen.getByLabelText("Max:"), {
@@ -95,7 +115,11 @@ describe("ConstraintRow", () => {
     const onChange = mock();
     const constraint = createSpaceConstraint(binSpecId, 0, 2, 5);
     render(
-      <ConstraintRow constraint={constraint} binName="Test bin" onChange={onChange} />,
+      <ConstraintRow
+        constraint={constraint}
+        binName="Test bin"
+        onChange={onChange}
+      />,
     );
 
     fireEvent.change(screen.getByLabelText("Max:"), {
@@ -109,7 +133,11 @@ describe("ConstraintRow", () => {
     const onChange = mock();
     const constraint = createSpaceConstraint(binSpecId, 2, 0, 5);
     render(
-      <ConstraintRow constraint={constraint} binName="Test bin" onChange={onChange} />,
+      <ConstraintRow
+        constraint={constraint}
+        binName="Test bin"
+        onChange={onChange}
+      />,
     );
 
     fireEvent.change(screen.getByLabelText("Max:"), {
@@ -123,7 +151,11 @@ describe("ConstraintRow", () => {
     const onChange = mock();
     const constraint = createSpaceConstraint(binSpecId, 2, 0, 5);
     render(
-      <ConstraintRow constraint={constraint} binName="Test bin" onChange={onChange} />,
+      <ConstraintRow
+        constraint={constraint}
+        binName="Test bin"
+        onChange={onChange}
+      />,
     );
 
     fireEvent.change(screen.getByTestId(`constraint-mode-${binSpecId}`), {
@@ -144,7 +176,11 @@ describe("ConstraintRow", () => {
     const onChange = mock();
     const constraint = createSpaceConstraint(binSpecId, 0, 0);
     render(
-      <ConstraintRow constraint={constraint} binName="Test bin" onChange={onChange} />,
+      <ConstraintRow
+        constraint={constraint}
+        binName="Test bin"
+        onChange={onChange}
+      />,
     );
 
     fireEvent.change(screen.getByTestId(`constraint-mode-${binSpecId}`), {
@@ -165,7 +201,11 @@ describe("ConstraintRow", () => {
     const onChange = mock();
     const constraint = createSpaceConstraint(binSpecId, 0, 2, 5);
     render(
-      <ConstraintRow constraint={constraint} binName="Test bin" onChange={onChange} />,
+      <ConstraintRow
+        constraint={constraint}
+        binName="Test bin"
+        onChange={onChange}
+      />,
     );
 
     fireEvent.change(screen.getByTestId(`constraint-mode-${binSpecId}`), {

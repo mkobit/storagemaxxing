@@ -63,7 +63,7 @@ describe("exportBOMToCSV", () => {
     const csv = exportBOMToCSV(bom, catalog);
     const [, row] = csv.split("\n");
 
-    expect(row).toBe("unknown-bin,\"Unknown\",1,0.00,0.00,unknown,unknown");
+    expect(row).toBe('unknown-bin,"Unknown",1,0.00,0.00,unknown,unknown');
   });
 
   test("prefixes formula-leading SKU/name fields to prevent CSV injection", () => {

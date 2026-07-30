@@ -5,7 +5,7 @@
 This contract defines when and how a bead is safe to hand to a low-capability runner (Jules, Gemma-class, or any agent without the reasoning budget for design judgement).
 It extends the base Bead task contract in [`AGENTS.md`](../../AGENTS.md); it does not replace it.
 
-A bead is *delegate-ready* only if it satisfies every rule below.
+A bead is _delegate-ready_ only if it satisfies every rule below.
 Beads that fail any rule must be re-shaped, split, or kept for an Opus-class agent.
 
 ## Label taxonomy
@@ -13,12 +13,12 @@ Beads that fail any rule must be re-shaped, split, or kept for an Opus-class age
 Apply these labels to every delegate-ready bead.
 They are additive — keep existing `scope:`, `meta:openspec:*`, and `slice:*` labels.
 
-| Label family | Values | Meaning |
-| --- | --- | --- |
-| `delegate:` | `jules`, `gemma`, `any-low` | Known-good recipient(s). `any-low` means either. |
-| `effort:` | `trivial` (<15 min), `small` (<2 h) | Wall-clock estimate for the runner. |
-| `mode:` | `hotl`, `auto-ok` | `hotl` requires human PR review before merge; `auto-ok` is mergeable on CI-green. |
-| `kind:` | `impl-mechanical`, `impl-narrow`, `research-readonly` | Mechanical = deterministic transform. Narrow = one file with a single judgement call. Research = no file changes; output is a bead comment. |
+| Label family | Values                                                | Meaning                                                                                                                                     |
+| ------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `delegate:`  | `jules`, `gemma`, `any-low`                           | Known-good recipient(s). `any-low` means either.                                                                                            |
+| `effort:`    | `trivial` (<15 min), `small` (<2 h)                   | Wall-clock estimate for the runner.                                                                                                         |
+| `mode:`      | `hotl`, `auto-ok`                                     | `hotl` requires human PR review before merge; `auto-ok` is mergeable on CI-green.                                                           |
+| `kind:`      | `impl-mechanical`, `impl-narrow`, `research-readonly` | Mechanical = deterministic transform. Narrow = one file with a single judgement call. Research = no file changes; output is a bead comment. |
 
 ## Hard rules
 
@@ -64,7 +64,7 @@ The orchestrator (or a human dispatcher) is responsible for not handing two same
 
 ## Queryable measure: concurrency width
 
-The canonical measure for "how many runners can dispatch right now" is the *concurrency width*: the count of distinct `scope:` labels among delegate-ready beads where no bead in that scope is already `in_progress`.
+The canonical measure for "how many runners can dispatch right now" is the _concurrency width_: the count of distinct `scope:` labels among delegate-ready beads where no bead in that scope is already `in_progress`.
 
 Run [`./.jules/delegate-slate.sh`](../delegate-slate.sh) for a human-readable view or `./.jules/delegate-slate.sh --json` for orchestrator-friendly JSON.
 The script emits the concurrency width, the dispatch slate (one bead per dispatchable scope, highest priority first), and any blocked scopes.
@@ -76,7 +76,7 @@ DELEGATE_LABEL=delegate:jules ./.jules/delegate-slate.sh --json
 
 A dispatcher should:
 
-1. **Run `bd dolt push` first.** Jules's `env_setup.sh` runs `bd dolt pull` once at sandbox bring-up. If the bead exists only in your local Dolt DB at dispatch time, Jules will see stale state and refuse to find it. Always push *before* `jules session create`.
+1. **Run `bd dolt push` first.** Jules's `env_setup.sh` runs `bd dolt pull` once at sandbox bring-up. If the bead exists only in your local Dolt DB at dispatch time, Jules will see stale state and refuse to find it. Always push _before_ `jules session create`.
 2. Run the slate script to obtain the dispatch slate.
 3. Hand each bead in the slate to a distinct runner.
 4. Re-run after any claim/close to recompute width before the next dispatch wave.
@@ -86,7 +86,7 @@ A dispatcher should:
 The runner is expected to:
 
 1. `bd update <id> --claim` before touching anything.
-2. Read the bead description as the *full* specification. Do not infer requirements from related beads.
+2. Read the bead description as the _full_ specification. Do not infer requirements from related beads.
 3. Execute the acceptance command locally and observe it passing.
 4. For `kind:research-readonly`: post the output as a bead comment with marker `<!-- delegate-output -->` and close the bead.
    For implementation kinds: push a branch matching the declared pattern, open a PR, and leave the bead open with a comment linking the PR. A human (or the orchestrator) closes the bead after merge.
@@ -103,7 +103,7 @@ Do NOT delegate a bead if any of these apply:
 
 ## Promotion path
 
-A bead that is *not* delegate-ready today can become so:
+A bead that is _not_ delegate-ready today can become so:
 
 - Add the missing acceptance command (often a new test).
 - Split it into a research half (delegate-ready) and an implementation half (still Opus-class) where the research output deterministically constrains the implementation.
