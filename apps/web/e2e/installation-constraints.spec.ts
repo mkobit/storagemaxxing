@@ -40,3 +40,67 @@ test("drillable toggle defaults to on and leaves real bins unaffected", async ({
   await expect(addButton).toBeDisabled(); // already added, not installation-excluded
   await expect(page.getByTestId("constraint-row-schaller-1x1x2")).toBeVisible();
 });
+
+// sm-njs6: these two scenarios exercise the drill-exclusion path itself,
+// which requires a catalog bin with installation.type "drill" -- no real
+// catalog SKU qualifies (see sm-6tip above), so they run only against the
+// chromium-e2e-fixtures project, whose dev server aliases
+// @storagemaxxing/catalog/lookup to e2e/fixtures/catalogWithDrillFixture.ts
+// (adding a synthetic "test-drill-bin"). The default chromium project
+// excludes @drill-fixture-tagged tests via playwright.config.ts's
+// grepInvert, since add-bin-test-drill-bin doesn't exist against its
+// real-catalog dev server.
+test(
+  "drill-mount bin is disabled in Add Bins once noDrill is set",
+  { tag: "@drill-fixture" },
+  async ({ page }) => {
+    await page.goto("/");
+
+    await page.getByTestId("create-space-name").fill("Drill exclusion check");
+    await page.getByTestId("create-space-system").selectOption("gridfinity");
+    await page.getByTestId("create-space-columns").fill("8");
+    await page.getByTestId("create-space-rows").fill("8");
+    await page.getByTestId("create-space-depth").fill("2");
+    await page.getByTestId("create-space-submit").click();
+
+    const toggle = page.getByTestId("drillable-toggle");
+    await expect(toggle).toBeChecked();
+
+    const addButton = page.getByTestId("add-bin-test-drill-bin");
+    await expect(addButton).toBeEnabled();
+
+    await toggle.click();
+    await expect(toggle).not.toBeChecked();
+    await expect(addButton).toBeDisabled();
+  },
+);
+
+test(
+  "drill-mount bin already added is dropped from packed layout once noDrill is set",
+  { tag: "@drill-fixture" },
+  async ({ page }) => {
+    await page.goto("/");
+
+    await page.getByTestId("create-space-name").fill("Drill exclusion packing check");
+    await page.getByTestId("create-space-system").selectOption("gridfinity");
+    await page.getByTestId("create-space-columns").fill("8");
+    await page.getByTestId("create-space-rows").fill("8");
+    await page.getByTestId("create-space-depth").fill("2");
+    await page.getByTestId("create-space-submit").click();
+
+    await expect(page.getByTestId("drillable-toggle")).toBeChecked();
+
+    await page.getByTestId("add-bin-test-drill-bin").click();
+    await expect(page.getByTestId("constraint-row-test-drill-bin")).toBeVisible();
+
+    await page.getByRole("button", { name: "BOM" }).click();
+    const bomPanel = page.getByTestId("bom-panel");
+    await expect(bomPanel.locator("tr", { hasText: "TEST-DRILL-1" })).toBeVisible();
+
+    // ConstraintEditorPanel (and its drillable-toggle) renders outside the
+    // Layout/BOM/Options tab switch, so it stays reachable with the BOM tab
+    // still active -- no tab change needed.
+    await page.getByTestId("drillable-toggle").click();
+    await expect(bomPanel.locator("tr", { hasText: "TEST-DRILL-1" })).toHaveCount(0);
+  },
+);
