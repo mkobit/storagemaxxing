@@ -22,3 +22,12 @@ A pull request whose linked bead(s) carry the `mode:hotl` label SHALL require an
 
 - **WHEN** a pull request linked only to `mode:auto-ok`-labeled bead(s) has all required status checks green
 - **THEN** the pull request MAY be merged without waiting for a live human review, consistent with the project's existing autonomous-merge-on-green-CI practice.
+
+### Requirement: Merge Queue Serializes Concurrent Auto-Merges
+
+The `default` ruleset on `mkobit/storagemaxxing` SHALL enable a merge queue so that concurrent `mode:auto-ok` pull requests merge serially rather than racing directly against `main`.
+
+#### Scenario: Two `mode:auto-ok` PRs are eligible to merge at the same time
+
+- **WHEN** two or more pull requests linked only to `mode:auto-ok`-labeled bead(s) are simultaneously CI-green and eligible for automatic merge
+- **THEN** they MUST be serialized through the merge queue rather than merging directly against a potentially-stale `main`, so each merge is evaluated against the queue's up-to-date state rather than the state at the time its own CI run started.
