@@ -23,7 +23,7 @@ Automated agents MUST follow the **Spec-Driven Execution** model:
    - If a change is active but its tasks aren't in Beads, run `bd mol pour openspec-sync --var change_name=<name>`. This will parse the checkboxes in `tasks.md` into linked Beads issues.
 2. **TRIAGE:** Use `bd ready` or `bd query "meta:openspec:<name>"` to find your next task.
    - **Checkpoints**: If a design is complete but hasn't been reviewed, mark the bead as `status:blocked` (blocked on human) with the label `status:needs-review` and PAUSE.
-3. **CLAIM:** `bd update <id> --claim` to signal you are working.
+3. **CLAIM:** `bd update <id> --claim` to signal you are working, then immediately `git checkout -b <topic-branch>` if still on `main` -- do this before the first edit, not after `git-commit-main-guard` blocks the first commit.
 4. **EXECUTE:** Implement focused changes following "Engineering Rails".
 5. **FLOWBACK:** If the implementation deviates from the spec, you MUST update `design.md` or `tasks.md` in OpenSpec **FIRST**.
 6. **CLOSE:** Mark the task checkbox in OpenSpec `tasks.md` and run `bd close <id> --reason "..."`.
