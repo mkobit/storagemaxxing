@@ -13,34 +13,17 @@ This file serves as the "Prime Directive" for all AI agents (Gemini, Claude, Jul
 
 ## 🟢 Operational Loop (Spec-Driven & Bidirectional)
 
-All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (Execution/Tasking). OpenSpec is the source of truth; Beads is the engine.
+All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (Execution/Tasking) — OpenSpec is the source of truth, Beads is the engine. The session RESUME → TRIAGE → CLAIM → EXECUTE → CLOSE loop lives in **[.beads/PRIME.md](.beads/PRIME.md)** (auto-loaded via `bd prime` each session); this section covers only what that loop doesn't:
 
-1. **SYNC & DISCOVER:**
-   - Run `bd bootstrap --yes` to ensure the local database is initialized.
-   - Run `bd dolt pull` to fetch the latest operational context.
-   - Run `bd prime` to load the context into your session.
-   - Run `bunx openspec list --json` to identify active changes.
-   - Use `bunx openspec status --change <name>` to locate the relevant `design.md` and `tasks.md`.
-   - If working on `apps/web`, run `bun run dev` then `bun run screenshot` to capture the baseline UI before touching anything.
-2. **PLAN:** Before coding, ensure an OpenSpec `design.md` and `tasks.md` exist and are synced to Beads via `bd mol pour openspec-sync`.
-   - **Checkpoint:** All designs MUST be reviewed and approved by a human (using `status:needs-review`) before an agent starts the implementation phase.
-3. **CLAIM:** Always claim a Bead with `bd update <id> --claim` before starting execution.
-   Never modify a file unless you own the claim on the corresponding Bead.
-4. **EXECUTE & FLOWBACK:** Implement changes. If the design needs to change, update OpenSpec **BEFORE** proceeding with implementation or closing Beads.
-   - **Never edit canonical `openspec/specs/**/spec.md` files directly during implementation.** Canonical specs are derived from the change's delta by `bunx openspec archive`. CI enforces this: a PR that modifies both `openspec/specs/` and an active `openspec/changes/<name>/specs/` will fail.
-5. **VALIDATE & CLOSE:**
-   - Run `bunx openspec validate` to ensure spec integrity.
-   - Mark `tasks.md` checkboxes and run `bd close <id>`.
-   - **Commit immediately after every closed Bead:** `git add <changed files> && git commit -m "task(<id>): <description>"`. Never accumulate multiple tasks in one commit.
-   - Run `bunx openspec archive` only after all linked Beads are closed.
+- Before coding, an OpenSpec `design.md`/`tasks.md` must exist and be synced to Beads via `bd mol pour openspec-sync`. A design awaiting human review blocks implementation (`status:needs-review`).
+- Never modify a file unless you own the claim on its Bead.
+- If working on `apps/web`, run `bun run dev` then `bun run screenshot` for a baseline before touching anything.
+- **Never edit canonical `openspec/specs/**/spec.md` files directly** — they're derived from a change's delta by `bunx openspec archive`. CI fails a PR that touches both `openspec/specs/` and an active change's `specs/`.
+- **Commit immediately after every closed Bead, one bead per commit:** `git add <changed files> && git commit -m "task(<id>): <description>"`.
+- Run `bunx openspec archive` only after all linked Beads are closed.
+- **Before ending a session, reflect on the workflow itself (mandatory).** Record friction as a Meta bead (`bd create "Meta: <insight>" -t task -p 3 -l meta:beads-flow`) or `bd remember "<insight>"` for transient tips.
 
-6. **META-PROCESS REFLECTION (MANDATORY):**
-   - Before ending a session, you MUST reflect on the workflow itself.
-   - Did you hit a tool limitation? Was a spec ambiguous? Was there manual friction?
-   - **Action:** Record these as "Meta" beads: `bd create "Meta: <insight>" -t task -p 3 -l meta:beads-flow`.
-   - **Action:** Use `bd remember "<insight>"` for transient operational tips.
-
-Refer to **[.beads/PRIME.md](.beads/PRIME.md)** for detailed CLI instructions and **[openspec/config.yaml](openspec/config.yaml)** for schema-specific rules.
+See **[openspec/config.yaml](openspec/config.yaml)** for schema-specific rules.
 
 ## Bead task contract
 
@@ -56,8 +39,7 @@ If you cannot finish a claimed Bead, leave it `open` with a comment linking the 
 
 ## 🧠 Shared Memory & Audit
 
-- **Coordination:** Use `bd remember "<insight>"` to store operational knowledge (e.g., "The solver is currently hitting memory limits") that isn't a design spec but is critical for other agents.
-- **Recall:** Use `bd recall` or `bd memories` to retrieve shared context at the start of a session.
+- **Coordination:** Use `bd remember "<insight>"` to store operational knowledge (e.g., "The solver is currently hitting memory limits") that isn't a design spec but is critical for other agents. (`.beads/PRIME.md`'s RESUME step already covers recall at session start.)
 - **Audit:** All interactions are recorded locally; use `bd audit record` if you need to explicitly log an architectural justification.
 
 ## 📐 Breadth of Rectangles (Product Strategy)
