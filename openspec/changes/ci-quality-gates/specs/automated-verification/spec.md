@@ -55,3 +55,13 @@ Each new gate introduced by this capability (dead-code detection, coverage thres
 
 - **WHEN** a given gate's pre-existing findings reach zero (or are recorded in an explicit, reviewed allowlist)
 - **THEN** that gate alone is reconfigured to fail the job on a new finding, without waiting for the other two gates to reach the same state
+
+#### Scenario: Advisory mode MUST NOT mask an unrelated blocking check sharing the same invocation
+
+- **WHEN** a gate's check would otherwise run inside the same command invocation as an existing blocking check (e.g. the coverage-threshold gate sharing `bun test --coverage` with real test-failure detection, or the eslint-comments gate sharing `eslint . --max-warnings 0` with the existing zero-tolerance lint rules)
+- **THEN** the advisory gate MUST run as a separate, dedicated invocation whose exit code alone is suppressed, so that suppressing the advisory gate's findings during its rollout period can never also suppress a genuine failure of the pre-existing blocking check it shares a command with
+
+#### Scenario: A follow-up bead exists to force each gate's flip evaluation
+
+- **WHEN** a gate ships in advisory mode
+- **THEN** a dedicated follow-up bead ("flip `<gate>` to blocking once its backlog is zero") MUST be filed at rollout time, so the flip decision does not depend solely on continued incidental attention to the parent epic
