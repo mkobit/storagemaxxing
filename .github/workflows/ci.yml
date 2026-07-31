@@ -50,6 +50,9 @@ jobs:
       - name: Format check
         run: bun run format:check
 
+      - name: Gitignore/eslint-ignores parity check
+        run: bun run check:ignore-parity
+
   typecheck:
     runs-on: ubuntu-latest
     steps:
