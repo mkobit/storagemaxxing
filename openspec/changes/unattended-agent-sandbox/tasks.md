@@ -38,7 +38,7 @@
 
 ## 4. Credential scoping
 
-Note: none of the three spec deltas contain a requirement written specifically against the GitHub token injected by Decision 1/3 (they only cover the host-credential *directories* deliberately **not** mounted). Tasks below cite the closest existing requirement (`Workspace-Root Isolation`) as the nearest anchor — see the summary flag on this in the handoff notes; the human reviewer may want to add a dedicated requirement before these become beads.
+Note: none of the three spec deltas contain a requirement written specifically against the GitHub token injected by Decision 1/3 (they only cover the host-credential _directories_ deliberately **not** mounted). Tasks below cite the closest existing requirement (`Workspace-Root Isolation`) as the nearest anchor — see the summary flag on this in the handoff notes; the human reviewer may want to add a dedicated requirement before these become beads.
 
 - [ ] 4.1 [sm-pfa7](../../../.beads) Provision a fine-grained, repo-scoped GitHub token (`contents:write`, `pull-requests:write`, no `admin:*`, no other-repo access, session-length TTL) as the sandbox's sole injected credential
   - Validation: `gh api -H "Authorization: token $SANDBOX_TOKEN" repos/mkobit/storagemaxxing` returns `200`, and the same call against any other repo returns `404`/`403`
