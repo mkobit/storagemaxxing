@@ -11,7 +11,7 @@
   - Scope: scope:tooling
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
 
-- [ ] 1.2 [sm-xsqx](../../../.beads) Wire `bunx knip` as an advisory step inside the existing `lint` CI job
+- [x] 1.2 [sm-xsqx](../../../.beads) Wire `bunx knip` as an advisory step inside the existing `lint` CI job
   - Notes: new step in `.github/workflows/ci.yml`'s `lint` job (after the existing "Gitignore/eslint-ignores parity check" step), running `bunx knip` with `continue-on-error: true`. No new job -- reuses the job's existing checkout/mise/install steps.
   - Validation: `gh run view <run-id> --json jobs -q '.jobs[] | select(.name=="lint") | .steps[].name'` includes a knip step; a deliberately-introduced unused export on a scratch branch shows up in the step's output but does not fail the `lint` job.
   - Scope: scope:infra
