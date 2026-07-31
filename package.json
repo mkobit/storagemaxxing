@@ -15,7 +15,6 @@
     "fix:tasks": "bun scripts/check-tasks-consistency.ts --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "knip": "knip",
     "lint": "eslint . --max-warnings 0 --cache --cache-location .eslintcache --cache-strategy content",
     "screenshot": "bun run --filter @storagemaxxing/web screenshot",
     "test": "bun test packages ./.agents/hooks && bun run --filter @storagemaxxing/web test",
