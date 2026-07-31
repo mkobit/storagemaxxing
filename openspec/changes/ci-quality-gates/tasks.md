@@ -5,7 +5,7 @@
 
 ## 1. Dead-code detection (knip)
 
-- [ ] 1.1 [sm-oxc3](../../../.beads) Add `knip.json` with entry points and ignore patterns for known dynamic-resolution cases
+- [x] 1.1 [sm-oxc3](../../../.beads) Add `knip.json` with entry points and ignore patterns for known dynamic-resolution cases
   - Notes: entry list names the 5 harness-invoked hook scripts referenced in `.claude/settings.json` (`lint-on-edit.ts`, `typecheck-on-edit.ts`, `openspec-validate-on-edit.ts`, `openspec-canonical-guard-on-edit.ts`, `git-commit-main-guard.ts`); an ignore/entry declaration for `apps/web/e2e/fixtures/catalogWithDrillFixture.ts` (only reachable via the `E2E_DRILL_FIXTURE=true` Vite alias in `apps/web/vite.config.ts`); and `ignoreDependencies` entries for the CLI-only tooling packages (`@fission-ai/openspec`, `prettier-plugin-packagejson`, `modern-web-guidance`) per AGENTS.md's Agent Tooling Packages carve-out. Do not add a separate entry for `.agents/hooks/claude-hook.ts` -- it resolves transitively once the 5 real entry scripts are declared.
   - Validation: `bunx knip` output's "Unused files" section is empty, and none of the 5 hook scripts, `claude-hook.ts`, or the e2e fixture appear in any finding category.
   - Scope: scope:tooling

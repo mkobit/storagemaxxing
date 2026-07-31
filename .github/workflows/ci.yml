@@ -53,6 +53,10 @@ jobs:
       - name: Gitignore/eslint-ignores parity check
         run: bun run check:ignore-parity
 
+      - name: Dead-code check (knip)
+        run: bunx knip
+        continue-on-error: true
+
   typecheck:
     runs-on: ubuntu-latest
     steps:
