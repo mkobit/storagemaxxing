@@ -17,7 +17,7 @@
   - Scope: scope:infra
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-advisory-first-gate-rollout
 
-- [ ] 1.3 [sm-y22j](../../../.beads) Triage knip's real unused-devDependency backlog
+- [x] 1.3 [sm-y22j](../../../.beads) Triage knip's real unused-devDependency backlog
   - Notes: of the 7 flagged unused devDeps, 3 are presumably the CLI-only tooling packages already carved out via `ignoreDependencies` in task 1.1 -- confirm against a fresh `bunx knip` run at claim time. Triage whatever remains (~4) by either removing the dependency from `package.json` or adding real usage.
   - Validation: `bunx knip` reports zero entries under "Unused devDependencies" outside the `ignoreDependencies` list configured in task 1.1.
   - Scope: scope:tooling
