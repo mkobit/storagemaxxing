@@ -7,6 +7,10 @@ ignoreScripts = true
 [test]
 root = "packages"
 
+# Test-factory-only module, not product code: excluded so its own partial
+# internal coverage doesn't drag down the gate for unrelated product changes.
+coveragePathIgnorePatterns = ["packages/geometry/src/testing.ts"]
+
 # Do not set [run] bun = true: it shims `node` to Bun inside `bun run` scripts,
 # and Playwright's runner spawns `node` workers that are not supported under the Bun runtime
 # (vitest broke the same way before its removal: zod ESM named exports resolved undefined).
