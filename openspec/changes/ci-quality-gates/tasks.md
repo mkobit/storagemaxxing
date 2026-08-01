@@ -31,7 +31,7 @@
 
 ## 2. Coverage threshold
 
-- [ ] 2.1 [sm-7bz6](../../../.beads) Exclude test-helper-only modules from coverage via `coveragePathIgnorePatterns`
+- [x] 2.1 [sm-7bz6](../../../.beads) Exclude test-helper-only modules from coverage via `coveragePathIgnorePatterns`
   - Notes: add `coveragePathIgnorePatterns` to both `bunfig.toml` and `apps/web/bunfig.toml`, excluding `packages/geometry/src/testing.ts` (and any other test-factory-only module found at implementation time). Safe to ship immediately -- unlike `coverageThreshold`, this only changes what Bun counts, not whether the command's exit code changes, so it does not need to wait for the advisory-to-blocking flip.
   - Validation: `bun test packages ./.agents/hooks --coverage` output's per-file table no longer lists `packages/geometry/src/testing.ts`.
   - Scope: scope:tooling
