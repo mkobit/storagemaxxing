@@ -216,11 +216,25 @@ export default tseslint.config(
     },
   },
   {
-    files: ["eslint.config.ts", "apps/web/vite.config.ts"],
+    files: [
+      "eslint.config.ts",
+      "eslint.config.advisory.ts",
+      "apps/web/vite.config.ts",
+    ],
     rules: {
       "import/no-default-export": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/consistent-type-assertions": "off",
+    },
+  },
+  {
+    // import/extensions misreads the "./eslint.config" specifier's literal
+    // ".config" segment as a (disallowed-by-default) extension, since path
+    // extension detection can't distinguish it from the real .ts extension
+    // already stripped -- a false positive specific to this filename.
+    files: ["eslint.config.advisory.ts"],
+    rules: {
+      "import/extensions": "off",
     },
   },
 );

@@ -46,7 +46,7 @@ const drawSpaceBounds = (
   /* eslint-disable functional/immutable-data -- Canvas 2D API requires imperative property assignment */
   ctx.strokeStyle = resolveCanvasToken("--color-canvas-grid");
   ctx.lineWidth = 1;
-  /* eslint-enable functional/immutable-data */
+  /* eslint-enable functional/immutable-data -- re-enable after the imperative Canvas 2D block above */
   ctx.setLineDash([4, 2]);
   ctx.strokeRect(
     (0 - bounds.origin[0]) * fit.scale + fit.offsetX,
@@ -74,7 +74,7 @@ const drawPackedLayout = (
     ctx.fillStyle = constraint?.color ?? fallbackFill;
     ctx.strokeStyle = outline;
     ctx.lineWidth = 1;
-    /* eslint-enable functional/immutable-data */
+    /* eslint-enable functional/immutable-data -- re-enable after the imperative Canvas 2D block above */
     const x = (placed.origin[0] - bounds.origin[0]) * fit.scale + fit.offsetX;
     const y = (placed.origin[2] - bounds.origin[1]) * fit.scale + fit.offsetY;
     const w = spec.nominal.w * fit.scale;
@@ -113,7 +113,7 @@ const paintWireframe = (
     }
     ctx.strokeStyle = resolveCanvasToken(polygon.strokeToken);
     ctx.lineWidth = 1;
-    /* eslint-enable functional/immutable-data */
+    /* eslint-enable functional/immutable-data -- re-enable after the imperative Canvas 2D block above */
     ctx.stroke();
   });
 };
