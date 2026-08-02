@@ -45,7 +45,7 @@
 
 ## 3. Eslint-comment disable hygiene
 
-- [ ] 3.1 [sm-jiqu](../../../.beads) Register `@eslint-community/eslint-plugin-eslint-comments` in a new advisory-only ESLint config, run as a dedicated CI step
+- [x] 3.1 [sm-jiqu](../../../.beads) Register `@eslint-community/eslint-plugin-eslint-comments` in a new advisory-only ESLint config, run as a dedicated CI step
   - Notes: new `eslint.config.advisory.ts` extending the base `eslint.config.ts` plugin-registration pattern (top-of-file import, `plugins: {}` block), adding only `no-unlimited-disable` and `require-description`. New CI step running ESLint against this config with `continue-on-error: true`. Do NOT register these rules in the main `eslint.config.ts` -- `bun run lint` (`eslint . --max-warnings 0`) is already zero-tolerance, so that would make them blocking immediately.
   - Validation: the advisory step reports the known 19-site backlog (tasks 3.2-3.6) as violations in CI output without failing the `lint` job.
   - Scope: scope:infra
