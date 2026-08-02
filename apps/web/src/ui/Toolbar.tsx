@@ -23,9 +23,9 @@ export const Toolbar: React.FC = () => {
       new Blob([json], { type: "application/json" }),
     );
     const link = document.createElement("a");
-    // eslint-disable-next-line functional/immutable-data
+    // eslint-disable-next-line functional/immutable-data -- HTMLAnchorElement is a native mutable browser object; there is no immutable alternative to setting href to trigger a file download
     link.href = url;
-    // eslint-disable-next-line functional/immutable-data
+    // eslint-disable-next-line functional/immutable-data -- same as href above, setting download is the only way to name the downloaded file
     link.download = SKETCH_FILE_NAME;
     link.click();
     URL.revokeObjectURL(url);
@@ -35,7 +35,7 @@ export const Toolbar: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>,
   ): Promise<void> => {
     const file = e.target.files?.[0];
-    // eslint-disable-next-line functional/immutable-data
+    // eslint-disable-next-line functional/immutable-data -- resetting the native file input's value is the only way to let the same file be re-selected/re-imported later
     e.target.value = "";
     if (!file) return;
     try {

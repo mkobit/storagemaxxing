@@ -75,7 +75,7 @@
   - Scope: scope:store
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-eslint-comment-disable-hygiene
 
-- [ ] 3.6 [sm-timr](../../../.beads) Write `--` justifications for eslint-disable-next-line comments in `apps/web`
+- [x] 3.6 [sm-timr](../../../.beads) Write `--` justifications for eslint-disable-next-line comments in `apps/web`
   - Notes: `apps/web/src/ui/bom/BOMHeader.tsx` line 16 and `apps/web/src/ui/Toolbar.tsx` lines 26, 28, 38 -- all `functional/immutable-data`. 4 sites across 2 files. Distinct from the already-fixed `LayoutCanvas.tsx` file-wide disables (sm-3u1c), which already carry reasons and are not part of this backlog.
   - Validation: `bunx eslint --config eslint.config.advisory.ts apps/web/src/ui/bom/BOMHeader.tsx apps/web/src/ui/Toolbar.tsx` reports zero `require-description` violations.
   - Scope: scope:apps/web
