@@ -61,7 +61,7 @@ export const createSpaceTemplate = (
   dimensions: Dimensions3D,
   accessFace: AccessFace,
 ): SpaceTemplate => ({
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- id is a branded Zod type; this factory takes a plain string param and constructs the branded value without re-running SpaceTemplateIdSchema.parse()
   id: id as SpaceTemplateId,
   name: id,
   type: "drawer",

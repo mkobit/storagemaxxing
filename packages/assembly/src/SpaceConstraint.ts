@@ -83,7 +83,7 @@ export const createSpaceConstraint = (
   if (hardMin > 0) {
     return {
       mode: "hard",
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- binId is a branded Zod type; this factory takes a plain string param and constructs the branded value without re-running BinSpecIdSchema.parse()
       binId: binId as BinSpecId,
       lo: hardMin,
       softLo: softMin > hardMin ? softMin : undefined,
@@ -95,7 +95,7 @@ export const createSpaceConstraint = (
   if (softMin > 0) {
     return {
       mode: "soft",
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- binId is a branded Zod type; this factory takes a plain string param and constructs the branded value without re-running BinSpecIdSchema.parse()
       binId: binId as BinSpecId,
       lo: softMin,
       hi: max ?? null,
@@ -105,7 +105,7 @@ export const createSpaceConstraint = (
   }
   return {
     mode: "auto",
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- binId is a branded Zod type; this factory takes a plain string param and constructs the branded value without re-running BinSpecIdSchema.parse()
     binId: binId as BinSpecId,
     lo: 0,
     hi: null,
