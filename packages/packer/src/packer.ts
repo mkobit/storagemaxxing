@@ -122,7 +122,7 @@ export const packSpace = (
   );
   const placedCounts = placedBins.reduce(
     (acc, bin) => ({ ...acc, [bin.binId]: (acc[bin.binId] || 0) + 1 }),
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- reduce's empty-object initial value can't be inferred as Record<string, number> without an assertion
     {} as Record<string, number>,
   );
   const areaUtil = placedBins.reduce(
