@@ -10,6 +10,7 @@ import storybook from "eslint-plugin-storybook";
 import * as jsoncParser from "jsonc-eslint-parser";
 import globals from "globals";
 import { fixupPluginRules } from "@eslint/compat";
+import eslintComments from "@eslint-community/eslint-plugin-eslint-comments";
 
 const DAG_ORDER = [
   "geometry",
@@ -84,6 +85,7 @@ export default tseslint.config(
       react: fixupPluginRules(react as any),
       "react-hooks": fixupPluginRules(reactHooks as any),
       "jsx-a11y": fixupPluginRules(jsxA11y as any),
+      "eslint-comments": eslintComments,
     },
     settings: {
       react: {
@@ -122,6 +124,8 @@ export default tseslint.config(
         { patterns: ["**/index", "**/index.ts", "**/index.tsx"] },
       ],
       "react/react-in-jsx-scope": "off",
+      "eslint-comments/no-unlimited-disable": "error",
+      "eslint-comments/require-description": "error",
     },
   },
   ...dagBoundaries,
@@ -216,25 +220,11 @@ export default tseslint.config(
     },
   },
   {
-    files: [
-      "eslint.config.ts",
-      "eslint.config.advisory.ts",
-      "apps/web/vite.config.ts",
-    ],
+    files: ["eslint.config.ts", "apps/web/vite.config.ts"],
     rules: {
       "import/no-default-export": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/consistent-type-assertions": "off",
-    },
-  },
-  {
-    // import/extensions misreads the "./eslint.config" specifier's literal
-    // ".config" segment as a (disallowed-by-default) extension, since path
-    // extension detection can't distinguish it from the real .ts extension
-    // already stripped -- a false positive specific to this filename.
-    files: ["eslint.config.advisory.ts"],
-    rules: {
-      "import/extensions": "off",
     },
   },
 );
