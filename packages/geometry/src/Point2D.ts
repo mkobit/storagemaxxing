@@ -14,8 +14,7 @@ export const Point2DSchema = z
   ])
   .transform((val): ReadonlyVec2 => {
     if (val instanceof Float32Array) {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      return val as ReadonlyVec2;
+      return val;
     }
     return vec2.fromValues(val[0], val[1]);
   });
@@ -27,7 +26,5 @@ export type Point2D = ReadonlyVec2;
  */
 export type Point = Point2D;
 
-export const createPoint2D = (x: number, y: number): Point2D => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  return vec2.fromValues(x, y) as Point2D;
-};
+export const createPoint2D = (x: number, y: number): Point2D =>
+  vec2.fromValues(x, y);
