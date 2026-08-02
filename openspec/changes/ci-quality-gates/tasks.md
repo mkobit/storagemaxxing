@@ -63,7 +63,7 @@
   - Scope: scope:geometry
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-eslint-comment-disable-hygiene
 
-- [ ] 3.4 [sm-jrr8](../../../.beads) Write `--` justification for the eslint-disable-next-line comment in `packages/packer`
+- [x] 3.4 [sm-jrr8](../../../.beads) Write `--` justification for the eslint-disable-next-line comment in `packages/packer`
   - Notes: `packer.ts` line 125 (`@typescript-eslint/consistent-type-assertions`). 1 site.
   - Validation: `bunx eslint --config eslint.config.advisory.ts packages/packer/src/packer.ts` reports zero `require-description` violations.
   - Scope: scope:packer
