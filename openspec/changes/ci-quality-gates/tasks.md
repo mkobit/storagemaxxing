@@ -69,7 +69,7 @@
   - Scope: scope:packer
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-eslint-comment-disable-hygiene
 
-- [ ] 3.5 [sm-3rhz](../../../.beads) Write `--` justifications for eslint-disable-next-line comments in `packages/store`
+- [x] 3.5 [sm-3rhz](../../../.beads) Write `--` justifications for eslint-disable-next-line comments in `packages/store`
   - Notes: `layoutSelectors.ts` line 157 (`@typescript-eslint/consistent-type-assertions`); `useStore.ts` lines 17, 21, 99 (`functional/no-expression-statements`). 4 sites across 2 files.
   - Validation: `bunx eslint --config eslint.config.advisory.ts packages/store/src/layoutSelectors.ts packages/store/src/useStore.ts` reports zero `require-description` violations.
   - Scope: scope:store
