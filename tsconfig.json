@@ -34,7 +34,6 @@
     "packages/*/test",
     "apps/*/serve.ts",
     "eslint.config.ts",
-    "eslint.config.advisory.ts",
     "scripts",
     ".agents/hooks"
   ]

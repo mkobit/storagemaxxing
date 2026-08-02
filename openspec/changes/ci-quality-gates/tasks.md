@@ -97,7 +97,7 @@ Filed now, at advisory-rollout time, per design.md Decision 4's forcing-function
   - Scope: scope:tooling
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-advisory-first-gate-rollout
 
-- [ ] 4.3 [sm-1631](../../../.beads) Flip eslint-comments hygiene to blocking once its backlog is zero
+- [x] 4.3 [sm-1631](../../../.beads) Flip eslint-comments hygiene to blocking once its backlog is zero
   - Notes: move `no-unlimited-disable`/`require-description` into the main `eslint.config.ts`'s existing plugin-registration block, retire `eslint.config.advisory.ts` and its CI step, once tasks 3.2-3.6 close.
   - Validation: `bun run lint` (the existing blocking command) passes repo-wide with both rules active; `eslint.config.advisory.ts` no longer exists. Trigger condition (per design.md Decision 4): tasks 3.2-3.6 closed. Not immediately actionable.
   - Scope: scope:tooling
