@@ -57,7 +57,7 @@
   - Scope: scope:assembly
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-eslint-comment-disable-hygiene
 
-- [ ] 3.3 [sm-m0ar](../../../.beads) Write `--` justifications for eslint-disable-next-line comments in `packages/geometry`
+- [x] 3.3 [sm-m0ar](../../../.beads) Write `--` justifications for eslint-disable-next-line comments in `packages/geometry`
   - Notes: `testing.ts` lines 46, 52, 63; `Point3D.ts` line 6; `Point2D.ts` lines 17, 31. 6 sites across 3 files (all `@typescript-eslint/consistent-type-assertions` except `testing.ts:46`, which also covers `@typescript-eslint/no-empty-object-type`/`no-unused-vars`).
   - Validation: `bunx eslint --config eslint.config.advisory.ts packages/geometry/src/testing.ts packages/geometry/src/Point3D.ts packages/geometry/src/Point2D.ts` reports zero `require-description` violations.
   - Scope: scope:geometry

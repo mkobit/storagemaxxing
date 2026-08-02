@@ -43,14 +43,13 @@ interface BrandedMatchers {
 }
 
 declare module "bun:test" {
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-unused-vars -- module augmentation: T must match bun:test's own Matchers<T> signature for declaration merging to apply, even though this augmentation's extends-only body doesn't use it
   interface Matchers<T = unknown> extends BrandedMatchers {}
 }
 
 expect.extend({
   toBeMm(actual: unknown, expected: number) {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const pass = (actual as number) === expected;
+    const pass = actual === expected;
     return {
       message: () =>
         pass
@@ -60,8 +59,7 @@ expect.extend({
     };
   },
   toBeInches(actual: unknown, expected: number) {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const pass = (actual as number) === expected;
+    const pass = actual === expected;
     return {
       message: () =>
         pass
