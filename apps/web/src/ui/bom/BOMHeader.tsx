@@ -13,7 +13,7 @@ export const BOMHeader: React.FC<BOMHeaderProps> = ({ bom }) => {
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    // eslint-disable-next-line functional/immutable-data
+    // eslint-disable-next-line functional/immutable-data -- HTMLAnchorElement is a native mutable browser object; there is no immutable alternative to setting href to trigger a file download
     link.href = url;
     link.setAttribute("download", "storagemaxxing_bom.csv");
     document.body.appendChild(link);
