@@ -51,7 +51,7 @@
   - Scope: scope:infra
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-advisory-first-gate-rollout
 
-- [ ] 3.2 [sm-c1su](../../../.beads) Write `--` justifications for eslint-disable-next-line comments in `packages/assembly`
+- [x] 3.2 [sm-c1su](../../../.beads) Write `--` justifications for eslint-disable-next-line comments in `packages/assembly`
   - Notes: `SpaceConstraint.ts` lines 86, 98, 108 and `SpaceTemplate.ts` line 64 -- all `@typescript-eslint/consistent-type-assertions`. 4 sites, real content work: state why each site needs the type assertion, not a mechanical find-and-replace.
   - Validation: `bunx eslint --config eslint.config.advisory.ts packages/assembly/src/SpaceConstraint.ts packages/assembly/src/SpaceTemplate.ts` reports zero `require-description` violations.
   - Scope: scope:assembly
