@@ -154,7 +154,7 @@ export const selectOptionsModeStrategies = (
       ...acc,
       [system]: resolveStrategy(template, system, catalog),
     }),
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- reduce's empty-object initial value can't be inferred as the target Record type without an assertion
     {} as Readonly<Record<ComparableStorageSystem, LayoutResolution>>,
   );
 

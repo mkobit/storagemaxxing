@@ -14,11 +14,11 @@ const idbStorage: StateStorage = {
   getItem: async (name: string): Promise<string | null> =>
     (await get(name)) || null,
   setItem: async (name: string, value: string): Promise<void> => {
-    // eslint-disable-next-line functional/no-expression-statements
+    // eslint-disable-next-line functional/no-expression-statements -- StateStorage.setItem must return Promise<void>; persisting to IndexedDB is inherently a side effect with no value to route through a return
     await set(name, value);
   },
   removeItem: async (name: string): Promise<void> => {
-    // eslint-disable-next-line functional/no-expression-statements
+    // eslint-disable-next-line functional/no-expression-statements -- StateStorage.removeItem must return Promise<void>; deleting from IndexedDB is inherently a side effect with no value to route through a return
     await del(name);
   },
 };
@@ -96,7 +96,7 @@ export const useStore = create<StoreState>()(
         constraintsBySpace: state.constraintsBySpace,
       }),
       onRehydrateStorage: () => (state) => {
-        // eslint-disable-next-line functional/no-expression-statements
+        // eslint-disable-next-line functional/no-expression-statements -- zustand's onRehydrateStorage callback must return void; flagging hydration complete is inherently a side effect with no value to route through a return
         state?.setHasHydrated(true);
       },
     },
