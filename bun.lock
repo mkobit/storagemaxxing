@@ -98,7 +98,6 @@
         "@storagemaxxing/catalog": "workspace:*",
         "@storagemaxxing/geometry": "workspace:*",
         "maxrects-packer": "^2.7.4",
-        "zod": "^4.4.3",
       },
     },
     "packages/store": {

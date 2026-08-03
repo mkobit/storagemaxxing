@@ -9,8 +9,6 @@ This package contains spatial layout algorithms and pure geometric calculations.
 ```ts-exports
 HeightEligibility
 PackInput
-PackInputSchema
-PackRect
 RectsAccumulator
 checkHardMinPhase
 checkPhaseFailures
@@ -19,7 +17,6 @@ createPackInput
 createPackInputBasic
 generateAutoFillRects
 generatePhaseRects
-generateRects
 getEffectiveFootprint
 getEffectiveSpaceDimensions
 getHardMin

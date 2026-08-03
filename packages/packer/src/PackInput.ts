@@ -1,17 +1,14 @@
-import { z } from "zod";
 import { BinSpec as CatalogBinSpec } from "@storagemaxxing/catalog/bin";
 
-export const PackInputSchema = z.object({
-  id: z.string(),
-  w: z.number(),
-  l: z.number(),
-  h: z.number(),
-  toleranceW: z.number().optional(),
-  toleranceL: z.number().optional(),
-  toleranceH: z.number().optional(),
-});
-
-export type PackInput = z.infer<typeof PackInputSchema>;
+export type PackInput = {
+  readonly id: string;
+  readonly w: number;
+  readonly l: number;
+  readonly h: number;
+  readonly toleranceW?: number;
+  readonly toleranceL?: number;
+  readonly toleranceH?: number;
+};
 
 type PackInputParams = {
   readonly id: string;
