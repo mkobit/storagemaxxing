@@ -26,10 +26,7 @@ type PhaseRequirement = {
   readonly reason: "hardMin" | "softMin";
 };
 
-const generateRects = (
-  bin: PackInput,
-  count: number,
-): RectsAccumulator => {
+const generateRects = (bin: PackInput, count: number): RectsAccumulator => {
   if (count <= 0) return [];
   const footprint = getEffectiveFootprint(bin);
   return Array.from({ length: count }, () => ({
