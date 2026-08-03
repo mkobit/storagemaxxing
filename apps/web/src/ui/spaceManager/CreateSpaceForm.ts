@@ -8,4 +8,3 @@ export const CreateSpaceInputSchema = z.object({
   rows: z.coerce.number().int().positive(),
   depth: z.coerce.number().positive(),
 });
-export type CreateSpaceInput = z.infer<typeof CreateSpaceInputSchema>;

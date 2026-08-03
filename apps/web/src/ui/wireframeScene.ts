@@ -12,7 +12,7 @@ import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { BinSpec } from "@storagemaxxing/catalog/bin";
 
-export type WireframePolygon = {
+type WireframePolygon = {
   readonly points: readonly Point2D[];
   readonly fillToken?: string;
   readonly fillColor?: string;

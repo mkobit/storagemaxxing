@@ -1,4 +1,4 @@
-export const BIN_COLOR_PALETTE = [
+const BIN_COLOR_PALETTE = [
   "#4e79a7",
   "#f28e2b",
   "#59a14f",
