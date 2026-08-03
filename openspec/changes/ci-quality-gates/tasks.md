@@ -23,10 +23,38 @@
   - Scope: scope:tooling
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
 
-- [ ] 1.4 [sm-dgbl](../../../.beads) Triage knip's unused-export, unused-exported-type, and duplicate-export backlog (35 + 24 + 4 findings)
-  - Notes: design.md confirms two sites directly (`CreateSpaceInput` in `apps/web/src/ui/spaceManager/CreateSpaceForm.ts`, `WireframePolygon` in `apps/web/src/ui/wireframeScene.ts`) but does not enumerate the remaining ~61 findings or confirm they're confined to `apps/web`. Re-run `bunx knip` at claim time; if findings span multiple packages, split this into one bead per affected package/app before claiming (each bead needs exactly one `scope:` per the Bead task contract). For each finding, either narrow the export to module-private or add it to an explicit, reasoned `knip.json` ignore entry.
-  - Validation: `bunx knip` reports zero entries under "Unused exports", "Unused exported types", and "Duplicate exports" (or each remaining finding sits in an explicit, reasoned `knip.json` ignore entry).
-  - Scope: scope:apps/web (best-effort from the two confirmed examples -- verify and re-scope per Notes above)
+- [x] 1.4 [sm-dgbl](../../../.beads) ~~Triage knip's unused-export, unused-exported-type, and duplicate-export backlog (35 + 24 + 4 findings)~~ Split into 1.4.1-1.4.6
+  - Notes: closed as superseded, not completed -- a fresh `bunx knip` run at claim time confirmed the 63-item backlog spans 6 scopes (not just `apps/web`, as this task's best-effort guess assumed), violating the Bead task contract's one-scope-per-bead rule. Split into the 6 per-package tasks below.
+  - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
+
+- [ ] 1.4.1 [sm-7nnk](../../../.beads) Triage knip unused-export/type backlog: apps/web (3 findings)
+  - Validation: `bunx knip` reports zero apps/web findings under Unused exports / Unused exported types
+  - Scope: scope:apps/web
+  - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
+
+- [ ] 1.4.2 [sm-8x0r](../../../.beads) Triage knip unused-export/type backlog: packages/assembly (25 findings)
+  - Validation: `bunx knip` reports zero packages/assembly findings under Unused exports / Unused exported types
+  - Scope: scope:assembly
+  - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
+
+- [ ] 1.4.3 [sm-jtpt](../../../.beads) Triage knip unused-export/type backlog: packages/catalog (2 findings)
+  - Validation: `bunx knip` reports zero packages/catalog findings under Unused exports / Unused exported types
+  - Scope: scope:catalog
+  - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
+
+- [ ] 1.4.4 [sm-uwu6](../../../.beads) Triage knip unused-export/type/duplicate backlog: packages/geometry (24 findings)
+  - Validation: `bunx knip` reports zero packages/geometry findings under Unused exports / Unused exported types / Duplicate exports
+  - Scope: scope:geometry
+  - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
+
+- [ ] 1.4.5 [sm-shlm](../../../.beads) Triage knip unused-export/type backlog: packages/packer (3 findings)
+  - Validation: `bunx knip` reports zero packages/packer findings under Unused exports / Unused exported types
+  - Scope: scope:packer
+  - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
+
+- [ ] 1.4.6 [sm-kkic](../../../.beads) Triage knip unused-export/type backlog: packages/store (6 findings)
+  - Validation: `bunx knip` reports zero packages/store findings under Unused exports / Unused exported types
+  - Scope: scope:store
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
 
 ## 2. Coverage threshold
