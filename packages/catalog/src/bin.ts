@@ -4,7 +4,7 @@ import { CatalogSource } from "./catalogSource";
 import { StorageSystem } from "./StorageSystem";
 import { InstallationRequirement } from "./installationRequirement";
 
-export const BinIdSchema = z.string().brand("BinId");
+const BinIdSchema = z.string().brand("BinId");
 export type BinId = z.infer<typeof BinIdSchema>;
 
 export const binId = (id: string): BinId => BinIdSchema.parse(id);
