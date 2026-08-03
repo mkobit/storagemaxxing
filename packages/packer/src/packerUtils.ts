@@ -9,7 +9,7 @@ import {
 } from "@storagemaxxing/assembly/PackingResult";
 import { getEffectiveFootprint } from "./geometryUtils";
 
-export type PackRect = {
+type PackRect = {
   readonly width: number;
   readonly height: number;
   readonly data: { readonly binId: string };
@@ -26,10 +26,7 @@ type PhaseRequirement = {
   readonly reason: "hardMin" | "softMin";
 };
 
-export const generateRects = (
-  bin: PackInput,
-  count: number,
-): RectsAccumulator => {
+const generateRects = (bin: PackInput, count: number): RectsAccumulator => {
   if (count <= 0) return [];
   const footprint = getEffectiveFootprint(bin);
   return Array.from({ length: count }, () => ({
