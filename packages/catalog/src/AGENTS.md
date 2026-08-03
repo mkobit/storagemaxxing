@@ -10,7 +10,6 @@ This package contains static vendor product data and lookup functions. It houses
 AKROMILS_CATALOG
 ALL_BINS
 BinId
-BinIdSchema
 BinSpec
 CatalogSource
 GOLDEN_PATH_STARTER_BIN_IDS
@@ -18,7 +17,6 @@ GOLDEN_PATH_SYSTEM
 GRIDFINITY_CATALOG
 InstallationRequirement
 OPENGRID_CATALOG
-PartId
 PartIdSchema
 SCHALLER_CATALOG
 SCHALLER_PART_0
