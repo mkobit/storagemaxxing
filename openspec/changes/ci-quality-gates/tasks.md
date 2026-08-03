@@ -27,7 +27,7 @@
   - Notes: closed as superseded, not completed -- a fresh `bunx knip` run at claim time confirmed the 63-item backlog spans 6 scopes (not just `apps/web`, as this task's best-effort guess assumed), violating the Bead task contract's one-scope-per-bead rule. Split into the 6 per-package tasks below.
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
 
-- [ ] 1.4.1 [sm-7nnk](../../../.beads) Triage knip unused-export/type backlog: apps/web (3 findings)
+- [x] 1.4.1 [sm-7nnk](../../../.beads) Triage knip unused-export/type backlog: apps/web (3 findings)
   - Validation: `bunx knip` reports zero apps/web findings under Unused exports / Unused exported types
   - Scope: scope:apps/web
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
