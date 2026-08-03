@@ -107,6 +107,10 @@ jobs:
           bun test packages ./.agents/hooks --coverage
           bun --cwd apps/web test src --coverage
 
+      - name: Coverage threshold check (advisory)
+        run: bun run check:coverage-threshold
+        continue-on-error: true
+
   build-storybook:
     runs-on: ubuntu-latest
     steps:
