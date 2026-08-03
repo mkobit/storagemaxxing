@@ -37,7 +37,7 @@
   - Scope: scope:tooling
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-coverage-threshold-gate
 
-- [ ] 2.2 [sm-x41r](../../../.beads) Add an advisory coverage-threshold check as a dedicated CI step, decoupled from the blocking `test` job
+- [x] 2.2 [sm-x41r](../../../.beads) Add an advisory coverage-threshold check as a dedicated CI step, decoupled from the blocking `test` job
   - Notes: new script (e.g. `scripts/check-coverage-threshold.ts`, following the existing `scripts/check-gitignore-eslint-parity.ts` pattern) that runs coverage with `--coverage-reporter=lcov` (or parses the text summary) and compares against `{ line = 0.90, function = 0.85 }` (packages+hooks) / `{ line = 0.85, function = 0.80 }` (apps/web) -- re-measure both baselines immediately before shipping per design.md Decision 2, since they drift. Wired as its own CI step with `continue-on-error: true`. Do NOT set `bunfig.toml`'s `coverageThreshold` during this task -- `bun test --coverage` must keep failing only on real test failures, exactly as it does today post-sm-wghm.
   - Validation: the dedicated step runs and reports its comparison in CI output; a deliberately-lowered local coverage run confirms the script flags a miss while `continue-on-error: true` keeps the step from failing the job, and a deliberately-broken test in the same run still fails the job (proving the two failure modes stay decoupled).
   - Scope: scope:infra

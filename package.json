@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "build": "bun run --filter @storagemaxxing/web build",
+    "check:coverage-threshold": "bun scripts/check-coverage-threshold.ts",
     "check:ignore-parity": "bun scripts/check-gitignore-eslint-parity.ts",
     "check:tasks": "bun scripts/check-tasks-consistency.ts",
     "dev": "bun run --filter @storagemaxxing/web dev",
