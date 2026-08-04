@@ -35,13 +35,13 @@ export type LayoutResolution =
       readonly unresolvedBinIds: readonly string[];
     };
 
-export const layoutResolutionNone = (): LayoutResolution => ({ kind: "none" });
+const layoutResolutionNone = (): LayoutResolution => ({ kind: "none" });
 
-export const layoutResolutionMissingTemplate = (
+const layoutResolutionMissingTemplate = (
   templateId: string,
 ): LayoutResolution => ({ kind: "missing-template", templateId });
 
-export const layoutResolutionResolved = (
+const layoutResolutionResolved = (
   result: PackingResult,
   unresolvedBinIds: readonly string[],
 ): LayoutResolution => ({ kind: "resolved", result, unresolvedBinIds });

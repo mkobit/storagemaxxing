@@ -23,7 +23,7 @@ export type AppState = {
   >;
 };
 
-export type AppActions = {
+type AppActions = {
   readonly setHasHydrated: (state: boolean) => void;
   readonly setMode: (mode: ToolMode) => void;
 

@@ -10,7 +10,7 @@ import {
 import { SpaceConstraintSchema } from "@storagemaxxing/assembly/SpaceConstraint";
 import { AppState } from "./StoreTypes";
 
-export const SketchSchema = z
+const SketchSchema = z
   .object({
     spaces: z.array(SpaceInstanceSchema).readonly(),
     activeSpaceId: SpaceInstanceIdSchema.nullable(),
@@ -25,7 +25,7 @@ export const SketchSchema = z
 
 export type Sketch = z.infer<typeof SketchSchema>;
 
-export const toSketch = (
+const toSketch = (
   state: Pick<
     AppState,
     "spaces" | "activeSpaceId" | "templatesById" | "constraintsBySpace"
