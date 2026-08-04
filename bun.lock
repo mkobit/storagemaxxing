@@ -41,7 +41,6 @@
         "@storagemaxxing/assembly": "workspace:*",
         "@storagemaxxing/catalog": "workspace:*",
         "@storagemaxxing/geometry": "workspace:*",
-        "@storagemaxxing/packer": "workspace:*",
         "@storagemaxxing/store": "workspace:*",
         "react": "^19.2.7",
         "react-dom": "^19.2.7",
@@ -70,7 +69,6 @@
       "dependencies": {
         "@storagemaxxing/catalog": "workspace:*",
         "@storagemaxxing/geometry": "workspace:*",
-        "@storagemaxxing/packer": "workspace:*",
         "zod": "^4.4.3",
       },
     },

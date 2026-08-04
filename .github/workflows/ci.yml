@@ -55,7 +55,6 @@ jobs:
 
       - name: Dead-code check (knip)
         run: bunx knip
-        continue-on-error: true
 
   typecheck:
     runs-on: ubuntu-latest

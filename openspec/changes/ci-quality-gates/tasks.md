@@ -113,7 +113,7 @@
 
 Filed now, at advisory-rollout time, per design.md Decision 4's forcing-function requirement -- not left to be remembered informally. None of these three are actionable at filing time; each is blocked on its own flip trigger below, not on other tasks in this file.
 
-- [ ] 4.1 [sm-e2jn](../../../.beads) Flip knip to blocking once its backlog is zero
+- [x] 4.1 [sm-e2jn](../../../.beads) Flip knip to blocking once its backlog is zero
   - Notes: remove `continue-on-error: true` from the knip CI step (task 1.2) once tasks 1.3 and 1.4 close -- every real finding fixed or in a reasoned `knip.json` ignore entry.
   - Validation: `.github/workflows/ci.yml`'s knip step has no `continue-on-error`; a deliberately-reintroduced dead export fails the `lint` job. Trigger condition (per design.md Decision 4): tasks 1.3 and 1.4 closed. Not immediately actionable.
   - Scope: scope:infra

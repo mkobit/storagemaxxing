@@ -9,7 +9,6 @@
   "dependencies": {
     "@storagemaxxing/catalog": "workspace:*",
     "@storagemaxxing/geometry": "workspace:*",
-    "@storagemaxxing/packer": "workspace:*",
     "zod": "^4.4.3"
   }
 }
