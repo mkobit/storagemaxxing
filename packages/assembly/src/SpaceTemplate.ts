@@ -11,15 +11,10 @@ import {
 export const SpaceTemplateIdSchema = z.string().brand<"SpaceTemplateId">();
 export type SpaceTemplateId = z.infer<typeof SpaceTemplateIdSchema>;
 
-export const AccessFaceSchema = z.enum([
-  "top",
-  "front",
-  "top+front",
-  "all-sides",
-]);
+const AccessFaceSchema = z.enum(["top", "front", "top+front", "all-sides"]);
 export type AccessFace = z.infer<typeof AccessFaceSchema>;
 
-export const Point2DSchema = z.custom<Point2D>((val) => {
+const Point2DSchema = z.custom<Point2D>((val) => {
   return val instanceof Float32Array && val.length === 2;
 });
 

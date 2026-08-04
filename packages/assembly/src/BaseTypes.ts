@@ -10,7 +10,6 @@ export const SpaceTypeIdSchema = z.enum([
   "wall",
   "pegboard",
 ]);
-export type SpaceType = z.infer<typeof SpaceTypeIdSchema>;
 
 export const BinSpecIdSchema = PartIdSchema;
 export type BinSpecId = z.infer<typeof BinSpecIdSchema>;
@@ -56,13 +55,10 @@ export const InstallationConstraintSchema = z.discriminatedUnion("type", [
     })
     .readonly(),
 ]);
-export type InstallationConstraint = z.infer<
-  typeof InstallationConstraintSchema
->;
 
 // Since Inches is a branded number type without a custom Zod schema in geometry,
 // we create a local Zod schema that produces an Inches type
-export const InchesZodSchema = z.number().transform(inches);
+const InchesZodSchema = z.number().transform(inches);
 
 export const DividerSchema = z
   .object({
@@ -71,7 +67,6 @@ export const DividerSchema = z
     thickness: InchesZodSchema,
   })
   .readonly();
-export type Divider = z.infer<typeof DividerSchema>;
 
 export const ObstacleSchema = z
   .object({
@@ -85,47 +80,16 @@ export const ObstacleSchema = z
     permanent: z.boolean(),
   })
   .readonly();
-export type Obstacle = z.infer<typeof ObstacleSchema>;
-
-export const StorageCategoryIdSchema = z.string().brand<"StorageCategoryId">();
-export type StorageCategoryId = z.infer<typeof StorageCategoryIdSchema>;
-
-export const StorageCategorySchema = z
-  .object({
-    id: StorageCategoryIdSchema,
-    name: z.string(),
-    requiredCount: z.number().int().nonnegative(),
-    notes: z.string(),
-  })
-  .readonly();
-export type StorageCategory = z.infer<typeof StorageCategorySchema>;
-
-export const AggregateConstraintSchema = z
-  .object({
-    binId: BinSpecIdSchema,
-    minTotal: z.number().int().nonnegative(),
-    maxTotal: z.number().int().nonnegative().nullable(),
-    hard: z.boolean(),
-  })
-  .readonly();
-export type AggregateConstraint = z.infer<typeof AggregateConstraintSchema>;
 
 export const PackingStrategyIdSchema = z.string().brand<"PackingStrategyId">();
-export type PackingStrategyId = z.infer<typeof PackingStrategyIdSchema>;
 
-export const BOMItemSchema = z
-  .object({
-    binId: BinSpecIdSchema,
-    quantity: z.number().int().positive(),
-  })
-  .readonly();
-export type BOMItem = z.infer<typeof BOMItemSchema>;
+export type BOMItem = {
+  readonly binId: BinSpecId;
+  readonly quantity: number;
+};
 
-export const BOMSchema = z
-  .object({
-    items: z.array(BOMItemSchema).readonly(),
-    totalPrice: z.number().nonnegative(),
-    isApproximatePrice: z.boolean(),
-  })
-  .readonly();
-export type BOM = z.infer<typeof BOMSchema>;
+export type BOM = {
+  readonly items: readonly BOMItem[];
+  readonly totalPrice: number;
+  readonly isApproximatePrice: boolean;
+};

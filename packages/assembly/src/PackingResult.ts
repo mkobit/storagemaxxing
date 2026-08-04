@@ -1,7 +1,5 @@
 import { PlacedBin } from "./PlacedBin";
 
-export type PackingPhase = "hardMin" | "softMin" | "cappedFill" | "autoFill";
-
 export type ValidityState = "valid" | "partial" | "invalid";
 
 export type CountConstraintFailure = {
