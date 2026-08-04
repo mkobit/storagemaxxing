@@ -52,7 +52,7 @@
   - Scope: scope:packer
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
 
-- [ ] 1.4.6 [sm-kkic](../../../.beads) Triage knip unused-export/type backlog: packages/store (6 findings)
+- [x] 1.4.6 [sm-kkic](../../../.beads) Triage knip unused-export/type backlog: packages/store (6 findings)
   - Validation: `bunx knip` reports zero packages/store findings under Unused exports / Unused exported types
   - Scope: scope:store
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
