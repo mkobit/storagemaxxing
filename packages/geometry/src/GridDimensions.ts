@@ -4,11 +4,6 @@ export type GridDimensions = {
   readonly depth?: number;
 };
 
-export interface GridCoord {
-  readonly col: number;
-  readonly row: number;
-}
-
 export const createGridDimensions = ({
   cols,
   rows,

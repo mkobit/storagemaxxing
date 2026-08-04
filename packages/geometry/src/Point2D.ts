@@ -21,10 +21,5 @@ export const Point2DSchema = z
 
 export type Point2D = ReadonlyVec2;
 
-/**
- * Alias for Point2D to match OpenSpec terminology
- */
-export type Point = Point2D;
-
 export const createPoint2D = (x: number, y: number): Point2D =>
   vec2.fromValues(x, y);

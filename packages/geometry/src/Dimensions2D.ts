@@ -15,11 +15,6 @@ export type Dimensions2D<T extends number = number> = {
   readonly l: T;
 };
 
-/**
- * Alias for Dimensions2D to match OpenSpec terminology
- */
-export type Size<T extends number = number> = Dimensions2D<T>;
-
 export const createDimensions2D = <T extends number>(
   w: T,
   l: T,
@@ -27,8 +22,3 @@ export const createDimensions2D = <T extends number>(
   w,
   l,
 });
-
-/**
- * Alias for createDimensions2D
- */
-export const createSize = createDimensions2D;
