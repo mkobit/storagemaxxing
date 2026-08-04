@@ -17,11 +17,6 @@ export type Rect2D<T extends number = number> = {
   readonly dimensions: Dimensions2D<T>;
 };
 
-/**
- * Alias for Rect2D to match OpenSpec terminology
- */
-export type Rect<T extends number = number> = Rect2D<T>;
-
 export const createRect2D = <T extends number>(
   origin: Point2D,
   dimensions: Dimensions2D<T>,
@@ -29,8 +24,3 @@ export const createRect2D = <T extends number>(
   origin,
   dimensions,
 });
-
-/**
- * Alias for createRect2D
- */
-export const createRect = createRect2D;

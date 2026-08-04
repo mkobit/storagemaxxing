@@ -42,7 +42,7 @@
   - Scope: scope:catalog
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
 
-- [ ] 1.4.4 [sm-uwu6](../../../.beads) Triage knip unused-export/type/duplicate backlog: packages/geometry (24 findings)
+- [x] 1.4.4 [sm-uwu6](../../../.beads) Triage knip unused-export/type/duplicate backlog: packages/geometry (24 findings)
   - Validation: `bunx knip` reports zero packages/geometry findings under Unused exports / Unused exported types / Duplicate exports
   - Scope: scope:geometry
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate

@@ -5,7 +5,6 @@ export const InchesSchema = z.number().brand("inches");
 export type Inches = z.infer<typeof InchesSchema>;
 
 export const inches = (value: number): Inches => InchesSchema.parse(value);
-export const createInches = inches;
 
 export const parseDim = (input: string): Inches | null => {
   const value = parseFraction(input);
