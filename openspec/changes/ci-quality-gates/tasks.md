@@ -32,7 +32,7 @@
   - Scope: scope:apps/web
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate
 
-- [ ] 1.4.2 [sm-8x0r](../../../.beads) Triage knip unused-export/type backlog: packages/assembly (25 findings)
+- [x] 1.4.2 [sm-8x0r](../../../.beads) Triage knip unused-export/type backlog: packages/assembly (25 findings)
   - Validation: `bunx knip` reports zero packages/assembly findings under Unused exports / Unused exported types
   - Scope: scope:assembly
   - Spec: openspec/changes/ci-quality-gates/specs/automated-verification/spec.md#requirement-dead-code-detection-gate

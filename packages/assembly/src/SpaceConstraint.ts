@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { BinSpecIdSchema, BinSpecId } from "./BaseTypes";
 
-export const SpaceConstraintOffSchema = z
+const SpaceConstraintOffSchema = z
   .object({
     mode: z.literal("off"),
     binId: BinSpecIdSchema,
@@ -12,7 +12,7 @@ export const SpaceConstraintOffSchema = z
   })
   .readonly();
 
-export const SpaceConstraintAutoSchema = z
+const SpaceConstraintAutoSchema = z
   .object({
     mode: z.literal("auto"),
     binId: BinSpecIdSchema,
@@ -23,7 +23,7 @@ export const SpaceConstraintAutoSchema = z
   })
   .readonly();
 
-export const SpaceConstraintSoftSchema = z
+const SpaceConstraintSoftSchema = z
   .object({
     mode: z.literal("soft"),
     binId: BinSpecIdSchema,
@@ -35,7 +35,7 @@ export const SpaceConstraintSoftSchema = z
   })
   .readonly();
 
-export const SpaceConstraintHardSchema = z
+const SpaceConstraintHardSchema = z
   .object({
     mode: z.literal("hard"),
     binId: BinSpecIdSchema,
@@ -66,11 +66,6 @@ export const SpaceConstraintSchema = z
       path: ["lo"],
     },
   );
-
-export type SpaceConstraintOff = z.infer<typeof SpaceConstraintOffSchema>;
-export type SpaceConstraintAuto = z.infer<typeof SpaceConstraintAutoSchema>;
-export type SpaceConstraintSoft = z.infer<typeof SpaceConstraintSoftSchema>;
-export type SpaceConstraintHard = z.infer<typeof SpaceConstraintHardSchema>;
 
 export type SpaceConstraint = z.infer<typeof SpaceConstraintSchema>;
 
