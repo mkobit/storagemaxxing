@@ -61,6 +61,7 @@ export default tseslint.config(
       "apps/web/playwright.config.ts",
       "apps/web/.storybook/**",
       "apps/web/storybook-static/**",
+      "apps/web/.wrangler/**",
       "scripts/**",
       ".agents/hooks/**",
     ],

@@ -7,7 +7,7 @@
     "build": "vite build",
     "build-storybook": "storybook build",
     "check-stories": "bun scripts/check-stories.ts",
-    "deploy": "wrangler pages deploy dist",
+    "deploy": "wrangler deploy",
     "dev": "vite",
     "playwright:install": "playwright install chromium --with-deps",
     "preview": "vite preview",
