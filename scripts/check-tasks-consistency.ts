@@ -12,6 +12,12 @@ type Mismatch = {
   readonly beadStatus: string;
 };
 
+type CheckboxRef = {
+  readonly line: number;
+  readonly beadId: string;
+  readonly checked: boolean;
+};
+
 function findTasksFiles(dir: string): readonly string[] {
   return readdirSync(dir).flatMap((entry) => {
     const full = join(dir, entry);
@@ -21,54 +27,72 @@ function findTasksFiles(dir: string): readonly string[] {
   });
 }
 
-async function beadStatus(id: string): Promise<string | undefined> {
-  const proc = Bun.spawn(["bd", "show", id, "--json"], {
-    stdout: "pipe",
-    stderr: "pipe",
-  });
-  const out = await new Response(proc.stdout).text();
-  const exitCode = await proc.exited;
-  if (exitCode !== 0) return undefined;
-  const parsed: unknown = JSON.parse(out);
-  const record = Array.isArray(parsed) ? parsed[0] : parsed;
-  if (typeof record !== "object" || record === null || !("status" in record)) {
-    return undefined;
-  }
-  const { status } = record as { readonly status: unknown };
-  return typeof status === "string" ? status : undefined;
-}
-
-const args = process.argv.slice(2);
-const fix = args.includes("--fix");
-const root = args.find((arg) => !arg.startsWith("--")) ?? "openspec/changes";
-const files = findTasksFiles(root);
-const statusCache = new Map<string, string | undefined>();
-
-async function statusFor(beadId: string): Promise<string | undefined> {
-  if (!statusCache.has(beadId)) {
-    statusCache.set(beadId, await beadStatus(beadId));
-  }
-  return statusCache.get(beadId);
-}
-
-async function mismatchesInFile(file: string): Promise<readonly Mismatch[]> {
+function extractCheckboxRefs(file: string): readonly CheckboxRef[] {
   const lines = readFileSync(file, "utf8").split("\n");
-  const found: Mismatch[] = [];
+  const found: CheckboxRef[] = [];
   for (const [index, line] of lines.entries()) {
     const checkboxMatch = CHECKBOX_LINE.exec(line);
     if (!checkboxMatch) continue;
     const idMatch = BEAD_ID.exec(checkboxMatch[4]);
     if (!idMatch) continue;
-    const beadId = idMatch[0];
-    const status = await statusFor(beadId);
+    found.push({
+      line: index + 1,
+      beadId: idMatch[0],
+      checked: checkboxMatch[2].toLowerCase() === "x",
+    });
+  }
+  return found;
+}
+
+// Fetches every bead's status in a single `bd show` invocation instead of one
+// subprocess per unique ID -- with ~40+ beads referenced repo-wide across
+// openspec/changes/**/tasks.md, per-ID subprocess overhead compounds linearly
+// and previously caused this script to exceed the 120s default tool timeout.
+async function fetchBeadStatuses(
+  ids: readonly string[],
+): Promise<ReadonlyMap<string, string>> {
+  const statuses = new Map<string, string>();
+  if (ids.length === 0) return statuses;
+  const proc = Bun.spawn(["bd", "show", ...ids, "--json"], {
+    stdout: "pipe",
+    stderr: "pipe",
+  });
+  const out = await new Response(proc.stdout).text();
+  await proc.exited;
+  const parsed: unknown = JSON.parse(out);
+  // bd show --json returns an array for any valid IDs found, but a bare
+  // error object ({ error, schema_version }) when NONE of the requested IDs
+  // resolve -- normalize both shapes into an array to scan uniformly.
+  const records = Array.isArray(parsed) ? parsed : [parsed];
+  for (const record of records) {
+    if (typeof record !== "object" || record === null) continue;
+    if (!("id" in record) || !("status" in record)) continue;
+    const { id, status } = record as {
+      readonly id: unknown;
+      readonly status: unknown;
+    };
+    if (typeof id === "string" && typeof status === "string") {
+      statuses.set(id, status);
+    }
+  }
+  return statuses;
+}
+
+function mismatchesInFile(
+  file: string,
+  refs: readonly CheckboxRef[],
+  statuses: ReadonlyMap<string, string>,
+): readonly Mismatch[] {
+  const found: Mismatch[] = [];
+  for (const ref of refs) {
+    const status = statuses.get(ref.beadId);
     if (status === undefined) continue;
-    const checked = checkboxMatch[2].toLowerCase() === "x";
-    if ((status === "closed") !== checked) {
+    if ((status === "closed") !== ref.checked) {
       found.push({
         file,
-        line: index + 1,
-        beadId,
-        checked,
+        line: ref.line,
+        beadId: ref.beadId,
+        checked: ref.checked,
         beadStatus: status,
       });
     }
@@ -90,8 +114,21 @@ function applyFixes(file: string, fileMismatches: readonly Mismatch[]): void {
   writeFileSync(file, fixedLines.join("\n"));
 }
 
-const results = await Promise.all(files.map(mismatchesInFile));
-const mismatches = results.flat();
+const args = process.argv.slice(2);
+const fix = args.includes("--fix");
+const root = args.find((arg) => !arg.startsWith("--")) ?? "openspec/changes";
+const files = findTasksFiles(root);
+const refsByFile = new Map(
+  files.map((file) => [file, extractCheckboxRefs(file)]),
+);
+const allIds = [
+  ...new Set([...refsByFile.values()].flat().map((r) => r.beadId)),
+];
+const statuses = await fetchBeadStatuses(allIds);
+
+const mismatches = files.flatMap((file) =>
+  mismatchesInFile(file, refsByFile.get(file) ?? [], statuses),
+);
 
 if (mismatches.length === 0) {
   console.log("No bd-close / tasks.md checkbox mismatches found.");
