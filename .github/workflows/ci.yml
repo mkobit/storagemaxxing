@@ -56,6 +56,15 @@ jobs:
       - name: Dead-code check (knip)
         run: bunx knip
 
+      - name: Bootstrap Beads
+        run: bd bootstrap --yes
+
+      - name: Sync Beads from remote
+        run: bd dolt pull
+
+      - name: Lint Beads
+        run: bd lint
+
   typecheck:
     runs-on: ubuntu-latest
     steps:
