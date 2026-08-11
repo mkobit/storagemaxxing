@@ -33,11 +33,18 @@ id = "remediation-plan"
 title = "Draft remediation specs for {{feature_name}}"
 type = "task"
 labels = ["type:sync", "meta:openspec"]
-description = "Update design.md and tasks.md in {{feature_name}} to address the holes identified above."
+description = "Update design.md in {{feature_name}} to address the holes identified above."
+
+[[steps]]
+id = "draft-tasks"
+title = "Author tasks.md for {{feature_name}}"
+type = "task"
+labels = ["type:sync", "status:needs-tasks"]
+description = "Author tasks.md from the finalized (post-remediation) design.md: break it into units satisfying the Bead task contract in AGENTS.md (each names a scope: label, references the spec requirement it implements, and carries a runnable acceptance command). This step exists because feature-probe used to end at human-review with no artifact ever producing tasks.md, leaving openspec-sync's expand-tasks step (which only parses existing checkboxes) with nothing to hydrate from (sm-nqkd)."
 
 [[steps]]
 id = "human-review"
 title = "Human Review & Adversarial Sign-off"
 type = "task"
 labels = ["status:needs-review"]
-description = "Stop here. Mark this task as `blocked` (using `bd update <id> --status blocked`) to signal it is waiting for human approval. The design being reviewed should already reflect the hole-poking/remediation findings above -- the human is confirming a design that has already survived an adversarial pass, not acting as the sole adversary. Only proceed to hydration after a human approves."
+description = "Stop here. Mark this task as `blocked` (using `bd update <id> --status blocked`) to signal it is waiting for human approval. The design AND tasks.md being reviewed should already reflect the hole-poking/remediation findings above -- the human is confirming a design that has already survived an adversarial pass, not acting as the sole adversary. Only proceed to hydration (`bd mol pour openspec-sync`) after a human approves."
