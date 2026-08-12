@@ -12,7 +12,7 @@ id = "hole-poking"
 title = "Poke holes in {{change_name}} design"
 type = "task"
 labels = ["type:audit", "meta:adversary"]
-description = "Systematically analyze the design for: (1) Missing failure scenarios, (2) Performance bottlenecks/complexity gaps, (3) Boundary condition errors (zero state, invalid inputs), and (4) Multi-agent race conditions. Log gaps as new OpenSpec requirements."
+description = "Systematically analyze the design for: (1) Missing failure scenarios, (2) Performance bottlenecks/complexity gaps, (3) Boundary condition errors (zero state, invalid inputs), (4) Multi-agent race conditions, and (5) Alias-swap test seams (if a new module is the alias target, does the module's own import graph route through that same aliased specifier?). Log gaps as new OpenSpec requirements."
 
 [[steps]]
 id = "remediation-plan"
