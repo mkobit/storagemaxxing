@@ -65,6 +65,9 @@ issue-id-length: 8
 
 export.auto: true
 
-sync.remote: "git+https://github.com/mkobit/storagemaxxing"
+# sync.remote intentionally unset (sm-hsky): explicit git+https:// values are
+# rejected by bd 1.2+'s isGitCodeRepoURL bootstrap guard, which doesn't fall
+# through to the git-origin refs/dolt/data auto-detect that handles this repo's
+# shape correctly. Leaving sync.remote unset lets that auto-detect run instead.
 
 export.git-add: false
