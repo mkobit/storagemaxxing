@@ -13,15 +13,25 @@ This file serves as the "Prime Directive" for all AI agents (Gemini, Claude, Jul
 
 ## 🟢 Operational Loop (Spec-Driven & Bidirectional)
 
-All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (Execution/Tasking) — OpenSpec is the source of truth, Beads is the engine. The session RESUME → TRIAGE → CLAIM → EXECUTE → CLOSE loop lives in **[.beads/PRIME.md](.beads/PRIME.md)** (auto-loaded via `bd prime` each session); this section covers only what that loop doesn't:
+All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (Execution/Tasking) — OpenSpec is the source of truth, Beads is the engine.
+The session RESUME → TRIAGE → CLAIM → EXECUTE → CLOSE loop lives in **[.beads/PRIME.md](.beads/PRIME.md)** (auto-loaded via `bd prime` each session); this section covers only what that loop doesn't:
 
-- Before coding, an OpenSpec `design.md`/`tasks.md` must exist and be synced to Beads via `bd mol pour openspec-sync`. A design awaiting human review blocks implementation (`status:needs-review`).
+- **OpenSpec vs Bead-only decision rule:**
+  - **OpenSpec + Beads:** Required for non-trivial features, architectural changes, schema updates, cross-package changes, or multi-step design updates that alter system behavior or public API contracts.
+    Before coding, an OpenSpec `design.md`/`tasks.md` must exist and be synced to Beads via `bd mol pour openspec-sync`.
+    A design awaiting human review blocks implementation (`status:needs-review`).
+  - **Bead-only:** Permitted for localized bug fixes, single-package chores, documentation updates, operational/meta tasks, or refactorings that preserve existing spec contracts without altering system topology or schemas.
 - Never modify a file unless you own the claim on its Bead.
 - If working on `apps/web`, run `bun run dev` then `bun run screenshot` for a baseline before touching anything.
-- **Never edit canonical `openspec/specs/**/spec.md` files directly** — they're derived from a change's delta by `bunx openspec archive`. CI fails a PR that touches both `openspec/specs/` and an active change's `specs/`.
+- **Never edit canonical `openspec/specs/**/spec.md` files directly** — they're derived from a change's delta by `bunx openspec archive`.
+  CI fails a PR that touches both `openspec/specs/` and an active change's `specs/`.
 - **Commit immediately after every closed Bead, one bead per commit:** `git add <changed files> && git commit -m "task(<id>): <description>"`.
 - Run `bunx openspec archive` only after all linked Beads are closed.
-- **Before ending a session, reflect on the workflow itself (mandatory).** Record friction as a Meta bead (`bd create "Meta: <insight>" -t task -p 3 -l meta:beads-flow`) or `bd remember "<insight>"` for transient tips.
+- **Before ending a session, reflect on the workflow itself (mandatory).**
+  Record friction as a Meta bead (`bd create "Meta: <insight>" -t task -p 3 -l meta:beads-flow`) or `bd remember "<insight>"` for transient tips.
+- **Multi-tool spec alignment and `agent_docs/` plan:**
+  - `AGENTS.md` serves as the root entrypoint for all agent directives across Gemini, Claude, Jules, and Opencode.
+  - Multi-tool config alignment will consolidate shared guidance into a lean `agent_docs/` layer referenced by tool configs to prevent instruction drift.
 
 See **[openspec/config.yaml](openspec/config.yaml)** for schema-specific rules.
 
