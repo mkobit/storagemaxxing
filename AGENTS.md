@@ -2,217 +2,27 @@
 
 This file serves as the "Prime Directive" for all AI agents (Gemini, Claude, Jules, Opencode) operating in the Storagemaxxing monorepo.
 
-## 🏗 Engineering Rails (The Laws of Physics)
+> ⚠️ **Do not blindly run `bd setup codex`/`claude`/`gemini` to clear a "stale" warning.** The Session Completion block in `agent_docs/beads-workflow.md` was hand-patched (sm-94br) to require a feature branch + PR instead of a direct `git push`, because `main` is branch-protected (GH013). Regenerating reverts that patch. If `bd setup <recipe> --check` reports stale, diff the output first and re-apply the branch+PR requirement to `CRITICAL RULES` if the regen wipes it. Tracked in sm-sws7.
 
-- **Functional Purity:** All logic in `packages/geometry`, `packages/catalog`, and `packages/packer` MUST be pure functional. No side effects.
-- **Immutability:** Use `const` and `readonly`. No `let`, no object mutation. Enforced by ESLint `functional/*` rules.
-- **Strict Typing:** `strict: true` in all packages. No `any`. Use `unknown` + narrowing/validation.
-- **tsconfig Scope:** When adding TypeScript files outside a package's `src/` directory (e.g., `scripts/`, `e2e/`), verify the directory is listed in that package's `tsconfig.json` `include` array or ESLint will fail to parse it.
-- **Monorepo Topology:** Lint-enforced directed acyclic graph: `geometry → catalog → assembly → packer → store → web`. Upward or lateral imports fail `bun run lint`.
-- **Engine:** Layer 1 only — synchronous 2D geometric fitting (pure functions) in `packages/packer`. Layer 2 (asynchronous constraint validation) is deferred and has no package.
+## 📚 Agent Guidance Modules (`agent_docs/`)
 
-## 🟢 Operational Loop (Spec-Driven & Bidirectional)
+- [Engineering Rails](agent_docs/engineering-rails.md) — Laws of physics, purity, immutability, topology.
+- [Operational Loop & Bead Task Contract](agent_docs/operational-loop.md) — OpenSpec vs Bead-only decision rule, sync, commit discipline.
+- [Issue Tracking & Session Completion](agent_docs/beads-workflow.md) — Beads lifecycle, quality gates, Dolt sync, session completion & branch+PR workflow.
+- [Shared Memory & Multi-Agent Sandbox](agent_docs/multi-agent-sandbox.md) — Identity, Jules delegation, audit logs, memory.
+- [Product Strategy](agent_docs/product-strategy.md) — Horizontal breadth over vertical depth.
+- [Tooling & High-Velocity Bun Patterns](agent_docs/tooling-patterns.md) — Pinned tooling devDependencies, Bun execution patterns.
 
-All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (Execution/Tasking) — OpenSpec is the source of truth, Beads is the engine. The session RESUME → TRIAGE → CLAIM → EXECUTE → CLOSE loop lives in **[.beads/PRIME.md](.beads/PRIME.md)** (auto-loaded via `bd prime` each session); this section covers only what that loop doesn't:
+---
 
-- Before coding, an OpenSpec `design.md`/`tasks.md` must exist and be synced to Beads via `bd mol pour openspec-sync`. A design awaiting human review blocks implementation (`status:needs-review`).
-- Never modify a file unless you own the claim on its Bead.
-- If working on `apps/web`, run `bun run dev` then `bun run screenshot` for a baseline before touching anything.
-- **Never edit canonical `openspec/specs/**/spec.md` files directly** — they're derived from a change's delta by `bunx openspec archive`. CI fails a PR that touches both `openspec/specs/` and an active change's `specs/`.
-- **Commit immediately after every closed Bead, one bead per commit:** `git add <changed files> && git commit -m "task(<id>): <description>"`.
-- Run `bunx openspec archive` only after all linked Beads are closed.
-- **Before ending a session, reflect on the workflow itself (mandatory).** Record friction as a Meta bead (`bd create "Meta: <insight>" -t task -p 3 -l meta:beads-flow`) or `bd remember "<insight>"` for transient tips.
+@agent_docs/engineering-rails.md
 
-See **[openspec/config.yaml](openspec/config.yaml)** for schema-specific rules.
+@agent_docs/operational-loop.md
 
-## Bead task contract
+@agent_docs/beads-workflow.md
 
-Every implementation Bead MUST satisfy this contract before an agent claims it:
+@agent_docs/multi-agent-sandbox.md
 
-- Names exactly one package (or `apps/web`) in a `scope:` label.
-- References the OpenSpec spec requirement it implements.
-- Carries an acceptance criterion runnable as a command (test, lint, or typecheck invocation).
-- If the acceptance criterion greps/scopes removal of hardcoded literals (e.g. hex colors) in named files: confirm each named file is actually imported/rendered before scoping the migration to it — a file with zero importers is dead code and belongs in a separate triage bead, not folded into the migration — and explicitly list any literal values intentionally excluded from the check (domain/categorical data, test fixtures) so they aren't ambiguously in-scope.
+@agent_docs/product-strategy.md
 
-If a Bead cannot meet the contract, re-scope it or flag it with `bd human <id>` instead of claiming it.
-If you cannot finish a claimed Bead, leave it `open` with a comment linking the relevant OpenSpec change so another agent can resume.
-
-## 🧠 Shared Memory & Audit
-
-- **Coordination:** Use `bd remember "<insight>"` to store operational knowledge (e.g., "The solver is currently hitting memory limits") that isn't a design spec but is critical for other agents. (`.beads/PRIME.md`'s RESUME step already covers recall at session start.)
-- **Audit:** All interactions are recorded locally; use `bd audit record` if you need to explicitly log an architectural justification.
-
-## 📐 Breadth of Rectangles (Product Strategy)
-
-We prioritize **Horizontal Breadth** (many storage systems) over **Vertical Depth** (complex 3D/WASM solvers).
-
-- Default to **Modular 2D Fitters** first.
-- CAD, 3D visualization, and complex global optimization are **Layered Features**, not core requirements.
-
-## 🛠 Multi-Agent Sandbox & Sync
-
-- **Identity:** Always attribute your actions to your agent name (e.g., `actor:gemini`).
-- **Jules:** Jules is a remote agent with a large execution quota but limited reasoning. Delegate many small, narrowly scoped tasks to it — **1-2 Beads per execution cycle**, each satisfying the Bead task contract. Never hand Jules open-ended design work or multi-package changes.
-- **Patrols:** Recurring duties live in `.jules/prompts/` with a Goal, Frequency, and Protocol. Jules MUST check for assigned `meta:patrol` beads before picking up other tasks.
-- **Sync:** Always refresh state (`git pull` or `bd sync`) at the start of a session.
-- **Jail:** Respect the workspace root. Do NOT access files or execute commands outside `/home/mkobit/workspace/mkobit/storagemaxxing`.
-- **MCP:** Use only the approved MCP servers defined in the project configuration.
-
-## 🔧 Agent Tooling Packages
-
-Skill-support CLIs that agents invoke via `bunx` (e.g. `openspec`, `modern-web-guidance`) are pinned as root `devDependencies`, not left as ephemeral/unpinned `bunx` fetches.
-Pinning gives every agent the same resolved version and lets `bunx <tool>` resolve from `node_modules/.bin` instead of re-fetching from the registry each call.
-These packages support agent workflow only — they are not application dependencies of `apps/web` or any `packages/*`, so they stay out of the monorepo's import graph and lint topology.
-Add new agent-only tooling the same way: `bun add -d <package>` at the repo root.
-
-## ⚡️ High-Velocity Bun Patterns
-
-- **Runtime caveat:** Do NOT set `[run] bun = true` in `bunfig.toml`.
-  It shims `node` to Bun inside `bun run` scripts, and Playwright's runner spawns `node` workers that are not supported under the Bun runtime.
-- **Unit tests run on `bun test` everywhere:** packages directly, and `apps/web` with a happy-dom preload (`apps/web/bunfig.toml`).
-- **Package tests:** Run package tests with `bun test packages/<pkg>` from the repo root.
-  Packages have no `test` script, so `bun --cwd packages/<pkg> test` fails with "Script not found".
-- **Root-Level Execution:** To run a script in a subproject from the root, use the `--cwd` flag.
-  When using `run` with `--cwd`, place `--cwd` _after_ the `run` keyword to avoid CLI argument parsing errors (e.g. `bun run --cwd apps/web test:e2e`).
-  Otherwise, run the script directly without `run` (e.g. `bun --cwd apps/web dev`).
-- **Filter-based:** Alternatively, use `--filter` for workspace-aware execution:
-  ```bash
-  bun run --filter @storagemaxxing/web dev
-  ```
-
-> ⚠️ **Do not blindly run `bd setup codex`/`claude`/`gemini` to clear a "stale" warning.** The Session Completion block below was hand-patched (sm-94br) to require a feature branch + PR instead of a direct `git push`, because `main` is branch-protected (GH013). Regenerating reverts that patch. If `bd setup <recipe> --check` reports stale, diff the output first and re-apply the branch+PR requirement to `CRITICAL RULES` if the regen wipes it. Tracked in sm-sws7.
-
-<!-- BEGIN BEADS INTEGRATION v:1 profile:full hash:f65d5d33 -->
-
-## Issue Tracking with bd (beads)
-
-**IMPORTANT**: This project uses **bd (beads)** for ALL issue tracking. Do NOT use markdown TODOs, task lists, or other tracking methods.
-
-### Why bd?
-
-- Dependency-aware: Track blockers and relationships between issues
-- Git-friendly: Dolt-powered version control with native sync
-- Agent-optimized: JSON output, ready work detection, discovered-from links
-- Prevents duplicate tracking systems and confusion
-
-### Quick Start
-
-**Check for ready work:**
-
-```bash
-bd ready
-```
-
-**Create new issues:**
-
-Always include `--validate` and `--acceptance` for task/feature/bug types:
-
-```bash
-bd create "Issue title" --description="Detailed context" -t task -p 2 --validate --acceptance "Given ..., when ..., then ..."
-bd create "Issue title" --description="What this issue is about" -t bug -p 1 --validate --acceptance "Bug no longer reproduces" --deps discovered-from:bd-123
-```
-
-**Claim and update:**
-
-```bash
-bd update <id> --claim
-bd update bd-42 --priority 1
-```
-
-**Complete work:**
-
-```bash
-bd close bd-42 --reason "Completed"
-```
-
-### Issue Types
-
-- `bug` - Something broken
-- `feature` - New functionality
-- `task` - Work item (tests, docs, refactoring)
-- `epic` - Large feature with subtasks
-- `chore` - Maintenance (dependencies, tooling)
-
-### Priorities
-
-- `0` - Critical (security, data loss, broken builds)
-- `1` - High (major features, important bugs)
-- `2` - Medium (default, nice-to-have)
-- `3` - Low (polish, optimization)
-- `4` - Backlog (future ideas)
-
-### Workflow for AI Agents
-
-1. **Check ready work**: `bd ready` shows unblocked issues
-2. **Claim your task atomically**: `bd update <id> --claim`
-3. **Work on it**: Implement, test, document
-4. **Discover new work?** Create linked issue:
-   - `bd create "Found bug" --description="Details about what was found" -p 1 --deps discovered-from:<parent-id>`
-5. **Complete**: `bd close <id> --reason "Done"`
-
-### Quality
-
-- Use `--acceptance` and `--design` fields when creating issues
-- Use `--validate` to check description completeness
-
-### Lifecycle
-
-- `bd defer <id>` / `bd supersede <id>` for issue management
-- `bd stale` / `bd orphans` / `bd lint` for hygiene
-- `bd human <id>` to flag for human decisions
-- `bd formula list` / `bd mol pour <name>` for structured workflows
-
-### Auto-Sync
-
-bd automatically syncs via Dolt:
-
-- Each write auto-commits to Dolt history
-- Use `bd dolt push`/`bd dolt pull` for remote sync
-- No manual export/import needed!
-- **Never commit `.beads/issues.jsonl`.** It is bd's auto-export backup and is gitignored. Dolt is the only sync channel — committing the jsonl pollutes unrelated PR diffs with bead-state churn and creates two competing sources of truth.
-
-### Important Rules
-
-- ✅ Use bd for ALL task tracking
-- ✅ Read plain bd output directly in interactive sessions; never pipe bd output into shell or script interpreters to extract fields
-- ✅ Reserve `--json` for unattended automation (CI, hooks) that parses output programmatically
-- ✅ Link discovered work with `discovered-from` dependencies
-- ✅ Check `bd ready` before asking "what should I work on?"
-- ❌ Do NOT create markdown TODO lists
-- ❌ Do NOT use external issue trackers
-- ❌ Do NOT duplicate tracking systems
-
-For more details, see README.md and docs/QUICKSTART.md.
-
-## Session Completion
-
-**When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
-
-**MANDATORY WORKFLOW:**
-
-1. **File issues for remaining work** - Create issues for anything that needs follow-up
-2. **Run quality gates** (if code changed) - Tests, linters, builds
-3. **Update issue status** - Close finished work, update in-progress items
-4. **PUSH TO REMOTE** - This is MANDATORY:
-   ```bash
-   git pull --rebase
-   bd lint       # MUST pass before pushing — fix any missing Acceptance Criteria
-   bd dolt push
-   git checkout -b <topic-branch>   # skip if already on a feature branch
-   git push -u origin <topic-branch>
-   gh pr create --fill
-   ```
-5. **Clean up** - Clear stashes, prune remote branches
-6. **Verify** - All changes committed AND pushed
-7. **Hand off** - Provide context for next session
-
-**CRITICAL RULES:**
-
-- `main` is branch-protected (GH013: pull request required) - a direct `git push` to main is always rejected, even for tiny/doc-only changes
-- Work is NOT complete until a feature branch is pushed and a PR against main is opened
-- NEVER attempt a direct push to main as a shortcut - branch + PR is the required path, no exceptions
-- NEVER stop before pushing the branch and opening the PR - that leaves work stranded locally
-- NEVER say "ready to push when you are" - YOU must push the branch and open the PR
-- If push or PR creation fails, resolve and retry until it succeeds
-
-<!-- END BEADS INTEGRATION -->
+@agent_docs/tooling-patterns.md

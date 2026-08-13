@@ -9,9 +9,14 @@ At the start of every session, you MUST run `bd prime` to load the full operatio
 
 ## Project Rails
 
-The following canonical documentation defines our technical and product constraints. You must strictly adhere to these while implementing tasks:
+The following canonical documentation in `agent_docs/` defines our technical and product constraints. You must strictly adhere to these while implementing tasks:
 
-- [Architecture & Standards](../AGENTS.md)
+- [Engineering Rails](../agent_docs/engineering-rails.md)
+- [Operational Loop & Bead Contract](../agent_docs/operational-loop.md)
+- [Issue Tracking & Session Completion](../agent_docs/beads-workflow.md)
+- [Shared Memory & Multi-Agent Sandbox](../agent_docs/multi-agent-sandbox.md)
+- [Product Strategy](../agent_docs/product-strategy.md)
+- [Tooling Patterns](../agent_docs/tooling-patterns.md)
 - [Technical Stack](../docs/jules/tech.md)
 - [Product Philosophy](../docs/jules/product.md)
 - [Packing & Grid Constraints](../docs/jules/constraints.md)
@@ -21,10 +26,10 @@ The following canonical documentation defines our technical and product constrai
 ## Session Protocol (Spec-Driven)
 
 1. Run `bd prime` to load latest operational context.
-2. Follow the **Operational Loop** defined in [AGENTS.md](../AGENTS.md):
+2. Follow the **Operational Loop** defined in [Operational Loop](../agent_docs/operational-loop.md):
    - **Discover**: Identify active OpenSpec designs.
    - **Hydrate**: Use `bd mol pour openspec-sync` if tasks aren't in Beads.
    - **Claim**: `bd update <id> --claim`.
    - **Execute & Flowback**: Update specs if design shifts.
    - **Close**: Check off `tasks.md` and run `bd close <id>`.
-3. **MANDATORY**: Run `git add .` and `git push` to synchronize all task and code changes. We use **Git-backed JSONL** for issues, so `bd dolt push` is NOT required.
+3. **MANDATORY**: Follow the Session Completion workflow in [Issue Tracking & Session Completion](../agent_docs/beads-workflow.md).
