@@ -132,6 +132,34 @@ export default tseslint.config(
   },
   ...dagBoundaries,
   {
+    // Ban barrel FILES at creation, not just barrel imports (which
+    // no-restricted-imports at INDEX_IMPORT_PATTERN already blocks). A new
+    // index.{ts,tsx} that re-exports siblings is architecturally dead here --
+    // importing **/index is banned repo-wide -- so it only accrues as
+    // untracked dead code (the sm-bg72/sm-ut5o pattern) and widens the
+    // import/no-cycle surface. Zero-dep core no-restricted-syntax rather than
+    // eslint-plugin-barrel-files, whose rule is import-side and overlaps the
+    // existing ban. Decision recorded in sm-cyg7. apps/web/src/index.tsx is the
+    // Vite entry (not a re-export hub) and is exempt.
+    files: ["**/index.{ts,tsx}"],
+    ignores: ["apps/web/src/index.tsx"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "ExportAllDeclaration",
+          message:
+            "Barrel file: 'export *' in an index.{ts,tsx} re-export hub is banned (sm-cyg7). Import the source module directly.",
+        },
+        {
+          selector: "ExportNamedDeclaration[source]",
+          message:
+            "Barrel file: re-exporting from another module in an index.{ts,tsx} is banned (sm-cyg7). Import the source module directly.",
+        },
+      ],
+    },
+  },
+  {
     files: ["apps/web/src/**/*.{ts,tsx}", "apps/web/serve.ts"],
     rules: {
       "functional/no-expression-statements": "off",
