@@ -13,6 +13,10 @@ storybook-static/
 # Never commit this file; it is rewritten on every bd command and pollutes diffs.
 .beads/issues.jsonl
 
+# bd 1.2+ Smart Gate runtime lock (repo root, not inside .beads/ — created during
+# schema-migration checks, not covered by .beads/.gitignore's *.lock pattern).
+.beads.gate.lock
+
 # Personal Claude Code overrides (settings.json is the shared, checked-in config).
 .claude/settings.local.json
 
