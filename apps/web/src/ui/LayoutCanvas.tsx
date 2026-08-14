@@ -121,9 +121,9 @@ const paintWireframe = (
 const validityBadgeClassName: Readonly<
   Record<PackingResult["validity"], string>
 > = {
-  valid: "bg-green-600",
-  partial: "bg-amber-600",
-  invalid: "bg-red-600",
+  valid: "bg-status-success",
+  partial: "bg-status-warning",
+  invalid: "bg-status-danger",
 };
 
 const badgeBase: React.CSSProperties = {
@@ -208,7 +208,7 @@ const ResolvedCanvas: React.FC<{
         {unresolvedBinIds.length > 0 && (
           <span
             data-testid="layout-unresolved-count"
-            className="bg-red-600 text-white"
+            className="bg-status-danger text-white"
             style={{ ...badgeBase, right: 8 }}
           >
             {unresolvedBinIds.length} unresolved
@@ -236,7 +236,7 @@ const renderResolution = (
     return (
       <div
         data-testid="layout-error-missing-template"
-        className="p-8 text-red-600"
+        className="p-8 text-status-danger"
       >
         Selected space references missing template: {resolution.templateId}
       </div>
