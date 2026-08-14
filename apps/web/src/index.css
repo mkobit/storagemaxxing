@@ -36,6 +36,10 @@
   --color-border-subtle: #e2e8f0;
   --color-border-strong: #64748b;
 
+  --color-status-success: #16a34a;
+  --color-status-warning: #d97706;
+  --color-status-danger: #dc2626;
+
   /* LayoutCanvas draws directly to a <canvas> 2D context, which does not resolve
      CSS custom properties on its own -- these are read at draw time via
      getComputedStyle instead of a Tailwind utility class. */
@@ -89,6 +93,10 @@
   --color-border-default: #334155;
   --color-border-subtle: #1e293b;
   --color-border-strong: #94a3b8;
+
+  --color-status-success: #22c55e;
+  --color-status-warning: #f59e0b;
+  --color-status-danger: #ef4444;
 
   /* blue-400, not the base blue-600: used as *text* (e.g. text-brand-primary
      highlights) against dark surfaces, which needs a lighter blue than the

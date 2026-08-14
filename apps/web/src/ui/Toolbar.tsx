@@ -102,7 +102,9 @@ export const Toolbar: React.FC = () => {
         className="hidden"
       />
       {importError && (
-        <span className="self-center text-sm text-red-600">{importError}</span>
+        <span className="self-center text-sm text-status-danger">
+          {importError}
+        </span>
       )}
       <div className="mx-2 my-1 w-px bg-border-default" />
       <GoldenPathSetup />

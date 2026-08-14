@@ -131,7 +131,7 @@ export const ConstraintRow: React.FC<ConstraintRowProps> = ({
         {onDelete && (
           <button
             onClick={onDelete}
-            className="cursor-pointer border-none bg-transparent px-2 py-0 text-xl leading-none text-red-500"
+            className="cursor-pointer border-none bg-transparent px-2 py-0 text-xl leading-none text-status-danger"
             title="Remove constraint"
           >
             &times;

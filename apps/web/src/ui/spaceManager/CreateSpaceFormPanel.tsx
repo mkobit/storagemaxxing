@@ -123,7 +123,10 @@ export const CreateSpaceFormPanel: React.FC = () => {
         Create space
       </button>
       {error && (
-        <span data-testid="create-space-error" className="text-sm text-red-600">
+        <span
+          data-testid="create-space-error"
+          className="text-sm text-status-danger"
+        >
           {error}
         </span>
       )}

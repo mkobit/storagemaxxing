@@ -168,7 +168,8 @@ export default tseslint.config(
   {
     // Enforces openspec/specs/web-design-system "no new hardcoded color
     // values": components must consume @theme tokens (apps/web/src/index.css)
-    // instead of hex/rgb/hsl literals or Tailwind arbitrary bracket literals.
+    // instead of hex/rgb/hsl literals, Tailwind arbitrary bracket literals, or
+    // Tailwind built-in named-color utilities (sm-5w9k).
     files: ["apps/web/src/**/*.{ts,tsx}"],
     ignores: ["**/*.test.ts", "**/*.test.tsx"],
     rules: {
@@ -185,6 +186,18 @@ export default tseslint.config(
             "JSXAttribute[name.name='className'] Literal[value=/-\\[(?!var\\()[^\\]]+\\]/]",
           message:
             "Tailwind arbitrary bracket literal -- use a token/scale utility, or a var(--theme-token) reference, or if the value is structural (not styling), disable this rule inline with a reason.",
+        },
+        {
+          selector:
+            "Literal[value=/\\b(?:[a-z0-9-]+:)*(?:bg|text|border(?:-[trblxy])?|ring(?:-offset)?|stroke|fill|from|via|to|outline|shadow|accent|caret|divide|decoration)-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-(?:50|100|200|300|400|500|600|700|800|900|950))?(?![a-zA-Z0-9-])/]",
+          message:
+            "Tailwind built-in named-color utility -- reference a @theme token in apps/web/src/index.css instead of built-in color scales (sm-5w9k).",
+        },
+        {
+          selector:
+            "TemplateElement[value.raw=/\\b(?:[a-z0-9-]+:)*(?:bg|text|border(?:-[trblxy])?|ring(?:-offset)?|stroke|fill|from|via|to|outline|shadow|accent|caret|divide|decoration)-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(?:-(?:50|100|200|300|400|500|600|700|800|900|950))?(?![a-zA-Z0-9-])/]",
+          message:
+            "Tailwind built-in named-color utility -- reference a @theme token in apps/web/src/index.css instead of built-in color scales (sm-5w9k).",
         },
       ],
     },
