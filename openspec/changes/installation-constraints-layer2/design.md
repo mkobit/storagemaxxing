@@ -54,9 +54,7 @@ export type WeightOverflowFailure = {
 };
 
 export type ConstraintFailure =
-  | CountConstraintFailure
-  | HeightOverflowFailure
-  | WeightOverflowFailure;
+  CountConstraintFailure | HeightOverflowFailure | WeightOverflowFailure;
 
 export const createWeightOverflowFailure = (
   maxWeightLbs: number,
@@ -88,6 +86,7 @@ z.object({
 ## Package Impacts & Code Verification
 
 Verification pass over current codebase (`packages/`):
+
 - `packages/catalog/src/BinSpec.ts`: `BinSpec` currently lacks `weightLbs`; addition is backwards-compatible (optional field).
 - `packages/assembly/src/PackingResult.ts`: `ConstraintFailure` union handles Discriminated Union pattern on `reason`; callers handling `failures` array narrow on `reason`.
 - `packages/store/src/selectors/layoutSelectors.ts`: `resolveSpace` currently filters `noDrill` in line 142 (`bin.installation?.type !== "drill"`). Extending this check to require `railPresent` for `installation?.type === "rail"` is localized and synchronous.

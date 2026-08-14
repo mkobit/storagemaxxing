@@ -4,6 +4,7 @@
 
 The initial `installation-constraints` change (archived 2026-07-16) introduced the catalog `installation` field on `BinSpec` and single-space `noDrill` filtering.
 Two installation constraint types were deferred from that initial slice:
+
 1. `maxWeightLbs`: per-space weight-budget aggregation across placed bin quantities.
 2. `railPresent`: conditional catalog expansion/unlock logic for wall-mounted/rail-mounted storage bins.
 
