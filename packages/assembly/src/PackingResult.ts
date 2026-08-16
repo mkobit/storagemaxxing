@@ -16,7 +16,14 @@ export type HeightOverflowFailure = {
   readonly spaceHeight: number;
 };
 
-export type ConstraintFailure = CountConstraintFailure | HeightOverflowFailure;
+export type WeightOverflowFailure = {
+  readonly reason: "weightOverflow";
+  readonly maxWeightLbs: number;
+  readonly actualWeightLbs: number;
+};
+
+export type ConstraintFailure =
+  CountConstraintFailure | HeightOverflowFailure | WeightOverflowFailure;
 
 export type PackingMetrics = {
   readonly placedCounts: Readonly<Record<string, number>>;
@@ -51,6 +58,15 @@ export const createHeightOverflowFailure = (
   reason: "heightOverflow",
   binHeight,
   spaceHeight,
+});
+
+export const createWeightOverflowFailure = (
+  maxWeightLbs: number,
+  actualWeightLbs: number,
+): WeightOverflowFailure => ({
+  reason: "weightOverflow",
+  maxWeightLbs,
+  actualWeightLbs,
 });
 
 export const createPackingMetrics = (

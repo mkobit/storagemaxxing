@@ -24,4 +24,5 @@ export interface BinSpec<T extends number = number> {
   readonly tolerance: Dimensions3D<T>;
 
   readonly installation?: InstallationRequirement;
+  readonly weightLbs?: number;
 }

@@ -48,6 +48,14 @@ type AppActions = {
     templateId: SpaceTemplateId,
     drillable: boolean,
   ) => void;
+  readonly setSpaceRailPresent: (
+    templateId: SpaceTemplateId,
+    railPresent: boolean,
+  ) => void;
+  readonly setSpaceMaxWeightLbs: (
+    templateId: SpaceTemplateId,
+    maxWeightLbs: number | undefined,
+  ) => void;
   readonly applySpaceStrategy: (
     spaceId: SpaceInstanceId,
     system: ComparableStorageSystem,

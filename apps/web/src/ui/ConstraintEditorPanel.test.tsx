@@ -36,7 +36,24 @@ const drillBin: CatalogBinSpec = {
   installation: { type: "drill", description: "Requires drilling" },
 };
 
-const ALL_BINS: readonly CatalogBinSpec[] = [...REAL_ALL_BINS, drillBin];
+const railBin: CatalogBinSpec = {
+  id: binId("test-rail-bin"),
+  name: "Test Rail Bin",
+  sku: "TEST-RAIL-1",
+  vendor: "Test Vendor",
+  system: "gridfinity",
+  catalogSource: "builtin",
+  nominal: binDims,
+  actual: binDims,
+  tolerance: zeroTolerance,
+  installation: { type: "rail", description: "Mounts to a rail system" },
+};
+
+const ALL_BINS: readonly CatalogBinSpec[] = [
+  ...REAL_ALL_BINS,
+  drillBin,
+  railBin,
+];
 
 mock.module("@storagemaxxing/catalog/lookup", () => ({
   ALL_BINS,
@@ -290,6 +307,126 @@ describe("ConstraintEditorPanel", () => {
       fireEvent.click(toggle);
 
       expect(screen.getByTestId(`constraint-row-${drillBin.id}`)).toBeTruthy();
+    });
+  });
+
+  describe("rail present toggle", () => {
+    it("calls setSpaceRailPresent with true when toggled on", () => {
+      render(<ConstraintEditorPanel />);
+      const toggle = screen.getByLabelText("Mounting rail present?");
+      expect((toggle as HTMLInputElement).checked).toBe(false);
+
+      fireEvent.click(toggle);
+
+      const updatedTemplate = useStore.getState().templatesById[templateId];
+      expect(
+        updatedTemplate?.installationConstraints.some(
+          (c) => c.type === "railPresent",
+        ),
+      ).toBe(true);
+    });
+
+    it("calls setSpaceRailPresent with false when toggled back off", () => {
+      useStore.setState({
+        templatesById: {
+          [templateId]: {
+            ...createSpaceTemplate(
+              templateId,
+              createDimensions3D(6, 6, 2),
+              "top",
+            ),
+            installationConstraints: [{ type: "railPresent" }],
+          },
+        },
+      });
+
+      render(<ConstraintEditorPanel />);
+      const toggle = screen.getByLabelText("Mounting rail present?");
+      expect((toggle as HTMLInputElement).checked).toBe(true);
+
+      fireEvent.click(toggle);
+
+      const updatedTemplate = useStore.getState().templatesById[templateId];
+      expect(
+        updatedTemplate?.installationConstraints.some(
+          (c) => c.type === "railPresent",
+        ),
+      ).toBe(false);
+    });
+
+    it("greys/disables a rail-requiring bin in Add Bins when railPresent is unset", () => {
+      render(<ConstraintEditorPanel />);
+      const addButton = screen.getByTestId(`add-bin-${railBin.id}`);
+      expect((addButton as HTMLButtonElement).disabled).toBe(true);
+      expect(addButton.title.toLowerCase()).toContain("rail");
+    });
+
+    it("enables a rail-requiring bin in Add Bins when railPresent is set", () => {
+      useStore.setState({
+        templatesById: {
+          [templateId]: {
+            ...createSpaceTemplate(
+              templateId,
+              createDimensions3D(6, 6, 2),
+              "top",
+            ),
+            installationConstraints: [{ type: "railPresent" }],
+          },
+        },
+      });
+
+      render(<ConstraintEditorPanel />);
+      const addButton = screen.getByTestId(`add-bin-${railBin.id}`);
+      expect((addButton as HTMLButtonElement).disabled).toBe(false);
+    });
+  });
+
+  describe("max weight lbs input", () => {
+    it("is empty by default", () => {
+      render(<ConstraintEditorPanel />);
+      const input = screen.getByLabelText("Max weight limit (lbs)");
+      expect((input as HTMLInputElement).value).toBe("");
+    });
+
+    it("calls setSpaceMaxWeightLbs with the numeric value when changed", () => {
+      render(<ConstraintEditorPanel />);
+      const input = screen.getByLabelText("Max weight limit (lbs)");
+
+      fireEvent.change(input, { target: { value: "50" } });
+
+      const updatedTemplate = useStore.getState().templatesById[templateId];
+      const constraint = updatedTemplate?.installationConstraints.find(
+        (c) => c.type === "maxWeightLbs",
+      );
+      expect(constraint?.type === "maxWeightLbs" && constraint.value).toBe(50);
+    });
+
+    it("clears the constraint when the input is emptied", () => {
+      useStore.setState({
+        templatesById: {
+          [templateId]: {
+            ...createSpaceTemplate(
+              templateId,
+              createDimensions3D(6, 6, 2),
+              "top",
+            ),
+            installationConstraints: [{ type: "maxWeightLbs", value: 50 }],
+          },
+        },
+      });
+
+      render(<ConstraintEditorPanel />);
+      const input = screen.getByLabelText("Max weight limit (lbs)");
+      expect((input as HTMLInputElement).value).toBe("50");
+
+      fireEvent.change(input, { target: { value: "" } });
+
+      const updatedTemplate = useStore.getState().templatesById[templateId];
+      expect(
+        updatedTemplate?.installationConstraints.some(
+          (c) => c.type === "maxWeightLbs",
+        ),
+      ).toBe(false);
     });
   });
 });

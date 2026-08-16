@@ -54,10 +54,11 @@ describe("packerUtils", () => {
         NO_HEIGHT_INELIGIBLE,
       );
       expect(failures.length).toBe(1);
-      expect(failures[0].binId).toBe("bin1");
-      if (failures[0].reason !== "heightOverflow") {
-        expect(failures[0].placed).toBe(3);
-        expect(failures[0].required).toBe(5);
+      const failure = failures[0];
+      if (failure.reason === "hardMin" || failure.reason === "softMin") {
+        expect(failure.binId).toBe("bin1");
+        expect(failure.placed).toBe(3);
+        expect(failure.required).toBe(5);
       }
     });
 

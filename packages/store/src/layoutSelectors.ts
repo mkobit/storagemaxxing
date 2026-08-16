@@ -1,6 +1,9 @@
 import { packSpace } from "@storagemaxxing/packer/packer";
 import { toPackInput } from "@storagemaxxing/packer/PackInput";
-import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
+import {
+  PackingResult,
+  createWeightOverflowFailure,
+} from "@storagemaxxing/assembly/PackingResult";
 import { BinSpec as CatalogBinSpec, binId } from "@storagemaxxing/catalog/bin";
 import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
 import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
@@ -17,7 +20,40 @@ export const isBinInstallationAllowed = (
   !(
     bin.installation?.type === "drill" &&
     constraints.some((c) => c.type === "noDrill")
+  ) &&
+  !(
+    bin.installation?.type === "rail" &&
+    !constraints.some((c) => c.type === "railPresent")
   );
+
+const applyWeightOverflow = (
+  result: PackingResult,
+  allowedBins: readonly CatalogBinSpec[],
+  installationConstraints: SpaceTemplate["installationConstraints"],
+): PackingResult => {
+  const maxWeightConstraint = installationConstraints.find(
+    (c) => c.type === "maxWeightLbs",
+  );
+  if (maxWeightConstraint === undefined) return result;
+
+  const actualWeightLbs = allowedBins.reduce(
+    (total, bin) =>
+      total + (bin.weightLbs ?? 0) * (result.metrics.placedCounts[bin.id] ?? 0),
+    0,
+  );
+  if (actualWeightLbs <= maxWeightConstraint.value) return result;
+
+  return {
+    ...result,
+    metrics: {
+      ...result.metrics,
+      failures: [
+        ...result.metrics.failures,
+        createWeightOverflowFailure(maxWeightConstraint.value, actualWeightLbs),
+      ],
+    },
+  };
+};
 
 export type LayoutInputs = Pick<
   AppState,
@@ -85,9 +121,15 @@ const resolveSpace = (
 
   const fittingConstraints = allowed.map((r) => r.constraint);
 
-  const bins = allowed.map((r) => r.bin).map(toPackInput);
+  const allowedBins = allowed.map((r) => r.bin);
+  const bins = allowedBins.map(toPackInput);
 
-  const result = packSpace(template, bins, fittingConstraints);
+  const packed = packSpace(template, bins, fittingConstraints);
+  const result = applyWeightOverflow(
+    packed,
+    allowedBins,
+    template.installationConstraints,
+  );
   return layoutResolutionResolved(result, unresolvedBinIds);
 };
 
