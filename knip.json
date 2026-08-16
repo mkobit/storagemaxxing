@@ -1,7 +1,11 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "ignore": ["apps/web/e2e/fixtures/catalogWithDrillFixture.ts"],
-  "ignoreDependencies": ["modern-web-guidance"],
+  "ignore": [
+    "apps/web/e2e/fixtures/catalogWithDrillFixture.ts"
+  ],
+  "ignoreDependencies": [
+    "modern-web-guidance"
+  ],
   "workspaces": {
     ".": {
       "entry": [
@@ -10,7 +14,8 @@
         ".agents/hooks/openspec-validate-on-edit.ts",
         ".agents/hooks/openspec-canonical-guard-on-edit.ts",
         ".agents/hooks/git-commit-main-guard.ts",
-        ".agents/hooks/bead-close-commit-guard.ts"
+        ".agents/hooks/bead-close-commit-guard.ts",
+        ".claude/hooks/openspec-validate.ts"
       ]
     }
   }
