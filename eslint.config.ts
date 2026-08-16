@@ -63,7 +63,6 @@ export default tseslint.config(
       "apps/web/storybook-static/**",
       "apps/web/.wrangler/**",
       "scripts/**",
-      ".agents/hooks/**",
     ],
   },
   js.configs.recommended,
@@ -163,6 +162,27 @@ export default tseslint.config(
     files: ["apps/web/src/**/*.{ts,tsx}", "apps/web/serve.ts"],
     rules: {
       "functional/no-expression-statements": "off",
+    },
+  },
+  {
+    // CLI entry scripts (top-level await, process.exit, stdout/stderr writes)
+    // are inherently expression-statement-driven, same category as apps/web
+    // above -- but immutability (no-let, immutable-data, readonly) still
+    // applies, unlike scripts/** which stays fully lint-ignored.
+    files: [".agents/hooks/**/*.ts"],
+    ignores: ["**/*.test.ts"],
+    rules: {
+      "functional/no-expression-statements": "off",
+    },
+  },
+  {
+    // Test fixtures need beforeAll-deferred assignment (fixtureRepo/fixtureBin
+    // set up once, torn down in afterAll) -- same idiom no other test file in
+    // the repo needs, since packages/apps tests don't share a spawned git repo
+    // fixture across cases.
+    files: [".agents/hooks/**/*.test.ts"],
+    rules: {
+      "functional/no-let": "off",
     },
   },
   {
