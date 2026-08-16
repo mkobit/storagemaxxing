@@ -63,7 +63,10 @@ beforeAll(async () => {
 
   fixtureBin = mkdtempSync(join(tmpdir(), "bead-guard-bin-"));
   const bdStubPath = join(fixtureBin, "bd");
-  writeFileSync(bdStubPath, '#!/usr/bin/env bash\necho "$BD_STUB_CLOSED_JSON"\n');
+  writeFileSync(
+    bdStubPath,
+    '#!/usr/bin/env bash\necho "$BD_STUB_CLOSED_JSON"\n',
+  );
   chmodSync(bdStubPath, 0o755);
 });
 
@@ -74,7 +77,10 @@ afterAll(() => {
 
 describe("bead-close-commit-guard", () => {
   test("non-bd-close command exits clean without touching bd", async () => {
-    const { exitCode, stderr } = await runGuard("git status", '["should-not-be-read"]');
+    const { exitCode, stderr } = await runGuard(
+      "git status",
+      '["should-not-be-read"]',
+    );
     expect(exitCode).toBe(0);
     expect(stderr).toBe("");
   });
@@ -82,14 +88,20 @@ describe("bead-close-commit-guard", () => {
   test("bd close with a clean working tree exits clean", async () => {
     await run(["git", "checkout", "-q", "main"], fixtureRepo);
     await run(["git", "clean", "-fdq"], fixtureRepo);
-    const { exitCode, stderr } = await runGuard('bd close sm-1 --reason "done"', "[]");
+    const { exitCode, stderr } = await runGuard(
+      'bd close sm-1 --reason "done"',
+      "[]",
+    );
     expect(exitCode).toBe(0);
     expect(stderr).toBe("");
   });
 
   test("bd close with uncommitted changes and no prior closes exits clean", async () => {
     writeFileSync(join(fixtureRepo, "dirty.txt"), "uncommitted\n");
-    const { exitCode, stderr } = await runGuard('bd close sm-2 --reason "done"', "[]");
+    const { exitCode, stderr } = await runGuard(
+      'bd close sm-2 --reason "done"',
+      "[]",
+    );
     expect(exitCode).toBe(0);
     expect(stderr).toBe("");
     rmSync(join(fixtureRepo, "dirty.txt"));
