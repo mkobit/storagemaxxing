@@ -47,6 +47,15 @@
             "command": "bun $CLAUDE_PROJECT_DIR/.agents/hooks/openspec-canonical-guard-on-edit.ts"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "bun \"$CLAUDE_PROJECT_DIR/.claude/hooks/openspec-validate.ts\"",
+            "type": "command"
+          }
+        ],
+        "matcher": "Write|Edit"
       }
     ],
     "PreToolUse": [
