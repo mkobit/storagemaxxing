@@ -45,3 +45,22 @@ describe("BinSpec installation field", () => {
     expect(bin.installation).toBeUndefined();
   });
 });
+
+describe("BinSpec weightLbs field", () => {
+  test("accepts a numeric weightLbs", () => {
+    const bin: BinSpec = {
+      ...baseBin,
+      weightLbs: 2.5,
+    };
+
+    expect(bin.weightLbs).toBe(2.5);
+  });
+
+  test("omitting weightLbs entirely still type-checks and behaves as before", () => {
+    const bin: BinSpec = {
+      ...baseBin,
+    };
+
+    expect(bin.weightLbs).toBeUndefined();
+  });
+});
