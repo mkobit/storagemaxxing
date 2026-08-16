@@ -4,3 +4,9 @@
 # would trip that guard. Remove this entry and reformat once no active
 # change has a pending specs/ delta (sm-hohu).
 openspec/specs/
+
+# Prettier only auto-reads the root .gitignore, not nested ones, so
+# .beads/.gitignore's runtime-file entries (backup/, embeddeddolt/,
+# export-state.json, etc.) aren't picked up automatically. These are bd's
+# own runtime state, never authored content, so ignore the whole directory.
+.beads/
