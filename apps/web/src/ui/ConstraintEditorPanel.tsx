@@ -25,9 +25,7 @@ export const ConstraintEditorPanel: React.FC = () => {
   );
   const setSpaceDrillable = useStore((state) => state.setSpaceDrillable);
   const setSpaceRailPresent = useStore((state) => state.setSpaceRailPresent);
-  const setSpaceMaxWeightLbs = useStore(
-    (state) => state.setSpaceMaxWeightLbs,
-  );
+  const setSpaceMaxWeightLbs = useStore((state) => state.setSpaceMaxWeightLbs);
 
   const [searchQuery, setSearchQuery] = useState("");
 

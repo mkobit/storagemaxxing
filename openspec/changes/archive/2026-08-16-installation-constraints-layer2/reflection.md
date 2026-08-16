@@ -10,7 +10,7 @@
 
 ### 2. OpenSpec Workflow
 
-- **Design Clarity**: The *decisions* in design.md (Layer 1 extension, not a new Layer 2 package; schema shapes for `WeightOverflowFailure` and the two new `InstallationConstraint` variants) were correct and directly usable. The *code-verification claims* were not reliable — see retrospective §2. Net effect: design.md was useful as an architecture brief, not as a citation of current code state.
+- **Design Clarity**: The _decisions_ in design.md (Layer 1 extension, not a new Layer 2 package; schema shapes for `WeightOverflowFailure` and the two new `InstallationConstraint` variants) were correct and directly usable. The _code-verification claims_ were not reliable — see retrospective §2. Net effect: design.md was useful as an architecture brief, not as a citation of current code state.
 - **Task Granularity**: tasks.md's 4-task split (catalog → assembly → store → web) mapped 1:1 onto the package DAG and onto exactly the dependency chain beads needed. No task needed re-scoping.
 - **Artifact Friction**: None beyond the verification-claims issue already covered.
 

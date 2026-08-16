@@ -354,7 +354,9 @@ describe("installation-constraints: maxWeightLbs aggregation via selectPackedLay
     expect(derived.kind).toBe("resolved");
     if (derived.kind !== "resolved") return;
     expect(
-      derived.result.metrics.failures.some((f) => f.reason === "weightOverflow"),
+      derived.result.metrics.failures.some(
+        (f) => f.reason === "weightOverflow",
+      ),
     ).toBe(false);
   });
 
@@ -383,7 +385,9 @@ describe("installation-constraints: maxWeightLbs aggregation via selectPackedLay
     expect(derived.kind).toBe("resolved");
     if (derived.kind !== "resolved") return;
     expect(
-      derived.result.metrics.failures.some((f) => f.reason === "weightOverflow"),
+      derived.result.metrics.failures.some(
+        (f) => f.reason === "weightOverflow",
+      ),
     ).toBe(false);
   });
 });

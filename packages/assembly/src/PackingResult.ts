@@ -23,9 +23,7 @@ export type WeightOverflowFailure = {
 };
 
 export type ConstraintFailure =
-  | CountConstraintFailure
-  | HeightOverflowFailure
-  | WeightOverflowFailure;
+  CountConstraintFailure | HeightOverflowFailure | WeightOverflowFailure;
 
 export type PackingMetrics = {
   readonly placedCounts: Readonly<Record<string, number>>;

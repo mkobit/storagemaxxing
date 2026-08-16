@@ -38,8 +38,7 @@ const applyWeightOverflow = (
 
   const actualWeightLbs = allowedBins.reduce(
     (total, bin) =>
-      total +
-      (bin.weightLbs ?? 0) * (result.metrics.placedCounts[bin.id] ?? 0),
+      total + (bin.weightLbs ?? 0) * (result.metrics.placedCounts[bin.id] ?? 0),
     0,
   );
   if (actualWeightLbs <= maxWeightConstraint.value) return result;
