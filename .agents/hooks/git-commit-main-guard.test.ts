@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 // Sanity check: bun run typecheck (tsc --noEmit, .agents/hooks is in root tsconfig.json include)
-// and: bun run lint (eslint ignores .agents/hooks/**, matching the scripts/** precedent)
+// and: bun run lint
 
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
 import { mkdtempSync, rmSync } from "node:fs";
@@ -18,7 +18,7 @@ async function run(cmd: readonly string[], cwd: string): Promise<void> {
 
 async function runGuard(
   command: string,
-): Promise<{ exitCode: number; stderr: string }> {
+): Promise<{ readonly exitCode: number; readonly stderr: string }> {
   const proc = Bun.spawn(["bun", HOOK_PATH], {
     cwd: fixtureRepo,
     env: { ...process.env, CLAUDE_PROJECT_DIR: fixtureRepo },

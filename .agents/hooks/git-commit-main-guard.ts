@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 // Sanity check: bun run typecheck (tsc --noEmit, .agents/hooks is in root tsconfig.json include)
-// and: bun run lint (eslint ignores .agents/hooks/**, matching the scripts/** precedent)
+// and: bun run lint
 
 import { readHookInput } from "./claude-hook";
 

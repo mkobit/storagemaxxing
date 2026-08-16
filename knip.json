@@ -9,7 +9,8 @@
         ".agents/hooks/typecheck-on-edit.ts",
         ".agents/hooks/openspec-validate-on-edit.ts",
         ".agents/hooks/openspec-canonical-guard-on-edit.ts",
-        ".agents/hooks/git-commit-main-guard.ts"
+        ".agents/hooks/git-commit-main-guard.ts",
+        ".agents/hooks/bead-close-commit-guard.ts"
       ]
     }
   }
