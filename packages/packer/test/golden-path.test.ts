@@ -109,7 +109,11 @@ describe("storage-layout: Golden-Path Packing", () => {
     expect(result.validity).toBe("invalid");
     expect(result.metrics.failures.length).toBeGreaterThan(0);
 
-    const failedIds = new Set(result.metrics.failures.map((f) => f.binId));
+    const failedIds = new Set(
+      result.metrics.failures
+        .filter((f) => f.reason !== "weightOverflow")
+        .map((f) => f.binId),
+    );
     starterBins.forEach((bin) => {
       const placed = result.metrics.placedCounts[bin.id] ?? 0;
       if (placed < 1) {
@@ -117,7 +121,7 @@ describe("storage-layout: Golden-Path Packing", () => {
       }
     });
     result.metrics.failures.forEach((failure) => {
-      if (failure.reason !== "heightOverflow") {
+      if (failure.reason === "hardMin" || failure.reason === "softMin") {
         expect(failure.placed).toBeLessThan(failure.required);
       }
     });

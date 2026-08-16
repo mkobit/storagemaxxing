@@ -36,6 +36,7 @@ SpaceTemplateIdSchema
 SpaceTemplateSchema
 SpaceTypeIdSchema
 ValidityState
+WeightOverflowFailure
 computeAggregateBom
 computeBom
 createConstraintFailure
@@ -45,6 +46,7 @@ createPackingResult
 createPlacedBin
 createSpaceConstraint
 createSpaceTemplate
+createWeightOverflowFailure
 ```
 
 ## Import Rules

@@ -2,6 +2,7 @@ import { describe, it, expect } from "bun:test";
 import {
   createConstraintFailure,
   createHeightOverflowFailure,
+  createWeightOverflowFailure,
 } from "./PackingResult";
 
 describe("ConstraintFailure factories", () => {
@@ -22,6 +23,15 @@ describe("ConstraintFailure factories", () => {
       reason: "heightOverflow",
       binHeight: 3,
       spaceHeight: 2,
+    });
+  });
+
+  it("createWeightOverflowFailure produces a weightOverflow failure with maxWeightLbs/actualWeightLbs", () => {
+    const failure = createWeightOverflowFailure(50, 62.5);
+    expect(failure).toEqual({
+      reason: "weightOverflow",
+      maxWeightLbs: 50,
+      actualWeightLbs: 62.5,
     });
   });
 });
