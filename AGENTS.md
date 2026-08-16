@@ -26,3 +26,5 @@ This file serves as the "Prime Directive" for all AI agents (Gemini, Claude, Jul
 @agent_docs/product-strategy.md
 
 @agent_docs/tooling-patterns.md
+
+- Note: `bun exec openspec validate --all` runs as a PR check on changes under `openspec/**`.
