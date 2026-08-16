@@ -112,3 +112,53 @@ export const setTemplateDrillableInState = (
     },
   };
 };
+
+export const setTemplateRailPresentInState = (
+  state: AppState,
+  templateId: SpaceTemplateId,
+  railPresent: boolean,
+): Pick<AppState, "templatesById"> => {
+  const template = state.templatesById[templateId];
+  if (template === undefined) return { templatesById: state.templatesById };
+
+  const withoutRailPresent = template.installationConstraints.filter(
+    (c) => c.type !== "railPresent",
+  );
+  const installationConstraints = railPresent
+    ? [...withoutRailPresent, { type: "railPresent" as const }]
+    : withoutRailPresent;
+
+  return {
+    templatesById: {
+      ...state.templatesById,
+      [templateId]: { ...template, installationConstraints },
+    },
+  };
+};
+
+export const setTemplateMaxWeightLbsInState = (
+  state: AppState,
+  templateId: SpaceTemplateId,
+  maxWeightLbs: number | undefined,
+): Pick<AppState, "templatesById"> => {
+  const template = state.templatesById[templateId];
+  if (template === undefined) return { templatesById: state.templatesById };
+
+  const withoutMaxWeightLbs = template.installationConstraints.filter(
+    (c) => c.type !== "maxWeightLbs",
+  );
+  const installationConstraints =
+    maxWeightLbs !== undefined && maxWeightLbs > 0
+      ? [
+          ...withoutMaxWeightLbs,
+          { type: "maxWeightLbs" as const, value: maxWeightLbs },
+        ]
+      : withoutMaxWeightLbs;
+
+  return {
+    templatesById: {
+      ...state.templatesById,
+      [templateId]: { ...template, installationConstraints },
+    },
+  };
+};

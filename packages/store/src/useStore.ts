@@ -6,6 +6,8 @@ import {
   updateConstraintInState,
   removeConstraintFromState,
   setTemplateDrillableInState,
+  setTemplateRailPresentInState,
+  setTemplateMaxWeightLbsInState,
   applyStrategyInState,
 } from "./StoreHelpers";
 import { ALL_BINS } from "@storagemaxxing/catalog/lookup";
@@ -62,6 +64,14 @@ export const useStore = create<StoreState>()(
       setSpaceDrillable: (templateId, drillable) =>
         set((state) =>
           setTemplateDrillableInState(state, templateId, drillable),
+        ),
+      setSpaceRailPresent: (templateId, railPresent) =>
+        set((state) =>
+          setTemplateRailPresentInState(state, templateId, railPresent),
+        ),
+      setSpaceMaxWeightLbs: (templateId, maxWeightLbs) =>
+        set((state) =>
+          setTemplateMaxWeightLbsInState(state, templateId, maxWeightLbs),
         ),
       applySpaceStrategy: (spaceId, system) =>
         set((state) => applyStrategyInState(state, spaceId, system, ALL_BINS)),

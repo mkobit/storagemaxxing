@@ -25,6 +25,8 @@ selectPackedLayout
 selectPackingResultsBySpace
 serializeSketch
 setTemplateDrillableInState
+setTemplateMaxWeightLbsInState
+setTemplateRailPresentInState
 updateConstraintInState
 removeConstraintFromState
 useStore

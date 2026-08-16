@@ -24,6 +24,10 @@ export const ConstraintEditorPanel: React.FC = () => {
     (state) => state.removeConstraintForSpace,
   );
   const setSpaceDrillable = useStore((state) => state.setSpaceDrillable);
+  const setSpaceRailPresent = useStore((state) => state.setSpaceRailPresent);
+  const setSpaceMaxWeightLbs = useStore(
+    (state) => state.setSpaceMaxWeightLbs,
+  );
 
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -42,6 +46,13 @@ export const ConstraintEditorPanel: React.FC = () => {
   const activeTemplate = templatesById[activeSpace.templateId];
   const installationConstraints = activeTemplate?.installationConstraints ?? [];
   const drillable = !installationConstraints.some((c) => c.type === "noDrill");
+  const railPresent = installationConstraints.some(
+    (c) => c.type === "railPresent",
+  );
+  const maxWeightConstraint = installationConstraints.find(
+    (c) => c.type === "maxWeightLbs",
+  );
+  const maxWeightLbsValue = maxWeightConstraint?.value;
 
   const detectedSystem = (() => {
     if (activeSpace.system) return activeSpace.system;
@@ -92,6 +103,18 @@ export const ConstraintEditorPanel: React.FC = () => {
     setSpaceDrillable(activeSpace.templateId, nextDrillable);
   };
 
+  const handleRailPresentChange = (nextRailPresent: boolean) => {
+    setSpaceRailPresent(activeSpace.templateId, nextRailPresent);
+  };
+
+  const handleMaxWeightLbsChange = (rawValue: string) => {
+    const parsed = Number(rawValue);
+    setSpaceMaxWeightLbs(
+      activeSpace.templateId,
+      rawValue === "" || Number.isNaN(parsed) ? undefined : parsed,
+    );
+  };
+
   return (
     <div
       data-testid="constraint-editor-panel"
@@ -106,6 +129,28 @@ export const ConstraintEditorPanel: React.FC = () => {
             onChange={(e) => handleDrillableChange(e.target.checked)}
           />
           Can I drill into this space?
+        </label>
+
+        <label className="flex items-center gap-2 text-sm text-text-primary">
+          <input
+            type="checkbox"
+            data-testid="rail-present-toggle"
+            checked={railPresent}
+            onChange={(e) => handleRailPresentChange(e.target.checked)}
+          />
+          Mounting rail present?
+        </label>
+
+        <label className="flex flex-col gap-1 text-sm text-text-primary">
+          Max weight limit (lbs)
+          <input
+            type="number"
+            min={0}
+            data-testid="max-weight-lbs-input"
+            value={maxWeightLbsValue ?? ""}
+            onChange={(e) => handleMaxWeightLbsChange(e.target.value)}
+            className="rounded-sm border border-border-default p-2 text-sm"
+          />
         </label>
       </div>
 
@@ -167,7 +212,9 @@ export const ConstraintEditorPanel: React.FC = () => {
               );
               const disabled = isAdded || !installationAllowed;
               const title = !installationAllowed
-                ? "requires drilling — not allowed for this space"
+                ? bin.installation?.type === "rail"
+                  ? "requires a mounting rail — not allowed for this space"
+                  : "requires drilling — not allowed for this space"
                 : bin.name;
               return (
                 <div
