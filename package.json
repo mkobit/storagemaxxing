@@ -17,6 +17,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --max-warnings 0 --cache --cache-location .eslintcache --cache-strategy content",
+    "openspec:validate": "openspec validate --all",
     "screenshot": "bun run --filter @storagemaxxing/web screenshot",
     "test": "bun test packages ./.agents/hooks && bun run --filter @storagemaxxing/web test",
     "typecheck": "tsc --noEmit"
