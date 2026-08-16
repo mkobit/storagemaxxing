@@ -88,6 +88,7 @@ bd automatically syncs via Dolt:
 - ✅ Read plain bd output directly in interactive sessions; never pipe bd output into shell or script interpreters to extract fields
 - ✅ Reserve `--json` for unattended automation (CI, hooks) that parses output programmatically
 - ✅ Link discovered work with `discovered-from` dependencies
+- ✅ Verify dependency direction with `bd dep tree <id>` immediately after running `bd dep add` or `bd create --deps`
 - ✅ Check `bd ready` before asking "what should I work on?"
 - ❌ Do NOT create markdown TODO lists
 - ❌ Do NOT use external issue trackers
