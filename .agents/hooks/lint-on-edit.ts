@@ -8,7 +8,8 @@ const EDITABLE_FILE_PATTERN = /\.(tsx?|jsx?|mts|cts|jsonc?)$/;
 
 const input = await readHookInput();
 const path = input.tool_input?.file_path ?? "";
-const projectRoot = process.env.CLAUDE_PROJECT_DIR ?? ".";
+const projectRoot =
+  input.workspaceRoot ?? process.env.CLAUDE_PROJECT_DIR ?? ".";
 
 if (EDITABLE_FILE_PATTERN.test(path)) {
   const proc = Bun.spawn(["bunx", "eslint", "--fix", path], {

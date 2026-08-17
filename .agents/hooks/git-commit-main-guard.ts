@@ -27,7 +27,8 @@ if (BRANCH_CREATE_PATTERN.test(precedingCommand)) {
   process.exit(0);
 }
 
-const projectRoot = process.env.CLAUDE_PROJECT_DIR ?? ".";
+const projectRoot =
+  input.workspaceRoot ?? process.env.CLAUDE_PROJECT_DIR ?? ".";
 const proc = Bun.spawn(["git", "rev-parse", "--abbrev-ref", "HEAD"], {
   cwd: projectRoot,
   stdout: "pipe",

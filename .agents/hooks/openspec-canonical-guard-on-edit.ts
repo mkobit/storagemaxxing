@@ -10,7 +10,8 @@ const CANONICAL_SPEC_PATTERN = /(?:^|\/)openspec\/specs\/([^/]+)\/spec\.md$/;
 
 const input = await readHookInput();
 const path = input.tool_input?.file_path ?? "";
-const projectRoot = process.env.CLAUDE_PROJECT_DIR ?? ".";
+const projectRoot =
+  input.workspaceRoot ?? process.env.CLAUDE_PROJECT_DIR ?? ".";
 
 const match = path.match(CANONICAL_SPEC_PATTERN);
 if (!match) {

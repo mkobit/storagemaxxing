@@ -20,7 +20,8 @@ if (!BD_CLOSE_PATTERN.test(unquotedCommand)) {
   process.exit(0);
 }
 
-const projectRoot = process.env.CLAUDE_PROJECT_DIR ?? ".";
+const projectRoot =
+  input.workspaceRoot ?? process.env.CLAUDE_PROJECT_DIR ?? ".";
 
 async function run(
   cmd: readonly string[],
