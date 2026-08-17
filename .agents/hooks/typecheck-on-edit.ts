@@ -9,7 +9,8 @@ const PACKAGE_SCOPE_PATTERN = /(?:^|\/)(packages|apps)\/([^/]+)\//;
 
 const input = await readHookInput();
 const path = input.tool_input?.file_path ?? "";
-const projectRoot = process.env.CLAUDE_PROJECT_DIR ?? ".";
+const projectRoot =
+  input.workspaceRoot ?? process.env.CLAUDE_PROJECT_DIR ?? ".";
 
 if (!TYPECHECKED_FILE_PATTERN.test(path)) {
   process.exit(0);

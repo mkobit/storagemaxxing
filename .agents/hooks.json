@@ -1,0 +1,42 @@
+{
+  "project-hooks": {
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "bun .agents/hooks/lint-on-edit.ts",
+            "type": "command"
+          },
+          {
+            "command": "bun .agents/hooks/typecheck-on-edit.ts",
+            "type": "command"
+          },
+          {
+            "command": "bun .agents/hooks/openspec-validate-on-edit.ts",
+            "type": "command"
+          },
+          {
+            "command": "bun .agents/hooks/openspec-canonical-guard-on-edit.ts",
+            "type": "command"
+          }
+        ],
+        "matcher": "replace_file_content|write_to_file|multi_replace_file_content"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "bun .agents/hooks/git-commit-main-guard.ts",
+            "type": "command"
+          },
+          {
+            "command": "bun .agents/hooks/bead-close-commit-guard.ts",
+            "type": "command"
+          }
+        ],
+        "matcher": "run_command"
+      }
+    ]
+  }
+}
