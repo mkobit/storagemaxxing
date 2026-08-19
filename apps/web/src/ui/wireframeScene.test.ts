@@ -24,6 +24,7 @@ const testBin = (id: string, w: number, l: number, h: number): BinSpec => ({
   sku: id,
   vendor: "test",
   catalogSource: "user_defined",
+  kind: "bin",
   nominal: createDimensions3D(w, l, h),
   actual: createDimensions3D(w, l, h),
   tolerance: createDimensions3D(0, 0, 0),
