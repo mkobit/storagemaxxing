@@ -6,6 +6,7 @@ import { createSpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
 import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
+import { binId } from "@storagemaxxing/catalog/bin";
 import { GOLDEN_PATH_STARTER_BIN_IDS } from "@storagemaxxing/catalog/goldenPath";
 
 const EPSILON = 1e-3;
@@ -147,6 +148,57 @@ describe("storage-layout: Golden-Path Packing", () => {
       return footprint.w > 2 || footprint.l > 2;
     })!;
     expect(result.placedBins.some((p) => p.binId === oversized.id)).toBe(false);
+  });
+
+  test("packs an accessory entry into a bounded space without overlap", () => {
+    const space = createSpaceTemplate(
+      "golden-path-accessory-space",
+      createDimensions3D(12, 12, 2),
+      "top",
+    );
+
+    const accessorySpec = findBinById(ALL_BINS, binId("gridfinity-hook-1x1"))!;
+    expect(accessorySpec.kind).toBe("accessory");
+
+    const accessoryInput = createPackInput({
+      id: accessorySpec.id,
+      w: accessorySpec.actual.w,
+      l: accessorySpec.actual.l,
+      h: accessorySpec.actual.h,
+      toleranceW: accessorySpec.tolerance.w,
+      toleranceL: accessorySpec.tolerance.l,
+      toleranceH: accessorySpec.tolerance.h,
+    });
+
+    // toPackInput/packSpace read only id/actual/tolerance -- kind is dropped,
+    // so the accessory packs via the exact same code path as a bin.
+    const inputs = [...starterBins, accessoryInput];
+    const constraints = [
+      ...exactlyOneEach,
+      createSpaceConstraint(accessoryInput.id, 1, 0, 1),
+    ];
+
+    const result = packSpace(space, inputs, constraints);
+
+    expect(result.validity).toBe("valid");
+    expect(result.metrics.placedCounts[accessoryInput.id]).toBe(1);
+
+    const rects: readonly Rect[] = result.placedBins.map((placed) => {
+      const spec = inputs.find((b) => b.id === placed.binId)!;
+      const footprint = getEffectiveFootprint(spec);
+      return {
+        x: placed.origin[0],
+        z: placed.origin[2],
+        w: footprint.w,
+        l: footprint.l,
+      };
+    });
+
+    rects.forEach((a, i) => {
+      rects.slice(i + 1).forEach((b) => {
+        expect(overlaps(a, b)).toBe(false);
+      });
+    });
   });
 
   test("a bin taller than the space is excluded and reported as a heightOverflow failure", () => {
