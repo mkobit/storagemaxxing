@@ -5,6 +5,7 @@ Gridfinity (`packages/catalog/src/gridfinity.ts`) and OpenGrid (`packages/catalo
 The `GridAccessory` name from `docs/2026-04-13-PRD.md` was never implemented — `rg -n "GridAccessory" packages/` returns zero hits.
 
 Downstream, three packages consume `BinSpec`:
+
 - `packages/packer/src/PackInput.ts:45-54` (`toPackInput`) reads only `id`, `w`/`l`/`h` (from `actual`), and `toleranceW`/`L`/`H` — it does not read `system`, `kind`, or any other field, and discards everything else. Confirmed by reading the function body directly (not inferred).
 - `packages/assembly/src/bom.ts:79-112` (`computeBom`) and `:114-148` (`computeAggregateBom`) key everything off `binId` counts and call `lookupBin(binId)` to fetch price — they never branch on any bin field other than price/`priceApproximate`.
 - `apps/web/src/ui/ConstraintEditorPanel.tsx:76-98` filters `ALL_BINS` by `bin.system === detectedSystem` into a single flat list (`compatibleBins`/`filteredBins`), then `handleAddBinConstraint` calls `createSpaceConstraint(id, 1, 0)` (`packages/assembly/src/SpaceConstraint.ts:72`) for whichever `id` was clicked — the handler itself is item-shape-agnostic.
@@ -35,12 +36,7 @@ This means the entire packing/BOM pipeline is generic over "anything with an id,
 ```ts
 // packages/catalog/src/bin.ts
 export type AccessoryType =
-  | "hook"
-  | "label"
-  | "divider"
-  | "blank"
-  | "cable_clip"
-  | "custom";
+  "hook" | "label" | "divider" | "blank" | "cable_clip" | "custom";
 
 export interface BinSpec<T extends number = number> {
   readonly id: BinId;
