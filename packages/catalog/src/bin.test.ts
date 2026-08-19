@@ -12,6 +12,7 @@ const baseBin = {
   sku: "TEST-1",
   vendor: "Test Vendor",
   catalogSource: "builtin",
+  kind: "bin",
   nominal: dims,
   actual: dims,
   tolerance: createDimensions3D(inches(0), inches(0), inches(0)),
