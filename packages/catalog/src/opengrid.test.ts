@@ -2,7 +2,21 @@ import { expect, test } from "bun:test";
 import { OPENGRID_CATALOG } from "./opengrid";
 
 test("OPENGRID_CATALOG generates correct number of bins", () => {
-  expect(OPENGRID_CATALOG.length).toBe(36);
+  const bins = OPENGRID_CATALOG.filter((entry) => entry.kind === "bin");
+  expect(bins.length).toBe(36);
+});
+
+test("includes hook and accessory bin entries", () => {
+  const accessories = OPENGRID_CATALOG.filter(
+    (entry) => entry.kind === "accessory",
+  );
+
+  expect(
+    accessories.filter((entry) => entry.accessoryType === "hook").length,
+  ).toBeGreaterThan(0);
+  expect(
+    accessories.filter((entry) => entry.accessoryType === "custom").length,
+  ).toBeGreaterThan(0);
 });
 
 test("openGrid 2x2x1 bin has the correct dimensions", () => {
