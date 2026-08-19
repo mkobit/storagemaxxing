@@ -90,6 +90,7 @@ bd automatically syncs via Dolt:
 - ✅ Link discovered work with `discovered-from` dependencies
 - ✅ Verify dependency direction with `bd dep tree <id>` immediately after running `bd dep add` or `bd create --deps`
 - ✅ Check `bd ready` before asking "what should I work on?"
+- ✅ Before filing a new `human`-labeled bead, check open `human`-labeled beads sharing the same `domain:`/`scope:` labels first (`bd query "label=human AND label=domain:<x>"`) — a single dashboard/settings action can resolve more than one, and bundling them saves the human a repeat trip. See sm-zopp for the incident that prompted this rule; kept as a manual filing-time check rather than an automated `bd lint` rule since `bd`'s lint rule set isn't user-extensible.
 - ❌ Do NOT create markdown TODO lists
 - ❌ Do NOT use external issue trackers
 - ❌ Do NOT duplicate tracking systems
