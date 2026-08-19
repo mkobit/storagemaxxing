@@ -70,8 +70,8 @@ describe("CreateSpaceFormPanel", () => {
     expect(activeSpaceId).toEqual(spaces[0].id);
     const template = templatesById[spaces[0].templateId];
     expect(template.w).toBe(5);
-    expect(template.l).toBe(4);
-    expect(template.h).toBe(2);
+    expect(template.l).toBe(2);
+    expect(template.h).toBe(4);
     expect(spaces[0].constraints).toEqual({});
   });
 

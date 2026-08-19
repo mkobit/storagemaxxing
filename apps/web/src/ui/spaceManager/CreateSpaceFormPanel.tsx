@@ -41,8 +41,8 @@ export const CreateSpaceFormPanel: React.FC = () => {
       crypto.randomUUID(),
       createDimensions3D(
         parsed.data.columns,
-        parsed.data.rows,
         parsed.data.depth,
+        parsed.data.rows,
       ),
       "top",
     );
