@@ -37,6 +37,7 @@ export const GRIDFINITY_CATALOG: ReadonlyArray<BinSpec> = FOOTPRINTS.flatMap(
         vendor: "Gridfinity",
         system: "gridfinity",
         catalogSource: "builtin",
+        kind: "bin",
         price: 0,
         nominal: {
           w: inches(nominalW / 25.4),

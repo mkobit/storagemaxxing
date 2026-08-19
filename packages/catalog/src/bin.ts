@@ -9,6 +9,9 @@ export type BinId = z.infer<typeof BinIdSchema>;
 
 export const binId = (id: string): BinId => BinIdSchema.parse(id);
 
+export type AccessoryType =
+  "hook" | "label" | "divider" | "blank" | "cable_clip" | "custom";
+
 export interface BinSpec<T extends number = number> {
   readonly id: BinId;
   readonly name: string;
@@ -18,6 +21,9 @@ export interface BinSpec<T extends number = number> {
   readonly catalogSource: CatalogSource;
   readonly price?: number;
   readonly priceApproximate?: boolean;
+
+  readonly kind: "bin" | "accessory";
+  readonly accessoryType?: AccessoryType;
 
   readonly nominal: Dimensions3D<T>;
   readonly actual: Dimensions3D<T>;

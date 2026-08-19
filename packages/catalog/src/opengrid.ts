@@ -47,6 +47,7 @@ export const OPENGRID_CATALOG: ReadonlyArray<BinSpec> = FOOTPRINTS.flatMap(
         vendor: "openGrid",
         system: "opengrid",
         catalogSource: "builtin",
+        kind: "bin",
         price: 0,
         nominal: {
           w: inches(nominalW / 25.4),
