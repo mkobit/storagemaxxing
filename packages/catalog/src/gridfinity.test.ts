@@ -2,7 +2,21 @@ import { expect, test } from "bun:test";
 import { GRIDFINITY_CATALOG } from "./gridfinity";
 
 test("GRIDFINITY_CATALOG generates correct number of bins", () => {
-  expect(GRIDFINITY_CATALOG.length).toBe(36);
+  const bins = GRIDFINITY_CATALOG.filter((entry) => entry.kind === "bin");
+  expect(bins.length).toBe(36);
+});
+
+test("includes hook, label, divider, and blank accessories", () => {
+  const accessories = GRIDFINITY_CATALOG.filter(
+    (entry) => entry.kind === "accessory",
+  );
+
+  (["hook", "label", "divider", "blank"] as const).forEach((accessoryType) => {
+    const matches = accessories.filter(
+      (entry) => entry.accessoryType === accessoryType,
+    );
+    expect(matches.length).toBeGreaterThan(0);
+  });
 });
 
 test("Gridfinity 2x2x1 bin has the correct dimensions", () => {
