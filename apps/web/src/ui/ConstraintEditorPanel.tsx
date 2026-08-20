@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useStore } from "@storagemaxxing/store/useStore";
 import { ConstraintRow } from "./constraints/ConstraintRow";
 import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
-import { binId } from "@storagemaxxing/catalog/bin";
+import { binId, type BinSpec } from "@storagemaxxing/catalog/bin";
 import { BinSpecIdSchema } from "@storagemaxxing/assembly/BaseTypes";
 import {
   SpaceConstraint,
@@ -73,12 +73,19 @@ export const ConstraintEditorPanel: React.FC = () => {
     return "gridfinity";
   })();
 
-  const compatibleBins = ALL_BINS.filter(
-    (bin) => bin.system === detectedSystem,
+  const compatibleItems = ALL_BINS.filter(
+    (item) => item.system === detectedSystem,
+  );
+  const compatibleBins = compatibleItems.filter((item) => item.kind === "bin");
+  const compatibleAccessories = compatibleItems.filter(
+    (item) => item.kind === "accessory",
   );
 
   const filteredBins = compatibleBins.filter((bin) =>
     bin.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+  const filteredAccessories = compatibleAccessories.filter((accessory) =>
+    accessory.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const handleConstraintChange = (newConstraint: SpaceConstraint) => {
@@ -112,6 +119,56 @@ export const ConstraintEditorPanel: React.FC = () => {
       rawValue === "" || Number.isNaN(parsed) ? undefined : parsed,
     );
   };
+
+  const renderCatalogItem = (item: BinSpec, testIdPrefix: string) => {
+    const binSpecId = BinSpecIdSchema.parse(item.id);
+    const isAdded = activeSpace.constraints[binSpecId] !== undefined;
+    const installationAllowed = isBinInstallationAllowed(
+      item,
+      installationConstraints,
+    );
+    const disabled = isAdded || !installationAllowed;
+    const title = !installationAllowed
+      ? item.installation?.type === "rail"
+        ? "requires a mounting rail — not allowed for this space"
+        : "requires drilling — not allowed for this space"
+      : item.name;
+    return (
+      <div
+        key={item.id}
+        className={`flex items-center justify-between border-b border-border-subtle py-1 text-sm ${
+          !installationAllowed ? "opacity-50" : ""
+        }`}
+      >
+        <span title={title} className="max-w-40 truncate">
+          {item.name}
+        </span>
+        <button
+          onClick={() => handleAddBinConstraint(item.id)}
+          disabled={disabled}
+          title={title}
+          aria-label={isAdded ? `${item.name} added` : `Add ${item.name}`}
+          data-testid={`${testIdPrefix}-${item.id}`}
+          className="cursor-pointer rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-xs text-text-primary disabled:cursor-default disabled:bg-brand-primary/10 disabled:text-brand-primary"
+        >
+          {isAdded ? "Added" : "+ Add"}
+        </button>
+      </div>
+    );
+  };
+
+  const renderCatalogSection = (
+    items: ReadonlyArray<BinSpec>,
+    testIdPrefix: string,
+    emptyMessage: string,
+  ) =>
+    items.length === 0 ? (
+      <div className="py-4 text-center text-sm text-text-muted">
+        {emptyMessage}
+      </div>
+    ) : (
+      items.map((item) => renderCatalogItem(item, testIdPrefix))
+    );
 
   return (
     <div
@@ -196,46 +253,23 @@ export const ConstraintEditorPanel: React.FC = () => {
           className="rounded-sm border border-border-default p-2 text-sm"
         />
         <div className="flex max-h-75 flex-col gap-2 overflow-y-auto rounded-sm border border-border-subtle bg-surface-raised p-2">
-          {filteredBins.length === 0 ? (
-            <div className="py-4 text-center text-sm text-text-muted">
-              No matching bins found
-            </div>
-          ) : (
-            filteredBins.map((bin) => {
-              const binSpecId = BinSpecIdSchema.parse(bin.id);
-              const isAdded = activeSpace.constraints[binSpecId] !== undefined;
-              const installationAllowed = isBinInstallationAllowed(
-                bin,
-                installationConstraints,
-              );
-              const disabled = isAdded || !installationAllowed;
-              const title = !installationAllowed
-                ? bin.installation?.type === "rail"
-                  ? "requires a mounting rail — not allowed for this space"
-                  : "requires drilling — not allowed for this space"
-                : bin.name;
-              return (
-                <div
-                  key={bin.id}
-                  className={`flex items-center justify-between border-b border-border-subtle py-1 text-sm ${
-                    !installationAllowed ? "opacity-50" : ""
-                  }`}
-                >
-                  <span title={title} className="max-w-40 truncate">
-                    {bin.name}
-                  </span>
-                  <button
-                    onClick={() => handleAddBinConstraint(bin.id)}
-                    disabled={disabled}
-                    title={title}
-                    data-testid={`add-bin-${bin.id}`}
-                    className="cursor-pointer rounded-sm border border-border-default bg-surface-raised px-2 py-1 text-xs text-text-primary disabled:cursor-default disabled:bg-brand-primary/10 disabled:text-brand-primary"
-                  >
-                    {isAdded ? "Added" : "+ Add"}
-                  </button>
-                </div>
-              );
-            })
+          {renderCatalogSection(
+            filteredBins,
+            "add-bin",
+            "No matching bins found",
+          )}
+        </div>
+      </div>
+
+      <hr className="m-0 border-border-default" />
+
+      <div className="flex flex-col gap-3">
+        <h3 className="text-text-primary">Add Accessories</h3>
+        <div className="flex max-h-75 flex-col gap-2 overflow-y-auto rounded-sm border border-border-subtle bg-surface-raised p-2">
+          {renderCatalogSection(
+            filteredAccessories,
+            "add-accessory",
+            "No matching accessories found",
           )}
         </div>
       </div>

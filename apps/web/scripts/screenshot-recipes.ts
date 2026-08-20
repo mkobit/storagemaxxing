@@ -17,6 +17,18 @@ export const SCREENSHOT_RECIPES: Readonly<
     await page.getByTestId("add-bin-schaller-1x1x2").click();
     await page.waitForSelector('[data-testid="constraint-row-schaller-1x1x2"]');
   },
+  "accessory-constraint": async (page) => {
+    await page.getByTestId("create-space-name").fill("Accessory recipe space");
+    await page.getByTestId("create-space-system").selectOption("gridfinity");
+    await page.getByTestId("create-space-columns").fill("6");
+    await page.getByTestId("create-space-rows").fill("6");
+    await page.getByTestId("create-space-depth").fill("2");
+    await page.getByTestId("create-space-submit").click();
+    await page.getByTestId("add-accessory-gridfinity-hook-1x1").click();
+    await page.waitForSelector(
+      '[data-testid="constraint-row-gridfinity-hook-1x1"]',
+    );
+  },
   "options-mode": async (page) => {
     await createGoldenPathSpace(page);
     await page.getByText("Options", { exact: true }).click();
