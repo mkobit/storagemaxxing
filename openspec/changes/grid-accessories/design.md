@@ -31,14 +31,14 @@ This means the entire packing/BOM pipeline is generic over "anything with an id,
 
 ## Decisions
 
-### 1. `BinSpec` gains a discriminated `kind` field, not a separate `AccessorySpec` type
+### 1. `BinSpec` is a discriminated union, not a separate accessory collection type
 
 ```ts
 // packages/catalog/src/bin.ts
 export type AccessoryType =
   "hook" | "label" | "divider" | "blank" | "cable_clip" | "custom";
 
-export interface BinSpec<T extends number = number> {
+interface BaseBinSpec<T extends number = number> {
   readonly id: BinId;
   readonly name: string;
   readonly sku: string;
@@ -48,9 +48,6 @@ export interface BinSpec<T extends number = number> {
   readonly price?: number;
   readonly priceApproximate?: boolean;
 
-  readonly kind: "bin" | "accessory"; // NEW
-  readonly accessoryType?: AccessoryType; // NEW, required in practice when kind === "accessory"
-
   readonly nominal: Dimensions3D<T>;
   readonly actual: Dimensions3D<T>;
   readonly tolerance: Dimensions3D<T>;
@@ -58,13 +55,27 @@ export interface BinSpec<T extends number = number> {
   readonly installation?: InstallationRequirement;
   readonly weightLbs?: number;
 }
+
+interface StandardBinSpec<T extends number = number> extends BaseBinSpec<T> {
+  readonly kind: "bin";
+  readonly accessoryType?: never;
+}
+
+interface AccessoryBinSpec<T extends number = number> extends BaseBinSpec<T> {
+  readonly kind: "accessory";
+  readonly accessoryType: AccessoryType;
+}
+
+export type BinSpec<T extends number = number> =
+  StandardBinSpec<T> | AccessoryBinSpec<T>;
 ```
 
-One shared type (not `BinSpec | AccessorySpec`) keeps every downstream consumer (`ALL_BINS: ReadonlyArray<BinSpec>`, `findBinById`, `toPackInput`, `computeBom`) unchanged — a union type would force `packages/catalog/src/lookup.ts` and every consumer to add a type guard for no behavioral benefit, since accessories and bins are packed and priced identically.
+One shared exported union type keeps every downstream consumer (`ALL_BINS: ReadonlyArray<BinSpec>`, `findBinById`, `toPackInput`, `computeBom`) unchanged because they only use fields common to both branches.
+Consumers need a type guard only when reading an accessory-specific field, which is the desired proof that `accessoryType` exists for an accessory.
 
 `kind` is a required field, not optional, so every existing catalog file (`schaller.ts`, `akromils.ts`, plus the accessory literals added to `gridfinity.ts`/`opengrid.ts`) must be updated to add `kind: "bin"` to its entries. This is a mechanical, compiler-enforced migration (TypeScript will fail to build until every entry sets `kind`) rather than a silent default, which avoids a stale-data class of bug where a future catalog file forgets the field.
 
-`accessoryType` stays optional at the type level (not enforced by a discriminated union against `kind`) because `BinSpec` is a plain interface, not a tagged union with per-branch fields — the plan doesn't introduce a `type BinSpec = BinEntry | AccessoryEntry` discriminated union, which is more invasive than the schema-shape change this feature needs. The added `Accessory entries require accessoryType` test scenario is enforced at the catalog-data level (every accessory literal in `gridfinity.ts`/`opengrid.ts` sets it) and at runtime via a small assertion helper in catalog test setup, not via the type system.
+`accessoryType` is required by the accessory branch and forbidden on the ordinary-bin branch, so TypeScript rejects malformed catalog literals before they reach a lookup or test setup.
 
 ### 2. Accessories are generated as `BinSpec` literals in the existing catalog files, not a new `packages/catalog/src/accessories.ts`
 
@@ -139,7 +150,7 @@ No file path or exported symbol referenced above was assumed from naming convent
 
 - **`kind` becoming a required field is a breaking type change to `BinSpec`.** Every existing catalog literal in `schaller.ts` and `akromils.ts` (not just `gridfinity.ts`/`opengrid.ts`) must add `kind: "bin"`, or the build fails. This is intentional (see Decision 1) but means tasks.md must include a mechanical pass over all four catalog files, not just the two grid systems, or `bun run typecheck` fails at the package boundary.
 - **PRD wording fix is a documentation-only, no-test-coverage change.** There's no automated guard against the PRD drifting from the real spec again; accepted as low-risk since it's prose, not code.
-- **`accessoryType` is optional-typed but semantically required for `kind: "accessory"` entries.** TypeScript's structural typing won't catch a hand-authored accessory literal that omits `accessoryType` at the catalog-data level; the `bin.test.ts` scenario ("accessory entries require accessoryType") must assert this at runtime for every entry in `ALL_BINS`, not rely on the type system alone.
+- **`BinSpec` is a union, so branch-specific fields require narrowing.** This is limited to consumers that read `accessoryType`; existing packing, lookup, and BOM consumers read common fields only and require no code changes.
 - **Real-world Gridfinity/OpenGrid accessory dimensions are approximations.** Neither system publishes an official machine-readable spec for every accessory (labels/dividers especially vary by third-party manufacturer); catalog data here is illustrative/typical dimensions, consistent with how `price: 0`/`priceApproximate` is already handled for other builtin catalog entries — not a new precision bar this change must clear.
 
 ## Adversarial Audit

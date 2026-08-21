@@ -9,7 +9,6 @@ This package contains static vendor product data and lookup functions. It houses
 ```ts-exports
 AKROMILS_CATALOG
 ALL_BINS
-AccessoryType
 BinId
 BinSpec
 CatalogSource

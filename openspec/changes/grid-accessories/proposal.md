@@ -31,7 +31,7 @@ They fit the existing packer/constraint/BOM pipeline unchanged as ordinary `BinS
 ## Impact
 
 - **Affected packages**: `packages/catalog` (new discriminant field, new catalog data, lookup wiring), `apps/web` (constraint editor UI, BOM UI). `packages/assembly` and `packages/packer` are unaffected — `computeBom` (`packages/assembly/src/bom.ts:79-112`) is already placement/type-agnostic, and the packer treats every `BinSpec` as a footprint rectangle regardless of `kind`.
-- **Affected data**: `BinSpec` gains two new optional/discriminant fields; existing bin entries are unaffected (default `kind: "bin"`).
+- **Affected data**: `BinSpec` becomes a discriminated union with a required `kind` and an `accessoryType` required for accessory entries; existing bin entries remain `kind: "bin"`.
 - **Docs**: one factual correction in `docs/2026-04-13-PRD.md` (OpenGrid base unit).
 
 ## Success Criteria

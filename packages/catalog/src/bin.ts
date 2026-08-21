@@ -9,10 +9,10 @@ export type BinId = z.infer<typeof BinIdSchema>;
 
 export const binId = (id: string): BinId => BinIdSchema.parse(id);
 
-export type AccessoryType =
+type AccessoryType =
   "hook" | "label" | "divider" | "blank" | "cable_clip" | "custom";
 
-export interface BinSpec<T extends number = number> {
+interface BaseBinSpec<T extends number = number> {
   readonly id: BinId;
   readonly name: string;
   readonly sku: string;
@@ -22,9 +22,6 @@ export interface BinSpec<T extends number = number> {
   readonly price?: number;
   readonly priceApproximate?: boolean;
 
-  readonly kind: "bin" | "accessory";
-  readonly accessoryType?: AccessoryType;
-
   readonly nominal: Dimensions3D<T>;
   readonly actual: Dimensions3D<T>;
   readonly tolerance: Dimensions3D<T>;
@@ -32,3 +29,16 @@ export interface BinSpec<T extends number = number> {
   readonly installation?: InstallationRequirement;
   readonly weightLbs?: number;
 }
+
+interface StandardBinSpec<T extends number = number> extends BaseBinSpec<T> {
+  readonly kind: "bin";
+  readonly accessoryType?: never;
+}
+
+interface AccessoryBinSpec<T extends number = number> extends BaseBinSpec<T> {
+  readonly kind: "accessory";
+  readonly accessoryType: AccessoryType;
+}
+
+export type BinSpec<T extends number = number> =
+  StandardBinSpec<T> | AccessoryBinSpec<T>;
