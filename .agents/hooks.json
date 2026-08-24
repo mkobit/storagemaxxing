@@ -4,19 +4,19 @@
       {
         "hooks": [
           {
-            "command": "bun .agents/hooks/lint-on-edit.ts",
+            "command": "bun hooks/lint-on-edit.ts",
             "type": "command"
           },
           {
-            "command": "bun .agents/hooks/typecheck-on-edit.ts",
+            "command": "bun hooks/typecheck-on-edit.ts",
             "type": "command"
           },
           {
-            "command": "bun .agents/hooks/openspec-validate-on-edit.ts",
+            "command": "bun hooks/openspec-validate-on-edit.ts",
             "type": "command"
           },
           {
-            "command": "bun .agents/hooks/openspec-canonical-guard-on-edit.ts",
+            "command": "bun hooks/openspec-canonical-guard-on-edit.ts",
             "type": "command"
           }
         ],
@@ -27,11 +27,11 @@
       {
         "hooks": [
           {
-            "command": "bun .agents/hooks/git-commit-main-guard.ts",
+            "command": "bun hooks/git-commit-main-guard.ts",
             "type": "command"
           },
           {
-            "command": "bun .agents/hooks/bead-close-commit-guard.ts",
+            "command": "bun hooks/bead-close-commit-guard.ts",
             "type": "command"
           }
         ],
