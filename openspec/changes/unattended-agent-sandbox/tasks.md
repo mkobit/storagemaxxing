@@ -9,8 +9,8 @@
   - Validation: `docker run --rm <sandbox-image> sh -c 'test ! -e ~/.ssh && test ! -e ~/.gnupg && test ! -e ~/.aws && test ! -e ~/.config/gcloud'` exits `0`
   - Scope: scope:infra
   - Spec: specs/agent-sandbox-runtime/spec.md#Requirement: Workspace-Root Isolation (Scenario: Session attempts to read outside the workspace; Scenario: Session attempts to reach a host credential)
-- [ ] 1.2 [sm-q02y](../../../.beads) Bootstrap the container's toolchain via `mise install` against the committed `mise.toml` (same bun `1.3.14` / beads `1.1.0` pins as CI and Jules), before `bun`/`bd` are invoked
-  - Validation: `docker run --rm <sandbox-image> sh -c 'bun --version && bd --version'` prints `1.3.14` and `1.1.0`
+- [ ] 1.2 [sm-q02y](../../../.beads) Bootstrap the container's toolchain via `mise install` against the committed `mise.toml` (same bun `1.4.0` / beads `1.1.0` pins as CI and Jules), before `bun`/`bd` are invoked
+  - Validation: `docker run --rm <sandbox-image> sh -c 'bun --version && bd --version'` prints `1.4.0` and `1.1.0`
   - Scope: scope:infra
   - Spec: specs/agent-sandbox-runtime/spec.md#Requirement: Scoped Toolchain Bootstrap (Scenario: Container starts a session)
 

@@ -70,7 +70,7 @@ This design's approval model is best understood as: **the same trust model as `.
 A `.devcontainer/devcontainer.json` (+ Dockerfile) defines the sandbox. The container:
 
 - Bind-mounts `storagemaxxing` only — no `$HOME`, no sibling repo directories under `/home/mkobit/workspace/mkobit/`.
-- Bootstraps its toolchain via `mise install` against the committed `mise.toml` (same tool versions bun `1.3.14` / beads `1.1.0` as CI and Jules — not a separately maintained pin).
+- Bootstraps its toolchain via `mise install` against the committed `mise.toml` (same tool versions bun `1.4.0` / beads `1.1.0` as CI and Jules — not a separately maintained pin).
 - Mounts no host credential directories (`~/.ssh`, `~/.gnupg`, `~/.aws`, `~/.config/gcloud`).
 - Injects exactly one credential: a fine-grained, repo-scoped GitHub token (contents:write, pull-requests:write; no admin; no other-repo access), session-length TTL, not the human operator's host `gh auth` token.
 - Restricts outbound network to an explicit allowlist: GitHub (git + REST/GraphQL API) and the bun package registry. `WebFetch`/`WebSearch` tools are disabled (or routed through the same allowlist check) for unattended sessions — an unattended agent has no human present to notice a prompt-injection payload from an arbitrary fetched page. The same allowlist applies during toolchain bootstrap (`mise install`) as during the live session — no separate, wider bootstrap-time carve-out; if `mise`/`bun`/`bd` installation needs a host beyond GitHub + the bun registry (e.g. a release CDN), that host must be named explicitly in the allowlist rather than left implicit.
