@@ -22,6 +22,7 @@ const gridfinityBin: CatalogBinSpec = {
   sku: "GRID-1",
   vendor: "Test Vendor",
   catalogSource: "builtin",
+  kind: "bin",
   system: "gridfinity",
   nominal: binDims,
   actual: binDims,

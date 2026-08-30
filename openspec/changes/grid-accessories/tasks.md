@@ -15,6 +15,8 @@
   - Validation: `bun test packages/store`
 - [x] 1.5 [sm-igme](../../../.beads) Update apps/web BinSpec fixtures for new `kind` field
   - Validation: `bun test apps/web`
+- [x] 1.6 [sm-ao3o](../../../.beads) Enforce `accessoryType` for `kind: "accessory"` at the `BinSpec` type boundary
+  - Validation: `bun test packages/catalog && bun run typecheck && bun run lint`
 
 ## 2. Catalog: accessory data
 

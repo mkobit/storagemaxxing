@@ -20,6 +20,7 @@ const drillBin: BinSpec = {
   vendor: "Test Vendor",
   system: "gridfinity",
   catalogSource: "builtin",
+  kind: "bin",
   nominal: binDims,
   actual: binDims,
   tolerance: zeroTolerance,

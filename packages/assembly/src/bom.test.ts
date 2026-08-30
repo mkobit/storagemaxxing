@@ -26,6 +26,7 @@ const mockCatalog: Readonly<
     sku: "SKU-1",
     vendor: "Vendor A",
     catalogSource: "builtin",
+    kind: "bin",
     nominal: mockDimensions,
     actual: mockDimensions,
     tolerance: mockDimensions,
@@ -37,6 +38,7 @@ const mockCatalog: Readonly<
     sku: "SKU-2",
     vendor: "Vendor B",
     catalogSource: "builtin",
+    kind: "bin",
     nominal: mockDimensions,
     actual: mockDimensions,
     tolerance: mockDimensions,
@@ -49,10 +51,24 @@ const mockCatalog: Readonly<
     sku: "GF-11",
     vendor: "Gridfinity",
     catalogSource: "builtin",
+    kind: "bin",
     nominal: mockDimensions,
     actual: mockDimensions,
     tolerance: mockDimensions,
     price: 0,
+  },
+  "gridfinity-hook-1x1": {
+    id: binId("gridfinity-hook-1x1"),
+    name: "Gridfinity Hook Plate 1x1",
+    sku: "GF-ACC-HOOK",
+    vendor: "Gridfinity",
+    catalogSource: "builtin",
+    kind: "accessory",
+    accessoryType: "hook",
+    nominal: mockDimensions,
+    actual: mockDimensions,
+    tolerance: mockDimensions,
+    price: 8,
   },
 };
 
@@ -146,6 +162,26 @@ describe("computeBom", () => {
 
     expect(bom.items).toHaveLength(0);
     expect(bom.totalPrice).toBe(0);
+    expect(bom.isApproximatePrice).toBe(false);
+  });
+
+  test("BOM includes accessory line items priced like bins", () => {
+    const counts = {
+      "bin-1": 1,
+      "gridfinity-hook-1x1": 4,
+    };
+
+    const bom = computeBom(counts, lookupBin);
+
+    expect(bom.items).toHaveLength(2);
+    const accessoryItem = bom.items.find(
+      (i) => i.binId === parseId("gridfinity-hook-1x1"),
+    );
+    expect(accessoryItem?.quantity).toBe(4);
+
+    // Same price * quantity derivation as any bin line item -- computeBom
+    // never branches on kind.
+    expect(bom.totalPrice).toBe(1 * 10 + 4 * 8);
     expect(bom.isApproximatePrice).toBe(false);
   });
 });

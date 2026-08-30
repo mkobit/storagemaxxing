@@ -12,10 +12,33 @@ const baseBin = {
   sku: "TEST-1",
   vendor: "Test Vendor",
   catalogSource: "builtin",
+  kind: "bin",
   nominal: dims,
   actual: dims,
   tolerance: createDimensions3D(inches(0), inches(0), inches(0)),
 } as const;
+
+describe("BinSpec accessory discriminant", () => {
+  test("requires accessoryType for accessory entries", () => {
+    // @ts-expect-error Accessory entries require an accessoryType.
+    const missingAccessoryType: BinSpec = {
+      ...baseBin,
+      kind: "accessory",
+    };
+
+    expect(missingAccessoryType.kind).toBe("accessory");
+  });
+
+  test("allows a valid accessory entry", () => {
+    const accessory: BinSpec = {
+      ...baseBin,
+      kind: "accessory",
+      accessoryType: "hook",
+    };
+
+    expect(accessory.accessoryType).toBe("hook");
+  });
+});
 
 describe("BinSpec installation field", () => {
   const variants: readonly InstallationRequirement[] = [

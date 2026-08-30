@@ -52,3 +52,29 @@ test("constraint row bin names stay visible with 2+ rows in the real 320px panel
   expect(firstBox?.width).toBeGreaterThan(0);
   expect(secondBox?.width).toBeGreaterThan(0);
 });
+
+test("adds a Gridfinity accessory through its distinct accessible action", async ({
+  page,
+}) => {
+  await page.goto("/");
+
+  await page.getByTestId("create-space-name").fill("Accessory space");
+  await page.getByTestId("create-space-system").selectOption("gridfinity");
+  await page.getByTestId("create-space-columns").fill("6");
+  await page.getByTestId("create-space-rows").fill("6");
+  await page.getByTestId("create-space-depth").fill("2");
+  await page.getByTestId("create-space-submit").click();
+
+  const addAccessory = page.getByRole("button", {
+    name: "Add Gridfinity Hook Plate 1x1",
+  });
+  await expect(addAccessory).toBeVisible();
+  await addAccessory.click();
+
+  await expect(
+    page.getByTestId("constraint-row-gridfinity-hook-1x1"),
+  ).toContainText("Gridfinity Hook Plate 1x1");
+  await expect(
+    page.getByTestId("add-accessory-gridfinity-hook-1x1"),
+  ).toHaveAccessibleName("Gridfinity Hook Plate 1x1 added");
+});

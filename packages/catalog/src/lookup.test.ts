@@ -43,4 +43,19 @@ describe("Catalog Lookup", () => {
       expect(bin.nominal.h).toBeLessThanOrEqual(2);
     });
   });
+
+  test("resolves accessory entries by id alongside bins", () => {
+    const gridfinityHook = findBinById(ALL_BINS, binId("gridfinity-hook-1x1"));
+    expect(gridfinityHook).toBeDefined();
+    expect(gridfinityHook?.kind).toBe("accessory");
+    expect(gridfinityHook?.accessoryType).toBe("hook");
+
+    const opengridAccessoryBin = findBinById(
+      ALL_BINS,
+      binId("opengrid-accessory-bin-2x2x1"),
+    );
+    expect(opengridAccessoryBin).toBeDefined();
+    expect(opengridAccessoryBin?.kind).toBe("accessory");
+    expect(opengridAccessoryBin?.accessoryType).toBe("custom");
+  });
 });

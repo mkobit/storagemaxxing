@@ -25,44 +25,78 @@ const OPENGRID_BASE_MM = 28;
 // Height is a single continuous cut with no material loss, so it carries no tolerance.
 const DIVIDER_THICKNESS_MM = 3;
 
-export const OPENGRID_CATALOG: ReadonlyArray<BinSpec> = FOOTPRINTS.flatMap(
-  ([gridW, gridD]) =>
-    HEIGHTS.map((gridH) => {
-      const nominalW = gridW * OPENGRID_BASE_MM;
-      const nominalD = gridD * OPENGRID_BASE_MM;
-      const nominalH = gridH * OPENGRID_BASE_MM;
+const gridDimensions = (gridW: number, gridD: number, gridH: number) => {
+  const nominalW = gridW * OPENGRID_BASE_MM;
+  const nominalD = gridD * OPENGRID_BASE_MM;
+  const nominalH = gridH * OPENGRID_BASE_MM;
 
-      const toleranceW = DIVIDER_THICKNESS_MM;
-      const toleranceD = DIVIDER_THICKNESS_MM;
-      const toleranceH = 0;
+  const toleranceW = DIVIDER_THICKNESS_MM;
+  const toleranceD = DIVIDER_THICKNESS_MM;
+  const toleranceH = 0;
 
-      const actualW = nominalW - toleranceW;
-      const actualD = nominalD - toleranceD;
-      const actualH = nominalH - toleranceH;
+  return {
+    nominal: {
+      w: inches(nominalW / 25.4),
+      l: inches(nominalD / 25.4),
+      h: inches(nominalH / 25.4),
+    },
+    actual: {
+      w: inches((nominalW - toleranceW) / 25.4),
+      l: inches((nominalD - toleranceD) / 25.4),
+      h: inches((nominalH - toleranceH) / 25.4),
+    },
+    tolerance: {
+      w: inches(toleranceW / 25.4),
+      l: inches(toleranceD / 25.4),
+      h: inches(toleranceH / 25.4),
+    },
+  };
+};
 
-      return {
-        id: binId(`opengrid-${gridW}x${gridD}x${gridH}`),
-        name: `openGrid ${gridW}x${gridD}x${gridH}`,
-        sku: `OG-${gridW}${gridD}${gridH}`,
-        vendor: "openGrid",
-        system: "opengrid",
-        catalogSource: "builtin",
-        price: 0,
-        nominal: {
-          w: inches(nominalW / 25.4),
-          l: inches(nominalD / 25.4),
-          h: inches(nominalH / 25.4),
-        },
-        actual: {
-          w: inches(actualW / 25.4),
-          l: inches(actualD / 25.4),
-          h: inches(actualH / 25.4),
-        },
-        tolerance: {
-          w: inches(toleranceW / 25.4),
-          l: inches(toleranceD / 25.4),
-          h: inches(toleranceH / 25.4),
-        },
-      };
-    }),
-);
+// Illustrative typical dimensions -- OpenGrid accessories are third-party
+// designs with no single official machine-readable spec (see design.md
+// Risks/Trade-offs). Every entry still packs as an ordinary grid-unit
+// footprint, same as a bin.
+const OPENGRID_ACCESSORIES: ReadonlyArray<BinSpec> = [
+  {
+    id: binId("opengrid-hook-1x1"),
+    name: "openGrid Hook Panel 1x1",
+    sku: "OG-ACC-HOOK",
+    vendor: "openGrid",
+    system: "opengrid",
+    catalogSource: "builtin",
+    kind: "accessory",
+    accessoryType: "hook",
+    price: 0,
+    ...gridDimensions(1, 1, 1),
+  },
+  {
+    id: binId("opengrid-accessory-bin-2x2x1"),
+    name: "openGrid Accessory Bin 2x2x1",
+    sku: "OG-ACC-BIN",
+    vendor: "openGrid",
+    system: "opengrid",
+    catalogSource: "builtin",
+    kind: "accessory",
+    accessoryType: "custom",
+    price: 0,
+    ...gridDimensions(2, 2, 1),
+  },
+];
+
+export const OPENGRID_CATALOG: ReadonlyArray<BinSpec> = [
+  ...FOOTPRINTS.flatMap(([gridW, gridD]) =>
+    HEIGHTS.map((gridH): BinSpec => ({
+      id: binId(`opengrid-${gridW}x${gridD}x${gridH}`),
+      name: `openGrid ${gridW}x${gridD}x${gridH}`,
+      sku: `OG-${gridW}${gridD}${gridH}`,
+      vendor: "openGrid",
+      system: "opengrid",
+      catalogSource: "builtin",
+      kind: "bin",
+      price: 0,
+      ...gridDimensions(gridW, gridD, gridH),
+    })),
+  ),
+  ...OPENGRID_ACCESSORIES,
+];

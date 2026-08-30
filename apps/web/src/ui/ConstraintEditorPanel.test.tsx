@@ -30,6 +30,7 @@ const drillBin: CatalogBinSpec = {
   vendor: "Test Vendor",
   system: "gridfinity",
   catalogSource: "builtin",
+  kind: "bin",
   nominal: binDims,
   actual: binDims,
   tolerance: zeroTolerance,
@@ -43,6 +44,7 @@ const railBin: CatalogBinSpec = {
   vendor: "Test Vendor",
   system: "gridfinity",
   catalogSource: "builtin",
+  kind: "bin",
   nominal: binDims,
   actual: binDims,
   tolerance: zeroTolerance,
@@ -140,6 +142,31 @@ describe("ConstraintEditorPanel", () => {
       .spaces.find((s) => s.id === spaceId);
     const expectedId = BinSpecIdSchema.parse("gridfinity-1x1x3");
     expect(updatedSpace?.constraints[expectedId]).toBeTruthy();
+  });
+
+  it("renders compatible catalog accessories in an Add Accessories section", () => {
+    render(<ConstraintEditorPanel />);
+    expect(screen.getByText("Add Accessories")).toBeTruthy();
+    expect(screen.getByText("Gridfinity Hook Plate 1x1")).toBeTruthy();
+  });
+
+  it("adds an accessory constraint via the same flow as adding a bin", () => {
+    render(<ConstraintEditorPanel />);
+    const addButton = screen.getByRole("button", {
+      name: "Add Gridfinity Hook Plate 1x1",
+    });
+    fireEvent.click(addButton);
+
+    const updatedSpace = useStore
+      .getState()
+      .spaces.find((s) => s.id === spaceId);
+    const expectedId = BinSpecIdSchema.parse("gridfinity-hook-1x1");
+    expect(updatedSpace?.constraints[expectedId]).toBeTruthy();
+    expect(
+      screen.getByRole("button", {
+        name: "Gridfinity Hook Plate 1x1 added",
+      }),
+    ).toBeTruthy();
   });
 
   it("shows the explicitly selected system's catalog even with no constraints and a non-matching name", () => {
