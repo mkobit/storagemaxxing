@@ -26,6 +26,18 @@ type Story = StoryObj<typeof BOMRow>;
 
 export const Default: Story = {};
 
+export const Accessory: Story = {
+  args: {
+    item: {
+      binId: BinSpecIdSchema.parse(
+        ALL_BINS.find((b) => b.kind === "accessory")?.id ??
+          "gridfinity-hook-1x1",
+      ),
+      quantity: 2,
+    },
+  },
+};
+
 export const UnknownBin: Story = {
   args: {
     item: {

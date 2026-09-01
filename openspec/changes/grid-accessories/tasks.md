@@ -38,7 +38,7 @@
 
 - [x] 4.1 [sm-ld2b](../../../.beads) ConstraintEditorPanel: add "Add Accessories" section
   - Validation: `bun test apps/web`
-- [ ] 4.2 [sm-juj2](../../../.beads) BOM UI: visually distinguish accessory line items
+- [x] 4.2 [sm-juj2](../../../.beads) BOM UI: visually distinguish accessory line items
   - Validation: `bun test apps/web`
 
 ## 5. Docs & optional polish
