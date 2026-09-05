@@ -1,5 +1,4 @@
 import { readFileSync, existsSync } from "node:fs";
-import { parse } from "yaml";
 import { z } from "zod";
 
 const workspaceSchema = z.object({
@@ -36,7 +35,7 @@ function checkFile(file: string): boolean {
   const raw = readFileSync(file, "utf8");
   let parsed: unknown;
   try {
-    parsed = parse(raw);
+    parsed = Bun.YAML.parse(raw);
   } catch (err) {
     console.error(`Failed to parse YAML in ${file}:`, err);
     return false;
