@@ -1,0 +1,6 @@
+schemaVersion: "1"
+name: "storagemaxxing-codex"
+agent: codex
+workspace:
+  path: ..
+  clone: true

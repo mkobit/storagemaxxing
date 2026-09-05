@@ -23,3 +23,8 @@ run = "bun run test"
 [tasks.validate]
 description = "Validate OpenSpec specs and changes"
 run = "bunx openspec validate --all --no-interactive"
+
+[tasks.validate-sbx]
+description = "Validate Docker Sandbox environment files"
+run = "bun run check:sbx-env"
+
