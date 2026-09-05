@@ -53,6 +53,9 @@ jobs:
       - name: Gitignore/eslint-ignores parity check
         run: bun run check:ignore-parity
 
+      - name: Validate Docker Sandbox environments
+        run: bun run check:sbx-env
+
       - name: Dead-code check (knip)
         run: bunx knip
 
