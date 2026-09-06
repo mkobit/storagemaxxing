@@ -1,10 +1,6 @@
 import { readFileSync, existsSync } from "node:fs";
-import { z } from "zod";
-
-const workspaceSchema = z.object({
-  path: z.string(),
-  clone: z.boolean(),
-});
+import { execSync } from "node:child_process";
+import { kitSpecSchema, sbxEnvV1Schema } from "./sbx-schemas";
 
 const FORBIDDEN_KEYS = [
   "secrets",
@@ -14,86 +10,20 @@ const FORBIDDEN_KEYS = [
   "localWorkspaces",
 ] as const;
 
-const portSchema = z.object({
-  sandbox: z.number().int().min(1).max(65535),
-  host: z.number().int().min(1).max(65535).optional(),
-  protocol: z.enum(["tcp", "tcp4", "tcp6", "udp", "udp4", "udp6"]).optional(),
-  hostIP: z.string().optional(),
-});
-
-const sbxEnvSchema = z
-  .object({
-    schemaVersion: z.literal("1"),
-    name: z.string().min(1),
-    agent: z.enum(["codex", "agy"]),
-    workspace: workspaceSchema,
-    kits: z.array(z.string()).min(1),
-    ports: z.array(portSchema).min(1),
-  })
-  .strict();
-
-const kitSpecSchema = z
-  .object({
-    schemaVersion: z.literal("2"),
-    kind: z.literal("mixin"),
-    name: z.string().min(1),
-    version: z.string().min(1),
-    description: z.string().optional(),
-    permissions: z
-      .object({
-        network: z
-          .object({
-            allow: z.array(z.string()).min(1),
-            deny: z.array(z.string()).optional(),
-          })
-          .optional(),
-      })
-      .optional(),
-    environment: z
-      .object({
-        variables: z.record(z.string(), z.string()).optional(),
-      })
-      .optional(),
-    setup: z
-      .object({
-        files: z
-          .array(
-            z.object({
-              path: z.string(),
-              content: z.string(),
-              mode: z.string().optional(),
-              onlyIfMissing: z.boolean().optional(),
-              description: z.string().optional(),
-            }),
-          )
-          .optional(),
-        install: z
-          .array(
-            z.object({
-              command: z.string(),
-              user: z.string().optional(),
-              description: z.string().optional(),
-            }),
-          )
-          .optional(),
-        startup: z
-          .array(
-            z.object({
-              command: z.union([z.string(), z.array(z.string())]),
-              background: z.boolean().optional(),
-              user: z.string().optional(),
-              description: z.string().optional(),
-            }),
-          )
-          .optional(),
-      })
-      .optional(),
-  })
-  .passthrough();
-
 const REQUIRED_PORTS = [5173, 6006] as const;
 const filesToCheck = [".sbx/.sbxenv.yaml", ".sbx/.sbxenv.agy.yaml"] as const;
 const kitSpecFile = ".sbx/kit/spec.yaml";
+const kitDir = ".sbx/kit";
+
+function checkKitWithSbxIfAvailable(dir: string): void {
+  try {
+    execSync("command -v sbx", { stdio: "ignore" });
+    console.log(`Running host 'sbx kit validate ${dir}'...`);
+    execSync(`sbx kit validate ${dir}`, { stdio: "inherit" });
+  } catch {
+    // sbx CLI is optional in CI or headless environments
+  }
+}
 
 function checkKitSpec(file: string): boolean {
   if (!existsSync(file)) {
@@ -122,7 +52,7 @@ function checkKitSpec(file: string): boolean {
   }
 
   console.log(
-    `✓ ${file} is valid (${result.data.name} v${result.data.version}, kind: ${result.data.kind})`,
+    `✓ ${file} is valid (${result.data.name}, schemaVersion: ${result.data.schemaVersion})`,
   );
   return true;
 }
@@ -156,7 +86,7 @@ function checkFile(file: string): boolean {
     return false;
   }
 
-  const result = sbxEnvSchema.safeParse(parsed);
+  const result = sbxEnvV1Schema.safeParse(parsed);
   if (!result.success) {
     console.error(`Validation failed for ${file}:`, result.error.format());
     return false;
@@ -167,13 +97,13 @@ function checkFile(file: string): boolean {
     return false;
   }
 
-  if (!result.data.kits.includes("./kit")) {
+  if (!result.data.kits || !result.data.kits.includes("./kit")) {
     console.error(`File ${file} must include "./kit" in kits`);
     return false;
   }
 
   const declaredSandboxPorts = new Set(
-    result.data.ports.map((port) => port.sandbox),
+    (result.data.ports ?? []).map((port) => port.sandbox),
   );
   for (const requiredPort of REQUIRED_PORTS) {
     if (!declaredSandboxPorts.has(requiredPort)) {
@@ -196,3 +126,6 @@ const envPassed = filesToCheck.every(checkFile);
 if (!kitPassed || !envPassed) {
   process.exit(1);
 }
+
+// When running in an environment where sbx CLI is installed, also run native sbx kit validate
+checkKitWithSbxIfAvailable(kitDir);
