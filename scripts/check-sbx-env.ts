@@ -120,10 +120,130 @@ function checkFile(file: string): boolean {
   return true;
 }
 
+function checkToolchainParity(): boolean {
+  const miseFile = "mise.toml";
+  const pkgFile = "package.json";
+
+  if (
+    !existsSync(miseFile) ||
+    !existsSync(pkgFile) ||
+    !existsSync(kitSpecFile)
+  ) {
+    console.error("Missing required config files for toolchain parity check");
+    return false;
+  }
+
+  let mise: { tools?: Record<string, string> };
+  try {
+    mise = Bun.TOML.parse(readFileSync(miseFile, "utf8")) as {
+      tools?: Record<string, string>;
+    };
+  } catch (err) {
+    console.error(`Failed to parse ${miseFile}:`, err);
+    return false;
+  }
+
+  let pkg: {
+    packageManager?: string;
+    engines?: { bun?: string };
+  };
+  try {
+    pkg = JSON.parse(readFileSync(pkgFile, "utf8")) as {
+      packageManager?: string;
+      engines?: { bun?: string };
+    };
+  } catch (err) {
+    console.error(`Failed to parse ${pkgFile}:`, err);
+    return false;
+  }
+
+  const rawKit = readFileSync(kitSpecFile, "utf8");
+  let parsedKit: unknown;
+  try {
+    parsedKit = Bun.YAML.parse(rawKit);
+  } catch (err) {
+    console.error(`Failed to parse ${kitSpecFile}:`, err);
+    return false;
+  }
+
+  const kitObj = parsedKit as {
+    setup?: { install?: Array<{ command?: string }> };
+  };
+
+  const miseBun = mise.tools?.["bun"];
+  const miseBeads = mise.tools?.["github:gastownhall/beads"];
+
+  if (!miseBun) {
+    console.error(`${miseFile} missing tools.bun definition`);
+    return false;
+  }
+
+  // Check package.json packageManager
+  const pkgManagerBun = pkg.packageManager?.replace(/^bun@/, "");
+  if (pkgManagerBun !== miseBun) {
+    console.error(
+      `Version mismatch: ${pkgFile} packageManager (${pkg.packageManager}) does not match ${miseFile} bun (${miseBun})`,
+    );
+    return false;
+  }
+
+  // Check package.json engines.bun
+  if (pkg.engines?.bun !== miseBun) {
+    console.error(
+      `Version mismatch: ${pkgFile} engines.bun (${pkg.engines?.bun}) does not match ${miseFile} bun (${miseBun})`,
+    );
+    return false;
+  }
+
+  // Check .sbx/kit/spec.yaml install commands
+  const installCommands = (kitObj.setup?.install ?? [])
+    .map((step) => step.command ?? "")
+    .join("\n");
+
+  const kitBunMatch = installCommands.match(/bun@([0-9]+\.[0-9]+\.[0-9]+)/);
+  if (!kitBunMatch) {
+    console.error(
+      `${kitSpecFile} does not declare an explicit bun version (expected bun@<semver>)`,
+    );
+    return false;
+  }
+
+  if (kitBunMatch[1] !== miseBun) {
+    console.error(
+      `Version mismatch: ${kitSpecFile} declares bun@${kitBunMatch[1]}, but ${miseFile} declares ${miseBun}`,
+    );
+    return false;
+  }
+
+  if (miseBeads) {
+    const kitBeadsMatch = installCommands.match(
+      /(?:github:gastownhall\/beads|beads)@([0-9]+\.[0-9]+\.[0-9]+)/,
+    );
+    if (!kitBeadsMatch) {
+      console.error(
+        `${kitSpecFile} does not declare an explicit beads version (expected beads@<semver>)`,
+      );
+      return false;
+    }
+    if (kitBeadsMatch[1] !== miseBeads) {
+      console.error(
+        `Version mismatch: ${kitSpecFile} declares beads@${kitBeadsMatch[1]}, but ${miseFile} declares ${miseBeads}`,
+      );
+      return false;
+    }
+  }
+
+  console.log(
+    `✓ Toolchain parity verified: bun@${miseBun}, beads@${miseBeads}`,
+  );
+  return true;
+}
+
 const kitPassed = checkKitSpec(kitSpecFile);
 const envPassed = filesToCheck.every(checkFile);
+const parityPassed = checkToolchainParity();
 
-if (!kitPassed || !envPassed) {
+if (!kitPassed || !envPassed || !parityPassed) {
   process.exit(1);
 }
 
