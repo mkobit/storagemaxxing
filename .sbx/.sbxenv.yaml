@@ -4,3 +4,10 @@ agent: codex
 workspace:
   path: ..
   clone: true
+kits:
+  - ./kit
+ports:
+  - sandbox: 5173
+    host: 5173
+  - sandbox: 6006
+    host: 6006
