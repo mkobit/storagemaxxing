@@ -17,26 +17,31 @@
 ## Docker Sandbox Configuration
 
 You can run sandbox validations using:
+
 ```sh
 sbx env exec .sbx/sbxenv.yaml -- mise run validate-sbx
 ```
 
 Or with an optional personal overlay that shouldn't be checked into git:
+
 ```sh
 sbx env exec .sbx/sbxenv.yaml ~/.local/share/sbx/personal/personal.sbxenv.yaml -- mise run validate-sbx
 ```
 
 You can run sandboxes using:
+
 ```sh
 sbx env run .sbx/sbxenv.yaml
 ```
 
 Or with an optional personal overlay:
+
 ```sh
 sbx env run .sbx/sbxenv.yaml ~/.local/share/sbx/personal/personal.sbxenv.yaml
 ```
 
 To execute a command directly inside the sandbox:
+
 ```sh
 sbx env exec .sbx/sbxenv.yaml ~/.local/share/sbx/personal/personal.sbxenv.yaml -- <project-check-command>
 ```
