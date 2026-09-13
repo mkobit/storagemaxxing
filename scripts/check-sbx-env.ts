@@ -15,13 +15,21 @@ const filesToCheck = [".sbx/.sbxenv.yaml", ".sbx/.sbxenv.agy.yaml"] as const;
 const kitSpecFile = ".sbx/kit/spec.yaml";
 const kitDir = ".sbx/kit";
 
-function checkKitWithSbxIfAvailable(dir: string): void {
+function checkKitWithSbx(dir: string): boolean {
   try {
     execSync("command -v sbx", { stdio: "ignore" });
+  } catch {
+    console.warn("sbx CLI not found; skipping native kit validation");
+    return true;
+  }
+
+  try {
     console.log(`Running host 'sbx kit validate ${dir}'...`);
     execSync(`sbx kit validate ${dir}`, { stdio: "inherit" });
-  } catch {
-    // sbx CLI is optional in CI or headless environments
+    return true;
+  } catch (err) {
+    console.error(`Host 'sbx kit validate ${dir}' failed:`, err);
+    return false;
   }
 }
 
@@ -242,10 +250,8 @@ function checkToolchainParity(): boolean {
 const kitPassed = checkKitSpec(kitSpecFile);
 const envPassed = filesToCheck.every(checkFile);
 const parityPassed = checkToolchainParity();
+const nativeKitPassed = checkKitWithSbx(kitDir);
 
-if (!kitPassed || !envPassed || !parityPassed) {
+if (!kitPassed || !envPassed || !parityPassed || !nativeKitPassed) {
   process.exit(1);
 }
-
-// When running in an environment where sbx CLI is installed, also run native sbx kit validate
-checkKitWithSbxIfAvailable(kitDir);
