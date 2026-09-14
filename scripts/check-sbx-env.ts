@@ -1,6 +1,5 @@
 import { readFileSync, existsSync } from "node:fs";
 import { execSync } from "node:child_process";
-import { kitSpecSchema, sbxEnvV1Schema } from "./sbx-schemas";
 
 const FORBIDDEN_KEYS = [
   "secrets",
@@ -15,13 +14,51 @@ const filesToCheck = [".sbx/.sbxenv.yaml", ".sbx/.sbxenv.agy.yaml"] as const;
 const kitSpecFile = ".sbx/kit/spec.yaml";
 const kitDir = ".sbx/kit";
 
-function checkKitWithSbxIfAvailable(dir: string): void {
+type MinimalKitSpec = {
+  readonly name?: unknown;
+  readonly schemaVersion?: unknown;
+};
+
+type MinimalSbxEnv = {
+  readonly name?: unknown;
+  readonly agent?: unknown;
+  readonly workspace?: { readonly clone?: unknown };
+  readonly kits?: readonly unknown[];
+  readonly ports?: readonly { readonly sandbox?: unknown }[];
+};
+
+function checkKitWithSbx(dir: string): boolean {
   try {
     execSync("command -v sbx", { stdio: "ignore" });
+  } catch {
+    console.warn("sbx CLI not found; skipping native kit validation");
+    return true;
+  }
+
+  try {
     console.log(`Running host 'sbx kit validate ${dir}'...`);
     execSync(`sbx kit validate ${dir}`, { stdio: "inherit" });
+    return true;
+  } catch (err) {
+    console.error(`Host 'sbx kit validate ${dir}' failed:`, err);
+    return false;
+  }
+}
+
+function checkEnvWithSbx(file: string): boolean {
+  try {
+    execSync("command -v sbx", { stdio: "ignore" });
   } catch {
-    // sbx CLI is optional in CI or headless environments
+    return true;
+  }
+
+  try {
+    console.log(`Running host 'sbx env plan ${file}'...`);
+    execSync(`sbx env plan ${file}`, { stdio: "inherit" });
+    return true;
+  } catch (err) {
+    console.error(`Host 'sbx env plan ${file}' failed:`, err);
+    return false;
   }
 }
 
@@ -45,14 +82,18 @@ function checkKitSpec(file: string): boolean {
     return false;
   }
 
-  const result = kitSpecSchema.safeParse(parsed);
-  if (!result.success) {
-    console.error(`Validation failed for ${file}:`, result.error.format());
+  const kit = parsed as MinimalKitSpec;
+  if (typeof kit.name !== "string" || kit.name.length === 0) {
+    console.error(`File ${file} is missing a valid name string`);
+    return false;
+  }
+  if (kit.schemaVersion !== 2 && kit.schemaVersion !== "2") {
+    console.error(`File ${file} must specify schemaVersion: 2`);
     return false;
   }
 
   console.log(
-    `✓ ${file} is valid (${result.data.name}, schemaVersion: ${result.data.schemaVersion})`,
+    `✓ ${file} is valid (${kit.name}, schemaVersion: ${kit.schemaVersion})`,
   );
   return true;
 }
@@ -86,24 +127,19 @@ function checkFile(file: string): boolean {
     return false;
   }
 
-  const result = sbxEnvV1Schema.safeParse(parsed);
-  if (!result.success) {
-    console.error(`Validation failed for ${file}:`, result.error.format());
-    return false;
-  }
-
-  if (!result.data.workspace.clone) {
+  const env = parsed as MinimalSbxEnv;
+  if (!env.workspace?.clone) {
     console.error(`File ${file} must have workspace.clone: true`);
     return false;
   }
 
-  if (!result.data.kits || !result.data.kits.includes("./kit")) {
+  if (!env.kits || !env.kits.includes("./kit")) {
     console.error(`File ${file} must include "./kit" in kits`);
     return false;
   }
 
   const declaredSandboxPorts = new Set(
-    (result.data.ports ?? []).map((port) => port.sandbox),
+    (env.ports ?? []).map((port) => port.sandbox),
   );
   for (const requiredPort of REQUIRED_PORTS) {
     if (!declaredSandboxPorts.has(requiredPort)) {
@@ -115,7 +151,7 @@ function checkFile(file: string): boolean {
   }
 
   console.log(
-    `✓ ${file} is valid (${result.data.name}, agent: ${result.data.agent})`,
+    `✓ ${file} is valid (${String(env.name)}, agent: ${String(env.agent)})`,
   );
   return true;
 }
@@ -242,10 +278,15 @@ function checkToolchainParity(): boolean {
 const kitPassed = checkKitSpec(kitSpecFile);
 const envPassed = filesToCheck.every(checkFile);
 const parityPassed = checkToolchainParity();
+const nativeKitPassed = checkKitWithSbx(kitDir);
+const nativeEnvPassed = filesToCheck.every(checkEnvWithSbx);
 
-if (!kitPassed || !envPassed || !parityPassed) {
+if (
+  !kitPassed ||
+  !envPassed ||
+  !parityPassed ||
+  !nativeKitPassed ||
+  !nativeEnvPassed
+) {
   process.exit(1);
 }
-
-// When running in an environment where sbx CLI is installed, also run native sbx kit validate
-checkKitWithSbxIfAvailable(kitDir);

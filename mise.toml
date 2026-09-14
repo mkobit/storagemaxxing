@@ -28,3 +28,12 @@ run = "bunx openspec validate --all --no-interactive"
 description = "Validate Docker Sandbox environment files"
 run = "bun run check:sbx-env"
 
+[tasks.sbx-plan]
+description = "Plan Docker Sandbox environment"
+run = "sbx env plan .sbx/.sbxenv.yaml"
+
+[tasks.sbx-validate-kit]
+description = "Validate Docker Sandbox kit"
+run = "sbx kit validate .sbx/kit"
+
+

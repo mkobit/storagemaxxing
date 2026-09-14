@@ -12,8 +12,7 @@
         ".agents/hooks/openspec-canonical-guard-on-edit.ts",
         ".agents/hooks/git-commit-main-guard.ts",
         ".agents/hooks/bead-close-commit-guard.ts",
-        ".claude/hooks/openspec-validate.ts",
-        "scripts/sbx-schemas.ts"
+        ".claude/hooks/openspec-validate.ts"
       ]
     }
   }
