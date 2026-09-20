@@ -43,7 +43,7 @@
 
 ## 5. Docs & optional polish
 
-- [ ] 5.1 [sm-jw34](../../../.beads) Fix PRD: OpenGrid is a 28mm panel system, not 75mm
+- [x] 5.1 [sm-jw34](../../../.beads) Fix PRD: OpenGrid is a 28mm panel system, not 75mm
   - Validation: `rg -n "75mm" docs/2026-04-13-PRD.md` (no OpenGrid match)
 - [x] 5.2 [sm-21p5](../../../.beads) (Optional) Visual differentiation for placed accessories in LayoutCanvas
   - Validation: `bun test apps/web` + manual dev-server check
