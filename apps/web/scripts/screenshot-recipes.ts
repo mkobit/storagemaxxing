@@ -24,6 +24,7 @@ export const SCREENSHOT_RECIPES: Readonly<
     await page.getByTestId("create-space-rows").fill("6");
     await page.getByTestId("create-space-depth").fill("2");
     await page.getByTestId("create-space-submit").click();
+    await page.getByTestId("add-bin-gridfinity-1x1x1").click();
     await page.getByTestId("add-accessory-gridfinity-hook-1x1").click();
     await page.waitForSelector(
       '[data-testid="constraint-row-gridfinity-hook-1x1"]',
