@@ -57,6 +57,42 @@ const drawSpaceBounds = (
   ctx.setLineDash([]);
 };
 
+const ACCESSORY_BORDER_DASH = [4, 2] as const;
+const ACCESSORY_HATCH_STEP_PX = 8;
+
+type CanvasFootprint = {
+  readonly x: number;
+  readonly y: number;
+  readonly w: number;
+  readonly l: number;
+};
+
+const drawAccessoryHatch = (
+  ctx: CanvasRenderingContext2D,
+  footprint: CanvasFootprint,
+  strokeColor: string,
+) => {
+  const { x, y, w, l } = footprint;
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, w, l);
+  ctx.clip();
+  /* eslint-disable functional/immutable-data -- Canvas 2D API requires imperative property assignment */
+  ctx.strokeStyle = strokeColor;
+  ctx.lineWidth = 1;
+  /* eslint-enable functional/immutable-data -- re-enable after the imperative Canvas 2D block above */
+  ctx.setLineDash([]);
+  const lineCount = Math.ceil((w + l) / ACCESSORY_HATCH_STEP_PX) + 1;
+  Array.from({ length: lineCount }).forEach((_, i) => {
+    const offset = -l + i * ACCESSORY_HATCH_STEP_PX;
+    ctx.beginPath();
+    ctx.moveTo(x + offset, y);
+    ctx.lineTo(x + offset + l, y + l);
+    ctx.stroke();
+  });
+  ctx.restore();
+};
+
 const drawPackedLayout = (
   ctx: CanvasRenderingContext2D,
   packingResult: PackingResult,
@@ -66,10 +102,12 @@ const drawPackedLayout = (
   const { fit, bounds } = transform;
   const fallbackFill = resolveCanvasToken("--color-canvas-fallback-fill");
   const outline = resolveCanvasToken("--color-canvas-outline");
+  const gridColor = resolveCanvasToken("--color-canvas-grid");
   packingResult.placedBins.forEach((placed) => {
     const spec = lookupBin(placed.binId);
     if (!spec) return;
     const constraint = constraints.find((c) => c.binId === placed.binId);
+    const isAccessory = spec.kind === "accessory";
     /* eslint-disable functional/immutable-data -- Canvas 2D API requires imperative property assignment */
     ctx.fillStyle = constraint?.color ?? fallbackFill;
     ctx.strokeStyle = outline;
@@ -80,7 +118,14 @@ const drawPackedLayout = (
     const w = spec.nominal.w * fit.scale;
     const l = spec.nominal.l * fit.scale;
     ctx.fillRect(x, y, w, l);
+    if (isAccessory) {
+      drawAccessoryHatch(ctx, { x, y, w, l }, gridColor);
+      ctx.setLineDash(ACCESSORY_BORDER_DASH);
+    }
     ctx.strokeRect(x, y, w, l);
+    if (isAccessory) {
+      ctx.setLineDash([]);
+    }
   });
 };
 
