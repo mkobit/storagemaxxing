@@ -74,6 +74,7 @@ export const CreateSpaceFormPanel: React.FC = () => {
       <input
         type="text"
         placeholder="Name"
+        aria-label="Space name"
         value={name}
         onChange={(e) => setName(e.target.value)}
         data-testid="create-space-name"
@@ -81,6 +82,7 @@ export const CreateSpaceFormPanel: React.FC = () => {
       />
       <select
         value={system}
+        aria-label="Storage system"
         onChange={(e) => setSystem(e.target.value)}
         data-testid="create-space-system"
         className={input}
@@ -94,6 +96,7 @@ export const CreateSpaceFormPanel: React.FC = () => {
       <input
         type="text"
         placeholder="Columns"
+        aria-label="Columns"
         value={columns}
         onChange={(e) => setColumns(e.target.value)}
         data-testid="create-space-columns"
@@ -102,6 +105,7 @@ export const CreateSpaceFormPanel: React.FC = () => {
       <input
         type="text"
         placeholder="Rows"
+        aria-label="Rows"
         value={rows}
         onChange={(e) => setRows(e.target.value)}
         data-testid="create-space-rows"
@@ -110,6 +114,7 @@ export const CreateSpaceFormPanel: React.FC = () => {
       <input
         type="text"
         placeholder="Depth"
+        aria-label="Depth"
         value={depth}
         onChange={(e) => setDepth(e.target.value)}
         data-testid="create-space-depth"
