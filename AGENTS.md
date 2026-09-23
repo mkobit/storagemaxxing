@@ -30,7 +30,9 @@ This file serves as the "Prime Directive" for all AI agents (Gemini, Claude, Jul
 - Note: `bun exec openspec validate --all` runs as a PR check on changes under `openspec/**`.
 
 ## Docker Sandbox Execution
+
 To run checks in a clean Docker Sandbox environment matching the CI setup, use:
+
 ```bash
 sbx env exec .sbx/sbxenv.yaml -- mise run check
 ```
