@@ -248,6 +248,7 @@ export const ConstraintEditorPanel: React.FC = () => {
         <input
           type="text"
           placeholder="Search catalog..."
+          aria-label="Search catalog"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="rounded-sm border border-border-default p-2 text-sm"
