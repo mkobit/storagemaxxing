@@ -52,7 +52,7 @@ export const Toolbar: React.FC = () => {
 
   return (
     <div
-      className="flex gap-4 border-b border-border-default bg-surface-sunken p-4 text-text-primary"
+      className="flex w-fit min-w-full gap-4 border-b border-border-default bg-surface-sunken p-4 text-text-primary"
       data-testid="toolbar"
     >
       <button
