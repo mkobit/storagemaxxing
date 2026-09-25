@@ -1,4 +1,10 @@
-import { readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  readFileSync,
+  readdirSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { join } from "node:path";
 
 const BEAD_ID = /\bsm-[a-z0-9]+(?:\.\d+)?\b/i;
@@ -27,6 +33,42 @@ function findTasksFiles(dir: string): readonly string[] {
   });
 }
 
+function resolveTasksFiles(target: string): readonly string[] {
+  if (existsSync(target)) {
+    const st = statSync(target);
+    if (st.isFile()) return [target];
+    return findTasksFiles(target);
+  }
+
+  const inChanges = join("openspec/changes", target);
+  if (existsSync(inChanges)) {
+    const st = statSync(inChanges);
+    if (st.isFile()) return [inChanges];
+    return findTasksFiles(inChanges);
+  }
+
+  const targetBase = target
+    .replace(/^openspec\/changes\//, "")
+    .replace(/^archive\//, "")
+    .replace(/\/tasks\.md$/, "")
+    .replace(/\/$/, "");
+
+  const archiveDir = "openspec/changes/archive";
+  if (existsSync(archiveDir)) {
+    const entries = readdirSync(archiveDir);
+    const matched = entries.filter(
+      (entry) => entry === targetBase || entry.endsWith(`-${targetBase}`),
+    );
+    if (matched.length > 0) {
+      matched.sort();
+      const resolvedDir = join(archiveDir, matched[matched.length - 1]);
+      return findTasksFiles(resolvedDir);
+    }
+  }
+
+  return [];
+}
+
 function extractCheckboxRefs(file: string): readonly CheckboxRef[] {
   const lines = readFileSync(file, "utf8").split("\n");
   const found: CheckboxRef[] = [];
@@ -44,37 +86,84 @@ function extractCheckboxRefs(file: string): readonly CheckboxRef[] {
   return found;
 }
 
-// Fetches every bead's status in a single `bd show` invocation instead of one
-// subprocess per unique ID -- with ~40+ beads referenced repo-wide across
-// openspec/changes/**/tasks.md, per-ID subprocess overhead compounds linearly
-// and previously caused this script to exceed the 120s default tool timeout.
+// Fetches bead statuses efficiently.
+// For large ID sets (>10 IDs, e.g. repository-wide validation), queries all beads
+// via `bd list --all --json` in ~1s instead of resolving full details/comments
+// via `bd show` which compounds linearly with ID count.
+// Any missing or small sets are queried via `bd show <ids...> --json`.
 async function fetchBeadStatuses(
   ids: readonly string[],
 ): Promise<ReadonlyMap<string, string>> {
   const statuses = new Map<string, string>();
   if (ids.length === 0) return statuses;
-  const proc = Bun.spawn(["bd", "show", ...ids, "--json"], {
-    stdout: "pipe",
-    stderr: "pipe",
-  });
-  const out = await new Response(proc.stdout).text();
-  await proc.exited;
-  const parsed: unknown = JSON.parse(out);
-  // bd show --json returns an array for any valid IDs found, but a bare
-  // error object ({ error, schema_version }) when NONE of the requested IDs
-  // resolve -- normalize both shapes into an array to scan uniformly.
-  const records = Array.isArray(parsed) ? parsed : [parsed];
-  for (const record of records) {
-    if (typeof record !== "object" || record === null) continue;
-    if (!("id" in record) || !("status" in record)) continue;
-    const { id, status } = record as {
-      readonly id: unknown;
-      readonly status: unknown;
-    };
-    if (typeof id === "string" && typeof status === "string") {
-      statuses.set(id, status);
+
+  if (ids.length > 10) {
+    try {
+      const proc = Bun.spawn(["bd", "list", "--all", "--json"], {
+        stdout: "pipe",
+        stderr: "pipe",
+      });
+      const out = await new Response(proc.stdout).text();
+      await proc.exited;
+      const parsed: unknown = JSON.parse(out);
+      if (Array.isArray(parsed)) {
+        const idSet = new Set(ids);
+        for (const record of parsed) {
+          if (
+            typeof record === "object" &&
+            record !== null &&
+            "id" in record &&
+            "status" in record
+          ) {
+            const { id, status } = record as {
+              readonly id: unknown;
+              readonly status: unknown;
+            };
+            if (
+              typeof id === "string" &&
+              typeof status === "string" &&
+              idSet.has(id)
+            ) {
+              statuses.set(id, status);
+            }
+          }
+        }
+      }
+    } catch {
+      // Fall back to bd show
     }
   }
+
+  const remainingIds = ids.filter((id) => !statuses.has(id));
+  if (remainingIds.length > 0) {
+    const proc = Bun.spawn(["bd", "show", ...remainingIds, "--json"], {
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    const out = await new Response(proc.stdout).text();
+    await proc.exited;
+    try {
+      const parsed: unknown = JSON.parse(out);
+      // bd show --json returns an array for any valid IDs found, but a bare
+      // error object ({ error, schema_version }) when NONE of the requested IDs
+      // resolve -- normalize both shapes into an array to scan uniformly.
+      const records = Array.isArray(parsed) ? parsed : [parsed];
+      for (const record of records) {
+        if (typeof record !== "object" || record === null) continue;
+        if (!("id" in record) || !("status" in record)) continue;
+        const { id, status } = record as {
+          readonly id: unknown;
+          readonly status: unknown;
+        };
+        if (typeof id === "string" && typeof status === "string") {
+          statuses.set(id, status);
+        }
+      }
+    } catch {
+      // Ignore parse failure on missing beads
+    }
+  }
+
   return statuses;
 }
 
@@ -116,8 +205,18 @@ function applyFixes(file: string, fileMismatches: readonly Mismatch[]): void {
 
 const args = process.argv.slice(2);
 const fix = args.includes("--fix");
-const root = args.find((arg) => !arg.startsWith("--")) ?? "openspec/changes";
-const files = findTasksFiles(root);
+const target = args.find((arg) => !arg.startsWith("--")) ?? "openspec/changes";
+const files = resolveTasksFiles(target);
+
+if (files.length === 0) {
+  if (target === "openspec/changes") {
+    console.log("No tasks.md files found in openspec/changes.");
+    process.exit(0);
+  }
+  console.error(`No tasks.md found matching target: ${target}`);
+  process.exit(1);
+}
+
 const refsByFile = new Map(
   files.map((file) => [file, extractCheckboxRefs(file)]),
 );

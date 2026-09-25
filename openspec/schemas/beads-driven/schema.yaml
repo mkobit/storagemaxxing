@@ -62,7 +62,8 @@ artifacts:
 
       Do NOT hand-flip `[ ]`/`[x]` marks as bead status changes. Run `bun run fix:tasks` (or
       `bun run check:tasks` to check without writing) to sync every checkbox to its linked bead's
-      closed/open status.
+      closed/open status. Pass an optional change directory or path (e.g.
+      `bun run fix:tasks openspec/changes/<change-name>`) to scope synchronization to the active change.
     requires:
       - design
   - id: retrospective

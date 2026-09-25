@@ -16,6 +16,8 @@ All agents MUST coordinate using **OpenSpec** (Design/Contract) and **Beads** (E
 - **Never edit canonical `openspec/specs/**/spec.md` files directly** — they're derived from a change's delta by `bunx openspec archive`.
   CI fails a PR that touches both `openspec/specs/` and an active change's `specs/`.
 - **Commit immediately after every closed Bead, one bead per commit:** `git add <changed files> && git commit -m "task(<id>): <description>"`.
+- Sync OpenSpec task checkboxes via `bun run fix:tasks [target]` (or `bun run check:tasks [target]` to check without writing).
+  Pass an optional change directory or name (e.g. `bun run fix:tasks openspec/changes/<change-name>`) to scope synchronization to the active change.
 - Run `bunx openspec archive` only after all linked Beads are closed.
 - **Before ending a session, reflect on the workflow itself (mandatory).**
   Record friction as a Meta bead (`bd create "Meta: <insight>" -t task -p 3 -l meta:beads-flow`) or `bd remember "<insight>"` for transient tips.
