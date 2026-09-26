@@ -47,6 +47,7 @@
   --color-canvas-outline: #000000;
   --color-canvas-fallback-fill: #cccccc;
   --color-canvas-wireframe-surface: #e2e8f0;
+  --color-canvas-reach-clearance: rgba(100, 116, 139, 0.15);
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
@@ -110,6 +111,7 @@
   --color-canvas-outline: #cbd5e1;
   --color-canvas-fallback-fill: #475569;
   --color-canvas-wireframe-surface: #334155;
+  --color-canvas-reach-clearance: rgba(148, 163, 184, 0.15);
 }
 
 @layer base {

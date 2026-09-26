@@ -25,7 +25,7 @@ import {
 
 const VIEWPORT_MARGIN_PX = 20;
 
-type LayoutTransform = {
+export type LayoutTransform = {
   readonly fit: ViewportFit;
   readonly bounds: Rect2D;
 };
@@ -36,25 +36,55 @@ const lookupBin = (id: string): BinSpec | undefined =>
 const resolveCanvasToken = (name: string): string =>
   getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
-const drawSpaceBounds = (
+export const drawSpaceBounds = (
   ctx: CanvasRenderingContext2D,
   template: SpaceTemplate,
   transform: LayoutTransform,
 ) => {
   if (template.w === undefined || template.l === undefined) return;
   const { fit, bounds } = transform;
+  const spaceX = (0 - bounds.origin[0]) * fit.scale + fit.offsetX;
+  const spaceY = (0 - bounds.origin[1]) * fit.scale + fit.offsetY;
+  const spaceW = template.w * fit.scale;
+  const spaceL = template.l * fit.scale;
+
   /* eslint-disable functional/immutable-data -- Canvas 2D API requires imperative property assignment */
   ctx.strokeStyle = resolveCanvasToken("--color-canvas-grid");
   ctx.lineWidth = 1;
   /* eslint-enable functional/immutable-data -- re-enable after the imperative Canvas 2D block above */
   ctx.setLineDash([4, 2]);
-  ctx.strokeRect(
-    (0 - bounds.origin[0]) * fit.scale + fit.offsetX,
-    (0 - bounds.origin[1]) * fit.scale + fit.offsetY,
-    template.w * fit.scale,
-    template.l * fit.scale,
-  );
+  ctx.strokeRect(spaceX, spaceY, spaceW, spaceL);
   ctx.setLineDash([]);
+
+  if (template.backClearance !== undefined && template.backClearance > 0) {
+    const clearance = template.backClearance;
+    const usableDepth = template.l - clearance;
+    const clearanceY =
+      (usableDepth - bounds.origin[1]) * fit.scale + fit.offsetY;
+    const clearanceH = clearance * fit.scale;
+
+    /* eslint-disable functional/immutable-data -- Canvas 2D API requires imperative property assignment */
+    ctx.fillStyle =
+      resolveCanvasToken("--color-canvas-reach-clearance") ||
+      "rgba(100, 116, 139, 0.15)";
+    ctx.fillRect(spaceX, clearanceY, spaceW, clearanceH);
+
+    ctx.strokeStyle = resolveCanvasToken("--color-canvas-grid");
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 2]);
+    ctx.beginPath();
+    ctx.moveTo(spaceX, clearanceY);
+    ctx.lineTo(spaceX + spaceW, clearanceY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    const label = `${clearance.toFixed(1)}in reach clearance (usable depth ${usableDepth.toFixed(1)}in)`;
+    ctx.fillStyle = resolveCanvasToken("--color-canvas-grid");
+    ctx.font = "11px sans-serif";
+    ctx.textBaseline = "middle";
+    ctx.fillText(label, spaceX + 8, clearanceY + clearanceH / 2);
+    /* eslint-enable functional/immutable-data -- re-enable after the imperative Canvas 2D block above */
+  }
 };
 
 const ACCESSORY_BORDER_DASH = [4, 2] as const;
