@@ -1,6 +1,6 @@
 schemaVersion: "1"
-name: "storagemaxxing-codex"
-agent: codex
+name: "storagemaxxing-claude"
+agent: claude
 workspace:
   path: ..
   clone: false
