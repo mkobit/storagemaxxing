@@ -116,7 +116,7 @@ jobs:
       - name: Test
         run: |
           bun test packages ./.agents/hooks --coverage
-          bun --cwd apps/web test src --coverage
+          bun --cwd apps/web test src scripts --coverage
 
       - name: Coverage threshold check (advisory)
         run: bun run check:coverage-threshold
@@ -222,7 +222,10 @@ jobs:
 
   preview-deploy:
     needs: [lint, typecheck, test, build-storybook, e2e]
-    if: github.event_name == 'pull_request' && !github.event.pull_request.head.repo.fork
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo && !github.event.pull_request.head.repo.fork }}
+    concurrency:
+      group: preview-worker-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     permissions:
       contents: read

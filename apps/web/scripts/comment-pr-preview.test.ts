@@ -43,34 +43,35 @@ describe("comment-pr-preview", () => {
       );
     });
 
-    it("falls back to default URL when output is empty", () => {
-      const url = extractPreviewUrl("", 101);
-      expect(url).toBe(
-        "https://storagemaxxing-web-pr-101.mkobit-cloudflare.workers.dev",
+    it("throws when output is empty and no preview URL can be extracted", () => {
+      expect(() => extractPreviewUrl("", 101)).toThrow(
+        "Unable to extract Cloudflare Workers preview URL for PR #101 from Wrangler output.",
       );
     });
   });
 
   describe("formatCommentBody", () => {
-    it("formats body containing comment marker and commit sha", () => {
+    it("formats body containing comment marker, commit sha, and timestamp", () => {
       const body = formatCommentBody(
-        "https://storagemaxxing-web-pr-42.mkobit-cloudflare.workers.dev",
+        "https://storagemaxxing-web-pr-42.custom.workers.dev",
         "abcdef1234567890",
+        "2026-09-26T12:00:00.000Z",
       );
       expect(body).toContain(COMMENT_MARKER);
       expect(body).toContain(
-        "https://storagemaxxing-web-pr-42.mkobit-cloudflare.workers.dev",
+        "https://storagemaxxing-web-pr-42.custom.workers.dev",
       );
       expect(body).toContain("`abcdef1`");
+      expect(body).toContain("2026-09-26T12:00:00.000Z");
     });
   });
 
   describe("formatTeardownCommentBody", () => {
-    it("formats teardown comment containing marker and PR number", () => {
-      const body = formatTeardownCommentBody(42);
+    it("formats teardown comment containing marker, PR number, and timestamp", () => {
+      const body = formatTeardownCommentBody(42, "2026-09-26T12:00:00.000Z");
       expect(body).toContain(COMMENT_MARKER);
       expect(body).toContain("storagemaxxing-web-pr-42");
-      expect(body).toContain("torn down");
+      expect(body).toContain("torn down at 2026-09-26T12:00:00.000Z");
     });
   });
 
@@ -101,7 +102,7 @@ describe("comment-pr-preview", () => {
   });
 
   describe("postOrUpdateComment", () => {
-    it("creates a new comment if none exists", async () => {
+    it("creates a new comment if none exists and updateOnly is false", async () => {
       const calls: { url: string; method?: string; body?: unknown }[] = [];
       const mockFetch = mock(
         (url: string | URL | Request, init?: RequestInit) => {
@@ -127,9 +128,34 @@ describe("comment-pr-preview", () => {
       });
 
       expect(calls.length).toBe(2);
-      expect(calls[0].url).toContain("/issues/42/comments");
+      expect(calls[0].url).toContain("/issues/42/comments?per_page=100");
       expect(calls[1].method).toBe("POST");
       expect(calls[1].url).toContain("/issues/42/comments");
+    });
+
+    it("does not create a new comment if updateOnly is true and none exists", async () => {
+      const calls: { url: string; method?: string; body?: unknown }[] = [];
+      const mockFetch = mock(
+        (url: string | URL | Request, init?: RequestInit) => {
+          const urlStr = String(url);
+          calls.push({ url: urlStr, method: init?.method, body: init?.body });
+          return Promise.resolve(
+            new Response(JSON.stringify([]), { status: 200 }),
+          );
+        },
+      ) as unknown as typeof fetch;
+
+      await postOrUpdateComment({
+        repo: "owner/repo",
+        prNumber: 42,
+        token: "fake-token",
+        body: "test body",
+        updateOnly: true,
+        fetchFn: mockFetch,
+      });
+
+      expect(calls.length).toBe(1);
+      expect(calls[0].url).toContain("/issues/42/comments?per_page=100");
     });
 
     it("updates existing comment if marker is present", async () => {
@@ -163,7 +189,7 @@ describe("comment-pr-preview", () => {
       });
 
       expect(calls.length).toBe(2);
-      expect(calls[0].url).toContain("/issues/42/comments");
+      expect(calls[0].url).toContain("/issues/42/comments?per_page=100");
       expect(calls[1].method).toBe("PATCH");
       expect(calls[1].url).toContain("/issues/comments/123");
     });

@@ -11,7 +11,10 @@ permissions:
 
 jobs:
   teardown:
-    if: !github.event.pull_request.head.repo.fork
+    if: ${{ github.event.pull_request.head.repo && !github.event.pull_request.head.repo.fork }}
+    concurrency:
+      group: preview-worker-${{ github.event.pull_request.number }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -35,7 +38,7 @@ jobs:
       - name: Delete preview Worker
         run: |
           worker_name="storagemaxxing-web-pr-${{ github.event.pull_request.number }}"
-          bun run --cwd apps/web preview:teardown "$worker_name" --force || true
+          bun run --cwd apps/web preview:teardown --name "$worker_name" --force || true
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

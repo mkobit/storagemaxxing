@@ -35,7 +35,7 @@ export function extractPreviewUrl(
           : `https://${parsed.url}`;
       }
     } catch {
-      // Ignore non-JSON lines
+      // Ignore non-JSON lines from wrangler output
     }
   }
 
@@ -44,12 +44,15 @@ export function extractPreviewUrl(
     return match[0];
   }
 
-  return `https://storagemaxxing-web-pr-${prNumber}.mkobit-cloudflare.workers.dev`;
+  throw new Error(
+    `Unable to extract Cloudflare Workers preview URL for PR #${prNumber} from Wrangler output.`,
+  );
 }
 
 export function formatCommentBody(
   previewUrl: string,
   commitSha?: string,
+  timestamp: string = new Date().toISOString(),
 ): string {
   const shortSha =
     commitSha !== undefined && commitSha.length > 0
@@ -59,20 +62,23 @@ export function formatCommentBody(
     COMMENT_MARKER,
     "### 🚀 Cloudflare Workers Preview",
     "",
-    "| Environment | Preview URL | Commit |",
-    "| :--- | :--- | :--- |",
-    `| Preview | [${previewUrl}](${previewUrl}) | ${shortSha} |`,
+    "| Environment | Preview URL | Commit | Updated (UTC) |",
+    "| :--- | :--- | :--- | :--- |",
+    `| Preview | [${previewUrl}](${previewUrl}) | ${shortSha} | ${timestamp} |`,
     "",
     "*Deployed to Cloudflare Workers with static assets.*",
   ].join("\n");
 }
 
-export function formatTeardownCommentBody(prNumber: number): string {
+export function formatTeardownCommentBody(
+  prNumber: number,
+  timestamp: string = new Date().toISOString(),
+): string {
   return [
     COMMENT_MARKER,
     "### 🛑 Cloudflare Workers Preview (Closed)",
     "",
-    `Preview deployment \`storagemaxxing-web-pr-${prNumber}\` has been torn down.`,
+    `Preview deployment \`storagemaxxing-web-pr-${prNumber}\` has been torn down at ${timestamp}.`,
   ].join("\n");
 }
 
@@ -81,6 +87,7 @@ export async function verifyUrlStatus(
   maxAttempts = 30,
   delayMs = 2000,
   fetchFn: typeof fetch = fetch,
+  requestTimeoutMs = 5000,
 ): Promise<void> {
   console.log(`Verifying preview deployment reachable at ${url}...`);
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
@@ -88,6 +95,7 @@ export async function verifyUrlStatus(
       const res = await fetchFn(url, {
         method: "GET",
         headers: { "User-Agent": "storagemaxxing-preview-check" },
+        signal: AbortSignal.timeout(requestTimeoutMs),
       });
       if (res.status === 200) {
         console.log(`Preview URL returned HTTP 200 on attempt ${attempt}.`);
@@ -116,18 +124,27 @@ export interface CommentOptions {
   readonly prNumber: number;
   readonly token: string;
   readonly body: string;
+  readonly updateOnly?: boolean;
   readonly fetchFn?: typeof fetch;
 }
 
 export async function postOrUpdateComment(
   options: CommentOptions,
 ): Promise<void> {
-  const { repo, prNumber, token, body, fetchFn = fetch } = options;
-  const baseUrl = `https://api.github.com/repos/${repo}/issues/${prNumber}/comments`;
+  const {
+    repo,
+    prNumber,
+    token,
+    body,
+    updateOnly = false,
+    fetchFn = fetch,
+  } = options;
+  const baseUrl = `https://api.github.com/repos/${repo}/issues/${prNumber}/comments?per_page=100`;
   const headers = {
     Authorization: `Bearer ${token}`,
     Accept: "application/vnd.github+json",
     "User-Agent": "storagemaxxing-preview-deploy",
+    "X-GitHub-Api-Version": "2022-11-28",
   };
 
   const listRes = await fetchFn(baseUrl, { headers });
@@ -163,22 +180,29 @@ export async function postOrUpdateComment(
         `Failed to update comment (${updateRes.status}): ${errorText}`,
       );
     }
-  } else {
+  } else if (!updateOnly) {
     console.log(`Creating new preview comment on PR #${prNumber}...`);
-    const createRes = await fetchFn(baseUrl, {
-      method: "POST",
-      headers: {
-        ...headers,
-        "Content-Type": "application/json",
+    const createRes = await fetchFn(
+      `https://api.github.com/repos/${repo}/issues/${prNumber}/comments`,
+      {
+        method: "POST",
+        headers: {
+          ...headers,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ body }),
       },
-      body: JSON.stringify({ body }),
-    });
+    );
     if (!createRes.ok) {
       const errorText = await createRes.text();
       throw new Error(
         `Failed to create comment (${createRes.status}): ${errorText}`,
       );
     }
+  } else {
+    console.log(
+      "No existing preview comment found; skipping teardown comment update.",
+    );
   }
 }
 
@@ -231,7 +255,13 @@ async function main(): Promise<void> {
       console.warn("GITHUB_TOKEN not set, skipping teardown comment update.");
       return;
     }
-    await postOrUpdateComment({ repo, prNumber, token, body });
+    await postOrUpdateComment({
+      repo,
+      prNumber,
+      token,
+      body,
+      updateOnly: true,
+    });
     return;
   }
 

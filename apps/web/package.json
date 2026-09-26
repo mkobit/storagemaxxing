@@ -16,7 +16,7 @@
     "preview:teardown": "wrangler delete",
     "screenshot": "bun scripts/screenshot.ts",
     "storybook": "storybook dev -p 6006",
-    "test": "bun test src",
+    "test": "bun test src scripts",
     "test:e2e": "playwright test",
     "test:watch": "bun test --watch src",
     "typecheck": "tsc --noEmit"
