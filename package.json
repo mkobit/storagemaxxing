@@ -19,7 +19,7 @@
     "format:check": "prettier --check .",
     "lint": "eslint . --max-warnings 0 --cache --cache-location .eslintcache --cache-strategy content && bun run format:check",
     "openspec:validate": "openspec validate --all",
-    "sbx:plan": "sbx env plan .sbx/.sbxenv.yaml",
+    "sbx:plan": "sbx env plan .sbx/sbxenv.yaml",
     "sbx:validate-kit": "sbx kit validate .sbx/kit",
     "screenshot": "bun run --filter @storagemaxxing/web screenshot",
     "test": "bun test packages ./.agents/hooks && bun run --filter @storagemaxxing/web test",

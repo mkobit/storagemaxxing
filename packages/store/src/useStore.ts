@@ -19,12 +19,10 @@ const idbStorage: StateStorage = {
   },
   setItem: async (name: string, value: string): Promise<void> => {
     if (typeof indexedDB === "undefined") return;
-    // eslint-disable-next-line functional/no-expression-statements -- StateStorage.setItem must return Promise<void>; persisting to IndexedDB is inherently a side effect with no value to route through a return
     await set(name, value);
   },
   removeItem: async (name: string): Promise<void> => {
     if (typeof indexedDB === "undefined") return;
-    // eslint-disable-next-line functional/no-expression-statements -- StateStorage.removeItem must return Promise<void>; deleting from IndexedDB is inherently a side effect with no value to route through a return
     await del(name);
   },
 };

@@ -10,7 +10,11 @@ const FORBIDDEN_KEYS = [
 ] as const;
 
 const REQUIRED_PORTS = [5173, 6006] as const;
-const filesToCheck = [".sbx/sbxenv.yaml", ".sbx/sbxenv.agy.yaml"] as const;
+const filesToCheck = [
+  ".sbx/sbxenv.yaml",
+  ".sbx/sbxenv.agy.yaml",
+  ".sbx/sbxenv.claude.yaml",
+] as const;
 const kitSpecFile = ".sbx/kit/spec.yaml";
 const kitDir = ".sbx/kit";
 
@@ -128,8 +132,8 @@ function checkFile(file: string): boolean {
   }
 
   const env = parsed as MinimalSbxEnv;
-  if (!env.workspace?.clone) {
-    console.error(`File ${file} must have workspace.clone: true`);
+  if (env.workspace?.clone !== false) {
+    console.error(`File ${file} must have workspace.clone: false`);
     return false;
   }
 
