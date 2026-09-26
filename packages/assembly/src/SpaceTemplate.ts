@@ -29,6 +29,8 @@ export const SpaceTemplateSchema = z
     l: z.number().optional(),
     h: z.number().optional(),
 
+    backClearance: z.number().nonnegative().optional(),
+
     footprint: z.array(Point2DSchema).readonly().optional(),
 
     gridResolution: z.number().default(0.5),
@@ -55,6 +57,7 @@ export const createSpaceTemplate = (
   id: string,
   dimensions: Dimensions3D,
   accessFace: AccessFace,
+  options?: { readonly backClearance?: number },
 ): SpaceTemplate => ({
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- id is a branded Zod type; this factory takes a plain string param and constructs the branded value without re-running SpaceTemplateIdSchema.parse()
   id: id as SpaceTemplateId,
@@ -64,6 +67,9 @@ export const createSpaceTemplate = (
   w: dimensions.w,
   h: dimensions.h,
   l: dimensions.l,
+  ...(options?.backClearance !== undefined
+    ? { backClearance: options.backClearance }
+    : {}),
   packingModel: "2d",
   installationConstraints: [],
   gridResolution: 0.5,

@@ -6,7 +6,7 @@ mock.module("idb-keyval", () => ({
 }));
 
 import { render, screen } from "@testing-library/react";
-import { LayoutCanvas } from "./LayoutCanvas";
+import { LayoutCanvas, drawSpaceBounds, LayoutTransform } from "./LayoutCanvas";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import { useStore } from "@storagemaxxing/store/useStore";
 import { initialState } from "@storagemaxxing/store/StoreTypes";
@@ -20,6 +20,9 @@ import {
 } from "@storagemaxxing/assembly/SpaceTemplate";
 import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
 import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
+import { createRect2D } from "@storagemaxxing/geometry/Rect2D";
+import { createPoint2D } from "@storagemaxxing/geometry/Point2D";
+import { createDimensions2D } from "@storagemaxxing/geometry/Dimensions2D";
 
 type MockCanvasContext = {
   readonly clearRect: ReturnType<typeof mock>;
@@ -35,9 +38,12 @@ type MockCanvasContext = {
   readonly moveTo: ReturnType<typeof mock>;
   readonly lineTo: ReturnType<typeof mock>;
   readonly stroke: ReturnType<typeof mock>;
+  readonly fillText: ReturnType<typeof mock>;
   readonly fillStyle: string;
   readonly strokeStyle: string;
   readonly lineWidth: number;
+  readonly font: string;
+  readonly textBaseline: string;
 };
 
 const createMockContext = (): MockCanvasContext => ({
@@ -54,9 +60,12 @@ const createMockContext = (): MockCanvasContext => ({
   moveTo: mock(),
   lineTo: mock(),
   stroke: mock(),
+  fillText: mock(),
   fillStyle: "",
   strokeStyle: "",
   lineWidth: 1,
+  font: "",
+  textBaseline: "",
 });
 
 describe("LayoutCanvas", () => {
@@ -179,6 +188,46 @@ describe("LayoutCanvas", () => {
     expect(activeContext.fillRect.mock.calls.length).toBeGreaterThanOrEqual(2);
     expect(activeContext.strokeRect.mock.calls.length).toBeGreaterThanOrEqual(
       2,
+    );
+  });
+
+  it("draws reach clearance shaded band, dashed divider, and label when backClearance is defined", () => {
+    const template = createSpaceTemplate(
+      "test-template",
+      createDimensions3D(10, 20, 4),
+      "top",
+      { backClearance: 4 },
+    );
+    const transform: LayoutTransform = {
+      fit: {
+        scale: 10,
+        offsetX: 20,
+        offsetY: 20,
+      },
+      bounds: createRect2D(createPoint2D(0, 0), createDimensions2D(10, 20)),
+    };
+
+    drawSpaceBounds(
+      activeContext as unknown as CanvasRenderingContext2D,
+      template,
+      transform,
+    );
+
+    // Total space outline is stroked with dashed line
+    expect(activeContext.strokeRect).toHaveBeenCalledWith(20, 20, 100, 200);
+
+    // Reach clearance shaded band is filled at usable depth (16 * 10 + 20 = 180)
+    expect(activeContext.fillRect).toHaveBeenCalledWith(20, 180, 100, 40);
+
+    // Divider line is drawn
+    expect(activeContext.moveTo).toHaveBeenCalledWith(20, 180);
+    expect(activeContext.lineTo).toHaveBeenCalledWith(120, 180);
+
+    // Label with clearance and usable depth is rendered
+    expect(activeContext.fillText).toHaveBeenCalledWith(
+      "4.0in reach clearance (usable depth 16.0in)",
+      28,
+      200,
     );
   });
 });
