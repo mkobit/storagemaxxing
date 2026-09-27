@@ -1,0 +1,53 @@
+name: Preview Teardown
+
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  teardown:
+    if: ${{ github.event.pull_request.head.repo && !github.event.pull_request.head.repo.fork }}
+    concurrency:
+      group: preview-worker-${{ github.event.pull_request.number }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Setup mise
+        uses: jdx/mise-action@3c2e0cf82a5b2e5249f0d3635a4d83d0ae861518
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          cache: true
+
+      - name: Cache bun dependencies
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Delete preview Worker
+        run: |
+          worker_name="storagemaxxing-web-pr-${{ github.event.pull_request.number }}"
+          bun run --cwd apps/web preview:teardown --name "$worker_name" --force || true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Update PR comment
+        run: |
+          bun run --cwd apps/web preview:comment \
+            --pr "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --teardown || true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

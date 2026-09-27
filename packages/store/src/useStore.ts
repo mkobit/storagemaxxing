@@ -19,11 +19,11 @@ const idbStorage: StateStorage = {
   },
   setItem: async (name: string, value: string): Promise<void> => {
     if (typeof indexedDB === "undefined") return;
-    await set(name, value);
+    return void (await set(name, value));
   },
   removeItem: async (name: string): Promise<void> => {
     if (typeof indexedDB === "undefined") return;
-    await del(name);
+    return void (await del(name));
   },
 };
 
