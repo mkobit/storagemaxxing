@@ -46,11 +46,11 @@
     "jiti": "2.7.0",
     "jsonc-eslint-parser": "3.3.0",
     "knip": "^6.32.2",
-    "modern-web-guidance": "^0.0.183",
+    "modern-web-guidance": "^0.0.188",
     "prettier": "3.9.6",
     "prettier-plugin-packagejson": "3.0.2",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.67.0",
+    "typescript-eslint": "8.70.0",
     "zod": "^4.4.3"
   },
   "packageManager": "bun@1.4.2",
