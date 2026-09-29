@@ -1,9 +1,14 @@
 import { test, expect } from "@playwright/test";
 
+const openDevTools = async (page: import("@playwright/test").Page) => {
+  await page.getByTestId("dev-tools-menu").locator("summary").click();
+};
+
 test("wireframe toggle flips rendering mode without disturbing validity", async ({
   page,
 }) => {
   await page.goto("/");
+  await openDevTools(page);
   await page.getByTestId("system-select").selectOption("gridfinity");
   await page.getByTestId("add-starter-bins").click();
 

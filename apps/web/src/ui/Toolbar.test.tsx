@@ -78,14 +78,16 @@ describe("Toolbar", () => {
     );
   });
 
-  it("renders the space-manager panel alongside GoldenPathSetup", () => {
+  it("renders the space-manager panel alongside collapsed Dev Tools", () => {
     renderToolbar();
     expect(document.body.contains(screen.getByTestId("space-manager"))).toBe(
       true,
     );
-    expect(document.body.contains(screen.getByTestId("add-starter-bins"))).toBe(
-      true,
-    );
+    const menu = screen.getByTestId("dev-tools-menu");
+    expect(menu.hasAttribute("open")).toBe(false);
+    fireEvent.click(screen.getByText("Dev Tools"));
+    expect(menu.hasAttribute("open")).toBe(true);
+    expect(screen.getByTestId("add-starter-bins")).toBeTruthy();
   });
 
   it("toggles the theme when the theme toggle is clicked", () => {

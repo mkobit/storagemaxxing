@@ -4,7 +4,7 @@ import {
   serializeSketch,
   parseSketch,
 } from "@storagemaxxing/store/SketchSerialization";
-import { GoldenPathSetup } from "./GoldenPathSetup";
+import { DevToolsMenu } from "./DevToolsMenu";
 import { SpaceManager } from "./spaceManager/SpaceManager";
 import { ThemeToggle } from "./theme/ThemeToggle";
 
@@ -107,7 +107,7 @@ export const Toolbar: React.FC = () => {
         </span>
       )}
       <div className="mx-2 my-1 w-px bg-border-default" />
-      <GoldenPathSetup />
+      <DevToolsMenu />
       <div className="mx-2 my-1 w-px bg-border-default" />
       <SpaceManager />
       <div className="mx-2 my-1 w-px bg-border-default" />

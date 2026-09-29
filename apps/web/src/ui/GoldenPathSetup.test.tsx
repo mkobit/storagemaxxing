@@ -12,6 +12,7 @@ import { initialState } from "@storagemaxxing/store/StoreTypes";
 import { GOLDEN_PATH_STARTER_BIN_IDS } from "@storagemaxxing/catalog/goldenPath";
 import { SpaceInstanceIdSchema } from "@storagemaxxing/assembly/SpaceInstance";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
+import { DevToolsMenu } from "./DevToolsMenu";
 
 const constraintModes = (
   constraints: Readonly<Record<string, SpaceConstraint>>,
@@ -23,6 +24,29 @@ const constraintModes = (
 describe("GoldenPathSetup", () => {
   beforeEach(() => {
     useStore.setState(initialState);
+  });
+
+  it("keeps fixture controls closed until Dev Tools is opened", () => {
+    render(<DevToolsMenu />);
+
+    const menu = screen.getByTestId("dev-tools-menu");
+    expect(menu.hasAttribute("open")).toBe(false);
+    expect(
+      screen
+        .getByTestId("add-starter-bins")
+        .closest("details")
+        ?.hasAttribute("open"),
+    ).toBe(false);
+
+    fireEvent.click(screen.getByText("Dev Tools"));
+
+    expect(menu.hasAttribute("open")).toBe(true);
+    expect(
+      screen
+        .getByTestId("add-starter-bins")
+        .closest("details")
+        ?.hasAttribute("open"),
+    ).toBe(true);
   });
 
   it("loads the starter layout", () => {
