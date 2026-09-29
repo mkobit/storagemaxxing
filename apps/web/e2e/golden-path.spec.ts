@@ -7,10 +7,15 @@ const STARTER_COLORS = ["#4e79a7", "#f28e2b", "#59a14f", "#e15759"];
 // canvas inset by this margin on every edge, regardless of scale.
 const VIEWPORT_MARGIN_PX = 20;
 
+const openDevTools = async (page: import("@playwright/test").Page) => {
+  await page.getByTestId("dev-tools-menu").locator("summary").click();
+};
+
 test("user selects a system and bins and sees a packed layout", async ({
   page,
 }) => {
   await page.goto("/");
+  await openDevTools(page);
   await page.getByTestId("system-select").selectOption("gridfinity");
   await page.getByTestId("add-starter-bins").click();
   await expect(page.locator("canvas")).toBeVisible();
@@ -61,6 +66,7 @@ test("user selects a system and bins and sees a packed layout", async ({
 
 test("non-valid pack surfaces a non-valid validity badge", async ({ page }) => {
   await page.goto("/");
+  await openDevTools(page);
   await page.getByTestId("system-select").selectOption("gridfinity");
   await page.getByTestId("add-tiny-starter-bins").click();
   await expect(page.locator("canvas")).toBeVisible();
@@ -72,6 +78,7 @@ test("non-valid pack surfaces a non-valid validity badge", async ({ page }) => {
 
 test("partial pack surfaces a partial validity badge", async ({ page }) => {
   await page.goto("/");
+  await openDevTools(page);
   await page.getByTestId("system-select").selectOption("gridfinity");
   await page.getByTestId("add-partial-starter-bins").click();
   await expect(page.locator("canvas")).toBeVisible();
@@ -83,6 +90,7 @@ test("partial pack surfaces a partial validity badge", async ({ page }) => {
 
 test("unresolved bin ID surfaces unresolved count badge", async ({ page }) => {
   await page.goto("/");
+  await openDevTools(page);
   await page.getByTestId("system-select").selectOption("gridfinity");
   await page.getByTestId("add-unresolved-starter-bins").click();
 
@@ -95,6 +103,7 @@ test("changing a constraint's mode refreshes the validity badge", async ({
   page,
 }) => {
   await page.goto("/");
+  await openDevTools(page);
   await page.getByTestId("system-select").selectOption("gridfinity");
   await page.getByTestId("add-partial-starter-bins").click();
 
@@ -112,6 +121,7 @@ test("changing a constraint's mode refreshes the validity badge", async ({
 
 test("sketch state persists across a page reload", async ({ page }) => {
   await page.goto("/");
+  await openDevTools(page);
   await page.getByTestId("system-select").selectOption("gridfinity");
   await page.getByTestId("add-starter-bins").click();
   await expect(page.getByTestId("layout-validity-badge")).toHaveText("valid");
@@ -149,6 +159,7 @@ test("exports and re-imports a sketch to restore the layout", async ({
   browser,
 }) => {
   await page.goto("/");
+  await openDevTools(page);
   await page.getByTestId("system-select").selectOption("gridfinity");
   await page.getByTestId("add-starter-bins").click();
   await expect(page.getByTestId("layout-validity-badge")).toHaveText("valid");
