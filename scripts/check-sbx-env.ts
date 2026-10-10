@@ -5,7 +5,6 @@ const FORBIDDEN_KEYS = [
   "secrets",
   "bindings",
   "registries",
-  "additionalWorkspaces",
   "localWorkspaces",
 ] as const;
 
@@ -29,6 +28,8 @@ type MinimalSbxEnv = {
   readonly workspace?: { readonly clone?: unknown };
   readonly kits?: readonly unknown[];
   readonly ports?: readonly { readonly sandbox?: unknown }[];
+  readonly args?: unknown;
+  readonly additionalWorkspaces?: unknown;
 };
 
 function checkKitWithSbx(dir: string): boolean {
