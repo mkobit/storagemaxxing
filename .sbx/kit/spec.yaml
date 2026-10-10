@@ -21,6 +21,23 @@ environment:
     MISE_YES: "1"
 
 setup:
+  startup:
+    - command:
+        - sh
+        - -c
+        - |
+          set -e
+          target="$HOME/.gemini/antigravity-cli/antigravity-oauth-token"
+          src=$(ls -1 /home/*/.gemini/antigravity-cli/antigravity-oauth-token 2>/dev/null | grep -v "^/home/agent/" | head -n 1 || true)
+          if [ -n "$src" ] && [ -f "$src" ]; then
+            if [ ! -f "$target" ] || [ "$src" -nt "$target" ]; then
+              mkdir -p "$(dirname "$target")"
+              cp "$src" "$target"
+              chmod 600 "$target"
+            fi
+          fi
+      user: "1000"
+      description: "Seed host AGY OAuth token into agent home if mounted"
   install:
     - command: |
         curl -fsSL https://mise.run | MISE_VERSION=v2026.8.14 MISE_INSTALL_PATH=/usr/local/bin/mise sh
