@@ -26,7 +26,7 @@ const withTheme: Decorator = (Story, context) => {
           so isolated stories inherit the same ambient surface/text colors as
           the real app -- without it, dark-theme stories render on the raw
           white iframe background and fail axe's color-contrast check. */}
-      <div className="bg-surface-sunken p-4 text-text-primary">
+      <div className="w-fit min-w-full bg-surface-sunken p-4 text-text-primary">
         <Story />
       </div>
     </ThemeContext.Provider>

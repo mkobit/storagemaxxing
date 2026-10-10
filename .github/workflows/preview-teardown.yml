@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   teardown:
-    if: ${{ github.event.pull_request.head.repo && !github.event.pull_request.head.repo.fork }}
+    if: ${{ github.event.pull_request.head.repo && !github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' && github.event.pull_request.user.login != 'dependabot[bot]' }}
     concurrency:
       group: preview-worker-${{ github.event.pull_request.number }}
       cancel-in-progress: false
