@@ -47,7 +47,7 @@
     "jsonc-eslint-parser": "3.3.0",
     "knip": "^6.32.2",
     "modern-web-guidance": "^0.0.189",
-    "prettier": "3.9.8",
+    "prettier": "3.9.9",
     "prettier-plugin-packagejson": "3.0.2",
     "typescript": "6.0.3",
     "typescript-eslint": "8.70.0",
