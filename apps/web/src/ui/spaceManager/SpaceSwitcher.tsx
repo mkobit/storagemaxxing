@@ -13,7 +13,7 @@ export const SpaceSwitcher: React.FC = () => {
 
   if (spaces.length === 0) {
     return (
-      <div data-testid="space-switcher" className="text-sm text-text-muted">
+      <div data-testid="space-switcher" className="text-sm text-text-secondary">
         No spaces yet
       </div>
     );

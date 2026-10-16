@@ -2,7 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { chromium, type ConsoleMessage, type Page } from "@playwright/test";
 
 const PORT = 6100;
-const BASE_URL = `http://localhost:${PORT}`;
+const BASE_URL = `http://127.0.0.1:${PORT}`;
 const THEMES = ["light", "dark"] as const;
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
 
@@ -102,6 +102,8 @@ const storybook = Bun.spawn(
     "dev",
     "-p",
     String(PORT),
+    "--host",
+    "127.0.0.1",
     "--ci",
     "--quiet",
     "--exact-port",
