@@ -1,30 +1,23 @@
-import { describe, it, expect, mock } from "bun:test";
+import { describe, it, expect, beforeEach, mock } from "bun:test";
 mock.module("idb-keyval", () => ({
   get: async () => null,
   set: async () => {},
   del: async () => {},
 }));
 
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { Toolbar } from "./Toolbar";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import { useStore } from "@storagemaxxing/store/useStore";
-import { serializeSketch } from "@storagemaxxing/store/SketchSerialization";
-import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
-import { SpaceInstanceSchema } from "@storagemaxxing/assembly/SpaceInstance";
-import { createSpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
-import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
+import { initialState } from "@storagemaxxing/store/StoreTypes";
 
 const renderToolbar = () => render(<Toolbar />, { wrapper: ThemeProvider });
 
-const uploadFile = (input: HTMLElement, contents: string) => {
-  const file = new File([contents], "sketch.json", {
-    type: "application/json",
-  });
-  fireEvent.change(input, { target: { files: [file] } });
-};
-
 describe("Toolbar", () => {
+  beforeEach(() => {
+    useStore.setState(initialState);
+  });
+
   it("renders the toolbar", () => {
     renderToolbar();
     expect(document.body.contains(screen.getByTestId("toolbar"))).toBe(true);
@@ -36,66 +29,27 @@ describe("Toolbar", () => {
     expect(selectBtn.classList.contains("bg-brand-primary")).toBe(true);
   });
 
-  it("imports a valid sketch file and loads it into the store", async () => {
-    const template = createSpaceTemplate(
-      "template-1",
-      createDimensions3D(6, 6, 2),
-      "top",
-    );
-    const constraint = createSpaceConstraint("gridfinity-1x1x2", 2, 3, 5);
-    const space = SpaceInstanceSchema.parse({
-      id: "space-1",
-      templateId: template.id,
-      name: "Imported space",
-      count: 1,
-      constraints: { "gridfinity-1x1x2": constraint },
-    });
-    const sketchJson = serializeSketch({
-      spaces: [space],
-      activeSpaceId: space.id,
-      templatesById: { [template.id]: template },
-      constraintsBySpace: { [template.id]: [constraint] },
-    });
-
+  it("switches between select and pan modes", () => {
     renderToolbar();
-    uploadFile(screen.getByTestId("import-sketch-input"), sketchJson);
+    const selectBtn = screen.getByTestId("mode-select");
+    const panBtn = screen.getByTestId("mode-pan");
 
-    await waitFor(() =>
-      expect(useStore.getState().spaces.map((s) => s.id)).toEqual([space.id]),
-    );
-    expect(useStore.getState().activeSpaceId).toEqual(space.id);
+    fireEvent.click(panBtn);
+    expect(useStore.getState().mode).toBe("pan");
+    expect(panBtn.classList.contains("bg-brand-primary")).toBe(true);
+    expect(selectBtn.classList.contains("bg-brand-primary")).toBe(false);
+
+    fireEvent.click(selectBtn);
+    expect(useStore.getState().mode).toBe("select");
+    expect(selectBtn.classList.contains("bg-brand-primary")).toBe(true);
   });
 
-  it("shows an error when importing an invalid sketch file", async () => {
+  it("does not duplicate global controls hosted in AppHeader", () => {
     renderToolbar();
-    uploadFile(
-      screen.getByTestId("import-sketch-input"),
-      JSON.stringify({ nonsense: true }),
-    );
-
-    await waitFor(() =>
-      expect(screen.getByText("Invalid sketch file")).toBeTruthy(),
-    );
-  });
-
-  it("renders the space-manager panel alongside collapsed Dev Tools", () => {
-    renderToolbar();
-    expect(document.body.contains(screen.getByTestId("space-manager"))).toBe(
-      true,
-    );
-    const menu = screen.getByTestId("dev-tools-menu");
-    expect(menu.hasAttribute("open")).toBe(false);
-    fireEvent.click(screen.getByText("Dev Tools"));
-    expect(menu.hasAttribute("open")).toBe(true);
-    expect(screen.getByTestId("add-starter-bins")).toBeTruthy();
-  });
-
-  it("toggles the theme when the theme toggle is clicked", () => {
-    renderToolbar();
-    expect(document.documentElement.classList.contains("dark")).toBe(false);
-
-    fireEvent.click(screen.getByTestId("theme-toggle"));
-
-    expect(document.documentElement.classList.contains("dark")).toBe(true);
+    expect(screen.queryByTestId("space-manager")).toBeNull();
+    expect(screen.queryByTestId("export-sketch")).toBeNull();
+    expect(screen.queryByTestId("import-sketch")).toBeNull();
+    expect(screen.queryByTestId("dev-tools-menu")).toBeNull();
+    expect(screen.queryByTestId("theme-toggle")).toBeNull();
   });
 });

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { AppHeader } from "./AppHeader";
 import { Toolbar } from "./Toolbar";
 import { LayoutCanvas } from "./LayoutCanvas";
 import { useStore } from "@storagemaxxing/store/useStore";
@@ -18,6 +19,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="flex h-screen flex-col">
+      <AppHeader />
       <Toolbar />
       <div className="flex gap-4 bg-surface-sunken p-2 text-text-primary">
         <button

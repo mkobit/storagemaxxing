@@ -7,9 +7,9 @@
 
 - [x] 2.1 (sm-xfg1.2) Extract `GoldenPathSetup` buttons into a collapsible Dev Tools menu component
   - Validation: `bun test apps/web/src/ui/GoldenPathSetup.test.tsx`
-- [ ] 2.2 (sm-xfg1.3) Create `AppHeader` component with branding, space selector trigger, and global utilities
+- [x] 2.2 (sm-xfg1.3) Create `AppHeader` component with branding, space selector trigger, and global utilities
   - Validation: `bun --cwd apps/web check-stories`
-- [ ] 2.3 Refactor `Toolbar.tsx` to separate global app bar actions from canvas viewport controls
+- [x] 2.3 Refactor `Toolbar.tsx` to separate global app bar actions from canvas viewport controls
   - Validation: `bun test apps/web/src/ui/Toolbar.test.tsx`
 
 ## 3. Accessible space management
