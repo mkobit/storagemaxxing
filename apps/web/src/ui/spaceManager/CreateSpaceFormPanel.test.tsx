@@ -9,6 +9,13 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { CreateSpaceFormPanel } from "./CreateSpaceFormPanel";
 import { useStore } from "@storagemaxxing/store/useStore";
 
+const openDialog = () => {
+  const trigger = screen.queryByTestId("create-space-open");
+  if (trigger) {
+    fireEvent.click(trigger);
+  }
+};
+
 const fillAndSubmit = (fields: {
   readonly name?: string;
   readonly system?: string;
@@ -16,6 +23,7 @@ const fillAndSubmit = (fields: {
   readonly rows?: string;
   readonly depth?: string;
 }) => {
+  openDialog();
   if (fields.name !== undefined) {
     fireEvent.change(screen.getByTestId("create-space-name"), {
       target: { value: fields.name },
@@ -54,7 +62,7 @@ describe("CreateSpaceFormPanel", () => {
     });
   });
 
-  it("creates a template and space sized to the entered dimensions and makes it active", () => {
+  it("creates a template and space sized to the entered dimensions, makes it active, and closes the dialog", () => {
     render(<CreateSpaceFormPanel />);
 
     fillAndSubmit({
@@ -73,6 +81,8 @@ describe("CreateSpaceFormPanel", () => {
     expect(template.l).toBe(4);
     expect(template.h).toBe(2);
     expect(spaces[0].constraints).toEqual({});
+
+    expect(screen.queryByTestId("create-space-form")).toBeNull();
   });
 
   it("shows an inline error and adds nothing to the store when rows is non-numeric", () => {
@@ -89,6 +99,7 @@ describe("CreateSpaceFormPanel", () => {
     expect(useStore.getState().spaces.length).toBe(0);
     expect(useStore.getState().activeSpaceId).toBeNull();
     expect(screen.getByTestId("create-space-error")).toBeTruthy();
+    expect(screen.getByTestId("create-space-form")).toBeTruthy();
   });
 
   it("shows an inline error and adds nothing to the store when name is blank", () => {
@@ -104,5 +115,47 @@ describe("CreateSpaceFormPanel", () => {
 
     expect(useStore.getState().spaces.length).toBe(0);
     expect(screen.getByTestId("create-space-error")).toBeTruthy();
+    expect(screen.getByTestId("create-space-form")).toBeTruthy();
+  });
+
+  it("closes the dialog when Cancel is clicked", () => {
+    render(<CreateSpaceFormPanel />);
+    openDialog();
+    expect(screen.getByTestId("create-space-form")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(screen.queryByTestId("create-space-form")).toBeNull();
+  });
+
+  it("closes the dialog when Escape is pressed", () => {
+    render(<CreateSpaceFormPanel />);
+    openDialog();
+    expect(screen.getByTestId("create-space-form")).toBeTruthy();
+
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(screen.queryByTestId("create-space-form")).toBeNull();
+  });
+
+  it("closes the dialog when close button is clicked", () => {
+    render(<CreateSpaceFormPanel />);
+    openDialog();
+    expect(screen.getByTestId("create-space-form")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Close dialog" }));
+    expect(screen.queryByTestId("create-space-form")).toBeNull();
+  });
+
+  it("renders accessible modal dialog with labels and aria attributes", () => {
+    render(<CreateSpaceFormPanel />);
+    openDialog();
+
+    const dialog = screen.getByRole("dialog");
+    expect(dialog.getAttribute("aria-modal")).toBe("true");
+    expect(dialog.getAttribute("aria-labelledby")).toBe("create-space-title");
+    expect(screen.getByLabelText("Space name")).toBeTruthy();
+    expect(screen.getByLabelText("Storage system")).toBeTruthy();
+    expect(screen.getByLabelText("Columns")).toBeTruthy();
+    expect(screen.getByLabelText("Rows")).toBeTruthy();
+    expect(screen.getByLabelText("Depth")).toBeTruthy();
   });
 });
