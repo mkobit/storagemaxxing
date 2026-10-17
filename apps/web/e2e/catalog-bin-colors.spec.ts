@@ -18,6 +18,7 @@ test("catalog-added bins render distinct palette colors, not solid black", async
 }) => {
   await page.goto("/");
 
+  await page.getByTestId("create-space-open").click();
   await page.getByTestId("create-space-name").fill("Palette check");
   await page.getByTestId("create-space-system").selectOption("gridfinity");
   await page.getByTestId("create-space-columns").fill("14");

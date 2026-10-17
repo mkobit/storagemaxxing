@@ -27,6 +27,7 @@ test("Akro-Mils bin selection: a space named for a non-Gridfinity system packs a
 }) => {
   await page.goto("/");
 
+  await page.getByTestId("create-space-open").click();
   await page.getByTestId("create-space-name").fill("Tool tray");
   await page.getByTestId("create-space-system").selectOption("akromils");
   await page.getByTestId("create-space-columns").fill("8");
@@ -71,6 +72,7 @@ test("create-space-system dropdown alone drives the Add Bins catalog filter, ind
 }) => {
   await page.goto("/");
 
+  await page.getByTestId("create-space-open").click();
   await page.getByTestId("create-space-name").fill("Kitchen drawer");
   await page.getByTestId("create-space-system").selectOption("schaller");
   await page.getByTestId("create-space-columns").fill("10");

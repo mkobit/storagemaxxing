@@ -11,6 +11,7 @@ test("Workshop drawer planning: real dimensions, a chosen system, and hard-min b
 }) => {
   await page.goto("/");
 
+  await page.getByTestId("create-space-open").click();
   await page.getByTestId("create-space-name").fill("Workshop drawer");
   await page.getByTestId("create-space-system").selectOption("gridfinity");
   await page.getByTestId("create-space-columns").fill("14");
