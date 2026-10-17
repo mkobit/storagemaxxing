@@ -5,6 +5,9 @@ import { CreateSpaceFormPanel } from "./CreateSpaceFormPanel";
 
 const meta: Meta<typeof CreateSpaceFormPanel> = {
   component: CreateSpaceFormPanel,
+  args: {
+    defaultOpen: true,
+  },
   decorators: [
     (Story) => {
       useStore.setState({

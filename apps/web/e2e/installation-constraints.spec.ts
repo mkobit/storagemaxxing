@@ -13,6 +13,7 @@ test("drillable toggle defaults to on and leaves real bins unaffected", async ({
 }) => {
   await page.goto("/");
 
+  await page.getByTestId("create-space-open").click();
   await page.getByTestId("create-space-name").fill("Drill toggle check");
   await page.getByTestId("create-space-system").selectOption("schaller");
   await page.getByTestId("create-space-columns").fill("24");
@@ -56,6 +57,7 @@ test(
   async ({ page }) => {
     await page.goto("/");
 
+    await page.getByTestId("create-space-open").click();
     await page.getByTestId("create-space-name").fill("Drill exclusion check");
     await page.getByTestId("create-space-system").selectOption("gridfinity");
     await page.getByTestId("create-space-columns").fill("8");
@@ -81,6 +83,7 @@ test(
   async ({ page }) => {
     await page.goto("/");
 
+    await page.getByTestId("create-space-open").click();
     await page
       .getByTestId("create-space-name")
       .fill("Drill exclusion packing check");

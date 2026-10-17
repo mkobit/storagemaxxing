@@ -10,6 +10,10 @@ const createSpace = async (
   page: Page,
   options: { name: string; columns: number; rows: number; depth: number },
 ) => {
+  const openButton = page.getByTestId("create-space-open");
+  if (await openButton.isVisible()) {
+    await openButton.click();
+  }
   await page.getByTestId("create-space-name").fill(options.name);
   await page.getByTestId("create-space-columns").fill(String(options.columns));
   await page.getByTestId("create-space-rows").fill(String(options.rows));

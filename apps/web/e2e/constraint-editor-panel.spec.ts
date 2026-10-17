@@ -24,6 +24,7 @@ test("constraint row bin names stay visible with 2+ rows in the real 320px panel
 }) => {
   await page.goto("/");
 
+  await page.getByTestId("create-space-open").click();
   await page.getByTestId("create-space-name").fill("Schaller width check");
   await page.getByTestId("create-space-system").selectOption("schaller");
   await page.getByTestId("create-space-columns").fill("24");
@@ -58,6 +59,7 @@ test("adds a Gridfinity accessory through its distinct accessible action", async
 }) => {
   await page.goto("/");
 
+  await page.getByTestId("create-space-open").click();
   await page.getByTestId("create-space-name").fill("Accessory space");
   await page.getByTestId("create-space-system").selectOption("gridfinity");
   await page.getByTestId("create-space-columns").fill("6");

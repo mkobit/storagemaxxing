@@ -97,7 +97,9 @@
 
   --color-status-success: #22c55e;
   --color-status-warning: #f59e0b;
-  --color-status-danger: #ef4444;
+  /* red-400, not red-500: #ef4444 on surface-raised dark (#1e293b) was
+     3.88:1, below the 4.5:1 WCAG AA floor for normal text. */
+  --color-status-danger: #f87171;
 
   /* blue-400, not the base blue-600: used as *text* (e.g. text-brand-primary
      highlights) against dark surfaces, which needs a lighter blue than the

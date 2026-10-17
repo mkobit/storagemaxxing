@@ -1,140 +1,30 @@
 import React, { useState } from "react";
-import { useStore } from "@storagemaxxing/store/useStore";
-import { StorageSystemSchema } from "@storagemaxxing/catalog/StorageSystem";
-import { createSpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
-import { SpaceInstanceSchema } from "@storagemaxxing/assembly/SpaceInstance";
-import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
-import { CreateSpaceInputSchema } from "./CreateSpaceForm";
+import { CreateSpaceDialog } from "./CreateSpaceDialog";
 
-const button =
-  "rounded-sm border border-border-default bg-surface-raised px-3 py-1 hover:bg-surface-hover transition-colors duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)]";
-const input =
-  "w-20 rounded-sm border border-border-default bg-surface-raised px-2 py-1";
+export interface CreateSpaceFormPanelProps {
+  readonly defaultOpen?: boolean;
+}
 
-export const CreateSpaceFormPanel: React.FC = () => {
-  const addTemplate = useStore((state) => state.addTemplate);
-  const addSpace = useStore((state) => state.addSpace);
-  const setActiveSpace = useStore((state) => state.setActiveSpace);
+const transition =
+  "transition-colors duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)]";
+const button = `rounded-sm border border-border-default bg-surface-raised px-3 py-1 hover:bg-surface-hover ${transition}`;
 
-  const [name, setName] = useState("");
-  const [system, setSystem] = useState("gridfinity");
-  const [columns, setColumns] = useState("");
-  const [rows, setRows] = useState("");
-  const [depth, setDepth] = useState("");
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const parsed = CreateSpaceInputSchema.safeParse({
-      name,
-      system,
-      columns,
-      rows,
-      depth,
-    });
-    if (!parsed.success) {
-      setError(parsed.error.issues[0]?.message ?? "Invalid input");
-      return;
-    }
-
-    const template = createSpaceTemplate(
-      crypto.randomUUID(),
-      createDimensions3D(
-        parsed.data.columns,
-        parsed.data.rows,
-        parsed.data.depth,
-      ),
-      "top",
-    );
-    const space = SpaceInstanceSchema.parse({
-      id: crypto.randomUUID(),
-      templateId: template.id,
-      name: parsed.data.name,
-      count: 1,
-      constraints: {},
-      system: parsed.data.system,
-    });
-    addTemplate(template);
-    addSpace(space);
-    setActiveSpace(space.id);
-
-    setError(null);
-    setName("");
-    setColumns("");
-    setRows("");
-    setDepth("");
-  };
+export const CreateSpaceFormPanel: React.FC<CreateSpaceFormPanelProps> = ({
+  defaultOpen = false,
+}) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <form
-      data-testid="create-space-form"
-      onSubmit={handleSubmit}
-      className="flex items-center gap-2"
-    >
-      <input
-        type="text"
-        placeholder="Name"
-        aria-label="Space name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        data-testid="create-space-name"
-        className={input}
-      />
-      <select
-        value={system}
-        aria-label="Storage system"
-        onChange={(e) => setSystem(e.target.value)}
-        data-testid="create-space-system"
-        className={input}
-      >
-        {StorageSystemSchema.options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-      <input
-        type="text"
-        placeholder="Columns"
-        aria-label="Columns"
-        value={columns}
-        onChange={(e) => setColumns(e.target.value)}
-        data-testid="create-space-columns"
-        className={input}
-      />
-      <input
-        type="text"
-        placeholder="Rows"
-        aria-label="Rows"
-        value={rows}
-        onChange={(e) => setRows(e.target.value)}
-        data-testid="create-space-rows"
-        className={input}
-      />
-      <input
-        type="text"
-        placeholder="Depth"
-        aria-label="Depth"
-        value={depth}
-        onChange={(e) => setDepth(e.target.value)}
-        data-testid="create-space-depth"
-        className={input}
-      />
+    <>
       <button
-        type="submit"
-        data-testid="create-space-submit"
+        type="button"
+        data-testid="create-space-open"
+        onClick={() => setIsOpen(true)}
         className={button}
       >
-        Create space
+        + New space
       </button>
-      {error && (
-        <span
-          data-testid="create-space-error"
-          className="text-sm text-status-danger"
-        >
-          {error}
-        </span>
-      )}
-    </form>
+      <CreateSpaceDialog isOpen={isOpen} onClose={() => setIsOpen(false)} />
+    </>
   );
 };

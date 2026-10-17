@@ -17,6 +17,7 @@ test("viewing Options Mode renders one card per comparable system with per-metri
 }) => {
   await page.goto("/");
 
+  await page.getByTestId("create-space-open").click();
   await page.getByTestId("create-space-name").fill("Options mode drawer");
   await page.getByTestId("create-space-system").selectOption("schaller");
   await page.getByTestId("create-space-columns").fill("24");
@@ -41,6 +42,7 @@ test("selecting a strategy commits its system and auto-fill constraints, then ha
 }) => {
   await page.goto("/");
 
+  await page.getByTestId("create-space-open").click();
   await page.getByTestId("create-space-name").fill("Options mode drawer");
   await page.getByTestId("create-space-system").selectOption("schaller");
   await page.getByTestId("create-space-columns").fill("24");
