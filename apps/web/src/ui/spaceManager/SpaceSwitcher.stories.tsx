@@ -108,3 +108,10 @@ export const MultipleSpaces: Story = {
     },
   ],
 };
+
+export const DropdownOpen: Story = {
+  args: {
+    defaultOpen: true,
+  },
+  decorators: MultipleSpaces.decorators,
+};

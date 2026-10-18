@@ -119,14 +119,15 @@ export const SwitchingActiveSpace: Story = {
         },
         constraintsBySpace: {},
       });
-      return <Story />;
+      return <Story key="switching-active-space" />;
     },
   ],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByTestId("space-switcher-trigger"));
     await userEvent.click(canvas.getByTestId(`space-item-${spaceTwoId}`));
     await expect(
-      canvas.getByTestId(`space-item-${spaceTwoId}`),
-    ).toHaveAttribute("aria-current", "true");
+      canvas.getByTestId("space-switcher-trigger"),
+    ).toHaveTextContent("Second drawer");
   },
 };

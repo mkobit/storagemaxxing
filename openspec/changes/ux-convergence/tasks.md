@@ -16,7 +16,7 @@
 
 - [x] 3.1 (sm-xfg1.4) Implement `CreateSpaceDialog` replacing horizontal inline inputs with an accessible form
   - Validation: `bun test apps/web/src/ui/spaceManager/CreateSpaceFormPanel.test.tsx`
-- [ ] 3.2 (sm-xfg1.5) Implement dropdown `SpaceSwitcher` component supporting multi-space lists without horizontal overflow
+- [x] 3.2 (sm-xfg1.5) Implement dropdown `SpaceSwitcher` component supporting multi-space lists without horizontal overflow
   - Validation: `bun test apps/web/src/ui/spaceManager/SpaceSwitcher.test.tsx`
 - [ ] 3.3 Add Storybook stories covering `CreateSpaceDialog` and dropdown `SpaceSwitcher`
   - Validation: `bun --cwd apps/web check-stories`
