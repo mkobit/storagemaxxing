@@ -30,9 +30,10 @@ const createSpace = async (
   page: Page,
   options: { name: string; columns: number; rows: number; depth: number },
 ) => {
-  const openButton = page.getByTestId("create-space-open");
-  if (await openButton.isVisible()) {
-    await openButton.click();
+  const form = page.getByTestId("create-space-form");
+  if (!(await form.isVisible())) {
+    await page.getByTestId("create-space-open").click();
+    await expect(form).toBeVisible();
   }
   await page.getByTestId("create-space-name").fill(options.name);
   await page.getByTestId("create-space-system").selectOption("gridfinity");
@@ -40,6 +41,7 @@ const createSpace = async (
   await page.getByTestId("create-space-rows").fill(String(options.rows));
   await page.getByTestId("create-space-depth").fill(String(options.depth));
   await page.getByTestId("create-space-submit").click();
+  await expect(form).toBeHidden();
 };
 
 // Pins a hard constraint to an exact count (Min === Max) so the packer's
@@ -69,10 +71,22 @@ const assertSpaceRestored = async (
   page: Page,
   space: (typeof SPACES)[number],
 ) => {
-  await page
-    .getByTestId("space-manager")
-    .getByRole("button", { name: space.name })
-    .click();
+  const trigger = page.getByTestId("space-switcher-trigger");
+  if (await trigger.isVisible()) {
+    const text = await trigger.textContent();
+    if (!text?.includes(space.name)) {
+      await trigger.click();
+      await page
+        .getByTestId("space-switcher-menu")
+        .getByRole("button", { name: space.name })
+        .click();
+    }
+  } else {
+    await page
+      .getByTestId("space-manager")
+      .getByRole("button", { name: space.name })
+      .click();
+  }
 
   await expect(page.getByTestId("layout-validity-badge")).toHaveText("valid");
   await expect(page.locator("canvas")).toBeVisible();

@@ -91,10 +91,19 @@ test("creating a second space and switching to it updates the canvas to that spa
     .poll(() => canvasStrokeAspectRatio(page), { timeout: 10_000 })
     .toBeCloseTo(6 / 2, 1);
 
-  await page
-    .getByTestId("space-manager")
-    .getByRole("button", { name: "First drawer" })
-    .click();
+  const trigger = page.getByTestId("space-switcher-trigger");
+  if (await trigger.isVisible()) {
+    await trigger.click();
+    await page
+      .getByTestId("space-switcher-menu")
+      .getByRole("button", { name: "First drawer" })
+      .click();
+  } else {
+    await page
+      .getByTestId("space-manager")
+      .getByRole("button", { name: "First drawer" })
+      .click();
+  }
 
   await expect
     .poll(() => canvasStrokeAspectRatio(page), { timeout: 10_000 })

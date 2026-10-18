@@ -1,5 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const defaultPort = Number(process.env.PORT ?? 5175);
+const drillFixturePort = Number(process.env.DRILL_PORT ?? defaultPort + 1);
+
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
@@ -8,7 +11,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [["html", { open: "never" }], ["list"]],
   use: {
-    baseURL: "http://localhost:5173",
+    baseURL: `http://localhost:${defaultPort}`,
     trace: "on-first-retry",
   },
   projects: [
@@ -19,21 +22,25 @@ export default defineConfig({
     },
     {
       name: "chromium-e2e-fixtures",
-      use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:5174" },
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: `http://localhost:${drillFixturePort}`,
+      },
       grep: /@drill-fixture/,
     },
   ],
   webServer: [
     {
-      command: "bun run dev",
-      url: "http://localhost:5173",
-      reuseExistingServer: !process.env.CI,
+      command: `bun run dev --port ${defaultPort}`,
+      url: `http://localhost:${defaultPort}`,
+      reuseExistingServer: false,
+      env: { PORT: String(defaultPort) },
     },
     {
-      command: "bun run dev",
-      url: "http://localhost:5174",
-      reuseExistingServer: !process.env.CI,
-      env: { E2E_DRILL_FIXTURE: "true", PORT: "5174" },
+      command: `bun run dev --port ${drillFixturePort}`,
+      url: `http://localhost:${drillFixturePort}`,
+      reuseExistingServer: false,
+      env: { E2E_DRILL_FIXTURE: "true", PORT: String(drillFixturePort) },
     },
   ],
 });
