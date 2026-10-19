@@ -77,6 +77,23 @@ export const WithActiveSpace: Story = {
   ],
 };
 
+export const WireframeActive: Story = {
+  args: {
+    wireframeEnabled: true,
+  },
+  decorators: [
+    (Story) => {
+      useStore.setState({
+        mode: "select",
+        spaces: [sampleSpace],
+        activeSpaceId: spaceId,
+        templatesById: { [templateId]: sampleTemplate },
+      });
+      return <Story />;
+    },
+  ],
+};
+
 export const DarkTheme: Story = {
   globals: {
     theme: "dark",

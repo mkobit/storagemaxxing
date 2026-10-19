@@ -5,7 +5,7 @@ mock.module("idb-keyval", () => ({
   del: async () => {},
 }));
 
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { LayoutCanvas, drawSpaceBounds, LayoutTransform } from "./LayoutCanvas";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import { useStore } from "@storagemaxxing/store/useStore";
@@ -229,5 +229,117 @@ describe("LayoutCanvas", () => {
       28,
       200,
     );
+  });
+
+  it("renders dedicated viewport controls in the layout container", () => {
+    renderLayoutCanvas();
+    expect(screen.getByTestId("layout-canvas-container")).toBeTruthy();
+    expect(screen.getByTestId("toolbar")).toBeTruthy();
+    expect(screen.getByTestId("mode-select")).toBeTruthy();
+    expect(screen.getByTestId("mode-pan")).toBeTruthy();
+    expect(screen.getByTestId("viewport-zoom-in")).toBeTruthy();
+    expect(screen.getByTestId("viewport-zoom-out")).toBeTruthy();
+    expect(screen.getByTestId("viewport-fit")).toBeTruthy();
+    expect(screen.getByTestId("wireframe-toggle")).toBeTruthy();
+  });
+
+  it("toggles wireframe preview mode and updates aria-pressed", () => {
+    const spaceId = SpaceInstanceIdSchema.parse("grid-space");
+    const templateId = SpaceTemplateIdSchema.parse("grid-template");
+    const template = createSpaceTemplate(
+      templateId,
+      createDimensions3D(6, 6, 2),
+      "top",
+    );
+    useStore.setState({
+      activeSpaceId: spaceId,
+      spaces: [
+        SpaceInstanceSchema.parse({
+          id: spaceId,
+          templateId,
+          name: "Test Space",
+          count: 1,
+          constraints: {},
+        }),
+      ],
+      templatesById: { [templateId]: template },
+    });
+
+    renderLayoutCanvas();
+    const toggle = screen.getByTestId("wireframe-toggle");
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+  });
+
+  it("handles zoom and fit controls interaction", () => {
+    const spaceId = SpaceInstanceIdSchema.parse("grid-space");
+    const templateId = SpaceTemplateIdSchema.parse("grid-template");
+    const template = createSpaceTemplate(
+      templateId,
+      createDimensions3D(6, 6, 2),
+      "top",
+    );
+    useStore.setState({
+      activeSpaceId: spaceId,
+      spaces: [
+        SpaceInstanceSchema.parse({
+          id: spaceId,
+          templateId,
+          name: "Test Space",
+          count: 1,
+          constraints: {},
+        }),
+      ],
+      templatesById: { [templateId]: template },
+    });
+
+    renderLayoutCanvas();
+    const zoomIn = screen.getByTestId("viewport-zoom-in");
+    const zoomOut = screen.getByTestId("viewport-zoom-out");
+    const fit = screen.getByTestId("viewport-fit");
+
+    fireEvent.click(zoomIn);
+    fireEvent.click(zoomOut);
+    fireEvent.click(fit);
+    expect(screen.getByTestId("toolbar")).toBeTruthy();
+    expect(activeContext.clearRect).toHaveBeenCalled();
+  });
+
+  it("supports pan dragging when pan mode is active", () => {
+    const spaceId = SpaceInstanceIdSchema.parse("grid-space");
+    const templateId = SpaceTemplateIdSchema.parse("grid-template");
+    const template = createSpaceTemplate(
+      templateId,
+      createDimensions3D(6, 6, 2),
+      "top",
+    );
+    useStore.setState({
+      activeSpaceId: spaceId,
+      mode: "pan",
+      spaces: [
+        SpaceInstanceSchema.parse({
+          id: spaceId,
+          templateId,
+          name: "Test Space",
+          count: 1,
+          constraints: {},
+        }),
+      ],
+      templatesById: { [templateId]: template },
+    });
+
+    const { container } = renderLayoutCanvas();
+    const canvas = container.querySelector("canvas");
+    expect(canvas).toBeTruthy();
+    if (!canvas) return;
+
+    fireEvent.mouseDown(canvas, { clientX: 100, clientY: 100 });
+    fireEvent.mouseMove(canvas, { clientX: 120, clientY: 130 });
+    fireEvent.mouseUp(canvas);
   });
 });

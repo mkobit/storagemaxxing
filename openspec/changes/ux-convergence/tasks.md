@@ -23,7 +23,7 @@
 
 ## 4. Viewport controls and screenshot verification
 
-- [ ] 4.1 (sm-xfg1.6) Update `LayoutCanvas` container with dedicated viewport controls (fit, zoom, pan toggle)
+- [x] 4.1 (sm-xfg1.6) Update `LayoutCanvas` container with dedicated viewport controls (fit, zoom, pan toggle)
   - Validation: `bun test apps/web/src/ui/LayoutCanvas.test.tsx`
 - [ ] 4.2 Add Playwright screenshot recipes for new header, space dialog, and canvas layout
   - Validation: `bun --cwd apps/web test:e2e`

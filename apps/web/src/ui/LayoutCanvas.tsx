@@ -9,7 +9,6 @@ import { BinSpec, binId } from "@storagemaxxing/catalog/bin";
 import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
-import { SpaceInstance } from "@storagemaxxing/assembly/SpaceInstance";
 import { useTheme } from "./theme/useTheme";
 import { buildWireframeScene, WireframeScene } from "./wireframeScene";
 import {
@@ -22,6 +21,7 @@ import {
   Dimensions2D,
   createDimensions2D,
 } from "@storagemaxxing/geometry/Dimensions2D";
+import { Toolbar } from "./Toolbar";
 
 const VIEWPORT_MARGIN_PX = 20;
 
@@ -162,10 +162,9 @@ const drawPackedLayout = (
 const paintWireframe = (
   ctx: CanvasRenderingContext2D,
   scene: WireframeScene,
-  viewport: Dimensions2D,
+  fit: ViewportFit,
 ) => {
   const bounds = scene.boundingBox;
-  const fit = computeViewportFit(bounds, viewport, VIEWPORT_MARGIN_PX);
   const bboxH = bounds.dimensions.l;
 
   scene.polygons.forEach((polygon) => {
@@ -193,7 +192,7 @@ const paintWireframe = (
   });
 };
 
-const validityBadgeClassName: Readonly<
+const validityDotClassName: Readonly<
   Record<PackingResult["validity"], string>
 > = {
   valid: "bg-status-success",
@@ -210,15 +209,61 @@ const badgeBase: React.CSSProperties = {
   fontWeight: 600,
 };
 
-const ResolvedCanvas: React.FC<{
+type ResolvedCanvasProps = {
   readonly result: PackingResult;
   readonly unresolvedBinIds: readonly string[];
   readonly template: SpaceTemplate | null;
   readonly constraints: readonly SpaceConstraint[];
-}> = ({ result, unresolvedBinIds, template, constraints }) => {
+  readonly wireframeEnabled: boolean;
+  readonly zoomLevel: number;
+  readonly panOffset: { readonly x: number; readonly y: number };
+  readonly onPanChange: (offset: {
+    readonly x: number;
+    readonly y: number;
+  }) => void;
+};
+
+const ResolvedCanvas: React.FC<ResolvedCanvasProps> = ({
+  result,
+  unresolvedBinIds,
+  template,
+  constraints,
+  wireframeEnabled,
+  zoomLevel,
+  panOffset,
+  onPanChange,
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { resolvedTheme } = useTheme();
-  const [wireframeEnabled, setWireframeEnabled] = useState(false);
+  const mode = useStore((state) => state.mode);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState<{
+    readonly x: number;
+    readonly y: number;
+  } | null>(null);
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (mode === "pan") {
+      setIsDragging(true);
+      setDragStart({
+        x: e.clientX - panOffset.x,
+        y: e.clientY - panOffset.y,
+      });
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDragging || !dragStart || mode !== "pan") return;
+    onPanChange({
+      x: e.clientX - dragStart.x,
+      y: e.clientY - dragStart.y,
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setDragStart(null);
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -226,6 +271,11 @@ const ResolvedCanvas: React.FC<{
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const viewport: Dimensions2D = createDimensions2D(
+      canvas.width,
+      canvas.height,
+    );
+
     if (wireframeEnabled) {
       const scene = buildWireframeScene(
         result,
@@ -233,73 +283,114 @@ const ResolvedCanvas: React.FC<{
         constraints,
         lookupBin,
       );
-      paintWireframe(
-        ctx,
-        scene,
-        createDimensions2D(canvas.width, canvas.height),
-      );
-    } else {
-      const bounds = computeLayoutBounds(
-        template,
-        result.placedBins,
-        lookupBin,
-      );
-      const fit = computeViewportFit(
-        bounds,
-        createDimensions2D(canvas.width, canvas.height),
+      const baseFit = computeViewportFit(
+        scene.boundingBox,
+        viewport,
         VIEWPORT_MARGIN_PX,
       );
-      const transform: LayoutTransform = { fit, bounds };
-      if (template) drawSpaceBounds(ctx, template, transform);
-      drawPackedLayout(ctx, result, constraints, transform);
+      const effectiveScale = baseFit.scale * zoomLevel;
+      const fit: ViewportFit = {
+        scale: effectiveScale,
+        offsetX:
+          (canvas.width - scene.boundingBox.dimensions.w * effectiveScale) / 2 +
+          panOffset.x,
+        offsetY:
+          (canvas.height - scene.boundingBox.dimensions.l * effectiveScale) /
+            2 +
+          panOffset.y,
+      };
+      paintWireframe(ctx, scene, fit);
+      return;
     }
-  }, [result, template, constraints, resolvedTheme, wireframeEnabled]);
+
+    const bounds = computeLayoutBounds(template, result.placedBins, lookupBin);
+    const baseFit = computeViewportFit(bounds, viewport, VIEWPORT_MARGIN_PX);
+    const effectiveScale = baseFit.scale * zoomLevel;
+    const fit: ViewportFit = {
+      scale: effectiveScale,
+      offsetX:
+        (canvas.width - bounds.dimensions.w * effectiveScale) / 2 + panOffset.x,
+      offsetY:
+        (canvas.height - bounds.dimensions.l * effectiveScale) / 2 +
+        panOffset.y,
+    };
+    const transform: LayoutTransform = { fit, bounds };
+    if (template) drawSpaceBounds(ctx, template, transform);
+    drawPackedLayout(ctx, result, constraints, transform);
+  }, [
+    result,
+    template,
+    constraints,
+    resolvedTheme,
+    wireframeEnabled,
+    zoomLevel,
+    panOffset,
+  ]);
 
   return (
-    <div>
-      <button
-        type="button"
-        data-testid="wireframe-toggle"
-        aria-pressed={wireframeEnabled}
-        onClick={() => setWireframeEnabled((enabled) => !enabled)}
-        className="mb-2 rounded-sm border border-border-default bg-surface-raised px-3 py-1 text-text-primary transition-colors duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)] hover:bg-surface-hover"
+    <div style={{ position: "relative", display: "inline-block" }}>
+      <canvas
+        ref={canvasRef}
+        width={800}
+        height={600}
+        className={`border border-border-strong bg-surface-sunken ${
+          mode === "pan"
+            ? isDragging
+              ? "cursor-grabbing"
+              : "cursor-grab"
+            : "cursor-default"
+        }`}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+      />
+      <span
+        data-testid="layout-validity-badge"
+        className="flex items-center gap-1.5 rounded-sm border border-border-default bg-surface-raised px-2 py-0.5 text-xs font-semibold text-text-primary shadow-sm"
+        style={{ ...badgeBase, left: 8 }}
       >
-        Wireframe preview
-      </button>
-      <div style={{ position: "relative", display: "inline-block" }}>
-        <canvas
-          ref={canvasRef}
-          width={800}
-          height={600}
-          className="border border-border-strong bg-surface-sunken"
-        />
         <span
-          data-testid="layout-validity-badge"
-          className={`text-white ${validityBadgeClassName[result.validity]}`}
-          style={{ ...badgeBase, left: 8 }}
+          aria-hidden="true"
+          className={`h-2 w-2 rounded-full ${validityDotClassName[result.validity]}`}
+        />
+        {result.validity}
+      </span>
+      {unresolvedBinIds.length > 0 && (
+        <span
+          data-testid="layout-unresolved-count"
+          className="rounded-sm border border-border-default bg-surface-raised px-2 py-0.5 text-xs font-semibold text-status-danger shadow-sm"
+          style={{ ...badgeBase, right: 8 }}
         >
-          {result.validity}
+          {unresolvedBinIds.length} unresolved
         </span>
-        {unresolvedBinIds.length > 0 && (
-          <span
-            data-testid="layout-unresolved-count"
-            className="bg-status-danger text-white"
-            style={{ ...badgeBase, right: 8 }}
-          >
-            {unresolvedBinIds.length} unresolved
-          </span>
-        )}
-      </div>
+      )}
     </div>
   );
 };
 
-const renderResolution = (
-  resolution: LayoutResolution,
-  activeSpace: SpaceInstance | null,
-  template: SpaceTemplate | null,
-  constraints: readonly SpaceConstraint[],
-): React.ReactElement => {
+type ResolutionProps = {
+  readonly resolution: LayoutResolution;
+  readonly template: SpaceTemplate | null;
+  readonly constraints: readonly SpaceConstraint[];
+  readonly wireframeEnabled: boolean;
+  readonly zoomLevel: number;
+  readonly panOffset: { readonly x: number; readonly y: number };
+  readonly onPanChange: (offset: {
+    readonly x: number;
+    readonly y: number;
+  }) => void;
+};
+
+const renderResolution = ({
+  resolution,
+  template,
+  constraints,
+  wireframeEnabled,
+  zoomLevel,
+  panOffset,
+  onPanChange,
+}: ResolutionProps): React.ReactElement => {
   if (resolution.kind === "none") {
     return (
       <div className="p-8 text-text-secondary">
@@ -323,6 +414,10 @@ const renderResolution = (
       unresolvedBinIds={resolution.unresolvedBinIds}
       template={template}
       constraints={constraints}
+      wireframeEnabled={wireframeEnabled}
+      zoomLevel={zoomLevel}
+      panOffset={panOffset}
+      onPanChange={onPanChange}
     />
   );
 };
@@ -331,6 +426,10 @@ export const LayoutCanvas: React.FC = () => {
   const activeSpaceId = useStore((state) => state.activeSpaceId);
   const spaces = useStore((state) => state.spaces);
   const templatesById = useStore((state) => state.templatesById);
+
+  const [wireframeEnabled, setWireframeEnabled] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
 
   const resolution = useMemo(
     () => selectPackedLayout({ spaces, activeSpaceId, templatesById }),
@@ -348,5 +447,38 @@ export const LayoutCanvas: React.FC = () => {
     [activeSpace],
   );
 
-  return renderResolution(resolution, activeSpace, activeTemplate, constraints);
+  const handleZoomIn = () => setZoomLevel((z) => Math.min(z * 1.25, 4));
+  const handleZoomOut = () => setZoomLevel((z) => Math.max(z / 1.25, 0.25));
+  const handleFit = () => {
+    setZoomLevel(1);
+    setPanOffset({ x: 0, y: 0 });
+  };
+  const handleToggleWireframe = () =>
+    setWireframeEnabled((enabled) => !enabled);
+
+  return (
+    <div
+      className="flex flex-1 flex-col overflow-hidden"
+      data-testid="layout-canvas-container"
+    >
+      <Toolbar
+        onZoomIn={handleZoomIn}
+        onZoomOut={handleZoomOut}
+        onFit={handleFit}
+        wireframeEnabled={wireframeEnabled}
+        onToggleWireframe={handleToggleWireframe}
+      />
+      <div className="flex-1 overflow-auto p-4">
+        {renderResolution({
+          resolution,
+          template: activeTemplate,
+          constraints,
+          wireframeEnabled,
+          zoomLevel,
+          panOffset,
+          onPanChange: setPanOffset,
+        })}
+      </div>
+    </div>
+  );
 };
