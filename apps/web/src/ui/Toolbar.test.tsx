@@ -52,4 +52,53 @@ describe("Toolbar", () => {
     expect(screen.queryByTestId("dev-tools-menu")).toBeNull();
     expect(screen.queryByTestId("theme-toggle")).toBeNull();
   });
+
+  it("renders viewport controls and invokes callbacks on click", () => {
+    const onZoomIn = mock();
+    const onZoomOut = mock();
+    const onFit = mock();
+    render(
+      <Toolbar onZoomIn={onZoomIn} onZoomOut={onZoomOut} onFit={onFit} />,
+      { wrapper: ThemeProvider },
+    );
+
+    fireEvent.click(screen.getByTestId("viewport-zoom-in"));
+    expect(onZoomIn).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(screen.getByTestId("viewport-zoom-out"));
+    expect(onZoomOut).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(screen.getByTestId("viewport-fit"));
+    expect(onFit).toHaveBeenCalledTimes(1);
+  });
+
+  it("renders wireframe preview toggle and reflects wireframeEnabled state", () => {
+    const onToggleWireframe = mock();
+    const { rerender } = render(
+      <Toolbar
+        wireframeEnabled={false}
+        onToggleWireframe={onToggleWireframe}
+      />,
+      { wrapper: ThemeProvider },
+    );
+
+    const toggle = screen.getByTestId("wireframe-toggle");
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    expect(toggle.classList.contains("bg-brand-primary")).toBe(false);
+
+    fireEvent.click(toggle);
+    expect(onToggleWireframe).toHaveBeenCalledTimes(1);
+
+    rerender(
+      <ThemeProvider>
+        <Toolbar
+          wireframeEnabled={true}
+          onToggleWireframe={onToggleWireframe}
+        />
+      </ThemeProvider>,
+    );
+    const updatedToggle = screen.getByTestId("wireframe-toggle");
+    expect(updatedToggle.getAttribute("aria-pressed")).toBe("true");
+    expect(updatedToggle.classList.contains("bg-brand-primary")).toBe(true);
+  });
 });
