@@ -35,5 +35,6 @@ run = "sbx env plan .sbx/sbxenv.yaml"
 [tasks.sbx-validate-kit]
 description = "Validate Docker Sandbox kit"
 run = "sbx kit validate .sbx/kit"
-
-
+[tasks.check]
+description = "Run all verification checks"
+depends = ["typecheck", "lint", "test", "validate", "validate-sbx"]

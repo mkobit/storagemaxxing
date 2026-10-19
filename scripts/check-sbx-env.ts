@@ -6,9 +6,9 @@ const FORBIDDEN_KEYS = [
   "bindings",
   "registries",
   "localWorkspaces",
+  "ports",
 ] as const;
 
-const REQUIRED_PORTS = [5173, 6006] as const;
 const filesToCheck = [
   ".sbx/sbxenv.yaml",
   ".sbx/sbxenv.agy.yaml",
@@ -27,10 +27,6 @@ type MinimalSbxEnv = {
   readonly agent?: unknown;
   readonly workspace?: { readonly clone?: unknown };
   readonly kits?: readonly unknown[];
-  readonly ports?: readonly {
-    readonly sandbox?: unknown;
-    readonly host?: unknown;
-  }[];
   readonly args?: unknown;
   readonly additionalWorkspaces?: unknown;
 };
@@ -144,27 +140,6 @@ function checkFile(file: string): boolean {
   if (!env.kits || !env.kits.includes("./kit")) {
     console.error(`File ${file} must include "./kit" in kits`);
     return false;
-  }
-
-  const declaredSandboxPorts = new Set(
-    (env.ports ?? []).map((port) => port.sandbox),
-  );
-  for (const requiredPort of REQUIRED_PORTS) {
-    if (!declaredSandboxPorts.has(requiredPort)) {
-      console.error(
-        `File ${file} must forward required sandbox port ${requiredPort}`,
-      );
-      return false;
-    }
-  }
-
-  for (const port of env.ports ?? []) {
-    if ("host" in port && port.host !== undefined) {
-      console.error(
-        `File ${file} must not bind fixed host port ${String(port.host)}; omit host for dynamic allocation`,
-      );
-      return false;
-    }
   }
 
   console.log(
