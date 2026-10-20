@@ -4,6 +4,10 @@ const openDevTools = async (page: import("@playwright/test").Page) => {
   await page.getByTestId("dev-tools-menu").locator("summary").click();
 };
 
+const closeDevTools = async (page: import("@playwright/test").Page) => {
+  await page.getByTestId("dev-tools-menu").locator("summary").click();
+};
+
 test("wireframe toggle flips rendering mode without disturbing validity", async ({
   page,
 }) => {
@@ -11,6 +15,7 @@ test("wireframe toggle flips rendering mode without disturbing validity", async 
   await openDevTools(page);
   await page.getByTestId("system-select").selectOption("gridfinity");
   await page.getByTestId("add-starter-bins").click();
+  await closeDevTools(page);
 
   const canvas = page.locator("canvas");
   const badge = page.getByTestId("layout-validity-badge");

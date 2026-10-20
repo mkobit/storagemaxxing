@@ -1,3 +1,4 @@
+import React, { useLayoutEffect } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
 import {
@@ -9,6 +10,7 @@ import {
   SpaceTemplateIdSchema,
 } from "@storagemaxxing/assembly/SpaceTemplate";
 import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
+import type { StoreState } from "@storagemaxxing/store/StoreTypes";
 import { useStore } from "@storagemaxxing/store/useStore";
 import { AppHeader } from "./AppHeader";
 
@@ -52,82 +54,106 @@ export default meta;
 
 type Story = StoryObj<typeof AppHeader>;
 
+const StoreDecorator: React.FC<{
+  readonly state: Partial<StoreState>;
+  readonly children: React.ReactNode;
+}> = ({ state, children }) => {
+  useLayoutEffect(() => {
+    useStore.setState(state);
+  }, [state]);
+
+  return <>{children}</>;
+};
+
 export const Default: Story = {
   decorators: [
-    (Story) => {
-      useStore.setState({
-        spaces: [],
-        activeSpaceId: null,
-        templatesById: {},
-        constraintsBySpace: {},
-      });
-      return <Story />;
-    },
+    (Story) => (
+      <StoreDecorator
+        state={{
+          spaces: [],
+          activeSpaceId: null,
+          templatesById: {},
+          constraintsBySpace: {},
+        }}
+      >
+        <Story />
+      </StoreDecorator>
+    ),
   ],
 };
 
 export const WithSpaces: Story = {
   decorators: [
-    (Story) => {
-      useStore.setState({
-        spaces: [spaceOne, spaceTwo],
-        activeSpaceId: spaceOneId,
-        templatesById: {
-          [templateOneId]: templateOne,
-          [templateTwoId]: templateTwo,
-        },
-        constraintsBySpace: {},
-      });
-      return <Story />;
-    },
+    (Story) => (
+      <StoreDecorator
+        state={{
+          spaces: [spaceOne, spaceTwo],
+          activeSpaceId: spaceOneId,
+          templatesById: {
+            [templateOneId]: templateOne,
+            [templateTwoId]: templateTwo,
+          },
+          constraintsBySpace: {},
+        }}
+      >
+        <Story />
+      </StoreDecorator>
+    ),
   ],
 };
 
 export const DevToolsOpen: Story = {
   decorators: [
-    (Story) => {
-      useStore.setState({
-        spaces: [spaceOne],
-        activeSpaceId: spaceOneId,
-        templatesById: { [templateOneId]: templateOne },
-        constraintsBySpace: {},
-      });
-      return (
+    (Story) => (
+      <StoreDecorator
+        state={{
+          spaces: [spaceOne],
+          activeSpaceId: spaceOneId,
+          templatesById: { [templateOneId]: templateOne },
+          constraintsBySpace: {},
+        }}
+      >
         <div className="min-h-32">
           <Story />
         </div>
-      );
-    },
+      </StoreDecorator>
+    ),
   ],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.click(canvas.getByText("Dev Tools"));
-    await expect(canvas.getByTestId("dev-tools-menu")).toHaveAttribute("open");
-    await expect(canvas.getByTestId("add-starter-bins")).toBeVisible();
+    const summary = await canvas.findByText("Dev Tools");
+    await userEvent.click(summary);
+    await expect(await canvas.findByTestId("dev-tools-menu")).toHaveAttribute(
+      "open",
+    );
+    await expect(await canvas.findByTestId("add-starter-bins")).toBeVisible();
   },
 };
 
 export const SwitchingActiveSpace: Story = {
   decorators: [
-    (Story) => {
-      useStore.setState({
-        spaces: [spaceOne, spaceTwo],
-        activeSpaceId: spaceOneId,
-        templatesById: {
-          [templateOneId]: templateOne,
-          [templateTwoId]: templateTwo,
-        },
-        constraintsBySpace: {},
-      });
-      return <Story key="switching-active-space" />;
-    },
+    (Story) => (
+      <StoreDecorator
+        state={{
+          spaces: [spaceOne, spaceTwo],
+          activeSpaceId: spaceOneId,
+          templatesById: {
+            [templateOneId]: templateOne,
+            [templateTwoId]: templateTwo,
+          },
+          constraintsBySpace: {},
+        }}
+      >
+        <Story />
+      </StoreDecorator>
+    ),
   ],
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.click(canvas.getByTestId("space-switcher-trigger"));
-    await userEvent.click(canvas.getByTestId(`space-item-${spaceTwoId}`));
-    await expect(
-      canvas.getByTestId("space-switcher-trigger"),
-    ).toHaveTextContent("Second drawer");
+    const trigger = await canvas.findByTestId("space-switcher-trigger");
+    await userEvent.click(trigger);
+    const item = await canvas.findByTestId(`space-item-${spaceTwoId}`);
+    await userEvent.click(item);
+    await expect(trigger).toHaveTextContent("Second drawer");
   },
 };
