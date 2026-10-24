@@ -35,6 +35,11 @@ run = "sbx env plan .sbx/sbxenv.yaml"
 [tasks.sbx-validate-kit]
 description = "Validate Docker Sandbox kit"
 run = "sbx kit validate .sbx/kit"
+
+[tasks.sbx-test-e2e]
+description = "Run Playwright e2e tests inside Docker Sandbox"
+run = "sbx env exec .sbx/sbxenv.yaml -- bun run --filter @storagemaxxing/web test:e2e"
+
 [tasks.check]
 description = "Run all verification checks"
 depends = ["typecheck", "lint", "test", "validate", "validate-sbx"]
