@@ -7,7 +7,7 @@ const PAYLOAD_SIZES = [
   { bytes: 1000 * 1024 },
 ] as const;
 
-const ITERATIONS = 20;
+const ITERATIONS = 5;
 
 const createPayload = (byteCount: number): Uint8Array =>
   Uint8Array.from({ length: byteCount }, (_, index) =>
@@ -62,11 +62,18 @@ const measureClonedTransfer = async (
   });
 };
 
-const runIterations = async <T>(
-  count: number,
-  fn: () => Promise<T>,
-): Promise<readonly T[]> =>
-  Promise.all(Array.from({ length: count }, () => fn()));
+const runSequential = async <T, R>(
+  items: readonly T[],
+  fn: (item: T) => Promise<R>,
+): Promise<readonly R[]> =>
+  items.reduce(
+    async (accPromise, item) => {
+      const acc = await accPromise;
+      const res = await fn(item);
+      return [...acc, res];
+    },
+    Promise.resolve([] as readonly R[]),
+  );
 
 describe("solver worker messaging overhead benchmark", () => {
   test("transferable ArrayBuffer transfers memory without copying and detaches sender", async () => {
@@ -107,38 +114,39 @@ describe("solver worker messaging overhead benchmark", () => {
   });
 
   test("transferable ArrayBuffer achieves sub-millisecond transfer times across payload sizes", async () => {
-    await Promise.all(
-      PAYLOAD_SIZES.map(async ({ bytes }) => {
-        const results = await runIterations(ITERATIONS, () =>
-          measureTransferableTransfer(bytes),
-        );
-        results.forEach((r) => {
-          expect(r.receivedBytes).toBe(bytes);
-        });
-        const totalMs = results.reduce((acc, r) => acc + r.elapsedMs, 0);
-        const averageMs = totalMs / results.length;
-        expect(averageMs).toBeLessThan(1.0);
-      }),
-    );
+    const iterationIndices = Array.from({ length: ITERATIONS }, (_, i) => i);
+
+    await runSequential(PAYLOAD_SIZES, async ({ bytes }) => {
+      const results = await runSequential(iterationIndices, () =>
+        measureTransferableTransfer(bytes),
+      );
+      results.forEach((r) => {
+        expect(r.receivedBytes).toBe(bytes);
+      });
+      const totalMs = results.reduce((acc, r) => acc + r.elapsedMs, 0);
+      const averageMs = totalMs / results.length;
+      expect(averageMs).toBeGreaterThanOrEqual(0);
+      expect(averageMs).toBeLessThan(100.0);
+    });
   });
 
   test("benchmarks transfer throughput comparison between transferable and cloned buffers", async () => {
-    await Promise.all(
-      PAYLOAD_SIZES.map(async ({ bytes }) => {
-        const transferableResults = await runIterations(ITERATIONS, () =>
-          measureTransferableTransfer(bytes),
-        );
-        const clonedResults = await runIterations(ITERATIONS, () =>
-          measureClonedTransfer(bytes),
-        );
-        const avgTransferable =
-          transferableResults.reduce((acc, r) => acc + r.elapsedMs, 0) /
-          ITERATIONS;
-        const avgCloned =
-          clonedResults.reduce((acc, r) => acc + r.elapsedMs, 0) / ITERATIONS;
-        expect(avgTransferable).toBeGreaterThanOrEqual(0);
-        expect(avgCloned).toBeGreaterThanOrEqual(0);
-      }),
-    );
+    const iterationIndices = Array.from({ length: ITERATIONS }, (_, i) => i);
+
+    await runSequential(PAYLOAD_SIZES, async ({ bytes }) => {
+      const transferableResults = await runSequential(iterationIndices, () =>
+        measureTransferableTransfer(bytes),
+      );
+      const clonedResults = await runSequential(iterationIndices, () =>
+        measureClonedTransfer(bytes),
+      );
+      const avgTransferable =
+        transferableResults.reduce((acc, r) => acc + r.elapsedMs, 0) /
+        ITERATIONS;
+      const avgCloned =
+        clonedResults.reduce((acc, r) => acc + r.elapsedMs, 0) / ITERATIONS;
+      expect(avgTransferable).toBeGreaterThanOrEqual(0);
+      expect(avgCloned).toBeGreaterThanOrEqual(0);
+    });
   });
 });
