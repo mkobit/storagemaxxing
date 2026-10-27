@@ -8,7 +8,7 @@
 - [x] 1.1 Prototype minimal client-side OR-Tools CP-SAT WebAssembly build recipe and Dockerfile ([sm-54wg.2](../../../.beads))
   - Requirement: `Single-threaded WebAssembly compilation`
   - Validation: `docker build -f docker/wasm-solver/Dockerfile -t ortools-wasm .`
-- [ ] 1.2 Implement WebAssembly module loader and instantiation smoke test in `packages/packer` ([sm-54wg.6](../../../.beads))
+- [x] 1.2 Implement WebAssembly module loader and instantiation smoke test in `packages/packer` ([sm-54wg.6](../../../.beads))
   - Requirement: `Single-threaded WebAssembly compilation`, `Binary Protobuf model bridge`
   - Validation: `bun test packages/packer/src/wasmLoader.test.ts`
 
