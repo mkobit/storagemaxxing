@@ -7,9 +7,22 @@ This package contains spatial layout algorithms and pure geometric calculations.
 ## Type Ownership
 
 ```ts-exports
+FreeBufferFn
 HeightEligibility
+OrToolsSatModule
+OrToolsSatWasmExports
 PackInput
 RectsAccumulator
+SolveProtoBufferFn
+SolveProtoRawFn
+WasmFreeFn
+WasmLoadError
+WasmLoadResult
+WasmMallocFn
+WasmModuleImports
+WasmSolveError
+WasmSolveResult
+WasmSource
 checkHardMinPhase
 checkPhaseFailures
 checkSoftMinPhase
@@ -24,6 +37,8 @@ getMax
 getMaxBinDepth
 getPlacedCounts
 getSoftMin
+instantiateOrToolsSatModule
+invokeSolveProto
 isFootprintEligible
 isHeightEligible
 packSpace
