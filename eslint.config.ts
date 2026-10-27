@@ -62,6 +62,7 @@ export default tseslint.config(
       "apps/web/.storybook/**",
       "apps/web/storybook-static/**",
       "apps/web/.wrangler/**",
+      "packages/packer/src/gen/**",
       "scripts/**",
     ],
   },

@@ -4,12 +4,18 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "generate:proto": "buf generate",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@bufbuild/protobuf": "^2.16.0",
     "@storagemaxxing/assembly": "workspace:*",
     "@storagemaxxing/catalog": "workspace:*",
     "@storagemaxxing/geometry": "workspace:*",
     "maxrects-packer": "^2.7.4"
+  },
+  "devDependencies": {
+    "@bufbuild/buf": "^1.75.0",
+    "@bufbuild/protoc-gen-es": "^2.16.0"
   }
 }

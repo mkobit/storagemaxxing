@@ -10,3 +10,6 @@ openspec/specs/
 # export-state.json, etc.) aren't picked up automatically. These are bd's
 # own runtime state, never authored content, so ignore the whole directory.
 .beads/
+
+# Generated Protobuf TypeScript files from `buf generate`.
+packages/packer/src/gen/
