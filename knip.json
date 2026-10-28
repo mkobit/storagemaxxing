@@ -1,8 +1,11 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "ignore": ["apps/web/e2e/fixtures/catalogWithDrillFixture.ts"],
+  "ignore": [
+    "apps/web/e2e/fixtures/catalogWithDrillFixture.ts",
+    "packages/packer/src/gen/**"
+  ],
   "ignoreBinaries": ["sbx"],
-  "ignoreDependencies": ["modern-web-guidance"],
+  "ignoreDependencies": ["@bufbuild/protoc-gen-es", "modern-web-guidance"],
   "workspaces": {
     ".": {
       "entry": [
