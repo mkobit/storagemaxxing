@@ -17,7 +17,7 @@
 - [x] 2.1 Vendor `cp_model.proto` and configure `@bufbuild/protobuf` code generation in `packages/packer` ([sm-54wg.7](../../../.beads))
   - Requirement: `Binary Protobuf model bridge`
   - Validation: `bun test packages/packer`
-- [ ] 2.2 Implement pure `buildCpModel` function with `COORD_SCALE` and obstacle constraints in `packages/packer` ([sm-54wg.8](../../../.beads))
+- [x] 2.2 Implement pure `buildCpModel` function with `COORD_SCALE` and obstacle constraints in `packages/packer` ([sm-54wg.8](../../../.beads))
   - Requirement: `Pure functional model formulation`
   - Validation: `bun test packages/packer/src/cpModelBuilder.test.ts`
 - [ ] 2.3 Implement pure `decodeCpResponse` function mapping solver variables to canonical `PackingResult` in `packages/packer` ([sm-54wg.9](../../../.beads))
