@@ -13,10 +13,13 @@ AutomatonConstraintProto
 AutomatonConstraintProtoSchema
 BoolArgumentProto
 BoolArgumentProtoSchema
+COORD_SCALE
 CircuitConstraintProto
 CircuitConstraintProtoSchema
 ConstraintProto
 ConstraintProtoSchema
+CpModelBuilderParams
+CpModelObjectiveMode
 CpModelProto
 CpModelProtoSchema
 CpObjectiveProto
@@ -113,6 +116,7 @@ WasmModuleImports
 WasmSolveError
 WasmSolveResult
 WasmSource
+buildCpModel
 checkHardMinPhase
 checkPhaseFailures
 checkSoftMinPhase
@@ -134,6 +138,7 @@ invokeSolveProto
 isFootprintEligible
 isHeightEligible
 packSpace
+scaleCoord
 sortRects
 toPackInput
 ```
