@@ -19,7 +19,7 @@ import {
 
 export const COORD_SCALE = 1000;
 
-export type CpModelObjectiveMode = "count" | "area";
+type CpModelObjectiveMode = "count" | "area";
 
 export type CpModelBuilderParams = {
   readonly modelName?: string;

@@ -19,7 +19,6 @@ CircuitConstraintProtoSchema
 ConstraintProto
 ConstraintProtoSchema
 CpModelBuilderParams
-CpModelObjectiveMode
 CpModelProto
 CpModelProtoSchema
 CpObjectiveProto
