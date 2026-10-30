@@ -22,3 +22,6 @@ storybook-static/
 
 # Wrangler local dev/deploy cache.
 .wrangler/
+
+# Guest task evidence and disposable Beads context snapshots.
+.sbx-task/

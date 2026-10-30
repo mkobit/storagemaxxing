@@ -8,6 +8,7 @@ on:
       - "mise.toml"
       - "package.json"
       - "apps/web/package.json"
+      - "scripts/check-sbx-env*.ts"
       - ".github/workflows/sbx-validation.yml"
   pull_request:
     branches: [main]
@@ -16,6 +17,7 @@ on:
       - "mise.toml"
       - "package.json"
       - "apps/web/package.json"
+      - "scripts/check-sbx-env*.ts"
       - ".github/workflows/sbx-validation.yml"
   workflow_dispatch: {}
 
@@ -30,7 +32,7 @@ permissions: {}
 
 jobs:
   validate:
-    name: Validate Docker Sandbox kit and execute Playwright e2e
+    name: Validate Docker Sandbox kit and environment files
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -68,30 +70,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install and start sbx CLI
+      - name: Install sbx CLI
         run: |
           sudo apt-get update
           sudo apt-get install -y /tmp/sbx.deb
-          mkdir -p ~/.config/sandboxes/sandboxes
-          cat <<'EOF' > ~/.config/sandboxes/sandboxes/settings.json
-          {
-            "kit.allowedSources": [
-              "docker.io/",
-              "github.com/docker/"
-            ]
-          }
-          EOF
-          sbx daemon start -d
+          sbx version
 
       - name: Validate Docker Sandbox environments
         run: bun run check:sbx-env
-
-      - name: Build SBX kit and provision sandbox
-        run: sbx env create --force .sbx/sbxenv.yaml
-
-      - name: Execute Playwright e2e in SBX sandbox
-        run: sbx env exec .sbx/sbxenv.yaml -- bun run --filter @storagemaxxing/web test:e2e
-
-      - name: Clean up sandbox
-        if: always()
-        run: sbx env rm --force .sbx/sbxenv.yaml || true

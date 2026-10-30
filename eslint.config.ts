@@ -53,6 +53,7 @@ export default tseslint.config(
       "node_modules/**",
       ".claude/**",
       ".beads/**",
+      ".sbx-task/**",
       ".screenshots/**",
       "apps/web/test-results/**",
       "apps/web/playwright-report/**",

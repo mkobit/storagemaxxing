@@ -47,7 +47,16 @@ setup:
       description: "Seed host AGY OAuth token into agent home if mounted"
   install:
     - command: |
-        curl -fsSL https://mise.run | MISE_VERSION=v2026.8.14 MISE_INSTALL_PATH=/usr/local/bin/mise sh
+        set -eu
+        installer=$(mktemp)
+        trap 'rm -f "$installer"' EXIT
+        curl -fsSL https://mise.run -o "$installer"
+        MISE_VERSION=v2026.8.14 MISE_INSTALL_PATH=/usr/local/bin/mise sh "$installer"
+        if [ ! -x /usr/local/bin/mise ]; then
+          echo "mise installer did not create /usr/local/bin/mise" >&2
+          exit 1
+        fi
+        /usr/local/bin/mise --version
         echo 'if command -v mise >/dev/null 2>&1; then eval "$(mise activate bash)"; fi' > /etc/profile.d/mise.sh
         printf '%s\n' 'export PATH="/home/agent/.local/share/mise/shims:/home/agent/.local/bin:$PATH"' >> /etc/sandbox-persistent.sh
       description: "Install mise into /usr/local/bin and configure profile"
@@ -90,9 +99,22 @@ setup:
           xvfb
         rm -rf /var/lib/apt/lists/*
       description: "Install system dependencies required by Playwright Chromium"
-    - command: "mise settings set paranoid false && mise settings set yes true && mise use -g bun@1.4.3 && mise use -g github:gastownhall/beads@1.3.1"
+    - command: |
+        set -eu
+        workdir="${WORKSPACE_DIR:-$(tr '\0' '\n' < /proc/1/environ 2>/dev/null | sed -n 's/^WORKSPACE_DIR=//p' | head -n 1)}"
+        workdir="${workdir:-$PWD}"
+        if [ ! -f "$workdir/mise.toml" ]; then
+          echo "Cannot install repository tools: $workdir/mise.toml is missing" >&2
+          exit 1
+        fi
+        cd "$workdir"
+        mise trust mise.toml
+        mise install
+        mise reshim
+        mise exec -- bun --version
+        mise exec -- bd version
       user: "1000"
-      description: "Install bun 1.4.3 and beads 1.3.1 for agent"
+      description: "Install repository tools from mise.toml and mise.lock for agent"
     - command: |
         set -e
         export PATH="/home/agent/.local/share/mise/shims:/home/agent/.local/bin:$PATH"

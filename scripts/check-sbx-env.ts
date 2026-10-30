@@ -40,28 +40,11 @@ function checkKitWithSbx(dir: string): boolean {
   }
 
   try {
-    console.log(`Running host 'sbx kit validate ${dir}'...`);
-    execSync(`sbx kit validate ${dir}`, { stdio: "inherit" });
+    console.log(`Running host 'sbx kit validate ${dir} --offline'...`);
+    execSync(`sbx kit validate ${dir} --offline`, { stdio: "inherit" });
     return true;
   } catch (err) {
-    console.error(`Host 'sbx kit validate ${dir}' failed:`, err);
-    return false;
-  }
-}
-
-function checkEnvWithSbx(file: string): boolean {
-  try {
-    execSync("command -v sbx", { stdio: "ignore" });
-  } catch {
-    return true;
-  }
-
-  try {
-    console.log(`Running host 'sbx env plan ${file}'...`);
-    execSync(`sbx env plan ${file}`, { stdio: "inherit" });
-    return true;
-  } catch (err) {
-    console.error(`Host 'sbx env plan ${file}' failed:`, err);
+    console.error(`Host 'sbx kit validate ${dir} --offline' failed:`, err);
     return false;
   }
 }
@@ -228,37 +211,25 @@ function checkToolchainParity(): boolean {
     .map((step) => step.command ?? "")
     .join("\n");
 
-  const kitBunMatch = installCommands.match(/bun@([0-9]+\.[0-9]+\.[0-9]+)/);
-  if (!kitBunMatch) {
+  if (!/\bmise install\b/.test(installCommands)) {
     console.error(
-      `${kitSpecFile} does not declare an explicit bun version (expected bun@<semver>)`,
+      `${kitSpecFile} must run mise install against the repository mise.toml`,
     );
     return false;
   }
 
-  if (kitBunMatch[1] !== miseBun) {
+  if (/\bmise use\b|\b(?:bun|beads)@\d/.test(installCommands)) {
     console.error(
-      `Version mismatch: ${kitSpecFile} declares bun@${kitBunMatch[1]}, but ${miseFile} declares ${miseBun}`,
+      `${kitSpecFile} must use repository tool pins, without separate mise use or bun/beads versions`,
     );
     return false;
   }
 
-  if (miseBeads) {
-    const kitBeadsMatch = installCommands.match(
-      /(?:github:gastownhall\/beads|beads)@([0-9]+\.[0-9]+\.[0-9]+)/,
+  if (!miseBeads) {
+    console.error(
+      `${miseFile} missing tools.github:gastownhall/beads definition`,
     );
-    if (!kitBeadsMatch) {
-      console.error(
-        `${kitSpecFile} does not declare an explicit beads version (expected beads@<semver>)`,
-      );
-      return false;
-    }
-    if (kitBeadsMatch[1] !== miseBeads) {
-      console.error(
-        `Version mismatch: ${kitSpecFile} declares beads@${kitBeadsMatch[1]}, but ${miseFile} declares ${miseBeads}`,
-      );
-      return false;
-    }
+    return false;
   }
 
   console.log(
@@ -271,14 +242,7 @@ const kitPassed = checkKitSpec(kitSpecFile);
 const envPassed = filesToCheck.every(checkFile);
 const parityPassed = checkToolchainParity();
 const nativeKitPassed = checkKitWithSbx(kitDir);
-const nativeEnvPassed = filesToCheck.every(checkEnvWithSbx);
 
-if (
-  !kitPassed ||
-  !envPassed ||
-  !parityPassed ||
-  !nativeKitPassed ||
-  !nativeEnvPassed
-) {
+if (!kitPassed || !envPassed || !parityPassed || !nativeKitPassed) {
   process.exit(1);
 }

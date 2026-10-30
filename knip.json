@@ -9,6 +9,7 @@
   "workspaces": {
     ".": {
       "entry": [
+        "scripts/setup-sbx-context.ts",
         ".agents/hooks/lint-on-edit.ts",
         ".agents/hooks/typecheck-on-edit.ts",
         ".agents/hooks/openspec-validate-on-edit.ts",
