@@ -121,6 +121,7 @@ checkPhaseFailures
 checkSoftMinPhase
 createPackInput
 createPackInputBasic
+decodeCpResponse
 file_ortools_sat_cp_model
 file_ortools_sat_sat_parameters
 generateAutoFillRects

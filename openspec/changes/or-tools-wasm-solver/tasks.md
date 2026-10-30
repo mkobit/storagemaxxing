@@ -20,7 +20,7 @@
 - [x] 2.2 Implement pure `buildCpModel` function with `COORD_SCALE` and obstacle constraints in `packages/packer` ([sm-54wg.8](../../../.beads))
   - Requirement: `Pure functional model formulation`
   - Validation: `bun test packages/packer/src/cpModelBuilder.test.ts`
-- [ ] 2.3 Implement pure `decodeCpResponse` function mapping solver variables to canonical `PackingResult` in `packages/packer` ([sm-54wg.9](../../../.beads))
+- [x] 2.3 Implement pure `decodeCpResponse` function mapping solver variables to canonical `PackingResult` in `packages/packer` ([sm-54wg.9](../../../.beads))
   - Requirement: `Deterministic solution decoding`
   - Validation: `bun test packages/packer/src/cpResponseDecoder.test.ts`
 
