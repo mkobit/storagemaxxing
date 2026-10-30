@@ -84,9 +84,14 @@ Placing the Web Worker runtime in `apps/web` isolates side-effectful event liste
 The UI main thread remains unblocked and renders at 60 frames per second during solver operations.
 The main thread and worker communicate using typed message events.
 Binary protobuf payloads pass between threads as transferable `ArrayBuffer` objects with zero memory copy.
+The response can include an owned `responseBuffer` with the serialized solver response and an `errorCode` for structured failures.
+Transferring the buffer detaches it in the worker; the canonical packing result remains available as structured data.
 The Web Worker caches the compiled `WebAssembly.Module` instance across successive solve requests.
 A solve request accepts a configurable time limit to prevent runaway search execution.
 If the user modifies inputs during an active search, the main thread terminates the worker or cancels the job.
+The default worker loads `/ortools-sat.wasm`.
+The checkout has no compiled solver artifact, so real browser solving requires separate artifact delivery and verification.
+The worker tests verify the bridge, message handling, transfer, and cleanup with native export doubles.
 
 ### 5. Pure functional model formulation in `packages/packer`
 
@@ -224,7 +229,7 @@ export const SolverParametersSchema = z
   .object({
     maxTimeInSeconds: z.number().positive().default(5.0),
     numWorkers: z.literal(1).default(1),
-    randomSeed: z.number().int().nonnegative().default(42),
+    randomSeed: z.number().int().nonnegative().max(2147483647).default(42),
     logSearchProgress: z.boolean().default(false),
   })
   .readonly();
@@ -248,6 +253,8 @@ export const SolverWorkerResponseSchema = z
     status: SolverStatusSchema,
     wallTimeMs: z.number().nonnegative(),
     packingResult: PackingResultSchema.optional(),
+    responseBuffer: z.instanceof(ArrayBuffer).optional(),
+    errorCode: z.string().optional(),
     errorMessage: z.string().optional(),
   })
   .readonly();

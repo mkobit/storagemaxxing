@@ -26,9 +26,9 @@
 
 ## 3. Web Worker runtime and solver integration
 
-- [ ] 3.1 Implement Web Worker solver runtime in `apps/web` with transferable ArrayBuffers ([sm-54wg.4](../../../.beads))
+- [x] 3.1 Implement Web Worker solver runtime in `apps/web` with transferable ArrayBuffers ([sm-54wg.4](../../../.beads))
   - Requirement: `Web Worker asynchronous execution`
-  - Validation: `bun test apps/web/src/workers/solverWorker.test.ts`
+  - Validation: `mise exec -- bun test ./apps/web/src/workers/solverWorker.test.ts`
 - [ ] 3.2 Connect asynchronous solver worker actions to layout state in `packages/store` ([sm-54wg.10](../../../.beads))
   - Requirement: `Web Worker asynchronous execution`
   - Validation: `bun test packages/store/src/solverActions.test.ts`
