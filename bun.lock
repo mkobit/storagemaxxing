@@ -30,7 +30,7 @@
         "prettier-plugin-packagejson": "3.0.2",
         "typescript": "6.0.3",
         "typescript-eslint": "8.71.0",
-        "zod": "^4.4.3",
+        "zod": "^4.6.6",
       },
     },
     "apps/web": {
@@ -47,7 +47,7 @@
         "@storagemaxxing/store": "workspace:*",
         "react": "^19.2.8",
         "react-dom": "^19.2.8",
-        "zod": "^4.4.3",
+        "zod": "^4.6.6",
       },
       "devDependencies": {
         "@axe-core/playwright": "4.13.0",
@@ -73,7 +73,7 @@
       "dependencies": {
         "@storagemaxxing/catalog": "workspace:*",
         "@storagemaxxing/geometry": "workspace:*",
-        "zod": "^4.4.3",
+        "zod": "^4.6.6",
       },
     },
     "packages/catalog": {
@@ -81,7 +81,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@storagemaxxing/geometry": "workspace:*",
-        "zod": "^4.4.3",
+        "zod": "^4.6.6",
       },
     },
     "packages/geometry": {
@@ -89,7 +89,7 @@
       "version": "0.0.0",
       "dependencies": {
         "gl-matrix": "^3.4.4",
-        "zod": "^4.4.3",
+        "zod": "^4.6.6",
       },
     },
     "packages/packer": {
@@ -116,7 +116,7 @@
         "@storagemaxxing/geometry": "workspace:*",
         "@storagemaxxing/packer": "workspace:*",
         "idb-keyval": "^6.3.0",
-        "zod": "^4.4.3",
+        "zod": "^4.6.6",
         "zustand": "^5.0.15",
       },
     },
@@ -1528,7 +1528,7 @@
 
     "youch-core": ["youch-core@0.3.3", "", { "dependencies": { "@poppinss/exception": "^1.2.2", "error-stack-parser-es": "^1.0.5" } }, "sha512-ho7XuGjLaJ2hWHoK8yFnsUGy2Y5uDpqSTq1FkHLK4/oqKtyUU1AFbOOxY4IpC9f0fTLjwYbslUz0Po5BpD1wrA=="],
 
-    "zod": ["zod@4.6.5", "", {}, "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q=="],
+    "zod": ["zod@4.6.6", "", {}, "sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA=="],
 
     "zod-validation-error": ["zod-validation-error@4.0.2", "", { "peerDependencies": { "zod": "^3.25.0 || ^4.0.0" } }, "sha512-Q6/nZLe6jxuU80qb/4uJ4t5v2VEZ44lzQjPDhYJNztRQ4wyWc6VF3D3Kb/fAuPetZQnhS3hnajCf9CsWesghLQ=="],
 
