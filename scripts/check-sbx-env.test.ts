@@ -53,6 +53,52 @@ function check(dir: string, command: string) {
   );
 }
 
+test("native kit validation is offline and does not plan environments", () => {
+  const dir = fixture();
+  writeFileSync(
+    join(dir, "sbx"),
+    '#!/bin/sh\n[ "$*" = "kit validate .sbx/kit --offline" ] || exit 91\n',
+  );
+  expect(check(dir, "mise install").exitCode).toBe(0);
+});
+
+test("native structural validation failures fail the check", () => {
+  const dir = fixture();
+  writeFileSync(
+    join(dir, "sbx"),
+    '#!/bin/sh\nif [ "$*" = "kit validate .sbx/kit --offline" ]; then exit 7; fi\nexit 0\n',
+  );
+  expect(check(dir, "mise install").exitCode).toBe(1);
+});
+
+test("static environment checks reject an invalid workspace in each environment", () => {
+  for (const file of ["sbxenv.yaml", "sbxenv.agy.yaml", "sbxenv.claude.yaml"]) {
+    const dir = fixture();
+    const path = join(dir, ".sbx", file);
+    writeFileSync(
+      path,
+      readFileSync(path, "utf8").replace("clone: false", "clone: true"),
+    );
+    expect(check(dir, "mise install").exitCode).toBe(1);
+  }
+});
+
+test("SBX CI only installs tools and validates tracked configuration", () => {
+  const workflow = Bun.YAML.parse(
+    readFileSync(".github/workflows/sbx-validation.yml", "utf8"),
+  ) as {
+    jobs: { validate: { steps: { run?: string }[] } };
+  };
+  const commands = workflow.jobs.validate.steps
+    .map((step) => step.run ?? "")
+    .join("\n");
+  expect(commands).toContain("bun run check:sbx-env");
+  expect(commands).not.toMatch(
+    /\bsbx\s+(?:login|settings|daemon|env\s+(?:create|exec|rm))\b/,
+  );
+  expect(commands).not.toMatch(/DOCKER_PAT|DOCKER_USERNAME|settings\.json/);
+});
+
 test("repository tool pins can change without a second pin in the kit", () => {
   expect(
     check(

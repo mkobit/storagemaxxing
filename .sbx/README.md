@@ -43,6 +43,10 @@ Report the snapshot digest and time in the handoff, and ask the host coordinator
 Do not export the guest database back to the host tracker.
 
 Run `bun run check:sbx-env` for the focused tooling tests and static checks.
-Native `sbx kit validate` and `sbx env plan` run only where the host CLI is available.
+When the SBX CLI is available, this command also runs `sbx kit validate .sbx/kit --offline` to validate the kit structure without authentication or a daemon.
+CI installs the CLI and checks its version before validation, so native structural validation is required there.
+Environment files receive static checks for YAML, workspace mounting, local kit references, and forbidden tracked settings.
+CI does not sign in to Docker, start a daemon, or provision or execute a sandbox.
+Local worker execution remains available through `bun run sbx:plan` and `bun run sbx:test:e2e`, with the normal host authentication and runtime prerequisites.
 Run `mise run check` directly inside an existing guest.
 Do not create another SBX environment from inside it.

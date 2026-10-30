@@ -40,28 +40,11 @@ function checkKitWithSbx(dir: string): boolean {
   }
 
   try {
-    console.log(`Running host 'sbx kit validate ${dir}'...`);
-    execSync(`sbx kit validate ${dir}`, { stdio: "inherit" });
+    console.log(`Running host 'sbx kit validate ${dir} --offline'...`);
+    execSync(`sbx kit validate ${dir} --offline`, { stdio: "inherit" });
     return true;
   } catch (err) {
-    console.error(`Host 'sbx kit validate ${dir}' failed:`, err);
-    return false;
-  }
-}
-
-function checkEnvWithSbx(file: string): boolean {
-  try {
-    execSync("command -v sbx", { stdio: "ignore" });
-  } catch {
-    return true;
-  }
-
-  try {
-    console.log(`Running host 'sbx env plan ${file}'...`);
-    execSync(`sbx env plan ${file}`, { stdio: "inherit" });
-    return true;
-  } catch (err) {
-    console.error(`Host 'sbx env plan ${file}' failed:`, err);
+    console.error(`Host 'sbx kit validate ${dir} --offline' failed:`, err);
     return false;
   }
 }
@@ -259,14 +242,7 @@ const kitPassed = checkKitSpec(kitSpecFile);
 const envPassed = filesToCheck.every(checkFile);
 const parityPassed = checkToolchainParity();
 const nativeKitPassed = checkKitWithSbx(kitDir);
-const nativeEnvPassed = filesToCheck.every(checkEnvWithSbx);
 
-if (
-  !kitPassed ||
-  !envPassed ||
-  !parityPassed ||
-  !nativeKitPassed ||
-  !nativeEnvPassed
-) {
+if (!kitPassed || !envPassed || !parityPassed || !nativeKitPassed) {
   process.exit(1);
 }
