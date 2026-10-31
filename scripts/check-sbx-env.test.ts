@@ -39,13 +39,27 @@ function fixture() {
     join(dir, "package.json"),
     JSON.stringify({ packageManager: "bun@9.8.7", engines: { bun: "9.8.7" } }),
   );
+  mkdirSync(join(dir, "apps/web"), { recursive: true });
+  writeFileSync(
+    join(dir, "apps/web/package.json"),
+    JSON.stringify({ devDependencies: { "@playwright/test": "^1.2.3" } }),
+  );
   return dir;
 }
 
-function check(dir: string, command: string) {
+function check(
+  dir: string,
+  command: string,
+  playwrightCommand = "bun run --cwd apps/web playwright install chromium",
+  networkAllow = [
+    "cdn.playwright.dev",
+    "playwright.download.prss.microsoft.com",
+    "storage.googleapis.com",
+  ],
+) {
   writeFileSync(
     join(dir, ".sbx/kit/spec.yaml"),
-    `schemaVersion: "2"\nname: test\nsetup:\n  install:\n    - command: ${JSON.stringify(command)}\n`,
+    `schemaVersion: "2"\nname: test\npermissions:\n  network:\n    allow:\n${networkAllow.map((host) => `      - ${host}`).join("\n")}\nsetup:\n  install:\n    - command: ${JSON.stringify(command)}\n    - command: ${JSON.stringify(playwrightCommand)}\n`,
   );
   return Bun.spawnSync(
     [process.execPath, join(root, "scripts/check-sbx-env.ts")],
@@ -118,6 +132,42 @@ test("the kit must install repository tools and reject separate global pins", ()
   expect(check(fixture(), "mise install\nmise use -g bun@9.8.7").exitCode).toBe(
     1,
   );
+});
+
+test("the kit must keep every Playwright download permission", () => {
+  const requiredHosts = [
+    "cdn.playwright.dev",
+    "playwright.download.prss.microsoft.com",
+    "storage.googleapis.com",
+  ];
+  for (const missingHost of requiredHosts) {
+    expect(
+      check(
+        fixture(),
+        "mise install",
+        undefined,
+        requiredHosts.filter((host) => host !== missingHost),
+      ).exitCode,
+    ).toBe(1);
+  }
+});
+
+test("the kit must install Playwright Chromium from the web workspace", () => {
+  expect(check(fixture(), "mise install", "true").exitCode).toBe(1);
+  expect(
+    check(
+      fixture(),
+      "mise install",
+      "bun run --cwd apps/web playwright install firefox",
+    ).exitCode,
+  ).toBe(1);
+});
+
+test("the kit must use the web Playwright dependency without a separate pin", () => {
+  expect(
+    check(fixture(), "mise install", "bunx playwright@1.2.3 install chromium")
+      .exitCode,
+  ).toBe(1);
 });
 
 test("mise download failures stop bootstrap before the installer runs", () => {
