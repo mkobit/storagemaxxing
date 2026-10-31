@@ -19,8 +19,8 @@ afterEach(() =>
     .forEach((dir) => rmSync(dir, { recursive: true, force: true })),
 );
 
-function fixture(failImport = false) {
-  const dir = mkdtempSync(join(scratch, "sbx-context-test-"));
+function fixture(failImport = false, prefix = "sbx-context-test-") {
+  const dir = mkdtempSync(join(scratch, prefix));
   dirs.push(dir);
   mkdirSync(join(dir, ".beads"));
   mkdirSync(join(dir, ".sbx-task"));
@@ -36,7 +36,7 @@ set -eu
 case "$BEADS_DIR" in "${dir}"/.sbx-task/beads-context-*/.beads) ;; *) exit 90 ;; esac
 [ -z "\${BEADS_DB:-}" ] && [ -z "\${BD_DB:-}" ] || exit 91
 printf '%s\\n' "$*" >> "${dir}/calls"
-case "$*" in *-C*|*sync*|*push*|*pull*) exit 92 ;; esac
+for arg in "$@"; do case "$arg" in -C|sync|push|pull) exit 92 ;; esac; done
 ${failImport ? 'case "$*" in *import*) exit 23 ;; esac' : ""}
 `,
   );
@@ -117,4 +117,19 @@ test("a missing export fails before any tracker command", () => {
   rmSync(join(dir, ".sbx-task/issues.jsonl"));
   expect(setup(dir).exitCode).not.toBe(0);
   expect(readdirSync(dir)).not.toContain("calls");
+});
+
+test("context setup allows fixture paths containing forbidden argument names and rejects actual forbidden arguments", () => {
+  for (const arg of ["-C", "sync", "push", "pull"]) {
+    const dir = fixture(false, `sbx-context-${arg}-`);
+    expect(setup(dir).exitCode).toBe(0);
+    expect(
+      Bun.spawnSync([join(dir, "bd"), "--sandbox", arg], {
+        env: {
+          PATH: process.env.PATH,
+          BEADS_DIR: join(dir, ".sbx-task/beads-context-test/.beads"),
+        },
+      }).exitCode,
+    ).toBe(92);
+  }
 });
