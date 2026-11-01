@@ -30,7 +30,7 @@
         "prettier-plugin-packagejson": "3.0.2",
         "typescript": "6.0.3",
         "typescript-eslint": "8.71.2",
-        "zod": "^4.4.3",
+        "zod": "^4.6.7",
       },
     },
     "apps/web": {
@@ -47,7 +47,7 @@
         "@storagemaxxing/store": "workspace:*",
         "react": "^19.2.8",
         "react-dom": "^19.2.8",
-        "zod": "^4.4.3",
+        "zod": "^4.6.7",
       },
       "devDependencies": {
         "@axe-core/playwright": "4.14.0",
@@ -73,7 +73,7 @@
       "dependencies": {
         "@storagemaxxing/catalog": "workspace:*",
         "@storagemaxxing/geometry": "workspace:*",
-        "zod": "^4.4.3",
+        "zod": "^4.6.7",
       },
     },
     "packages/catalog": {
@@ -81,7 +81,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@storagemaxxing/geometry": "workspace:*",
-        "zod": "^4.4.3",
+        "zod": "^4.6.7",
       },
     },
     "packages/geometry": {
@@ -89,7 +89,7 @@
       "version": "0.0.0",
       "dependencies": {
         "gl-matrix": "^3.4.4",
-        "zod": "^4.4.3",
+        "zod": "^4.6.7",
       },
     },
     "packages/packer": {
@@ -100,7 +100,7 @@
         "@storagemaxxing/assembly": "workspace:*",
         "@storagemaxxing/catalog": "workspace:*",
         "@storagemaxxing/geometry": "workspace:*",
-        "maxrects-packer": "^2.7.4",
+        "maxrects-packer": "^3.0.0",
       },
       "devDependencies": {
         "@bufbuild/buf": "^1.75.0",
@@ -116,7 +116,7 @@
         "@storagemaxxing/geometry": "workspace:*",
         "@storagemaxxing/packer": "workspace:*",
         "idb-keyval": "^6.3.0",
-        "zod": "^4.4.3",
+        "zod": "^4.6.7",
         "zustand": "^5.0.15",
       },
     },
@@ -1190,7 +1190,7 @@
 
     "math-intrinsics": ["math-intrinsics@1.1.0", "", {}, "sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g=="],
 
-    "maxrects-packer": ["maxrects-packer@2.7.4", "", {}, "sha512-XrWjEw1b/7knibpHViEuPLxH08vzlclM+bZGuauju8NoARs5uFrwOxUIL4sdyEdohJsK2eYFyiIN1pU2N7zPUQ=="],
+    "maxrects-packer": ["maxrects-packer@3.0.0", "", {}, "sha512-ICKt2ji3L/ETwRhlpxit2jTtaqTtBLZHZmsosDuygzE1CBV9e3DB96d/UQIw0dUbMNxT/vNfN/eBEE9lGAasSg=="],
 
     "mimic-function": ["mimic-function@5.0.1", "", {}, "sha512-VP79XUPxV2CigYP3jWwAUFSku2aKqBH7uTAapFWCBqutsbmDo96KY5o8uh6U+/YSIn5OxJnXp73beVkpqMIGhA=="],
 
@@ -1500,7 +1500,7 @@
 
     "youch-core": ["youch-core@0.3.3", "", { "dependencies": { "@poppinss/exception": "^1.2.2", "error-stack-parser-es": "^1.0.5" } }, "sha512-ho7XuGjLaJ2hWHoK8yFnsUGy2Y5uDpqSTq1FkHLK4/oqKtyUU1AFbOOxY4IpC9f0fTLjwYbslUz0Po5BpD1wrA=="],
 
-    "zod": ["zod@4.6.5", "", {}, "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q=="],
+    "zod": ["zod@4.6.7", "", {}, "sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg=="],
 
     "zod-validation-error": ["zod-validation-error@4.0.2", "", { "peerDependencies": { "zod": "^3.25.0 || ^4.0.0" } }, "sha512-Q6/nZLe6jxuU80qb/4uJ4t5v2VEZ44lzQjPDhYJNztRQ4wyWc6VF3D3Kb/fAuPetZQnhS3hnajCf9CsWesghLQ=="],
 

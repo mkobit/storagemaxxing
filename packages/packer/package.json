@@ -12,7 +12,7 @@
     "@storagemaxxing/assembly": "workspace:*",
     "@storagemaxxing/catalog": "workspace:*",
     "@storagemaxxing/geometry": "workspace:*",
-    "maxrects-packer": "^2.7.4"
+    "maxrects-packer": "^3.0.0"
   },
   "devDependencies": {
     "@bufbuild/buf": "^1.75.0",
