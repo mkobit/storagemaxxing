@@ -16,6 +16,12 @@ const filesToCheck = [
 ] as const;
 const kitSpecFile = ".sbx/kit/spec.yaml";
 const kitDir = ".sbx/kit";
+const webPackageFile = "apps/web/package.json";
+const playwrightDownloadHosts = [
+  "cdn.playwright.dev",
+  "playwright.download.prss.microsoft.com",
+  "storage.googleapis.com",
+] as const;
 
 type MinimalKitSpec = {
   readonly name?: unknown;
@@ -179,6 +185,7 @@ function checkToolchainParity(): boolean {
 
   const kitObj = parsedKit as {
     setup?: { install?: Array<{ command?: string }> };
+    permissions?: { network?: { allow?: readonly unknown[] } };
   };
 
   const miseBun = mise.tools?.["bun"];
@@ -228,6 +235,52 @@ function checkToolchainParity(): boolean {
   if (!miseBeads) {
     console.error(
       `${miseFile} missing tools.github:gastownhall/beads definition`,
+    );
+    return false;
+  }
+
+  if (!existsSync(webPackageFile)) {
+    console.error(`Missing required web package file: ${webPackageFile}`);
+    return false;
+  }
+
+  let webPackage: { devDependencies?: Record<string, string> };
+  try {
+    webPackage = JSON.parse(readFileSync(webPackageFile, "utf8")) as {
+      devDependencies?: Record<string, string>;
+    };
+  } catch (err) {
+    console.error(`Failed to parse ${webPackageFile}:`, err);
+    return false;
+  }
+
+  if (!webPackage.devDependencies?.["@playwright/test"]) {
+    console.error(`${webPackageFile} must provide the Playwright dependency`);
+    return false;
+  }
+
+  const networkAllow = kitObj.permissions?.network?.allow ?? [];
+  const missingHosts = playwrightDownloadHosts.filter(
+    (host) => !networkAllow.includes(host),
+  );
+  if (missingHosts.length > 0) {
+    console.error(
+      `${kitSpecFile} must allow Playwright downloads from: ${missingHosts.join(", ")}`,
+    );
+    return false;
+  }
+
+  if (
+    !installCommands
+      .split("\n")
+      .some(
+        (command) =>
+          command.trim() ===
+          "bun run --cwd apps/web playwright install chromium",
+      )
+  ) {
+    console.error(
+      `${kitSpecFile} must install Chromium with the Playwright dependency from ${webPackageFile}`,
     );
     return false;
   }
