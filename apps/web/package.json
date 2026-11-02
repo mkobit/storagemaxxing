@@ -30,8 +30,8 @@
     "@storagemaxxing/geometry": "workspace:*",
     "@storagemaxxing/packer": "workspace:*",
     "@storagemaxxing/store": "workspace:*",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {
