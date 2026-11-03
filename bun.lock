@@ -100,7 +100,7 @@
         "@storagemaxxing/assembly": "workspace:*",
         "@storagemaxxing/catalog": "workspace:*",
         "@storagemaxxing/geometry": "workspace:*",
-        "maxrects-packer": "^2.7.4",
+        "maxrects-packer": "^3.0.0",
       },
       "devDependencies": {
         "@bufbuild/buf": "^1.75.0",
@@ -1190,7 +1190,7 @@
 
     "math-intrinsics": ["math-intrinsics@1.1.0", "", {}, "sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g=="],
 
-    "maxrects-packer": ["maxrects-packer@2.7.4", "", {}, "sha512-XrWjEw1b/7knibpHViEuPLxH08vzlclM+bZGuauju8NoARs5uFrwOxUIL4sdyEdohJsK2eYFyiIN1pU2N7zPUQ=="],
+    "maxrects-packer": ["maxrects-packer@3.0.0", "", {}, "sha512-ICKt2ji3L/ETwRhlpxit2jTtaqTtBLZHZmsosDuygzE1CBV9e3DB96d/UQIw0dUbMNxT/vNfN/eBEE9lGAasSg=="],
 
     "mimic-function": ["mimic-function@5.0.1", "", {}, "sha512-VP79XUPxV2CigYP3jWwAUFSku2aKqBH7uTAapFWCBqutsbmDo96KY5o8uh6U+/YSIn5OxJnXp73beVkpqMIGhA=="],
 

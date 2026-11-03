@@ -1,4 +1,4 @@
-import { MaxRectsPacker } from "maxrects-packer";
+import { MaxRectsPacker, Rectangle } from "maxrects-packer";
 import { PackInput } from "./PackInput";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import {
@@ -29,11 +29,11 @@ type PhaseRequirement = {
 const generateRects = (bin: PackInput, count: number): RectsAccumulator => {
   if (count <= 0) return [];
   const footprint = getEffectiveFootprint(bin);
-  return Array.from({ length: count }, () => ({
-    width: footprint.w,
-    height: footprint.l,
-    data: { binId: bin.id },
-  }));
+  return Array.from({ length: count }, () =>
+    Object.assign(new Rectangle(footprint.w, footprint.l), {
+      data: { binId: bin.id },
+    }),
+  );
 };
 
 export const generatePhaseRects = (
