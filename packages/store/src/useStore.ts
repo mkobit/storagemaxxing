@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, StateStorage, createJSONStorage } from "zustand/middleware";
 import { get, set, del } from "idb-keyval";
-import { StoreState, initialState } from "./StoreTypes";
+import { AppState, StoreState, initialState } from "./StoreTypes";
 import {
   updateConstraintInState,
   removeConstraintFromState,
@@ -10,6 +10,12 @@ import {
   setTemplateMaxWeightLbsInState,
   applyStrategyInState,
 } from "./StoreHelpers";
+import {
+  applySolverEventInState,
+  clearSolverStateInState,
+  startSolverRunInState,
+} from "./solverActions";
+import { SpaceTemplateId } from "@storagemaxxing/assembly/SpaceTemplate";
 import { ALL_BINS } from "@storagemaxxing/catalog/lookup";
 
 const idbStorage: StateStorage = {
@@ -26,6 +32,16 @@ const idbStorage: StateStorage = {
     return void (await del(name));
   },
 };
+
+const invalidateSolverResultsForTemplate = (
+  state: AppState,
+  templateId: SpaceTemplateId,
+): AppState["solverResultsBySpace"] =>
+  state.spaces.reduce<AppState["solverResultsBySpace"]>((acc, space) => {
+    if (space.templateId === templateId) return acc;
+    const existing = state.solverResultsBySpace[space.id];
+    return existing !== undefined ? { ...acc, [space.id]: existing } : acc;
+  }, {});
 
 export const useStore = create<StoreState>()(
   persist(
@@ -55,28 +71,77 @@ export const useStore = create<StoreState>()(
           templatesById: { ...state.templatesById, [template.id]: template },
         })),
       removeSpace: (id) =>
-        set((state) => ({ spaces: state.spaces.filter((s) => s.id !== id) })),
+        set((state) => {
+          const { [id]: _run, ...solverRunsBySpace } = state.solverRunsBySpace;
+          const { [id]: _res, ...solverResultsBySpace } =
+            state.solverResultsBySpace;
+          return {
+            spaces: state.spaces.filter((s) => s.id !== id),
+            solverRunsBySpace,
+            solverResultsBySpace,
+          };
+        }),
       setActiveSpace: (activeSpaceId) => set({ activeSpaceId }),
       setConstraintForSpace: (templateId, constraint) =>
-        set((state) => updateConstraintInState(state, templateId, constraint)),
+        set((state) => ({
+          ...updateConstraintInState(state, templateId, constraint),
+          solverResultsBySpace: invalidateSolverResultsForTemplate(
+            state,
+            templateId,
+          ),
+        })),
       updateConstraintForSpace: (templateId, constraint) =>
-        set((state) => updateConstraintInState(state, templateId, constraint)),
+        set((state) => ({
+          ...updateConstraintInState(state, templateId, constraint),
+          solverResultsBySpace: invalidateSolverResultsForTemplate(
+            state,
+            templateId,
+          ),
+        })),
       removeConstraintForSpace: (templateId, binId) =>
-        set((state) => removeConstraintFromState(state, templateId, binId)),
+        set((state) => ({
+          ...removeConstraintFromState(state, templateId, binId),
+          solverResultsBySpace: invalidateSolverResultsForTemplate(
+            state,
+            templateId,
+          ),
+        })),
       setSpaceDrillable: (templateId, drillable) =>
-        set((state) =>
-          setTemplateDrillableInState(state, templateId, drillable),
-        ),
+        set((state) => ({
+          ...setTemplateDrillableInState(state, templateId, drillable),
+          solverResultsBySpace: invalidateSolverResultsForTemplate(
+            state,
+            templateId,
+          ),
+        })),
       setSpaceRailPresent: (templateId, railPresent) =>
-        set((state) =>
-          setTemplateRailPresentInState(state, templateId, railPresent),
-        ),
+        set((state) => ({
+          ...setTemplateRailPresentInState(state, templateId, railPresent),
+          solverResultsBySpace: invalidateSolverResultsForTemplate(
+            state,
+            templateId,
+          ),
+        })),
       setSpaceMaxWeightLbs: (templateId, maxWeightLbs) =>
-        set((state) =>
-          setTemplateMaxWeightLbsInState(state, templateId, maxWeightLbs),
-        ),
+        set((state) => ({
+          ...setTemplateMaxWeightLbsInState(state, templateId, maxWeightLbs),
+          solverResultsBySpace: invalidateSolverResultsForTemplate(
+            state,
+            templateId,
+          ),
+        })),
       applySpaceStrategy: (spaceId, system) =>
-        set((state) => applyStrategyInState(state, spaceId, system, ALL_BINS)),
+        set((state) => {
+          const space = state.spaces.find((s) => s.id === spaceId);
+          const templateId = space?.templateId;
+          const solverResultsBySpace = templateId
+            ? invalidateSolverResultsForTemplate(state, templateId)
+            : state.solverResultsBySpace;
+          return {
+            ...applyStrategyInState(state, spaceId, system, ALL_BINS),
+            solverResultsBySpace,
+          };
+        }),
       clearConstraintsForSpace: (templateId) =>
         set((state) => {
           const { [templateId]: _, ...newConstraints } =
@@ -86,14 +151,27 @@ export const useStore = create<StoreState>()(
             spaces: state.spaces.map((s) =>
               s.templateId === templateId ? { ...s, constraints: {} } : s,
             ),
+            solverResultsBySpace: invalidateSolverResultsForTemplate(
+              state,
+              templateId,
+            ),
           };
         }),
+      startSolverRun: (spaceId, requestId) =>
+        set((state) => startSolverRunInState(state, spaceId, requestId)),
+      handleSolverEvent: (event, spaceId) =>
+        set((state) => applySolverEventInState(state, event, spaceId)),
+      clearSolverState: (spaceId) =>
+        set((state) => clearSolverStateInState(state, spaceId)),
       loadSketch: (sketch) =>
         set({
           spaces: sketch.spaces,
           activeSpaceId: sketch.activeSpaceId,
           templatesById: sketch.templatesById,
           constraintsBySpace: sketch.constraintsBySpace,
+          solverRunsBySpace: {},
+          solverResultsBySpace: {},
+          activeSolverRequests: {},
         }),
     }),
     {

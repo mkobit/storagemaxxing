@@ -9,7 +9,9 @@ import {
 } from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
 import { BinSpecId } from "@storagemaxxing/assembly/BaseTypes";
+import type { PackingResult } from "@storagemaxxing/assembly/PackingResult";
 import type { ComparableStorageSystem } from "./layoutSelectors";
+import type { SolverRunState, SolverWorkerEvent } from "./solverActions";
 
 export type AppState = {
   readonly _hasHydrated: boolean;
@@ -21,6 +23,11 @@ export type AppState = {
   readonly constraintsBySpace: Readonly<
     Record<SpaceTemplateId, readonly SpaceConstraint[]>
   >;
+  readonly solverRunsBySpace: Readonly<Record<SpaceInstanceId, SolverRunState>>;
+  readonly solverResultsBySpace: Readonly<
+    Record<SpaceInstanceId, PackingResult>
+  >;
+  readonly activeSolverRequests: Readonly<Record<string, SpaceInstanceId>>;
 };
 
 type AppActions = {
@@ -60,6 +67,15 @@ type AppActions = {
     spaceId: SpaceInstanceId,
     system: ComparableStorageSystem,
   ) => void;
+  readonly startSolverRun: (
+    spaceId: SpaceInstanceId,
+    requestId: string,
+  ) => void;
+  readonly handleSolverEvent: (
+    event: SolverWorkerEvent,
+    spaceId?: SpaceInstanceId,
+  ) => void;
+  readonly clearSolverState: (spaceId?: SpaceInstanceId) => void;
   readonly loadSketch: (
     sketch: Pick<
       AppState,
@@ -77,4 +93,7 @@ export const initialState: AppState = {
   activeSpaceId: null,
   templatesById: {},
   constraintsBySpace: {},
+  solverRunsBySpace: {},
+  solverResultsBySpace: {},
+  activeSolverRequests: {},
 };
