@@ -1,4 +1,4 @@
-import { MaxRectsPacker } from "maxrects-packer";
+import { MaxRectsPacker, Rectangle } from "maxrects-packer";
 import { PackInput } from "./PackInput";
 import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
@@ -41,8 +41,11 @@ const executePhases = (
   context: PackingContext,
 ) => {
   const add = (rects: RectsAccumulator) =>
-    // @ts-expect-error MaxRectsPacker TS definitions are missing readonly annotations
-    packer.addArray(Array.from(rects));
+    packer.addArray(
+      Array.from(rects, (r) =>
+        Object.assign(new Rectangle(r.width, r.height), { data: r.data }),
+      ),
+    );
 
   add(sortRects(generatePhaseRects(constraints, binMap, getHardMin)));
   const hmCheck = checkHardMinPhase(
