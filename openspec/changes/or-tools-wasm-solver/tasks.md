@@ -32,7 +32,7 @@
 - [x] 3.2 Connect asynchronous solver worker actions to layout state in `packages/store` ([sm-54wg.10](../../../.beads))
   - Requirement: `Web Worker asynchronous execution`
   - Validation: `bun test packages/store/src/solverActions.test.ts`
-- [ ] 3.3 Connect solver store actions and progress state to UI components in `apps/web` ([sm-54wg.11](../../../.beads))
+- [x] 3.3 Connect solver store actions and progress state to UI components in `apps/web` ([sm-54wg.11](../../../.beads))
   - Requirement: `Web Worker asynchronous execution`
   - Validation: `bun test apps/web/src/ui/LayoutCanvas.test.tsx`
 
