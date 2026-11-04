@@ -58,9 +58,13 @@ const applyWeightOverflow = (
 export type LayoutInputs = Pick<
   AppState,
   "spaces" | "activeSpaceId" | "templatesById"
->;
+> & {
+  readonly solverResultsBySpace?: AppState["solverResultsBySpace"];
+};
 
-export type SpaceInputs = Pick<AppState, "spaces" | "templatesById">;
+export type SpaceInputs = Pick<AppState, "spaces" | "templatesById"> & {
+  readonly solverResultsBySpace?: AppState["solverResultsBySpace"];
+};
 
 export type LayoutResolution =
   | { readonly kind: "none" }
@@ -143,6 +147,11 @@ export const selectPackedLayout = (
       : undefined;
   if (space === undefined) return layoutResolutionNone();
 
+  const solverResult = state.solverResultsBySpace?.[space.id];
+  if (solverResult !== undefined) {
+    return layoutResolutionResolved(solverResult, []);
+  }
+
   return resolveSpace(space, state.templatesById, catalog);
 };
 
@@ -205,9 +214,16 @@ export const selectPackingResultsBySpace = (
   catalog: readonly CatalogBinSpec[] = ALL_BINS,
 ): Readonly<Record<string, LayoutResolution>> =>
   state.spaces.reduce<Readonly<Record<string, LayoutResolution>>>(
-    (acc, space) => ({
-      ...acc,
-      [space.id]: resolveSpace(space, state.templatesById, catalog),
-    }),
+    (acc, space) => {
+      const solverResult = state.solverResultsBySpace?.[space.id];
+      const resolution =
+        solverResult !== undefined
+          ? layoutResolutionResolved(solverResult, [])
+          : resolveSpace(space, state.templatesById, catalog);
+      return {
+        ...acc,
+        [space.id]: resolution,
+      };
+    },
     {},
   );
