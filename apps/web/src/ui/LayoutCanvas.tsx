@@ -1,5 +1,10 @@
 import React, { useRef, useEffect, useMemo, useState } from "react";
 import { useStore } from "@storagemaxxing/store/useStore";
+import type { AppState } from "@storagemaxxing/store/StoreTypes";
+import {
+  selectActiveSolverRun,
+  type SolverRunState,
+} from "@storagemaxxing/store/solverActions";
 import {
   selectPackedLayout,
   LayoutResolution,
@@ -422,18 +427,75 @@ const renderResolution = ({
   );
 };
 
+const solverStatusMessage = (run: SolverRunState): string => {
+  if (run.status === "running") return "Solving layout…";
+  if (run.status === "error") {
+    return `Solver failed: ${run.errorMessage ?? run.errorCode ?? "Unable to solve layout."}`;
+  }
+  if (run.solverStatus === "INFEASIBLE") return "No feasible layout found.";
+  if (run.solverStatus === "FEASIBLE") return "Feasible layout found.";
+  return "Layout solved.";
+};
+
+const solverElapsedTime = (run: SolverRunState): string =>
+  run.wallTimeMs === undefined ? "" : ` (${Math.round(run.wallTimeMs)} ms)`;
+
+const selectDisplayedSolverRun = (
+  state: AppState,
+): SolverRunState | undefined => {
+  const run = selectActiveSolverRun(state);
+  return run?.status === "solved" &&
+    state.solverResultsBySpace[run.spaceId] === undefined
+    ? undefined
+    : run;
+};
+
+const SolverStatus: React.FC<{
+  readonly run: SolverRunState | undefined;
+}> = ({ run }) => {
+  const clearSolverState = useStore((state) => state.clearSolverState);
+  if (run === undefined || run.status === "idle") return null;
+  const finished = run.status === "solved" || run.status === "error";
+
+  return (
+    <div className="flex items-center gap-3 border-b border-border-default bg-surface-raised px-4 py-2 text-sm text-text-primary">
+      <span role={run.status === "error" ? "alert" : "status"}>
+        {solverStatusMessage(run)}
+        {finished && solverElapsedTime(run)}
+      </span>
+      {finished && (
+        <button
+          type="button"
+          className="rounded-sm border border-border-default px-2 py-1 hover:bg-surface-sunken"
+          onClick={() => clearSolverState(run.spaceId)}
+        >
+          {run.status === "error" ? "Dismiss solver error" : "Use preview"}
+        </button>
+      )}
+    </div>
+  );
+};
+
 export const LayoutCanvas: React.FC = () => {
   const activeSpaceId = useStore((state) => state.activeSpaceId);
   const spaces = useStore((state) => state.spaces);
   const templatesById = useStore((state) => state.templatesById);
+  const solverResultsBySpace = useStore((state) => state.solverResultsBySpace);
+  const solverRun = useStore(selectDisplayedSolverRun);
 
   const [wireframeEnabled, setWireframeEnabled] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
 
   const resolution = useMemo(
-    () => selectPackedLayout({ spaces, activeSpaceId, templatesById }),
-    [spaces, activeSpaceId, templatesById],
+    () =>
+      selectPackedLayout({
+        spaces,
+        activeSpaceId,
+        templatesById,
+        solverResultsBySpace,
+      }),
+    [spaces, activeSpaceId, templatesById, solverResultsBySpace],
   );
 
   const activeSpace = activeSpaceId
@@ -468,7 +530,12 @@ export const LayoutCanvas: React.FC = () => {
         wireframeEnabled={wireframeEnabled}
         onToggleWireframe={handleToggleWireframe}
       />
-      <div className="flex-1 overflow-auto p-4">
+      {resolution.kind === "resolved" && <SolverStatus run={solverRun} />}
+      <div
+        data-testid="layout-viewport"
+        aria-busy={solverRun?.status === "running"}
+        className="flex-1 overflow-auto p-4"
+      >
         {renderResolution({
           resolution,
           template: activeTemplate,

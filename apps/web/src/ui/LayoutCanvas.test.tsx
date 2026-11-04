@@ -5,7 +5,7 @@ mock.module("idb-keyval", () => ({
   del: async () => {},
 }));
 
-import { render, screen, fireEvent } from "@testing-library/react";
+import { act, render, screen, fireEvent } from "@testing-library/react";
 import { LayoutCanvas, drawSpaceBounds, LayoutTransform } from "./LayoutCanvas";
 import { ThemeProvider } from "./theme/ThemeProvider";
 import { useStore } from "@storagemaxxing/store/useStore";
@@ -23,6 +23,12 @@ import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint"
 import { createRect2D } from "@storagemaxxing/geometry/Rect2D";
 import { createPoint2D } from "@storagemaxxing/geometry/Point2D";
 import { createDimensions2D } from "@storagemaxxing/geometry/Dimensions2D";
+import { createPoint3D } from "@storagemaxxing/geometry/Point3D";
+import { createPlacedBin } from "@storagemaxxing/assembly/PlacedBin";
+import {
+  createPackingMetrics,
+  createPackingResult,
+} from "@storagemaxxing/assembly/PackingResult";
 
 type MockCanvasContext = {
   readonly clearRect: ReturnType<typeof mock>;
@@ -98,6 +104,212 @@ describe("LayoutCanvas", () => {
 
   const renderLayoutCanvas = () =>
     render(<LayoutCanvas />, { wrapper: ThemeProvider });
+
+  const setUpSolverSpace = () => {
+    const spaceId = SpaceInstanceIdSchema.parse("solver-space");
+    const templateId = SpaceTemplateIdSchema.parse("solver-template");
+    useStore.setState({
+      activeSpaceId: spaceId,
+      spaces: [
+        SpaceInstanceSchema.parse({
+          id: spaceId,
+          templateId,
+          name: "Solver space",
+          count: 1,
+          constraints: {},
+        }),
+      ],
+      templatesById: {
+        [templateId]: createSpaceTemplate(
+          templateId,
+          createDimensions3D(10, 10, 4),
+          "top",
+        ),
+      },
+    });
+    return spaceId;
+  };
+
+  it("announces solver progress while retaining the preview and viewport controls", async () => {
+    const spaceId = setUpSolverSpace();
+    renderLayoutCanvas();
+
+    await act(() => useStore.getState().startSolverRun(spaceId, "pending"));
+
+    expect(screen.getByRole("status").textContent).toContain("Solving layout");
+    expect(
+      screen.getByTestId("layout-viewport").getAttribute("aria-busy"),
+    ).toBe("true");
+    expect(screen.getByTestId("layout-validity-badge").textContent).toBe(
+      "valid",
+    );
+    fireEvent.click(screen.getByTestId("viewport-zoom-in"));
+    expect(activeContext.clearRect).toHaveBeenCalled();
+  });
+
+  it.each(["OPTIMAL", "FEASIBLE"] as const)(
+    "draws asynchronous %s placements and restores the preview when cleared",
+    async (status) => {
+      const spaceId = setUpSolverSpace();
+      renderLayoutCanvas();
+      await act(() =>
+        useStore.getState().startSolverRun(spaceId, "async-result"),
+      );
+      expect(activeContext.fillRect).not.toHaveBeenCalled();
+
+      await act(async () => {
+        await Promise.resolve();
+        useStore.getState().handleSolverEvent({
+          type: "SOLVE_SPACE_RESULT",
+          requestId: "async-result",
+          status,
+          wallTimeMs: 42,
+          packingResult: createPackingResult(
+            [createPlacedBin("gridfinity-1x1x1", createPoint3D(2, 0, 3))],
+            createPackingMetrics({ "gridfinity-1x1x1": 1 }, 0.03, []),
+            "partial",
+          ),
+        });
+      });
+
+      expect(screen.getByRole("status").textContent).toContain(
+        status === "OPTIMAL" ? "Layout solved" : "Feasible layout found",
+      );
+      expect(screen.getByRole("status").textContent).toContain("42 ms");
+      expect(
+        screen.getByTestId("layout-viewport").getAttribute("aria-busy"),
+      ).toBe("false");
+      expect(screen.getByTestId("layout-validity-badge").textContent).toBe(
+        "partial",
+      );
+      // A 10in square fits at 56px/in with offsets (120, 20).
+      expect(
+        activeContext.fillRect.mock.calls.some(
+          (call: readonly unknown[]) => call[0] === 232 && call[1] === 188,
+        ),
+      ).toBe(true);
+
+      activeContext.fillRect.mockClear();
+      fireEvent.click(screen.getByRole("button", { name: "Use preview" }));
+      expect(useStore.getState().solverRunsBySpace[spaceId]).toBeUndefined();
+      expect(screen.getByTestId("layout-validity-badge").textContent).toBe(
+        "valid",
+      );
+      expect(activeContext.fillRect).not.toHaveBeenCalled();
+      expect(screen.queryByRole("status")).toBeNull();
+    },
+  );
+
+  it("renders infeasible results as invalid with an explanation", async () => {
+    const spaceId = setUpSolverSpace();
+    renderLayoutCanvas();
+    await act(() => useStore.getState().startSolverRun(spaceId, "infeasible"));
+
+    await act(async () => {
+      useStore.getState().handleSolverEvent({
+        type: "SOLVE_SPACE_RESULT",
+        requestId: "infeasible",
+        status: "INFEASIBLE",
+        wallTimeMs: 8,
+      });
+    });
+
+    expect(screen.getByRole("status").textContent).toContain(
+      "No feasible layout found",
+    );
+    expect(screen.getByTestId("layout-validity-badge").textContent).toBe(
+      "invalid",
+    );
+    expect(
+      screen.getByTestId("layout-viewport").getAttribute("aria-busy"),
+    ).toBe("false");
+  });
+
+  it("announces solver failures and dismisses them through the store action", async () => {
+    const spaceId = setUpSolverSpace();
+    renderLayoutCanvas();
+    await act(() => useStore.getState().startSolverRun(spaceId, "failed"));
+
+    await act(async () => {
+      useStore.getState().handleSolverEvent({
+        type: "SOLVE_SPACE_RESULT",
+        requestId: "failed",
+        status: "UNKNOWN",
+        wallTimeMs: 5,
+        errorMessage: "Solver timed out",
+      });
+    });
+
+    expect(screen.getByRole("alert").textContent).toContain("Solver timed out");
+    expect(screen.getByTestId("layout-validity-badge").textContent).toBe(
+      "valid",
+    );
+    expect(
+      screen.getByTestId("layout-viewport").getAttribute("aria-busy"),
+    ).toBe("false");
+    fireEvent.click(
+      screen.getByRole("button", { name: "Dismiss solver error" }),
+    );
+    expect(useStore.getState().solverRunsBySpace[spaceId]).toBeUndefined();
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  it("keeps progress scoped to the active space and ignores superseded responses", async () => {
+    const spaceId = setUpSolverSpace();
+    renderLayoutCanvas();
+    await act(() => {
+      useStore.getState().startSolverRun(spaceId, "old");
+      useStore.getState().startSolverRun(spaceId, "new");
+      useStore.getState().handleSolverEvent({
+        type: "SOLVE_SPACE_RESULT",
+        requestId: "old",
+        status: "INFEASIBLE",
+        wallTimeMs: 8,
+      });
+    });
+    expect(screen.getByRole("status").textContent).toContain("Solving layout");
+    expect(screen.getByTestId("layout-validity-badge").textContent).toBe(
+      "valid",
+    );
+
+    await act(() => useStore.getState().setActiveSpace(null));
+    expect(screen.queryByRole("status")).toBeNull();
+    await act(() => useStore.getState().setActiveSpace(spaceId));
+    expect(screen.getByRole("status").textContent).toContain("Solving layout");
+  });
+
+  it("removes completed solver feedback when edited constraints invalidate the result", async () => {
+    const spaceId = setUpSolverSpace();
+    const templateId = useStore.getState().spaces[0].templateId;
+    renderLayoutCanvas();
+    await act(() => {
+      useStore.getState().startSolverRun(spaceId, "edited");
+      useStore.getState().handleSolverEvent({
+        type: "SOLVE_SPACE_RESULT",
+        requestId: "edited",
+        status: "INFEASIBLE",
+        wallTimeMs: 8,
+      });
+    });
+    expect(screen.getByTestId("layout-validity-badge").textContent).toBe(
+      "invalid",
+    );
+
+    await act(() =>
+      useStore
+        .getState()
+        .setConstraintForSpace(
+          templateId,
+          createSpaceConstraint("gridfinity-1x1x1", 1, 0),
+        ),
+    );
+
+    expect(screen.queryByRole("status")).toBeNull();
+    expect(screen.getByTestId("layout-validity-badge").textContent).toBe(
+      "valid",
+    );
+    expect(activeContext.fillRect).toHaveBeenCalled();
+  });
 
   it("renders an empty state when no active space is selected", () => {
     renderLayoutCanvas();
