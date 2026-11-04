@@ -10,11 +10,7 @@ import type { AppState } from "./StoreTypes";
 type SolverRunStatus = "idle" | "running" | "solved" | "error";
 
 type SolverWorkerStatus =
-  | "OPTIMAL"
-  | "FEASIBLE"
-  | "INFEASIBLE"
-  | "MODEL_INVALID"
-  | "UNKNOWN";
+  "OPTIMAL" | "FEASIBLE" | "INFEASIBLE" | "MODEL_INVALID" | "UNKNOWN";
 
 export type SolverWorkerEvent = {
   readonly type: "SOLVE_SPACE_RESULT";
