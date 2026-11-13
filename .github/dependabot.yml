@@ -21,22 +21,57 @@ updates:
           - "@types/react-dom"
           - "three"
           - "@types/three"
+          - "@fontsource-variable/*"
       typescript:
         patterns:
           - "typescript"
           - "bun-types"
           - "@types/node"
+      storybook:
+        patterns:
+          - "storybook"
+          - "@storybook/*"
+          - "eslint-plugin-storybook"
+      testing:
+        patterns:
+          - "@playwright/*"
+          - "playwright"
+          - "@testing-library/*"
+          - "@axe-core/*"
+          - "@happy-dom/*"
+          - "happy-dom"
+      deploy:
+        patterns:
+          - "wrangler"
+          - "@cloudflare/*"
+      tooling:
+        patterns:
+          - "@fission-ai/openspec"
+          - "openspec"
+          - "knip"
+          - "modern-web-guidance"
+      protobuf:
+        patterns:
+          - "@bufbuild/*"
       build:
         patterns:
           - "eslint"
           - "eslint-*"
           - "@eslint/*"
+          - "@eslint-community/*"
+          - "@types/eslint*"
+          - "jsonc-eslint-parser"
+          - "typescript-eslint"
           - "@typescript-eslint/*"
           - "globals"
           - "@stylistic/*"
           - "prettier"
+          - "prettier-*"
           - "vite"
           - "@vitejs/*"
+          - "tailwindcss"
+          - "@tailwindcss/*"
+          - "jiti"
       functional-libs:
         patterns:
           - "zod"
