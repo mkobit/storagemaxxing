@@ -1,13 +1,57 @@
 # OR-Tools CP-SAT WebAssembly architecture spike
 
-This document describes the prototype build recipe for Google OR-Tools CP-SAT compiled to single-threaded WebAssembly.
+## Overview
 
-## Purpose
+This component provides a reproducible multi-stage Docker build recipe for compiling Google OR-Tools CP-SAT (`v9.11`) to single-threaded WebAssembly (`ortools-sat.js` and `ortools-sat.wasm`).
+
+### Purpose
 
 The CAD workflow in StorageMaxxing needs exact constraint satisfaction for 2D item placement.
 The current heuristic solver cannot solve complex multi-compartment boundary constraints.
 This prototype tests compiling Google OR-Tools CP-SAT to a single-threaded WebAssembly binary.
 The binary must execute in standard Web Workers without cross-origin isolation headers.
+
+## Interface
+
+The C++ wrapper in `solve_proto.cc` provides two `extern "C"` `EMSCRIPTEN_KEEPALIVE` entrypoints:
+
+```cpp
+extern "C" {
+  EMSCRIPTEN_KEEPALIVE
+  uint8_t* SolveProto(const uint8_t* model_bytes, int model_len,
+                      const uint8_t* params_bytes, int params_len,
+                      int* out_len);
+
+  EMSCRIPTEN_KEEPALIVE
+  void FreeBuffer(uint8_t* ptr);
+}
+```
+
+- `solve_proto.cc:SolveProto`: accepts serialized `CpModelProto` bytes and optional `SatParameters` bytes, enforces `num_search_workers = 1`, executes `operations_research::sat::SolveCpModel()`, and returns a `std::malloc`-allocated serialized `CpSolverResponse` buffer with its byte length written to `*out_len`.
+- `solve_proto.cc:FreeBuffer`: frees a buffer returned by `SolveProto` via `std::free`.
+- `CMakeLists.txt`: builds the `ortools-sat` target as an ES6 module factory `createOrToolsSatModule` (`ortools-sat.js` and `ortools-sat.wasm`), exporting C functions `_malloc`, `_free`, `_SolveProto`, and `_FreeBuffer`, and Emscripten runtime methods `ccall`, `cwrap`, and `HEAPU8`.
+- `Dockerfile`: multi-stage container build (`build-ortools`, `build-wasm`, `verify`, `export`) parameterized by `ARG ORTOOLS_TAG=v9.11` that exports `/ortools-sat.wasm` and `/ortools-sat.js`.
+
+## Invariants
+
+- `CMakeLists.txt`: requires the `EMSCRIPTEN` toolchain (`FATAL_ERROR` otherwise) and C++17.
+- `Dockerfile` and `CMakeLists.txt`: enforce single-threaded static compilation (`BUILD_SHARED_LIBS=OFF`, `ORTOOLS_TARGET_OS_SUPPORTS_THREADS=OFF`, `-sUSE_PTHREADS=0`) so execution never requires `SharedArrayBuffer` or COOP/COEP headers.
+- `CMakeLists.txt`: configures WASM memory with `-sALLOW_MEMORY_GROWTH=1`, `-sINITIAL_MEMORY=33554432` (32 MB), and `-sMAXIMUM_MEMORY=536870912` (512 MB).
+- `solve_proto.cc:SolveProto`: returns `nullptr` immediately if `out_len == nullptr`; otherwise initializes `*out_len = 0` and returns a serialized `CpSolverResponse` with `status = MODEL_INVALID` and `solution_info = "Failed to parse CpModelProto buffer."` when `CpModelProto` parsing fails.
+- `solve_proto.cc:SolveProto`: sets `params.set_num_search_workers(1)` both before and after merging user-supplied `SatParameters` so search workers are never spawned.
+- `solve_proto.cc`: callers must release non-null buffers returned by `SolveProto` by calling `FreeBuffer`.
+- `Dockerfile` (`verify` stage): asserts that `ortools-sat.wasm.gz` is strictly smaller than `5242880` bytes (5 MB).
+- `Dockerfile`: `COPY` paths expect the repository root as the Docker build context.
+
+## Side effects
+
+- `solve_proto.cc`: allocates and frees WebAssembly heap buffers using `std::malloc` and `std::free`.
+- `Dockerfile`: clones `https://github.com/google/or-tools.git` during the `build-ortools` stage, installs static libraries to `/workspace/ortools-install`, compiles `ortools-sat.js` and `ortools-sat.wasm`, and writes `.gz` and `.br` artifacts in the `verify` stage.
+
+## Verification
+
+- Run: `docker build -f docker/wasm-solver/Dockerfile .` (builds `ortools-sat.js` and `ortools-sat.wasm` and runs the Stage 3 `verify` gzip size budget assertion).
+- Run: `bun test` (repository test suite).
 
 ## Upstream evaluation and upstreaming analysis
 
@@ -93,27 +137,6 @@ Pruning unused linear solvers and compiling with link-time optimization yields t
 | `ortools-sat.wasm.br` (Brotli level 9) | ~3.6 MB  | < 5.0 MB | Pass   |
 
 The compressed binary payload meets the 5 megabyte budget.
-
-## Minimal C interface
-
-The C++ wrapper in `solve_proto.cc` provides two entrypoints:
-
-```cpp
-extern "C" {
-  EMSCRIPTEN_KEEPALIVE
-  uint8_t* SolveProto(const uint8_t* model_bytes, int model_len,
-                      const uint8_t* params_bytes, int params_len,
-                      int* out_len);
-
-  EMSCRIPTEN_KEEPALIVE
-  void FreeBuffer(uint8_t* ptr);
-}
-```
-
-The `SolveProto` function accepts serialized `CpModelProto` bytes and optional `SatParameters` bytes.
-The function enforces `num_search_workers = 1`.
-The function executes `SolveCpModel()` and returns serialized `CpSolverResponse` bytes.
-The caller reads the bytes and calls `FreeBuffer` to release memory.
 
 ## Worker messaging overhead benchmark
 
