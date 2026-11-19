@@ -37,4 +37,4 @@ Each script enforces repository configuration parity, coverage thresholds, or is
 ## Verification
 
 - Run: `bun run check:sbx-env`
-- Run: `bun test`
+- Run: `bun run check:ignore-parity`

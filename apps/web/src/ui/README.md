@@ -22,7 +22,7 @@ Implements the Storagemaxxing React UI shell, layout canvas, constraint editor, 
   - [BOM UI](./bom/README.md) — Bill of materials table, row/header/summary components, and CSV export.
   - [Constraints UI](./constraints/README.md) — `ConstraintRow` and `ConstraintInputs` components for editing bin constraint modes and bounds.
   - [Options UI](./options/README.md) — `OptionsPanel`, `StrategyCard`, and `toCardMetrics` for comparing storage strategies.
-  - [Space manager UI](./spaceManager/README.md) — `CreateSpaceDialog`, `CreateSpaceForm`, `SpaceSwitcher`, and `SpaceManager` components.
+  - [Space manager UI](./spaceManager/README.md) — `CreateSpaceDialog`, `CreateSpaceFormPanel`, `SpaceSwitcher`, and `SpaceManager` components plus `CreateSpaceInputSchema`.
   - [Theme UI](./theme/README.md) — `ThemeProvider`, `ThemeToggle`, `ThemeContext`, and `useTheme` for light/dark/system themes.
 
 ## Invariants
