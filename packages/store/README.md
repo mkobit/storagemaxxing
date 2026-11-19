@@ -7,3 +7,4 @@ Package `@storagemaxxing/store` provides client state management, IndexedDB pers
 ## Subdirectories & boundaries
 
 - `src`: [./src/README.md](./src/README.md) — Zustand store, pure state helpers, layout selectors, solver reducers, and sketch serialization.
+- `test`: [./test/README.md](./test/README.md) — Store helper, layout selector, installation constraint, Options mode, serialization, and package-manifest governance tests.

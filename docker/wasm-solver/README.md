@@ -51,7 +51,7 @@ extern "C" {
 ## Verification
 
 - Run: `docker build -f docker/wasm-solver/Dockerfile .` (builds `ortools-sat.js` and `ortools-sat.wasm` and runs the Stage 3 `verify` gzip size budget assertion).
-- Run: `bun test` (repository test suite).
+- Run: `bun run test` (repository unit test suite).
 
 ## Upstream evaluation and upstreaming analysis
 

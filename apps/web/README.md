@@ -15,6 +15,8 @@ Configures the `@storagemaxxing/web` React and Vite frontend package, including 
 - `[wrangler.jsonc:name]` `storagemaxxing-web` with `assets.directory` `"./dist"` and `compatibility_date` `"2026-08-11"`.
 - `[wrangler.toml:name]` `storagemaxxing` with `pages_build_output_dir` `"dist"` and `compatibility_date` `"2024-05-15"`.
 - Subdirectories:
+  - [Storybook config](./.storybook/README.md) — Storybook React/Vite config, accessibility addon, and deterministic light/dark theme decorator.
+  - [End-to-end tests](./e2e/README.md) — Playwright Chromium specs covering user journeys, canvas rendering, persistence, and installation-constraint fixtures.
   - [Web scripts](./scripts/README.md) — Standalone Bun and Playwright CLI scripts for Storybook checks, PR preview comments, and screenshots.
   - [Web source](./src/README.md) — Application entrypoint, React UI, and CP-SAT solver Web Worker.
 

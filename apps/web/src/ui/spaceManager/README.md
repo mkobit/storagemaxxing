@@ -21,7 +21,7 @@ Provides React UI components, a Zod input schema, and Storybook stories for crea
 ## Invariants
 
 - `[CreateSpaceForm.ts:CreateSpaceInputSchema]` Requires `name` min length 1, `system` matching `StorageSystemSchema`, positive integer coerced `columns` and `rows`, and positive coerced `depth`.
-- `[CreateSpaceDialog.tsx:CreateSpaceDialog]` Renders `null` when `isOpen` is `false`; defaults `system` to `'gridfinity'`, creates templates with orientation `'top'`, and parses space instances with `count: 1` and `constraints: {}` via `SpaceInstanceSchema.parse`.
+- `[CreateSpaceDialog.tsx:CreateSpaceDialog]` Renders `null` when `isOpen` is `false`; defaults `system` to `'gridfinity'`, creates templates with accessFace `'top'`, and parses space instances with `count: 1` and `constraints: {}` via `SpaceInstanceSchema.parse`.
 - `[SpaceSwitcher.tsx:SpaceSwitcher]` Renders `'No spaces yet'` when `spaces.length === 0`; falls back to `spaces[0]` when `activeSpaceId` is not found in `spaces`.
 
 ## Side effects
