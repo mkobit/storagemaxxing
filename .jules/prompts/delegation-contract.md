@@ -11,7 +11,7 @@ Beads that fail any rule must be re-shaped, split, or kept for an Opus-class age
 ## Label taxonomy
 
 Apply these labels to every delegate-ready bead.
-They are additive — keep existing `scope:`, `meta:openspec:*`, and `slice:*` labels.
+They are additive — keep existing `scope:` and `slice:*` labels.
 
 | Label family | Values                                                | Meaning                                                                                                                                     |
 | ------------ | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -24,7 +24,7 @@ They are additive — keep existing `scope:`, `meta:openspec:*`, and `slice:*` l
 
 1. **Single scope.** The bead carries exactly one `scope:` label. Files touched are inside that package only.
 2. **Runnable acceptance.** The acceptance criterion is a single command the runner can execute and observe pass/fail. For `kind:research-readonly`, the command is `bd show <id>` and the assertion is "a comment exists matching pattern X".
-3. **No design ambiguity.** If the OpenSpec design leaves a choice (naming, location, signature), the bead description pre-commits to one option. The runner does not negotiate.
+3. **No design ambiguity.** If the design leaves a choice (naming, location, signature), the bead description pre-commits to one option. The runner does not negotiate.
 4. **Declared output channel.** Description states either (a) the PR branch name pattern (e.g. `delegate/sm-xxxx-short-slug`) or (b) "post findings as bead comment with marker `<!-- delegate-output -->`".
 5. **No cross-package import changes.** Delegate-ready beads cannot edit `package.json`, workspace topology, lint configs, or tsconfig project references.
 6. **No new tests, no new specs.** If new test infrastructure or a spec change is needed, the bead is not delegate-ready.

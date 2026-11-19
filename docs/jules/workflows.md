@@ -3,15 +3,14 @@
 This document serves as the high-level map for project operations.
 Detailed Beads conventions and automated agent loops are located in the task database configuration.
 
-## 🟢 Spec-Driven Operational Loop
+## 🟢 Operational Loop
 
-All development follows the **OpenSpec + Beads** bidirectional loop:
+All development follows the **Beads** operational loop:
 
-1. **Discover**: Run `bunx openspec list --json` to find active designs.
-2. **Hydrate**: If tasks aren't in Beads, run `bd mol pour openspec-sync --var change_name=<name>`.
-3. **Claim**: `bd update <id> --claim`.
-4. **Execute & Flowback**: If implementation reveals design shifts, update OpenSpec `design.md` or `tasks.md` **FIRST**.
-5. **Validate & Close**: Check off `tasks.md` and run `bd close <id>`.
+1. **Triage**: Run `bd ready` to find ready work.
+2. **Claim**: `bd update <id> --claim`.
+3. **Execute**: Implement focused changes following Engineering Rails.
+4. **Validate & Close**: Run `mise run check` and `bd close <id>`.
 
 Detailed command reference and pre-close checklists are in:
 

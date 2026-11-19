@@ -23,13 +23,12 @@ The following canonical documentation in `agent_docs/` defines our technical and
 - [System & Bin Definitions](../docs/jules/catalog.md)
 - [Supplemental Workflows](../docs/jules/workflows.md)
 
-## Session Protocol (Spec-Driven)
+## Session Protocol
 
 1. Run `bd prime` to load latest operational context.
 2. Follow the **Operational Loop** defined in [Operational Loop](../agent_docs/operational-loop.md):
-   - **Discover**: Identify active OpenSpec designs.
-   - **Hydrate**: Use `bd mol pour openspec-sync` if tasks aren't in Beads.
+   - **Triage**: Run `bd ready` to find your next task.
    - **Claim**: `bd update <id> --claim`.
-   - **Execute & Flowback**: Update specs if design shifts.
-   - **Close**: Check off `tasks.md` and run `bd close <id>`.
+   - **Execute**: Implement focused changes following "Engineering Rails".
+   - **Close**: Run `bd close <id>`.
 3. **MANDATORY**: Follow the Session Completion workflow in [Issue Tracking & Session Completion](../agent_docs/beads-workflow.md).

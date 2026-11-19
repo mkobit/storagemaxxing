@@ -40,7 +40,6 @@ You are picking up bead <bead-id> in the Storagemaxxing monorepo.
 
 - Do not commit any path outside the allowlist, even if the sandbox bootstrap created it.
 - Do not modify files outside `scope:<package>`.
-- Do not edit OpenSpec under `openspec/` — flowback is reserved for Opus-class agents.
 - Do not open issues, edit AGENTS.md, or touch lint/tsconfig.
 - If the bead seems ambiguous, stop and comment on the bead with `<!-- delegate-blocked -->`. Do not guess.
 ```
