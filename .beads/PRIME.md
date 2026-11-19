@@ -7,35 +7,26 @@
 Before finishing, you MUST run this checklist:
 
 1. **Validate:** `bun run lint` && `bun run typecheck` && `bun test`
-2. **Alignment:** Ensure all implemented logic is reflected in the canonical OpenSpec `design.md` or `specs/`.
-3. **Meta-Reflection:** Record at least one process learning or friction point as a `meta:beads-flow` bead or via `bd remember`.
-4. **Issue Sync:** `bd close <ids>` for completed work.
-5. **Git Sync:** `git add .` && `git commit -m "..."` -- `main` is branch-protected (GH013), so push a feature branch (`git push -u origin <topic-branch>`) and `gh pr create --fill` instead of pushing to main directly
+2. **Meta-Reflection:** Record at least one process learning or friction point as a `meta:beads-flow` bead or via `bd remember`.
+3. **Issue Sync:** `bd close <ids>` for completed work.
+4. **Git Sync:** `git add .` && `git commit -m "..."` -- `main` is branch-protected (GH013), so push a feature branch (`git push -u origin <topic-branch>`) and `gh pr create --fill` instead of pushing to main directly
 
 ## 🟢 AGENT OPERATIONAL LOOP
 
-Automated agents MUST follow the **Spec-Driven Execution** model:
+Automated agents MUST follow the **Beads Execution** model:
 
 1. **RESUME:**
    - Run `bd recall` or `bd memories` to check for shared operational context from other agents.
-   - Run `bunx openspec list --json` to find changes with `status: "in-progress"`.
-   - For each active change, run `bunx openspec status --change <name> --json` to locate its `design.md` and `tasks.md`.
-   - If a change is active but its tasks aren't in Beads, run `bd mol pour openspec-sync --var change_name=<name>`. This will parse the checkboxes in `tasks.md` into linked Beads issues.
-2. **TRIAGE:** Use `bd ready` or `bd query "meta:openspec:<name>"` to find your next task.
+2. **TRIAGE:** Use `bd ready` to find your next task.
    - **Checkpoints**: If a design is complete but hasn't been reviewed, mark the bead as `status:blocked` (blocked on human) with the label `status:needs-review` and PAUSE.
 3. **CLAIM:** `bd update <id> --claim` to signal you are working, then immediately `git checkout -b <topic-branch>` if still on `main` -- do this before the first edit, not after `git-commit-main-guard` blocks the first commit.
 4. **EXECUTE:** Implement focused changes following "Engineering Rails".
-5. **FLOWBACK:** If the implementation deviates from the spec, you MUST update `design.md` or `tasks.md` in OpenSpec **FIRST**.
-6. **CLOSE:** Mark the task checkbox in OpenSpec `tasks.md` and run `bd close <id> --reason "..."`.
+5. **CLOSE:** Run `bd close <id> --reason "..."`.
 
 ## 🧪 WORK FORMULAS (`bd mol`)
 
-Use these templates to bootstrap new feature probes and implementation syncs:
+Use these templates to bootstrap workflows:
 
-- `bd mol pour feature-probe --var system_name=<name>` - Scoping and architectural discovery via OpenSpec.
-- `bd mol pour openspec-sync --var change_name=<name>` - Hydrate task graph from OpenSpec design.
-- `bd mol pour design-adversary --var change_name=<name>` - Adversarial review of an existing design.
-- `bd mol pour engineering-sync` - Sync Engineering Standards from OpenSpec to Beads.
 - `bd mol pour autonomous-patrol --var agent_id=<jules|opencode> --var duty_name=<name>` - Recurring duty for autonomous agents.
 
 Run `bd formula list` for the current, authoritative set -- this list drifts as formulas are added/removed.

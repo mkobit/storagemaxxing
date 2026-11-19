@@ -10,14 +10,6 @@
           {
             "command": "bun hooks/typecheck-on-edit.ts",
             "type": "command"
-          },
-          {
-            "command": "bun hooks/openspec-validate-on-edit.ts",
-            "type": "command"
-          },
-          {
-            "command": "bun hooks/openspec-canonical-guard-on-edit.ts",
-            "type": "command"
           }
         ],
         "matcher": "replace_file_content|write_to_file|multi_replace_file_content"

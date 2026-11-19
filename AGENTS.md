@@ -7,7 +7,7 @@ This file serves as the "Prime Directive" for all AI agents (Gemini, Claude, Jul
 ## 📚 Agent Guidance Modules (`agent_docs/`)
 
 - [Engineering Rails](agent_docs/engineering-rails.md) — Laws of physics, purity, immutability, topology.
-- [Operational Loop & Bead Task Contract](agent_docs/operational-loop.md) — OpenSpec vs Bead-only decision rule, sync, commit discipline.
+- [Operational Loop & Bead Task Contract](agent_docs/operational-loop.md) — Bead task contract, sync, commit discipline.
 - [Issue Tracking & Session Completion](agent_docs/beads-workflow.md) — Beads lifecycle, quality gates, Dolt sync, session completion & branch+PR workflow.
 - [Shared Memory & Multi-Agent Sandbox](agent_docs/multi-agent-sandbox.md) — Identity, Jules delegation, audit logs, memory.
 - [Product Strategy](agent_docs/product-strategy.md) — Horizontal breadth over vertical depth.
@@ -26,8 +26,6 @@ This file serves as the "Prime Directive" for all AI agents (Gemini, Claude, Jul
 @agent_docs/product-strategy.md
 
 @agent_docs/tooling-patterns.md
-
-- Note: `bun exec openspec validate --all` runs as a PR check on changes under `openspec/**`.
 
 ## Docker Sandbox Execution
 

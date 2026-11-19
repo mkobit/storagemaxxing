@@ -20,10 +20,6 @@ run = "bun run typecheck"
 description = "Run unit tests"
 run = "bun run test"
 
-[tasks.validate]
-description = "Validate OpenSpec specs and changes"
-run = "bunx openspec validate --all --no-interactive"
-
 [tasks.validate-sbx]
 description = "Validate Docker Sandbox environment files"
 run = "bun run check:sbx-env"
@@ -42,4 +38,4 @@ run = "sbx env exec .sbx/sbxenv.yaml -- bun run --filter @storagemaxxing/web tes
 
 [tasks.check]
 description = "Run all verification checks"
-depends = ["typecheck", "lint", "test", "validate", "validate-sbx"]
+depends = ["typecheck", "lint", "test", "validate-sbx"]

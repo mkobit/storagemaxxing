@@ -46,8 +46,6 @@ updates:
           - "@cloudflare/*"
       tooling:
         patterns:
-          - "@fission-ai/openspec"
-          - "openspec"
           - "knip"
           - "modern-web-guidance"
       protobuf:
