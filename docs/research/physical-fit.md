@@ -40,7 +40,7 @@ Run the commands from the repository root with the existing toolchain.
 
 ```bash
 bun test packages/packer/src/physicalFitProbe.test.ts
-bunx prettier --check docs/research/physical-fit.md
+bun fmt --check docs/research/physical-fit.md
 ```
 
 The probe defines 14 fixed fixtures with explicit IDs, dimensions, constraints, and expected output.
