@@ -1,0 +1,60 @@
+name: Preview Sweep
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Log workers that would be pruned without deleting them"
+        required: false
+        type: boolean
+        default: false
+      ttl_days:
+        description: "Maximum PR inactivity age in days before pruning"
+        required: false
+        type: string
+        default: "7"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  sweep:
+    concurrency:
+      group: preview-sweep
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Setup mise
+        uses: jdx/mise-action@v5.2.9
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          cache: true
+
+      - name: Cache bun dependencies
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Sweep stale preview Workers
+        run: |
+          args=()
+          if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+            args+=(--dry-run)
+          fi
+          bun run --cwd apps/web preview:sweep "${args[@]}"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PREVIEW_TTL_DAYS: ${{ inputs.ttl_days || '7' }}
