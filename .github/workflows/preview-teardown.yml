@@ -4,6 +4,16 @@ on:
   pull_request:
     branches: [main]
     types: [closed]
+    paths:
+      - "apps/web/**"
+      - "packages/**"
+      - "package.json"
+      - "bun.lock"
+      - "tsconfig.json"
+      - "mise.toml"
+      - "mise.lock"
+      - ".github/workflows/ci.yml"
+      - ".github/workflows/preview-teardown.yml"
 
 permissions:
   contents: read
