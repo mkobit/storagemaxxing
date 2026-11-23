@@ -16,6 +16,7 @@
     "format": "bun fmt .",
     "format:check": "bun fmt --check .",
     "lint": "eslint . --max-warnings 0 --cache --cache-location .eslintcache --cache-strategy content && bun run format:check",
+    "lint:ci": "eslint . --max-warnings 0 --no-cache && bun run format:check",
     "sbx:plan": "sbx env plan .sbx/sbxenv.yaml",
     "sbx:test:e2e": "sbx env exec .sbx/sbxenv.yaml -- bun run --filter @storagemaxxing/web test:e2e",
     "sbx:validate-kit": "sbx kit validate .sbx/kit",
