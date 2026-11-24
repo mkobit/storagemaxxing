@@ -10,6 +10,7 @@ import { createSpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint"
 import { SpaceInstanceSchema } from "@storagemaxxing/assembly/SpaceInstance";
 import { createDimensions3D } from "@storagemaxxing/geometry/Dimensions3D";
 import { binColorForIndex } from "./binColorPalette";
+import { buildStarterDrawer, DEFAULT_STARTER_DRAWER } from "./starterDrawer";
 
 export const GoldenPathSetup: React.FC = () => {
   const [system, setSystem] = useState<StorageSystem>(GOLDEN_PATH_SYSTEM);
@@ -23,21 +24,11 @@ export const GoldenPathSetup: React.FC = () => {
     spaceId: string,
     spaceName: string,
   ) => {
-    const template = createSpaceTemplate(
+    const { template, space } = buildStarterDrawer({
       templateId,
-      createDimensions3D(spaceSize, spaceSize, 2),
-      "top",
-    );
-    const constraints = GOLDEN_PATH_STARTER_BIN_IDS.map((id, i) => ({
-      ...createSpaceConstraint(id, 1, 0, 1),
-      color: binColorForIndex(i),
-    }));
-    const space = SpaceInstanceSchema.parse({
-      id: spaceId,
-      templateId: template.id,
-      name: spaceName,
-      count: 1,
-      constraints: Object.fromEntries(constraints.map((c) => [c.binId, c])),
+      spaceSize,
+      spaceId,
+      spaceName,
     });
     addTemplate(template);
     addSpace(space);
@@ -46,10 +37,10 @@ export const GoldenPathSetup: React.FC = () => {
 
   const loadStarterLayout = () =>
     loadLayout(
-      "golden-path-space",
-      12,
-      "golden-path-instance",
-      "Starter drawer",
+      DEFAULT_STARTER_DRAWER.templateId,
+      DEFAULT_STARTER_DRAWER.spaceSize,
+      DEFAULT_STARTER_DRAWER.spaceId,
+      DEFAULT_STARTER_DRAWER.spaceName,
     );
 
   const loadTinyStarterLayout = () =>
