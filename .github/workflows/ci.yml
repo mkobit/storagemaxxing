@@ -172,11 +172,47 @@ jobs:
       - name: Golden-path e2e
         run: bun run --filter @storagemaxxing/web test:e2e
 
+  check-stories:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Setup mise
+        uses: jdx/mise-action@v5.2.9
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          cache: true
+
+      - name: Cache bun dependencies
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Resolve Playwright version
+        id: playwright-version
+        run: |
+          version=$(grep -oP '"@playwright/test@\K[0-9.]+' bun.lock | head -1)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
+
+      - name: Install Playwright browsers
+        run: bun run --filter @storagemaxxing/web playwright:install
+
       - name: Check stories
         run: bun run --filter @storagemaxxing/web check-stories
 
   deploy:
-    needs: [lint, typecheck, test, build-storybook, e2e]
+    needs: [lint, typecheck, test, build-storybook, e2e, check-stories]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
@@ -230,7 +266,8 @@ jobs:
           fi
 
   preview-deploy:
-    needs: [lint, typecheck, test, build-storybook, e2e, web-changes]
+    needs:
+      [lint, typecheck, test, build-storybook, e2e, check-stories, web-changes]
     if: ${{ github.event_name == 'pull_request' && needs.web-changes.outputs.changed == 'true' && github.event.pull_request.head.repo && !github.event.pull_request.head.repo.fork && github.actor != 'dependabot[bot]' && github.event.pull_request.user.login != 'dependabot[bot]' }}
     concurrency:
       group: preview-worker-${{ github.event.pull_request.number }}
