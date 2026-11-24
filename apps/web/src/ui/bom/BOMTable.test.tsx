@@ -78,4 +78,19 @@ describe("BOMTable", () => {
     expect(screen.queryByTestId("accessory-badge")).toBeNull();
     expect(row.textContent).toContain("Unknown Item");
   });
+
+  it("exposes the scrollable BOM table container as a keyboard-focusable region", () => {
+    const emptyBom: BOM = {
+      items: [],
+      totalPrice: 0,
+      isApproximatePrice: false,
+    };
+
+    render(<BOMTable bom={emptyBom} />);
+
+    const scrollRegion = screen.getByRole("region", {
+      name: "Bill of materials",
+    });
+    expect(scrollRegion.tabIndex).toBe(0);
+  });
 });
