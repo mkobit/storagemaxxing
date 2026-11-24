@@ -20,6 +20,7 @@ Playwright Chromium end-to-end test suite verifying user journeys, 2D/wireframe 
 - `[space-manager.spec.ts]` Verifies canvas grid stroke aspect ratios (`#666666`) and switching between active spaces.
 - `[theme.spec.ts]` Verifies `theme-toggle` persistence across reload and fallback on corrupted `localStorage`.
 - `[typography.spec.ts]` Verifies `Outfit` heading and `Inter` control font families.
+- `[visual.spec.ts]` Verifies visual regression baselines across default light/dark workspace, packed Gridfinity drawer, Options Mode cards, and BOM panel.
 - `[wireframe-toggle.spec.ts]` Verifies `wireframe-toggle` `aria-pressed` transitions preserve canvas visibility and `"valid"` status.
 - `[workshop-drawer-planning.spec.ts]` Verifies creating a `14x10x2` Gridfinity drawer and adding multiple bins to a `"valid"` layout (Journey 1).
 - Subdirectories:
@@ -40,3 +41,4 @@ Playwright Chromium end-to-end test suite verifying user journeys, 2D/wireframe 
 
 - Run: `bun run --filter @storagemaxxing/web test:e2e`
 - Run: `bun run sbx:test:e2e`
+- Update visual baselines (Linux): `bun run --filter @storagemaxxing/web test:e2e -- --update-snapshots=all visual.spec.ts`
