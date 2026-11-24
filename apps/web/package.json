@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "audit:ui": "bun scripts/audit-ui.ts",
     "build": "vite build",
     "build-storybook": "storybook build",
     "check-stories": "bun scripts/check-stories.ts",

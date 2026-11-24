@@ -6,6 +6,7 @@ Contains standalone Bun and Playwright CLI scripts and helpers for `apps/web`, c
 
 ## Interface
 
+- `[audit-ui.ts:CLI]` Standalone script with no exports; builds `apps/web` (`bun run build`), serves `dist/` in-process on `127.0.0.1:0`, checks `desktop` (`1280x800`) and `mobile` (`390x844`) viewports for horizontal overflow, console/page errors, and `WCAG_TAGS` via `@axe-core/playwright`, and writes screenshots plus `report.json`.
 - `[check-stories.ts:CLI]` Standalone script with no exports; builds static Storybook (or reads `STORYBOOK_STATIC_DIR`), serves it in-process on `127.0.0.1:0`, and checks `THEMES` (`"light"`, `"dark"`) in parallel (`CHECK_STORIES_CONCURRENCY`, default `min(4, availableParallelism())`) against `WCAG_TAGS` (`"wcag2a"`, `"wcag2aa"`, `"wcag21a"`, `"wcag21aa"`).
 - `[comment-pr-preview.ts:COMMENT_MARKER]` Exported string constant `"<!-- cloudflare-preview-deployment -->"`.
 - `[comment-pr-preview.ts:DeployOutputEntry]` Exported interface `{ type?: string; targets?: readonly string[]; url?: string; worker_name?: string }`.
@@ -21,6 +22,7 @@ Contains standalone Bun and Playwright CLI scripts and helpers for `apps/web`, c
 
 ## Invariants
 
+- `[audit-ui.ts:buildWebApp]` Throws if `bun run build` exits non-zero or exceeds `BUILD_TIMEOUT_MS` (`120_000` ms); `[audit-ui.ts:page]` requires `[data-testid="toolbar"]` within `PAGE_TIMEOUT_MS` (`15_000` ms).
 - `[check-stories.ts:buildStaticStorybook]` Throws if `bunx storybook build --quiet` exits non-zero or exceeds `BUILD_TIMEOUT_MS` (`120_000` ms); `[check-stories.ts:checkStory]` times out after `STORY_TIMEOUT_MS` (`10_000` ms) and treats `"errored"` Storybook render phases as errors alongside console/page errors.
 - `[check-stories.ts:storyIds]` Throws if `storyIds.length === 0`; sets `process.exitCode = 1` if `allErrors.length > 0` or `allViolations.length > 0`.
 - `[comment-pr-preview.ts:main]` Exits with code 1 if `--pr` or `PR_NUMBER` is missing or parses as `NaN`.
@@ -32,6 +34,7 @@ Contains standalone Bun and Playwright CLI scripts and helpers for `apps/web`, c
 
 ## Side effects
 
+- `[audit-ui.ts:audit]` Spawns `bun run build` into `apps/web/dist`, serves static files via `Bun.serve` stopped in `finally`, launches headless Chromium across `desktop` and `mobile` viewports, creates `apps/web/.screenshots/audit/`, and writes `desktop.png`, `mobile.png`, and `report.json`.
 - `[check-stories.ts:storybook]` Spawns `bunx storybook build --quiet` into `apps/web/storybook-static` (unless `STORYBOOK_STATIC_DIR` is set), serves static files and `/__axe.js` via `Bun.serve` stopped in `finally`, launches headless Chromium across concurrent `BrowserContext` workers with `a11y.manual:!true`, writes to stdout/stderr, and sets `process.exitCode`.
 - `[comment-pr-preview.ts:main]` Reads `--output-file` from disk via `node:fs` `readFileSync`; sends HTTP `GET` requests to the preview URL (`verifyUrlStatus`) and `GET`/`PATCH`/`POST` requests to `https://api.github.com/repos/...` (`postOrUpdateComment`); logs to console and may call `process.exit(1)`.
 - `[screenshot.ts:screenshot]` Creates `../../../.screenshots` (`mkdirSync` recursive); launches headless Chromium (`1280x800`) against `http://localhost:5173`; writes `.screenshots/latest.png` and copies it to `.screenshots/<timestamp>.png`; logs the path or calls `process.exit(1)`.
