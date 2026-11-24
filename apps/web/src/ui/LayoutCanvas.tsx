@@ -590,6 +590,10 @@ export const LayoutCanvas: React.FC = () => {
       {resolution.kind === "resolved" && <SolverStatus run={solverRun} />}
       <div
         data-testid="layout-viewport"
+        role="region"
+        aria-label="Layout viewport"
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- scrollable viewport must be keyboard focusable for WCAG 2.1.1
+        tabIndex={0}
         aria-busy={solverRun?.status === "running"}
         className="flex-1 overflow-auto p-4"
       >

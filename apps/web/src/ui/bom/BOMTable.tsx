@@ -13,7 +13,14 @@ export const BOMTable: React.FC<BOMTableProps> = ({ bom }) => {
     <div className="flex h-full flex-col text-text-primary">
       <BOMHeader bom={bom} />
 
-      <div className="flex-1 overflow-y-auto">
+      <div
+        data-testid="bom-table-scroll"
+        role="region"
+        aria-label="Bill of materials"
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- scrollable BOM table container must be keyboard focusable for WCAG 2.1.1
+        tabIndex={0}
+        className="flex-1 overflow-y-auto"
+      >
         <table className="w-full border-collapse text-left">
           <thead className="sticky top-0 bg-surface-sunken">
             <tr>

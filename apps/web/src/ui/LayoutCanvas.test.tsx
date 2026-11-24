@@ -479,6 +479,14 @@ describe("LayoutCanvas", () => {
     expect(screen.getByTestId("wireframe-toggle")).toBeTruthy();
   });
 
+  it("exposes the scrollable layout viewport as a keyboard-focusable region", () => {
+    renderLayoutCanvas();
+    const viewport = screen.getByTestId("layout-viewport");
+    expect(viewport.getAttribute("role")).toBe("region");
+    expect(viewport.getAttribute("aria-label")).toBe("Layout viewport");
+    expect(viewport.tabIndex).toBe(0);
+  });
+
   it("toggles wireframe preview mode and updates aria-pressed", () => {
     const spaceId = SpaceInstanceIdSchema.parse("grid-space");
     const templateId = SpaceTemplateIdSchema.parse("grid-template");
