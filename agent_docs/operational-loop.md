@@ -20,3 +20,9 @@ Every implementation Bead MUST satisfy this contract before an agent claims it:
 
 If a Bead cannot meet the contract, re-scope it or flag it with `bd human <id>` instead of claiming it.
 If you cannot finish a claimed Bead, leave it `open` with a comment so another agent can resume.
+
+## Self-improvement loop
+
+- Capture friction, flakiness, or missing capabilities immediately with `bd create` during execution.
+- Run `check-stories`, `test:e2e`, and visual snapshot checks (`apps/web/e2e/visual.spec.ts`) after UI PRs.
+- Triage and split oversized beads into tight, single-PR tasks before claiming them.
