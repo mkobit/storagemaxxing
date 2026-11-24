@@ -311,11 +311,35 @@ describe("LayoutCanvas", () => {
     expect(activeContext.fillRect).toHaveBeenCalled();
   });
 
-  it("renders an empty state when no active space is selected", () => {
+  it("renders an onboarding card when no active space is selected", () => {
     renderLayoutCanvas();
-    expect(
-      screen.getByText("Select or add a space to view the layout."),
-    ).toBeTruthy();
+    expect(screen.getByTestId("empty-state-onboarding")).toBeTruthy();
+    expect(screen.getByTestId("empty-state-create-space").textContent).toBe(
+      "+ Create your first space",
+    );
+    expect(screen.getByTestId("empty-state-try-sample").textContent).toBe(
+      "Try sample drawer",
+    );
+  });
+
+  it("loads a valid packed sample drawer in one click from the empty state", () => {
+    renderLayoutCanvas();
+    fireEvent.click(screen.getByTestId("empty-state-try-sample"));
+
+    expect(useStore.getState().spaces).toHaveLength(1);
+    expect(useStore.getState().activeSpaceId).toBeTruthy();
+    expect(screen.getByTestId("layout-validity-badge").textContent).toBe(
+      "valid",
+    );
+    expect(activeContext.fillRect).toHaveBeenCalled();
+  });
+
+  it("opens CreateSpaceDialog when clicking + Create your first space", () => {
+    renderLayoutCanvas();
+    fireEvent.click(screen.getByTestId("empty-state-create-space"));
+
+    expect(screen.getByRole("dialog")).toBeTruthy();
+    expect(screen.getByRole("heading", { name: "Create space" })).toBeTruthy();
   });
 
   it("renders an error when active space references a missing template", () => {

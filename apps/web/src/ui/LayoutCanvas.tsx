@@ -27,6 +27,8 @@ import {
   createDimensions2D,
 } from "@storagemaxxing/geometry/Dimensions2D";
 import { Toolbar } from "./Toolbar";
+import { CreateSpaceDialog } from "./spaceManager/CreateSpaceDialog";
+import { buildStarterDrawer, DEFAULT_STARTER_DRAWER } from "./starterDrawer";
 
 const VIEWPORT_MARGIN_PX = 20;
 
@@ -385,7 +387,49 @@ type ResolutionProps = {
     readonly x: number;
     readonly y: number;
   }) => void;
+  readonly onCreateSpace: () => void;
+  readonly onTrySampleDrawer: () => void;
 };
+
+const EmptyStateOnboarding: React.FC<{
+  readonly onCreateSpace: () => void;
+  readonly onTrySampleDrawer: () => void;
+}> = ({ onCreateSpace, onTrySampleDrawer }) => (
+  <div className="flex h-full items-center justify-center p-8">
+    <div
+      data-testid="empty-state-onboarding"
+      className="flex max-w-md flex-col items-start gap-4 rounded-md border border-border-default bg-surface-raised p-6 shadow-sm"
+    >
+      <div className="flex flex-col gap-1">
+        <h2 className="text-base font-semibold text-text-primary">
+          No space selected
+        </h2>
+        <p className="text-sm text-text-secondary">
+          Create a drawer or cabinet to start packing bins, or try a pre-packed
+          Gridfinity sample drawer.
+        </p>
+      </div>
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          data-testid="empty-state-create-space"
+          onClick={onCreateSpace}
+          className="cursor-pointer rounded-sm border border-border-default bg-brand-primary px-4 py-1.5 text-sm font-semibold text-text-inverse transition-colors duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)] hover:opacity-90"
+        >
+          + Create your first space
+        </button>
+        <button
+          type="button"
+          data-testid="empty-state-try-sample"
+          onClick={onTrySampleDrawer}
+          className="cursor-pointer rounded-sm border border-border-default bg-surface-sunken px-4 py-1.5 text-sm font-medium text-text-primary transition-colors duration-[var(--motion-duration-fast)] ease-[var(--motion-ease-standard)] hover:bg-surface-hover"
+        >
+          Try sample drawer
+        </button>
+      </div>
+    </div>
+  </div>
+);
 
 const renderResolution = ({
   resolution,
@@ -395,12 +439,15 @@ const renderResolution = ({
   zoomLevel,
   panOffset,
   onPanChange,
+  onCreateSpace,
+  onTrySampleDrawer,
 }: ResolutionProps): React.ReactElement => {
   if (resolution.kind === "none") {
     return (
-      <div className="p-8 text-text-secondary">
-        Select or add a space to view the layout.
-      </div>
+      <EmptyStateOnboarding
+        onCreateSpace={onCreateSpace}
+        onTrySampleDrawer={onTrySampleDrawer}
+      />
     );
   }
   if (resolution.kind === "missing-template") {
@@ -482,10 +529,14 @@ export const LayoutCanvas: React.FC = () => {
   const templatesById = useStore((state) => state.templatesById);
   const solverResultsBySpace = useStore((state) => state.solverResultsBySpace);
   const solverRun = useStore(selectDisplayedSolverRun);
+  const addTemplate = useStore((state) => state.addTemplate);
+  const addSpace = useStore((state) => state.addSpace);
+  const setActiveSpace = useStore((state) => state.setActiveSpace);
 
   const [wireframeEnabled, setWireframeEnabled] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+  const [isCreateSpaceOpen, setIsCreateSpaceOpen] = useState(false);
 
   const resolution = useMemo(
     () =>
@@ -517,6 +568,12 @@ export const LayoutCanvas: React.FC = () => {
   };
   const handleToggleWireframe = () =>
     setWireframeEnabled((enabled) => !enabled);
+  const handleTrySampleDrawer = () => {
+    const { template, space } = buildStarterDrawer(DEFAULT_STARTER_DRAWER);
+    addTemplate(template);
+    addSpace(space);
+    setActiveSpace(space.id);
+  };
 
   return (
     <div
@@ -544,8 +601,14 @@ export const LayoutCanvas: React.FC = () => {
           zoomLevel,
           panOffset,
           onPanChange: setPanOffset,
+          onCreateSpace: () => setIsCreateSpaceOpen(true),
+          onTrySampleDrawer: handleTrySampleDrawer,
         })}
       </div>
+      <CreateSpaceDialog
+        isOpen={isCreateSpaceOpen}
+        onClose={() => setIsCreateSpaceOpen(false)}
+      />
     </div>
   );
 };
