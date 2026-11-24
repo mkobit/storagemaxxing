@@ -135,7 +135,8 @@
     background: var(--color-surface-glass);
     border: 1px solid var(--color-border-subtle);
     box-shadow: var(--shadow-glass);
-    backdrop-filter: blur(16px);
+    /* Vendor-prefixed declaration must precede standard backdrop-filter so LightningCSS preserves both in prod builds. */
     -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
   }
 }

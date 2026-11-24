@@ -27,13 +27,13 @@ Playwright Chromium end-to-end test suite verifying user journeys, 2D/wireframe 
 
 ## Invariants
 
-- `apps/web/playwright.config.ts` partitions specs across `chromium` (`grepInvert: /@drill-fixture/`, `PORT ?? 5175`) and `chromium-e2e-fixtures` (`grep: /@drill-fixture/`, `DRILL_PORT ?? defaultPort + 1`, `E2E_DRILL_FIXTURE: "true"`).
-- Playwright runs with `fullyParallel: true`, `forbidOnly: !!process.env.CI`, `retries: CI ? 2 : 0`, `workers: CI ? 1 : undefined`, and `reuseExistingServer: false`.
+- `apps/web/playwright.config.ts` partitions specs across `chromium` (`grepInvert: /@drill-fixture/`, `127.0.0.1:${PORT}`) and `chromium-e2e-fixtures` (`grep: /@drill-fixture/`, `127.0.0.1:${DRILL_PORT}`, `E2E_DRILL_FIXTURE: "true"`), allocating distinct ephemeral ports when `PORT` is unset.
+- Playwright runs with `fullyParallel: true`, `forbidOnly: !!process.env.CI`, `retries: CI ? 2 : 0`, `workers: CI ? 2 : undefined`, and `reuseExistingServer: false`.
 - Specs are typechecked by `apps/web/tsconfig.json`, ESLint-ignored in `eslint.config.ts`, and excluded from root `bun test` (`bunfig.toml` sets `root = "packages"`).
 
 ## Side effects
 
-- Spawns two Vite dev servers (`bun run dev`), launches headless Chromium, and mutates DOM, canvas pixels, IndexedDB (`storagemaxxing-db`), and `localStorage` (`storagemaxxing-theme`).
+- Builds static production bundles into `apps/web/dist/e2e-default` and `apps/web/dist/e2e-drill`, spawns two `vite preview` servers on `127.0.0.1`, launches headless Chromium, and mutates DOM, canvas pixels, IndexedDB (`storagemaxxing-db`), and `localStorage` (`storagemaxxing-theme`).
 - Triggers browser downloads (`storagemaxxing-sketch.json`) and uploads, and writes test outputs under `apps/web/playwright-report/` and `apps/web/test-results/`.
 
 ## Verification

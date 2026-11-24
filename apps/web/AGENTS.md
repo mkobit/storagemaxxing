@@ -41,7 +41,7 @@ Add a new recipe there — not a fresh throwaway script — when a future check 
 - `bun run dev` — start Vite dev server on port 5173
 - `bun run build` — production build to `dist/`
 - `bun run test` — bun test unit tests (happy-dom)
-- `bun run test:e2e` — Playwright end-to-end tests (requires dev server)
+- `bun run test:e2e` — Playwright end-to-end tests (builds and previews both app variants automatically)
 - `bun run screenshot [route] [--recipe=<name>]` — capture UI screenshot to `.screenshots/latest.png`, optionally driving to a named app state first (see `scripts/screenshot-recipes.ts`)
 - `bun run typecheck` — TypeScript type check
 
