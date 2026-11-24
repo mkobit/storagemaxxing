@@ -136,4 +136,82 @@ describe("AppHeader", () => {
       expect(screen.getByText("Invalid sketch file")).toBeTruthy(),
     );
   });
+
+  it("opens Feedback popover, copies repro JSON, links to GitHub issues, and closes on Escape or outside click", async () => {
+    const template = createSpaceTemplate(
+      "template-1",
+      createDimensions3D(6, 6, 2),
+      "top",
+    );
+    const space = SpaceInstanceSchema.parse({
+      id: "space-1",
+      templateId: template.id,
+      name: "Test drawer",
+      count: 1,
+      constraints: {},
+    });
+    useStore.setState({
+      spaces: [space],
+      activeSpaceId: space.id,
+      templatesById: { [template.id]: template },
+      constraintsBySpace: {},
+    });
+
+    const writeText = mock(async () => {});
+    // eslint-disable-next-line functional/immutable-data -- happy-dom does not provide navigator.clipboard by default
+    Object.defineProperty(navigator, "clipboard", {
+      value: { writeText },
+      configurable: true,
+    });
+
+    renderAppHeader();
+    expect(screen.queryByTestId("feedback-popover")).toBeNull();
+
+    fireEvent.click(screen.getByTestId("feedback-trigger"));
+    expect(screen.getByTestId("feedback-popover")).toBeTruthy();
+
+    const issueLink = screen.getByTestId("open-github-issue");
+    const href = issueLink.getAttribute("href") ?? "";
+    expect(
+      href.startsWith("https://github.com/mkobit/storagemaxxing/issues/new?"),
+    ).toBe(true);
+    expect(href).toContain("title=");
+    expect(href).toContain("body=");
+
+    fireEvent.click(screen.getByTestId("copy-repro-json"));
+    await waitFor(() => {
+      expect(screen.getByTestId("copy-repro-json").textContent).toBe("Copied");
+    });
+
+    expect(writeText).toHaveBeenCalledTimes(1);
+    const copiedText = (
+      writeText.mock.calls[0] as unknown as readonly [string]
+    )[0];
+    const parsed = JSON.parse(copiedText) as {
+      readonly spacesCount: number;
+      readonly activeSpace: {
+        readonly id: string;
+        readonly name: string;
+      } | null;
+      readonly viewport: { readonly width: number; readonly height: number };
+      readonly url: string;
+      readonly userAgent: string;
+    };
+    expect(parsed.spacesCount).toBe(1);
+    expect(parsed.activeSpace?.id).toBe("space-1");
+    expect(parsed.activeSpace?.name).toBe("Test drawer");
+    expect(typeof parsed.viewport.width).toBe("number");
+    expect(typeof parsed.viewport.height).toBe("number");
+    expect(typeof parsed.url).toBe("string");
+    expect(typeof parsed.userAgent).toBe("string");
+
+    fireEvent.keyDown(window, { key: "Escape" });
+    expect(screen.queryByTestId("feedback-popover")).toBeNull();
+
+    fireEvent.click(screen.getByTestId("feedback-trigger"));
+    expect(screen.getByTestId("feedback-popover")).toBeTruthy();
+
+    fireEvent.mouseDown(document.body);
+    expect(screen.queryByTestId("feedback-popover")).toBeNull();
+  });
 });
