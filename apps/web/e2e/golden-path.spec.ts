@@ -74,6 +74,11 @@ test("non-valid pack surfaces a non-valid validity badge", async ({ page }) => {
   const badge = page.getByTestId("layout-validity-badge");
   await expect(badge).toBeVisible();
   await expect(badge).not.toHaveText("valid");
+
+  const failuresBanner = page.getByTestId("packing-failures-banner");
+  await expect(failuresBanner).toBeVisible();
+  await expect(failuresBanner).toContainText("Layout constraints not met");
+  await expect(failuresBanner).toContainText("hard minimum");
 });
 
 test("partial pack surfaces a partial validity badge", async ({ page }) => {
@@ -86,6 +91,11 @@ test("partial pack surfaces a partial validity badge", async ({ page }) => {
   const badge = page.getByTestId("layout-validity-badge");
   await expect(badge).toBeVisible();
   await expect(badge).toHaveText("partial");
+
+  const failuresBanner = page.getByTestId("packing-failures-banner");
+  await expect(failuresBanner).toBeVisible();
+  await expect(failuresBanner).toContainText("Partial layout");
+  await expect(failuresBanner).toContainText("soft minimum");
 });
 
 test("unresolved bin ID surfaces unresolved count badge", async ({ page }) => {
@@ -117,6 +127,7 @@ test("changing a constraint's mode refreshes the validity badge", async ({
     .selectOption("off");
 
   await expect(badge).toHaveText("valid");
+  await expect(page.getByTestId("packing-failures-banner")).toHaveCount(0);
 });
 
 test("sketch state persists across a page reload", async ({ page }) => {

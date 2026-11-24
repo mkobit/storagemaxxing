@@ -26,9 +26,14 @@ import { createDimensions2D } from "@storagemaxxing/geometry/Dimensions2D";
 import { createPoint3D } from "@storagemaxxing/geometry/Point3D";
 import { createPlacedBin } from "@storagemaxxing/assembly/PlacedBin";
 import {
+  createConstraintFailure,
+  createHeightOverflowFailure,
   createPackingMetrics,
   createPackingResult,
+  createWeightOverflowFailure,
 } from "@storagemaxxing/assembly/PackingResult";
+import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
+import { binId } from "@storagemaxxing/catalog/bin";
 
 type MockCanvasContext = {
   readonly clearRect: ReturnType<typeof mock>;
@@ -585,5 +590,91 @@ describe("LayoutCanvas", () => {
     fireEvent.mouseDown(canvas, { clientX: 100, clientY: 100 });
     fireEvent.mouseMove(canvas, { clientX: 120, clientY: 130 });
     fireEvent.mouseUp(canvas);
+  });
+
+  it("does not render packing failures banner when result has no failures", () => {
+    const spaceId = setUpSolverSpace();
+    const templateId = useStore.getState().spaces[0].templateId;
+    useStore
+      .getState()
+      .setConstraintForSpace(
+        templateId,
+        createSpaceConstraint("gridfinity-1x1x2", 1, 0),
+      );
+
+    renderLayoutCanvas();
+    expect(screen.getByTestId("layout-validity-badge").textContent).toBe(
+      "valid",
+    );
+    expect(screen.queryByTestId("packing-failures-banner")).toBeNull();
+    expect(spaceId).toBeTruthy();
+  });
+
+  it("renders human-readable failure messages for partial results", async () => {
+    const spaceId = setUpSolverSpace();
+    const binName = findBinById(ALL_BINS, binId("gridfinity-1x1x2"))?.name;
+    expect(binName).toBeTruthy();
+
+    renderLayoutCanvas();
+    await act(() => useStore.getState().startSolverRun(spaceId, "partial-run"));
+    await act(async () => {
+      useStore.getState().handleSolverEvent({
+        type: "SOLVE_SPACE_RESULT",
+        requestId: "partial-run",
+        status: "OPTIMAL",
+        wallTimeMs: 12,
+        packingResult: createPackingResult(
+          [],
+          createPackingMetrics({}, 0.25, [
+            createConstraintFailure("gridfinity-1x1x2", "softMin", 6, 4),
+          ]),
+          "partial",
+        ),
+      });
+    });
+
+    const banner = screen.getByTestId("packing-failures-banner");
+    expect(banner.textContent).toContain("Partial layout");
+    expect(banner.textContent).toContain(
+      `${binName}: target 6, placed 4 (soft minimum)`,
+    );
+  });
+
+  it("renders human-readable failure messages for invalid results", async () => {
+    const spaceId = setUpSolverSpace();
+    const binName = findBinById(ALL_BINS, binId("gridfinity-1x1x2"))?.name;
+    expect(binName).toBeTruthy();
+
+    renderLayoutCanvas();
+    await act(() => useStore.getState().startSolverRun(spaceId, "invalid-run"));
+    await act(async () => {
+      useStore.getState().handleSolverEvent({
+        type: "SOLVE_SPACE_RESULT",
+        requestId: "invalid-run",
+        status: "FEASIBLE",
+        wallTimeMs: 15,
+        packingResult: createPackingResult(
+          [],
+          createPackingMetrics({}, 0.1, [
+            createConstraintFailure("gridfinity-1x1x2", "hardMin", 3, 1),
+            createHeightOverflowFailure("unknown-bin-id", 5, 4),
+            createWeightOverflowFailure(10, 12),
+          ]),
+          "invalid",
+        ),
+      });
+    });
+
+    const banner = screen.getByTestId("packing-failures-banner");
+    expect(banner.textContent).toContain("Layout constraints not met");
+    expect(banner.textContent).toContain(
+      `${binName}: required 3, placed 1 (hard minimum)`,
+    );
+    expect(banner.textContent).toContain(
+      "unknown-bin-id: height 5 in exceeds space height 4 in",
+    );
+    expect(banner.textContent).toContain(
+      "Total weight 12 lbs exceeds max weight 10 lbs",
+    );
   });
 });
