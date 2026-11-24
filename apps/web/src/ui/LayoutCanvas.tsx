@@ -13,7 +13,10 @@ import { ALL_BINS, findBinById } from "@storagemaxxing/catalog/lookup";
 import { BinSpec, binId } from "@storagemaxxing/catalog/bin";
 import { SpaceTemplate } from "@storagemaxxing/assembly/SpaceTemplate";
 import { SpaceConstraint } from "@storagemaxxing/assembly/SpaceConstraint";
-import { PackingResult } from "@storagemaxxing/assembly/PackingResult";
+import {
+  ConstraintFailure,
+  PackingResult,
+} from "@storagemaxxing/assembly/PackingResult";
 import { useTheme } from "./theme/useTheme";
 import { buildWireframeScene, WireframeScene } from "./wireframeScene";
 import {
@@ -497,6 +500,57 @@ const selectDisplayedSolverRun = (
     : run;
 };
 
+const binDisplayName = (id: string): string => lookupBin(id)?.name ?? id;
+
+const formatFailureMessage = (failure: ConstraintFailure): string => {
+  switch (failure.reason) {
+    case "hardMin":
+      return `${binDisplayName(failure.binId)}: required ${failure.required}, placed ${failure.placed} (hard minimum)`;
+    case "softMin":
+      return `${binDisplayName(failure.binId)}: target ${failure.required}, placed ${failure.placed} (soft minimum)`;
+    case "heightOverflow":
+      return `${binDisplayName(failure.binId)}: height ${failure.binHeight} in exceeds space height ${failure.spaceHeight} in`;
+    case "weightOverflow":
+      return `Total weight ${failure.actualWeightLbs} lbs exceeds max weight ${failure.maxWeightLbs} lbs`;
+  }
+};
+
+const PackingFailuresBanner: React.FC<{
+  readonly resolution: LayoutResolution;
+}> = ({ resolution }) => {
+  if (resolution.kind !== "resolved") return null;
+  const { validity, metrics } = resolution.result;
+  if (metrics.failures.length === 0) return null;
+
+  return (
+    <div
+      data-testid="packing-failures-banner"
+      className="flex flex-col gap-1 border-b border-border-default bg-surface-raised px-4 py-2 text-xs text-text-primary"
+    >
+      <div className="flex items-center gap-1.5 font-semibold">
+        <span
+          aria-hidden="true"
+          className={`h-2 w-2 rounded-full ${validityDotClassName[validity]}`}
+        />
+        <span>
+          {validity === "invalid"
+            ? "Layout constraints not met"
+            : "Partial layout"}
+        </span>
+      </div>
+      <ul className="list-disc pl-5 text-text-secondary">
+        {metrics.failures.map((failure, index) => (
+          <li
+            key={`${failure.reason}-${"binId" in failure ? failure.binId : "space"}-${index}`}
+          >
+            {formatFailureMessage(failure)}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
 const SolverStatus: React.FC<{
   readonly run: SolverRunState | undefined;
 }> = ({ run }) => {
@@ -588,6 +642,7 @@ export const LayoutCanvas: React.FC = () => {
         onToggleWireframe={handleToggleWireframe}
       />
       {resolution.kind === "resolved" && <SolverStatus run={solverRun} />}
+      <PackingFailuresBanner resolution={resolution} />
       <div
         data-testid="layout-viewport"
         role="region"
