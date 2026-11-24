@@ -21,3 +21,35 @@ Add new agent-only tooling the same way: `bun add -d <package>` at the repo root
   ```bash
   bun run --filter @storagemaxxing/web dev
   ```
+
+## Background dev-server probes
+
+Never launch a dev server or background server (`vite`, `storybook`, `bun run dev`, etc.) without a hard wall-clock timeout and process-group cleanup.
+Unbounded `Bun.spawn` calls or background shells can stall indefinitely when child processes hold ports or stdio pipes open.
+
+- **Shell probes:** Wrap every server probe or long-running check with `timeout -k 5 <sec>s <cmd>`.
+  ```bash
+  timeout -k 5 60s bunx storybook dev --port 6006 --ci
+  ```
+- **Bun probes:** Spawn with `detached: true` (creates a new process group), pass `signal: AbortSignal.timeout(<ms>)`, and kill the entire process group (`-proc.pid`) in `finally`.
+  ```ts
+  const proc = Bun.spawn(
+    ["bunx", "storybook", "dev", "--port", "6006", "--ci"],
+    {
+      detached: true,
+      signal: AbortSignal.timeout(60_000),
+      stdout: "pipe",
+      stderr: "pipe",
+    },
+  );
+  try {
+    // Poll readiness or read output within the timeout
+  } finally {
+    try {
+      process.kill(-proc.pid, "SIGKILL");
+    } catch {
+      // Process group already exited
+    }
+    await proc.exited;
+  }
+  ```
