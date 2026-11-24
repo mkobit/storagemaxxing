@@ -42,8 +42,8 @@
     "globals": "17.13.0",
     "jiti": "2.7.0",
     "jsonc-eslint-parser": "3.3.0",
-    "knip": "6.43.0",
-    "modern-web-guidance": "^0.0.194",
+    "knip": "6.44.2",
+    "modern-web-guidance": "^0.0.203",
     "typescript": "6.0.3",
     "typescript-eslint": "8.71.2",
     "zod": "^4.6.7"
