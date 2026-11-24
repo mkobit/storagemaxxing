@@ -5,6 +5,7 @@ import {
   parseSketch,
 } from "@storagemaxxing/store/SketchSerialization";
 import { DevToolsMenu } from "./DevToolsMenu";
+import { FeedbackMenu } from "./FeedbackMenu";
 import { SpaceManager } from "./spaceManager/SpaceManager";
 import { ThemeToggle } from "./theme/ThemeToggle";
 
@@ -93,6 +94,8 @@ export const AppHeader: React.FC = () => {
         )}
         <div className="mx-1 my-1 h-5 w-px bg-border-default" />
         <DevToolsMenu />
+        <div className="mx-1 my-1 h-5 w-px bg-border-default" />
+        <FeedbackMenu />
         <div className="mx-1 my-1 h-5 w-px bg-border-default" />
         <ThemeToggle />
       </div>
