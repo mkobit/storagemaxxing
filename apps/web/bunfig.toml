@@ -1,2 +1,10 @@
 [test]
 preload = ["./src/test-setup.ts"]
+
+# Workspace packages are tested and coverage-gated at the root; exclude them
+# here so apps/web only gates its own files.
+coveragePathIgnorePatterns = ["../../packages/**"]
+
+# Enforced per-file by Bun (worst-file gate). Set just below current minimums
+# (BOMHeader.tsx 56.52% lines; StrategyCard.tsx 25.00% funcs).
+coverageThreshold = { lines = 0.55, functions = 0.25 }
