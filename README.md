@@ -30,3 +30,9 @@ Storagemaxxing is a Bun workspace monorepo for planning, packing, and visualizin
 
 - Run: `mise run check`
 - Run: `bun run test`
+
+## Pull requests and releases
+
+Open a pull request for changes to `main`.
+Wait for the required CI checks to pass, then squash merge.
+If this repository starts publishing releases, use an unprefixed UTC CalVer tag such as `2026.11.5`.
